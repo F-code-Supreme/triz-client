@@ -31,7 +31,7 @@ export default [
       // Generated files
       'src/routeTree.gen.ts',
       // Config files
-      '**/.prettierrc.cjs'
+      '**/.prettierrc.cjs',
     ],
     languageOptions: {
       globals: {
@@ -47,7 +47,7 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
-        project: ['./tsconfig.json', './tsconfig.node.json'],
+        // project: ['./tsconfig.json', './tsconfig.node.json'],
       },
     },
   },
