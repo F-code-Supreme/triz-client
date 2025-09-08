@@ -1,0 +1,115 @@
+{
+  "submit": "Gửi",
+  "close": "Đóng",
+  "continue": "Tiếp tục",
+
+  "prev": "Trước",
+  "prev_with_entity_type": "Trước {{entity_type, lowercase}}",
+
+  "next": "Tiếp theo",
+  "next_with_entity_type": "Tiếp theo {{entity_type, lowercase}}",
+
+  "download": "Tải xuống",
+  "export": "Xuất",
+  "import": "Nhập",
+
+  "send": "Gửi",
+  "send.success_message": "Gửi {{entity_type, lowercase}} thành công.",
+  "send.success_message_raw": "Gửi {{entity_type}} thành công.",
+
+  "save_draft": "Lưu nháp",
+
+  "save": "Lưu",
+  "save_with_entity_type": "Lưu {{entity_type, lowercase}}",
+  "save.success_message": "Thay đổi đã được lưu cho {{target_name}} {{entity_type, lowercase}}.",
+  "save.success_message_raw": "Thay đổi đã được lưu cho {{target_name}} {{entity_type}}.",
+
+  "upload": "Tải lên",
+  "upload_with_entity_type": "Tải lên {{entity_type, lowercase}}",
+
+  "empty": "Trống",
+
+  "cancel": "Hủy",
+  "cancel_with_entity_type": "Hủy {{entity_type, lowercase}}",
+
+  "join": "Tham gia",
+  "join_with_entity_type": "Tham gia {{entity_type, lowercase}}",
+
+  "select": "Chọn",
+  "select_with_entity_type": "Chọn {{entity_type, lowercase}}",
+  "select_all": "Chọn tất cả",
+
+  "search": "Tìm kiếm",
+  "search_with_entity_type": "Tìm kiếm theo {{entity_type, lowercase}}",
+
+  "create": "Tạo",
+  "create_with_entity_type": "Tạo {{entity_type, lowercase}}",
+  "create_with_entity_type_raw": "Tạo {{entity_type}}",
+  "create.success_message": "Tạo {{target_name}} {{entity_type, lowercase}} thành công.",
+  "create.success_message_raw": "Tạo {{target_name}} {{entity_type}} thành công.",
+
+  "edit": "Chỉnh sửa",
+  "edit.title": "Chỉnh sửa {{entity_type, lowercase}}",
+  "edit_with_entity_type": "Chỉnh sửa {{entity_type, lowercase}}",
+  "edit_with_entity_type_raw": "Chỉnh sửa {{entity_type}}",
+  "edit.success_message": "Cập nhật {{entity_type, lowercase}} cho {{target_name}} thành công.",
+
+  "delete": "Xóa",
+  "delete_with_entity_type": "Xóa {{entity_type, lowercase}}",
+  "delete.confirm_title": "Xóa {{entity_type, lowercase}}?",
+  "delete.confirm_title_raw": "Xóa {{entity_type}}?",
+  "delete.confirm_content": "Bạn có chắc chắn muốn xóa {{entity_type, lowercase}} \"{{target_name}}\"? Hành động này không thể hoàn tác",
+  "delete.confirm_content_raw": "Bạn có chắc chắn muốn xóa {{entity_type}} \"{{target_name}}\"? Hành động này không thể hoàn tác",
+  "delete.success_message": "Xóa {{target_name}} {{entity_type, lowercase}} thành công.",
+  "delete.success_message_raw": "Xóa {{target_name}} {{entity_type}} thành công.",
+
+  "add": "Thêm",
+  "add_with_entity_type": "Thêm {{entity_type, lowercase}}",
+  "add_to": "Thêm {{entity_type, lowercase}} vào {{target}}",
+  "add.success_message": "Thêm {{entity_type, lowercase}} {{target_name}} thành công.",
+  "add.success_message_just_with_entity_type": "Thêm {{entity_type, lowercase}} thành công.",
+
+  "remove": "Xóa",
+  "remove_with_entity_type": "Xóa {{entity_type, lowercase}}",
+  "remove.confirm_title": "Xóa {{entity_type, lowercase}}?",
+  "remove.confirm_content": "Bạn có chắc chắn muốn xóa \"{{entity_name}}\" {{entity_type, lowercase}} khỏi {{target_entity_type, lowercase}} này không?",
+
+  "move": "Di chuyển",
+  "move_with_entity_type": "Di chuyển {{entity_type, lowercase}}",
+
+  "apply": "Áp dụng",
+  "apply_with_entity_type": "Áp dụng {{entity_type, lowercase}}",
+  "apply.success_message": "Áp dụng {{entity_type, lowercase}} {{target_name}} thành công.",
+
+  "leave": "Rời",
+  "leave_with_entity_type": "Rời {{entity_type, lowercase}}",
+  "leave.success_message": "Rời {{target_name}} {{entity_type, lowercase}} thành công.",
+
+  "switch": "Chuyển",
+  "switch_with_entity_type": "Chuyển {{entity_type, lowercase}}",
+
+  "back": "Quay lại",
+  "back_with_entity_type": "Quay lại {{entity_type, lowercase}}",
+  "back_with_entity_type_raw": "Quay lại {{entity_type}}",
+
+  "view_details": "Xem chi tiết",
+
+  "grant": "Cấp quyền",
+  "grant_with_entity_type": "Cấp quyền {{entity_type, lowercase}}",
+  "grant.success_message": "Cấp quyền {{entity_type, lowercase}} {{target_name}} thành công.",
+  "grant.success_message_just_with_entity_type": "Thêm {{entity_type, lowercase}} thành công.",
+
+  "revoke": "Thu hồi",
+  "revoke.confirm_title": "Thu hồi {{entity_type, lowercase}}?",
+  "revoke.confirm_content": "Bạn có chắc chắn muốn thu hồi {{target_entity_type, lowercase}} khỏi {{entity_type, lowercase}} \"{{entity_name}}\"?",
+  "revoke.success_message": "Thu hồi {{entity_type, lowercase}} cho {{target_name}} thành công.",
+
+  "assign": "Gán",
+  "assign_with_entity_type": "Gán {{entity_type, lowercase}}",
+  "assign_with_target_entity_type": "Gán {{entity_name}} {{entity_type, lowercase}} cho {{target_entity_type, lowercase}}",
+  "assign.success_message": "Gán {{entity_type, lowercase}} {{target_name}} thành công.",
+  "assign.success_message_just_with_entity_type": "Gán {{entity_type, lowercase}} thành công.",
+
+  "test": "Kiểm tra",
+  "test_with_entity_type": "Kiểm tra {{entity_type, lowercase}}"
+}

@@ -1,5 +1,5 @@
 import { LoginForm } from '@/components/forms/login/login-form';
-import { DefaultLayout } from '@/layout/default-layout';
+import { DefaultLayout } from '@/layouts/default-layout';
 
 export const LoginPage = () => {
   const meta = {

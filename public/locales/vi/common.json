@@ -1,0 +1,43 @@
+{
+  "total": "Tổng",
+  "total_with_count": "Tổng: {{count}}",
+
+  "or": "Hoặc",
+  "or_lowercase": "hoặc",
+
+  "yes": "Có",
+  "no": "Không",
+
+  "page": "Trang",
+
+  "empty": "Trống",
+  "free": "Miễn phí",
+  "premium": "Cao cấp",
+  "private": "Riêng tư",
+  "public": "Công khai",
+  "required": "Bắt buộc",
+  "success": "Thành công",
+  "error": "Lỗi",
+  "warning": "Cảnh báo",
+  "info": "Thông tin",
+  "all": "Tất cả",
+  "copied": "Đã sao chép",
+  "from": "Từ",
+  "to": "Đến",
+  "dont_show_again": "Không hiển thị lại",
+  "no_data": "Không có dữ liệu",
+  "date": "Ngày",
+  "order": "Đơn hàng",
+
+  "day_one": "Ngày",
+  "day_other": "Ngày",
+
+  "not_found": "Không tìm thấy",
+  "not_found_with_entity_type": "{{entity_type}} không tìm thấy",
+
+  "showing": "Đang hiển thị",
+  "showing_with_count": "Đang hiển thị {{count}}",
+  "showing_with_total": "Đang hiển thị {{count}} trong tổng số {{total}}",
+
+  "filter_tooltip": "Đây là tổng số dựa trên bộ lọc đã chọn"
+}

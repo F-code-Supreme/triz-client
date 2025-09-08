@@ -1,0 +1,58 @@
+{
+  "dashboard": "Dashboard",
+  "organizations": "Organizations",
+
+  "user_management": "User management",
+  "user_management.users": "Users",
+  "user_management.roles": "Roles",
+  "user_management.permissions": "Permissions",
+
+  "branding": "Branding",
+  "branding.custom_domains": "Custom domains",
+  "branding.email_templates": "Email templates",
+  "branding.phone_templates": "Phone templates",
+
+  "app_integrations": "App integrations",
+  "app_integrations.authentications": "Authentications",
+  "app_integrations.push_notification": "Push notification",
+  "app_integrations.payment_gateway": "Payment gateway",
+  "app_integrations.smtp": "SMTP",
+  "app_integrations.sms": "SMS",
+
+  "devices": "Devices",
+
+  "subscription": "Subscription",
+  "subscription.features": "Features",
+  "subscription.package": "Packages",
+
+  "coupons": "Coupons",
+  "licenses": "Licenses",
+
+  "billing": "Billing",
+  "billing.invoices": "Invoices",
+  "billing.payments": "Payments",
+  "billing.subscription_types": "Subscription types",
+
+  "issues": "Issues",
+  "events": "Events",
+
+  "monitoring": "Monitoring",
+  "monitoring.tracking_activities": "Tracking activities",
+  "monitoring.tracking_emails": "Tracking emails",
+
+  "system": "System",
+  "system.currency": "Currency",
+  "system.country": "Country",
+  "system.state": "State",
+  "system.city": "City",
+  "system.timezone": "Time zone",
+  "system.language": "Language",
+  "system.exchange_rate": "Exchange rate",
+  "system.resource_type": "Resource type",
+
+  "settings": "Settings",
+
+  "brands": "Brands",
+  "pricing": "Pricing",
+  "wallet": "Wallet"
+}
