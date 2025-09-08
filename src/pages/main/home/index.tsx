@@ -1,9 +1,10 @@
 import { readme } from '@/assets/readme';
 import { BackToTop } from '@/components/back-to-top/back-to-top';
 import { Markdown } from '@/components/markdown/markdown';
-import { DefaultLayout } from '@/layout/default-layout';
+import { DefaultLayout } from '@/layouts/default-layout';
 import './styles.scss';
-export const HomePage = () => {
+
+const HomePage = () => {
   return (
     <DefaultLayout
       meta={{
@@ -17,3 +18,5 @@ export const HomePage = () => {
     </DefaultLayout>
   );
 };
+
+export default HomePage;

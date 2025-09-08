@@ -5,6 +5,10 @@ import ReactDOM from 'react-dom/client';
 import { Toaster } from 'sonner';
 
 import './index.css';
+
+// Import i18n configuration
+import './configs/i18next';
+import './configs/i18next/formatters';
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
 
