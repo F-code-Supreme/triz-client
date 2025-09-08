@@ -3,6 +3,11 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
+export const supportedLanguages = {
+  en: 'English',
+  vi: 'Tiếng Việt',
+};
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -15,6 +20,7 @@ i18n
     fallbackNS: 'common',
 
     fallbackLng: 'vi',
+    supportedLngs: Object.keys(supportedLanguages),
     debug: false,
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
