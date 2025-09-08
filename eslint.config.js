@@ -30,8 +30,11 @@ export default [
       'yarn-error.log*',
       // Generated files
       'src/routeTree.gen.ts',
+      'resources.d.ts',
       // Config files
       '**/.prettierrc.cjs',
+      // Locales
+      'locales/**',
     ],
     languageOptions: {
       globals: {
