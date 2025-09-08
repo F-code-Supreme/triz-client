@@ -13,7 +13,7 @@ const FallbackLoading = (properties: IFallbackLoadingProperties) => {
         isCenter && 'flex h-full w-full items-center justify-center',
       )}
     >
-      <Spinner size={32} variant="circle" />
+      <Spinner size={32} variant="ellipsis" />
     </div>
   );
 };
