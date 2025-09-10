@@ -11,7 +11,7 @@ const HomePage = () => {
         title: 'Home Page - Triz',
       }}
     >
-      <div className="border rounded-lg p-6 bg-card space-y-8 markdown-container">
+      <div className="border rounded-lg p-5 bg-card space-y-8 markdown-container">
         <Markdown content={readme} />
       </div>
       <BackToTop />
