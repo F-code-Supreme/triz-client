@@ -3,7 +3,7 @@ import { DefaultLayout } from '@/layouts/default-layout';
 
 const LoginPage = () => {
   const meta = {
-    title: 'Login Page',
+    title: 'Login Page - Triz',
   };
   return (
     <DefaultLayout meta={meta}>

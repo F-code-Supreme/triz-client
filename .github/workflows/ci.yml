@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -10,32 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: |
-        # Clean install without scripts
-        npm ci --ignore-scripts
-        # Install platform-specific dependencies
-        npm i @rollup/rollup-linux-x64-gnu
-        # Run prepare scripts after all dependencies are properly installed
-        npm rebuild
-        npm run prepare --if-present
+      - name: Install dependencies
+        run: |
+          # Clean install without scripts
+          npm ci --ignore-scripts
+          # Install platform-specific dependencies
+          npm i @rollup/rollup-linux-x64-gnu
+          # Run prepare scripts after all dependencies are properly installed
+          npm rebuild
+          npm run prepare --if-present
 
-    - name: Check formatting
-      run: npm run format:check
+      - name: Check formatting
+        run: npm run format:check
 
-    - name: Lint
-      run: npm run lint
+      - name: Lint
+        run: npm run lint
 
-    - name: Type check
-      run: npm run type-check
+      - name: Type check
+        run: npm run type-check
 
     # - name: Run tests
     #   run: npm run test:ci
