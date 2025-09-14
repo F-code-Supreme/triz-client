@@ -157,7 +157,6 @@ export default [
           },
         },
       ],
-      'unicorn/prevent-abbreviations': 'warn',
       'sonarjs/no-duplicate-string': 'warn',
       'sonarjs/cognitive-complexity': ['error', 15],
 

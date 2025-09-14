@@ -142,6 +142,16 @@ interface Resources {
     "page_meta_title": "Not found",
     "under_construction": "This feature is under maintenance, we will comeback soon!"
   },
+  "pages.sign_in": {
+    "form.description": "Welcome to Triz, please sign in to your account.",
+    "form.forgot_password": "Forgot password?",
+    "form.login_with_google": "Login with Google",
+    "form.no_account": "Don't have an account?",
+    "form.sign_up": "Sign up",
+    "form.submit": "Login",
+    "form.title": "Login",
+    "page_meta_title": "Sign in"
+  },
   "sidebar": {
     "app_integrations": "App integrations",
     "app_integrations.authentications": "Authentications",
