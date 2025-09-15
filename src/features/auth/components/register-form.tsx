@@ -35,7 +35,7 @@ const formSchema = z
   });
 
 export const RegisterForm = () => {
-  const { t } = useTranslation('header');
+  const { t } = useTranslation('pages.sign_up');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,10 +65,7 @@ export const RegisterForm = () => {
   }
 
   return (
-    <FormCard
-      title={t('sign_up')}
-      description="Create your account to get started"
-    >
+    <FormCard title={t('form.title')} description={t('form.description')}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid gap-4">
@@ -91,15 +88,15 @@ export const RegisterForm = () => {
               type="password"
             />
 
-            <SubmitButton>{t('sign_up')}</SubmitButton>
-            <GoogleSignInButton title="Sign up with Google" />
+            <SubmitButton>{t('form.submit')}</SubmitButton>
+            <GoogleSignInButton title={t('form.register_with_google')} />
           </div>
         </form>
       </Form>
       <div className="mt-4 text-center text-sm">
         Already have an account?{' '}
         <Link to="/login" className="text-secondary underline">
-          {t('sign_in')}
+          {t('form.sign_in')}
         </Link>
       </div>
     </FormCard>

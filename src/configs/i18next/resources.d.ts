@@ -162,6 +162,15 @@ interface Resources {
     "form.title": "Login",
     "page_meta_title": "Sign in"
   },
+  "pages.sign_up": {
+    "form.description": "Welcome to Triz, please create an account.",
+    "form.have_account": "Already have an account?",
+    "form.register_with_google": "Sign up with Google",
+    "form.sign_in": "Sign in",
+    "form.submit": "Sign up",
+    "form.title": "Sign up",
+    "page_meta_title": "Sign up"
+  },
   "sidebar": {
     "app_integrations": "App integrations",
     "app_integrations.authentications": "Authentications",

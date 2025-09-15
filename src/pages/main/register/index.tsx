@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import RegisterForm from '@/features/auth/components/register-form';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-const LoginPage = () => {
-  const { t } = useTranslation('pages.sign_in');
+const RegisterPage = () => {
+  const { t } = useTranslation('pages.sign_up');
 
   return (
     <DefaultLayout
@@ -18,4 +18,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
