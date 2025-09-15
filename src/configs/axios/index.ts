@@ -8,6 +8,7 @@ import type {
   UrlDownload,
   UploadStream,
 } from '@/configs/axios/types';
+import type { Response } from '@/types';
 import type { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 
 function analysisFilename(contentDisposition: string): string {
@@ -92,23 +93,39 @@ class MyAxios {
     );
   }
 
-  get<T>(url: string, data?: object): Promise<T> {
+  get<T = null>(url: string, data?: object): Promise<Response<T>> {
     return this.axiosInstance.get(url, { params: data });
   }
 
-  post<T>(url: string, data?: object, parameters?: object): Promise<T> {
+  post<T = null>(
+    url: string,
+    data?: object,
+    parameters?: object,
+  ): Promise<Response<T>> {
     return this.axiosInstance.post(url, data, { params: parameters });
   }
 
-  put<T>(url: string, data?: object, parameters?: object): Promise<T> {
+  put<T = null>(
+    url: string,
+    data?: object,
+    parameters?: object,
+  ): Promise<Response<T>> {
     return this.axiosInstance.put(url, data, { params: parameters });
   }
 
-  delete<T>(url: string, data?: object): Promise<T> {
+  patch<T = null>(
+    url: string,
+    data?: object,
+    parameters?: object,
+  ): Promise<Response<T>> {
+    return this.axiosInstance.patch(url, data, { params: parameters });
+  }
+
+  delete<T = null>(url: string, data?: object): Promise<Response<T>> {
     return this.axiosInstance.delete(url, { params: data });
   }
 
-  upload<T>(data: Upload): Promise<T> {
+  upload<T = null>(data: Upload): Promise<Response<T>> {
     const { url, formData, controller, onUploadProgress } = data;
     return this.axiosInstance.post(url, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -117,7 +134,7 @@ class MyAxios {
     });
   }
 
-  async uploadStream<T>(data: UploadStream): Promise<T> {
+  async uploadStream<T = null>(data: UploadStream): Promise<Response<T>> {
     const { url, file, controller, onUploadProgress } = data;
     /** generateSHA 生成文件SHA256 hash  用于标识文件唯一性 往往会用上 这里会用到crypto-js库 **/
     // async function generateSHA(file: File): Promise<string> {
