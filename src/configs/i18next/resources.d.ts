@@ -135,6 +135,16 @@ interface Resources {
     "second_with_count_one": "({{count}}) $t(second_one, lowercase)",
     "second_with_count_other": "({{count}}) $t(second_other, lowercase)"
   },
+  "header": {
+    "chat_ai": "Chat AI",
+    "forum": "Forum",
+    "home": "Home",
+    "learn_triz": "Learn TRIZ",
+    "logo_title": "The Science and Technology Creativity Center (STC)",
+    "quiz": "Quiz",
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up"
+  },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",
     "message": "We're sorry the page you requested could not be found. Please go back to the homepage!",
