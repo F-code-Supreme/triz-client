@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -12,13 +13,16 @@ import { Form } from '@/components/ui/form';
 
 // Improved schema with additional validation rules
 const formSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
+  email: z
+    .string()
+    .min(1, { message: 'Email is required' })
+    .email({ message: 'Invalid email address' }),
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters long' }),
+    .min(8, { message: 'Password must be at least 8 characters long' }),
 });
 
-export const LoginForm = () => {
+const LoginForm = () => {
   const { t } = useTranslation('pages.sign_in');
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,36 +48,36 @@ export const LoginForm = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-[50vh] h-full w-full items-center justify-center px-4">
-      <FormCard title={t('form.title')} description={t('form.description')}>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid gap-4">
-              <TextInput<typeof formSchema>
-                form={form}
-                name="email"
-                label="Email"
-                type="email"
-              />
-              <TextInput<typeof formSchema>
-                form={form}
-                name="password"
-                label="Password"
-                type="password"
-              />
+    <FormCard title={t('form.title')} description={t('form.description')}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid gap-4">
+            <TextInput<typeof formSchema>
+              form={form}
+              name="email"
+              label="Email"
+              type="email"
+            />
+            <TextInput<typeof formSchema>
+              form={form}
+              name="password"
+              label="Password"
+              type="password"
+            />
 
-              <SubmitButton>{t('form.submit')}</SubmitButton>
-              <GoogleSignInButton title={t('form.login_with_google')} />
-            </div>
-          </form>
-        </Form>
-        <div className="mt-4 text-center text-sm">
-          {t('form.no_account')}{' '}
-          <a href="#" className="underline">
-            {t('form.sign_up')}
-          </a>
-        </div>
-      </FormCard>
-    </div>
+            <SubmitButton>{t('form.submit')}</SubmitButton>
+            <GoogleSignInButton title={t('form.login_with_google')} />
+          </div>
+        </form>
+      </Form>
+      <div className="mt-4 text-center text-sm">
+        {t('form.no_account')}{' '}
+        <Link to="/register" className="text-secondary underline">
+          {t('form.sign_up')}
+        </Link>
+      </div>
+    </FormCard>
   );
 };
+
+export default LoginForm;

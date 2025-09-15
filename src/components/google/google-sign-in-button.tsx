@@ -3,7 +3,7 @@ import { ReactSVG } from 'react-svg';
 
 import GoogleIcon from '@/assets/google-icon.svg';
 
-import { SecondaryButton } from '../forms/buttons/secondary-button';
+import { Button } from '../ui/button';
 
 type GoogleSignInButtonProps = {
   title: string;
@@ -16,10 +16,10 @@ const GoogleSignInButton = ({ title }: GoogleSignInButtonProps) => {
   });
 
   return (
-    <SecondaryButton onClick={() => login()}>
+    <Button onClick={() => login()}>
       <ReactSVG src={GoogleIcon} className="mr-2" />
       {title}
-    </SecondaryButton>
+    </Button>
   );
 };
 

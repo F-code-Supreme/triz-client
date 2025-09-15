@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import LoginForm from '@/features/auth/components/login-form';
+import RegisterForm from '@/features/auth/components/register-form';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const LoginPage = () => {
@@ -13,7 +13,7 @@ const LoginPage = () => {
       }}
       headerVisible={false}
     >
-      <LoginForm />
+      <RegisterForm />
     </DefaultLayout>
   );
 };
