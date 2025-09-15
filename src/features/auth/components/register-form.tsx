@@ -94,7 +94,7 @@ export const RegisterForm = () => {
         </form>
       </Form>
       <div className="mt-4 text-center text-sm">
-        Already have an account?{' '}
+        {t('form.have_account')}{' '}
         <Link to="/login" className="text-secondary underline">
           {t('form.sign_in')}
         </Link>
