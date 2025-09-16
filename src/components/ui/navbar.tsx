@@ -122,6 +122,9 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       <div className="w-full border-t pt-2 mt-2">
                         <NavigationMenuItem className="w-full">
                           <Link
+                            search={{
+                              redirect: window.location.pathname,
+                            }}
                             to="/login"
                             className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
                           >
@@ -129,12 +132,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           </Link>
                         </NavigationMenuItem>
                         <NavigationMenuItem className="w-full">
-                          <a
-                            href="#"
+                          <Link
+                            search={{
+                              redirect: window.location.pathname,
+                            }}
+                            to="/register"
                             className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
                           >
                             {t('sign_up')}
-                          </a>
+                          </Link>
                         </NavigationMenuItem>
                       </div>
                     </NavigationMenuList>
@@ -182,7 +188,14 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             <div className="flex items-center space-x-4">
               <div className="hidden sm:flex items-center space-x-2">
                 <Button variant="ghost" asChild>
-                  <Link to="/login">{t('sign_in')}</Link>
+                  <Link
+                    search={{
+                      redirect: window.location.pathname,
+                    }}
+                    to="/login"
+                  >
+                    {t('sign_in')}
+                  </Link>
                 </Button>
                 <Button asChild>
                   <a href="#">{t('sign_up')}</a>
