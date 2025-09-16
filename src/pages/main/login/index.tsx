@@ -1,20 +1,19 @@
 import { useTranslation } from 'react-i18next';
 
 import LoginForm from '@/features/auth/components/login-form';
-import { DefaultLayout } from '@/layouts/default-layout';
+import { AuthLayout } from '@/layouts/auth-layout';
 
 const LoginPage = () => {
   const { t } = useTranslation('pages.sign_in');
 
   return (
-    <DefaultLayout
+    <AuthLayout
       meta={{
         title: t('page_meta_title'),
       }}
-      headerVisible={false}
     >
       <LoginForm />
-    </DefaultLayout>
+    </AuthLayout>
   );
 };
 

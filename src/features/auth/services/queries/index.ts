@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { request } from '@/configs/axios';
 
@@ -6,17 +6,19 @@ import { AuthKeys } from './keys';
 
 import type { IGetMeDataResponse } from './types';
 
-export const useGetMe = () => {
+export const useGetMeQuery = (token: string | null) => {
   return useQuery({
     queryKey: [AuthKeys.GetMeQuery],
-    queryFn: async () => {
-      const response = await request.get<IGetMeDataResponse>('/auth/me');
+    queryFn: token
+      ? async () => {
+          const response = await request.get<IGetMeDataResponse>('/auth/me');
 
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
+          if (response.code !== 200) {
+            throw new Error(response.message);
+          }
 
-      return response;
-    },
+          return response.data;
+        }
+      : skipToken,
   });
 };

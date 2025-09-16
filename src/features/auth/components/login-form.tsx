@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { FormCard } from '@/components/card/form-card';
@@ -10,8 +9,10 @@ import { SubmitButton } from '@/components/forms/buttons/submit-button';
 import { TextInput } from '@/components/forms/form-fields/text-input';
 import GoogleSignInButton from '@/components/google/google-sign-in-button';
 import { Form } from '@/components/ui/form';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
+import { STRING_EMPTY } from '@/constants';
+import { Route } from '@/routes/login';
 
-// Improved schema with additional validation rules
 const formSchema = z.object({
   email: z
     .string()
@@ -23,28 +24,27 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const { auth } = Route.useRouteContext();
+  const { redirect } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const { t } = useTranslation('pages.sign_in');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: STRING_EMPTY,
+      password: STRING_EMPTY,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // Assuming an async login function
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to submit the form. Please try again.');
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    auth.login(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      () => navigate({ search: { redirect } }),
+    );
   }
 
   return (
@@ -65,14 +65,29 @@ const LoginForm = () => {
               type="password"
             />
 
-            <SubmitButton>{t('form.submit')}</SubmitButton>
+            <SubmitButton disabled={auth.isLoggingIn}>
+              {auth.isLoggingIn ? (
+                <>
+                  <Spinner className="mr-2 h-4 w-4" />
+                  Signing in...
+                </>
+              ) : (
+                t('form.submit')
+              )}
+            </SubmitButton>
             <GoogleSignInButton title={t('form.login_with_google')} />
           </div>
         </form>
       </Form>
       <div className="mt-4 text-center text-sm">
         {t('form.no_account')}{' '}
-        <Link to="/register" className="text-secondary underline">
+        <Link
+          search={{
+            redirect,
+          }}
+          to="/register"
+          className="text-secondary underline"
+        >
           {t('form.sign_up')}
         </Link>
       </div>

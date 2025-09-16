@@ -4,7 +4,7 @@ import { request } from '@/configs/axios';
 
 import type { ISendOtpDataResponse, ISendOtpPayload } from './types';
 
-export const useSendOtp = () => {
+export const useSendOtpMutation = () => {
   return useMutation({
     mutationFn: async (payload: ISendOtpPayload) => {
       const response = await request.post<ISendOtpDataResponse>(
@@ -21,7 +21,7 @@ export const useSendOtp = () => {
   });
 };
 
-export const useVerifyOtp = () => {
+export const useVerifyOtpMutation = () => {
   return useMutation({
     mutationFn: async (payload: ISendOtpPayload) => {
       const response = await request.post<ISendOtpDataResponse>(

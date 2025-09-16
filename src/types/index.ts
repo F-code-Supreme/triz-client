@@ -4,3 +4,7 @@ export interface Response<T> {
   message: string; // Message
   data: T; // The response payload
 }
+
+export interface Meta {
+  title: string;
+}

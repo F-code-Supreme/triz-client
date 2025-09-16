@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { FormCard } from '@/components/card/form-card';
@@ -10,7 +9,8 @@ import { SubmitButton } from '@/components/forms/buttons/submit-button';
 import { TextInput } from '@/components/forms/form-fields/text-input';
 import GoogleSignInButton from '@/components/google/google-sign-in-button';
 import { Form } from '@/components/ui/form';
-import { PASSWORD_REGEX } from '@/constants';
+import { PASSWORD_REGEX, STRING_EMPTY } from '@/constants';
+import { Route } from '@/routes/register';
 
 const formSchema = z
   .object({
@@ -35,33 +35,29 @@ const formSchema = z
   });
 
 export const RegisterForm = () => {
+  const { auth } = Route.useRouteContext();
+  const { redirect } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const { t } = useTranslation('pages.sign_up');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
+      email: STRING_EMPTY,
+      password: STRING_EMPTY,
+      confirmPassword: STRING_EMPTY,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // Remove confirmPassword from the submission data
-      const { confirmPassword: _, ...submitData } = values;
-
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(submitData, null, 2)}
-          </code>
-        </pre>,
-      );
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to submit the form. Please try again.');
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    auth.register(
+      {
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+      },
+      () => navigate({ search: { redirect: '/login' } }),
+    );
   }
 
   return (
@@ -95,7 +91,13 @@ export const RegisterForm = () => {
       </Form>
       <div className="mt-4 text-center text-sm">
         {t('form.have_account')}{' '}
-        <Link to="/login" className="text-secondary underline">
+        <Link
+          search={{
+            redirect,
+          }}
+          to="/login"
+          className="text-secondary underline"
+        >
           {t('form.sign_in')}
         </Link>
       </div>

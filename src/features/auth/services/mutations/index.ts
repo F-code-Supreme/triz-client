@@ -10,7 +10,7 @@ import type {
   IResetForgotPasswordPayload,
 } from './types';
 
-export const useLogin = () => {
+export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (payload: ILoginPayload) => {
       const response = await request.post<ILoginDataResponse>(
@@ -27,7 +27,7 @@ export const useLogin = () => {
   });
 };
 
-export const useRegister = () => {
+export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: async (payload: IRegisterPayload) => {
       const response = await request.post('/auth/register', payload);
@@ -41,7 +41,7 @@ export const useRegister = () => {
   });
 };
 
-export const useRefreshToken = () => {
+export const useRefreshTokenMutation = () => {
   return useMutation({
     mutationFn: async (payload: IRefreshTokenPayload) => {
       const response = await request.post<ILoginDataResponse>(
@@ -58,10 +58,24 @@ export const useRefreshToken = () => {
   });
 };
 
-export const useResetForgotPassword = () => {
+export const useResetForgotPasswordMutation = () => {
   return useMutation({
     mutationFn: async (payload: IResetForgotPasswordPayload) => {
       const response = await request.patch('/auth/resetPassword', payload);
+
+      if (response.code !== 200) {
+        throw new Error(response.message);
+      }
+
+      return response;
+    },
+  });
+};
+
+export const useLogoutMutation = () => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await request.post('/auth/logout');
 
       if (response.code !== 200) {
         throw new Error(response.message);

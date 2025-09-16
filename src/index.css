@@ -113,6 +113,9 @@
       0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
     --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   }
+  .theme {
+    --animate-aurora: aurora 60s linear infinite;
+  }
 }
 
 @layer base {
@@ -124,5 +127,16 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+}
+
+@theme inline {
+  @keyframes aurora {
+  from {
+    backgroundPosition: 50% 50%, 50% 50%;
+    }
+  to {
+    backgroundPosition: 350% 50%, 350% 50%;
+    }
   }
 }
