@@ -88,7 +88,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           if (cb) cb();
         },
         onError: (error) => {
-          console.error('Login error', error);
           toast.error(
             error.response?.data.message ||
               'Failed to login. Please try again.',
@@ -99,20 +98,22 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     [loginMutate, setAccessToken, setRefreshToken],
   );
 
-  const register = useCallback((data: IRegisterPayload, cb?: () => void) => {
-    registerMutate(data, {
-      onSuccess: () => {
-        if (cb) cb();
-      },
-      onError: (error) => {
-        console.error('Register error', error);
-        toast.error(
-          error.response?.data.message ||
-            'Failed to register. Please try again.',
-        );
-      },
-    });
-  }, []);
+  const register = useCallback(
+    (data: IRegisterPayload, cb?: () => void) => {
+      registerMutate(data, {
+        onSuccess: () => {
+          if (cb) cb();
+        },
+        onError: (error) => {
+          toast.error(
+            error.response?.data.message ||
+              'Failed to register. Please try again.',
+          );
+        },
+      });
+    },
+    [registerMutate],
+  );
 
   const logout = useCallback(() => {
     logoutMutate(undefined, {

@@ -1,9 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { lazy } from 'react';
 
-import { Loadable } from '@/components/loadable';
-
-const LoginPage = Loadable(lazy(() => import('@/pages/main/login')));
+import LoginPage from '@/pages/main/login';
 
 export const Route = createFileRoute('/login')({
   validateSearch: (search) => ({

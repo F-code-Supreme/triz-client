@@ -2,7 +2,12 @@ import { useMutation } from '@tanstack/react-query';
 
 import { request } from '@/configs/axios';
 
-import type { ISendOtpDataResponse, ISendOtpPayload } from './types';
+import type {
+  ISendOtpDataResponse,
+  ISendOtpPayload,
+  IVerifyOtpPayload,
+  IVerifyOtpDataResponse,
+} from './types';
 
 export const useSendOtpMutation = () => {
   return useMutation({
@@ -12,10 +17,6 @@ export const useSendOtpMutation = () => {
         payload,
       );
 
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
-
       return response;
     },
   });
@@ -23,15 +24,11 @@ export const useSendOtpMutation = () => {
 
 export const useVerifyOtpMutation = () => {
   return useMutation({
-    mutationFn: async (payload: ISendOtpPayload) => {
-      const response = await request.post<ISendOtpDataResponse>(
+    mutationFn: async (payload: IVerifyOtpPayload) => {
+      const response = await request.post<IVerifyOtpDataResponse>(
         '/otp/verify',
         payload,
       );
-
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
 
       return response;
     },

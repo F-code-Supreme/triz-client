@@ -1,0 +1,8 @@
+{
+  "page_meta_title": "Xác thực OTP",
+  "form.title": "Xác thực OTP",
+  "form.description": "Vui lòng nhập OTP đã được gửi đến email của bạn.",
+  "form.resend_otp_with_time": "Gửi lại OTP trong",
+  "form.resend_otp": "Gửi lại OTP",
+  "form.submit": "Xác thực OTP"
+}

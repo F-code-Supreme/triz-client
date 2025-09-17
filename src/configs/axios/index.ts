@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { axiosBaseOptions } from '@/configs/axios/axios-setup';
+import { TokenType } from '@/features/auth/types';
 
 import type {
   AxiosDownload,
@@ -33,7 +34,7 @@ class MyAxios {
   private initInterceptors() {
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        const token: string | null = localStorage.getItem('token');
+        const token: string | null = localStorage.getItem(TokenType.ACCESS);
         if (token) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -43,7 +44,7 @@ class MyAxios {
         return config;
       },
       (error) => {
-        console.log(`Request error:`, error);
+        console.error(`Request error:`, error);
         return Promise.reject(error);
       },
     );
@@ -52,10 +53,8 @@ class MyAxios {
       (response) => {
         const { data } = response;
         console.log('data', data);
-        if (data.rsCode !== 0) {
-          // eslint-disable-next-line no-alert
-          alert(`${data.rsCause}`);
-          return Promise.reject(data.data);
+        if (data.code !== 200 || response.status !== 200) {
+          throw new Error(data.message);
         }
         if (data instanceof Blob) {
           return response;

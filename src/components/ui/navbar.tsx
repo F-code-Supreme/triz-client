@@ -198,7 +198,14 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                   </Link>
                 </Button>
                 <Button asChild>
-                  <a href="#">{t('sign_up')}</a>
+                  <Link
+                    search={{
+                      redirect: window.location.pathname,
+                    }}
+                    to="/register"
+                  >
+                    {t('sign_up')}
+                  </Link>
                 </Button>
               </div>
 

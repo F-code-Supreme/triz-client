@@ -124,16 +124,12 @@ interface Resources {
   },
   "datetime": {
     "date": "Date",
-    "day_left_one": "Days left",
-    "day_left_other": "Days left",
-    "day_left_with_count_one": "{{count}} t(day_left, lowercase)",
-    "day_left_with_count_other": "{{count}} t(days_left, lowercase)",
+    "day_left_one": "{{count}} day left",
+    "day_left_other": "{{count}} days left",
     "day_one": "Day",
     "day_other": "Days",
-    "second_one": "Second",
-    "second_other": "Seconds",
-    "second_with_count_one": "({{count}}) $t(second_one, lowercase)",
-    "second_with_count_other": "({{count}}) $t(second_other, lowercase)"
+    "seconds_left_one": "{{count}} second",
+    "seconds_left_other": "{{count}} seconds"
   },
   "header": {
     "chat_ai": "Chat AI",
@@ -170,6 +166,14 @@ interface Resources {
     "form.submit": "Sign up",
     "form.title": "Sign up",
     "page_meta_title": "Sign up"
+  },
+  "pages.sign_up.verify_otp": {
+    "form.description": "Please enter the OTP sent to your email.",
+    "form.resend_otp": "Resend OTP",
+    "form.resend_otp_with_time": "Resend OTP in",
+    "form.submit": "Verify OTP",
+    "form.title": "OTP Verification",
+    "page_meta_title": "OTP Verification"
   },
   "sidebar": {
     "app_integrations": "App integrations",

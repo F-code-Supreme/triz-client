@@ -1,0 +1,8 @@
+{
+  "page_meta_title": "OTP Verification",
+  "form.title": "OTP Verification",
+  "form.description": "Please enter the OTP sent to your email.",
+  "form.resend_otp_with_time": "Resend OTP in",
+  "form.resend_otp": "Resend OTP",
+  "form.submit": "Verify OTP"
+}

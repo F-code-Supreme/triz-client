@@ -1,6 +1,6 @@
 export enum Role {
-  USER = 'user',
-  ADMIN = 'admin',
+  USER = 'ROLE_user',
+  ADMIN = 'ROLE_admin',
 }
 
 export enum TokenType {

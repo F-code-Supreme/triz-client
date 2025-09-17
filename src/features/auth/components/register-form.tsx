@@ -9,6 +9,7 @@ import { SubmitButton } from '@/components/forms/buttons/submit-button';
 import { TextInput } from '@/components/forms/form-fields/text-input';
 import GoogleSignInButton from '@/components/google/google-sign-in-button';
 import { Form } from '@/components/ui/form';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { PASSWORD_REGEX, STRING_EMPTY } from '@/constants';
 import { Route } from '@/routes/register';
 
@@ -56,7 +57,12 @@ export const RegisterForm = () => {
         password: values.password,
         confirmPassword: values.confirmPassword,
       },
-      () => navigate({ search: { redirect: '/login' } }),
+      () => {
+        navigate({
+          to: '/verify-otp',
+          search: { redirect: '/login', email: values.email },
+        });
+      },
     );
   }
 
@@ -84,7 +90,16 @@ export const RegisterForm = () => {
               type="password"
             />
 
-            <SubmitButton>{t('form.submit')}</SubmitButton>
+            <SubmitButton>
+              {auth.isRegistering ? (
+                <>
+                  <Spinner className="mr-2 h-4 w-4" />
+                  Signing up...
+                </>
+              ) : (
+                t('form.submit')
+              )}
+            </SubmitButton>
             <GoogleSignInButton title={t('form.register_with_google')} />
           </div>
         </form>

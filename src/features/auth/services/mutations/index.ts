@@ -18,10 +18,6 @@ export const useLoginMutation = () => {
         payload,
       );
 
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
-
       return response;
     },
   });
@@ -31,10 +27,6 @@ export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: async (payload: IRegisterPayload) => {
       const response = await request.post('/auth/register', payload);
-
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
 
       return response;
     },
@@ -49,10 +41,6 @@ export const useRefreshTokenMutation = () => {
         payload,
       );
 
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
-
       return response;
     },
   });
@@ -63,10 +51,6 @@ export const useResetForgotPasswordMutation = () => {
     mutationFn: async (payload: IResetForgotPasswordPayload) => {
       const response = await request.patch('/auth/resetPassword', payload);
 
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
-
       return response;
     },
   });
@@ -76,10 +60,6 @@ export const useLogoutMutation = () => {
   return useMutation({
     mutationFn: async () => {
       const response = await request.post('/auth/logout');
-
-      if (response.code !== 200) {
-        throw new Error(response.message);
-      }
 
       return response;
     },

@@ -13,10 +13,6 @@ export const useGetMeQuery = (token: string | null) => {
       ? async () => {
           const response = await request.get<IGetMeDataResponse>('/auth/me');
 
-          if (response.code !== 200) {
-            throw new Error(response.message);
-          }
-
           return response.data;
         }
       : skipToken,
