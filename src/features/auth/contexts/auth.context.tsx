@@ -3,12 +3,7 @@ import { toast } from 'sonner';
 
 import { useLocalStorage } from '@/hooks/use-local-storage/use-local-storage';
 
-import {
-  useLoginMutation,
-  useLogoutMutation,
-  useRefreshTokenMutation,
-  useRegisterMutation,
-} from '../services/mutations';
+import { useLoginMutation, useRegisterMutation } from '../services/mutations';
 import { useGetMeQuery } from '../services/queries';
 import { TokenType, type User } from '../types';
 
@@ -23,13 +18,16 @@ export type AuthState = {
   isAuthenticating: boolean;
   user: User | null;
   persist: boolean;
+  refreshToken: string | null;
   setPersist: (value: boolean) => void;
   login: (data: ILoginPayload, cb?: () => void) => void;
   isLoggingIn: boolean;
   register: (data: IRegisterPayload, cb?: () => void) => void;
   isRegistering: boolean;
   logout: () => void;
-  refreshTokenAuth: () => void;
+  refreshTokenAuth: (accessToken: string, refreshToken: string) => void;
+  verifyOtpPasswordReset: (accessToken: string) => void;
+  resetPassword: () => void;
 };
 
 const AuthContext = createContext<AuthState>({
@@ -37,6 +35,7 @@ const AuthContext = createContext<AuthState>({
   isAuthenticating: false,
   user: null,
   persist: false,
+  refreshToken: null,
   setPersist: () => false,
   login: () => {},
   isLoggingIn: false,
@@ -44,6 +43,8 @@ const AuthContext = createContext<AuthState>({
   isRegistering: false,
   logout: () => {},
   refreshTokenAuth: () => {},
+  verifyOtpPasswordReset: () => {},
+  resetPassword: () => {},
 });
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -61,10 +62,9 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const { mutate: loginMutate, isPending: isLoggingIn } = useLoginMutation();
   const { mutate: registerMutate, isPending: isRegistering } =
     useRegisterMutation();
-  const { mutate: logoutMutate } = useLogoutMutation();
-  const { mutate: refreshTokenMutate } = useRefreshTokenMutation();
-  const { data: userData, isLoading: isAuthenticating } =
-    useGetMeQuery(accessToken);
+  const { data: userData, isLoading: isAuthenticating } = useGetMeQuery(
+    !!accessToken && isAuthenticated,
+  );
 
   useEffect(() => {
     if (userData) {
@@ -116,28 +116,31 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   );
 
   const logout = useCallback(() => {
-    logoutMutate(undefined, {
-      onSuccess: () => {
-        setAccessToken(null);
-        setRefreshToken(null);
-        setIsAuthenticated(false);
-      },
-    });
-  }, [logoutMutate, setAccessToken, setRefreshToken]);
+    setAccessToken(null);
+    setRefreshToken(null);
+    setIsAuthenticated(false);
+  }, [setAccessToken, setRefreshToken]);
 
-  const refreshTokenAuth = useCallback(() => {
-    if (refreshToken) {
-      refreshTokenMutate(
-        { refreshToken },
-        {
-          onSuccess: ({ data }) => {
-            setAccessToken(data.accessToken);
-            setRefreshToken(data.refreshToken);
-          },
-        },
-      );
-    }
-  }, [refreshToken, refreshTokenMutate, setAccessToken, setRefreshToken]);
+  const refreshTokenAuth = useCallback(
+    (accessToken: string, refreshToken: string) => {
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+    },
+    [setAccessToken, setRefreshToken],
+  );
+
+  const verifyOtpPasswordReset = useCallback(
+    (accessToken: string) => {
+      setAccessToken(accessToken);
+    },
+    [setAccessToken],
+  );
+
+  const resetPassword = useCallback(() => {
+    setAccessToken(null);
+    setRefreshToken(null);
+    setIsAuthenticated(false);
+  }, [setAccessToken, setRefreshToken]);
 
   return (
     <AuthContext.Provider
@@ -146,6 +149,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         isAuthenticating,
         user,
         persist,
+        refreshToken,
         setPersist,
         login,
         isLoggingIn,
@@ -153,6 +157,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         isRegistering,
         logout,
         refreshTokenAuth,
+        verifyOtpPasswordReset,
+        resetPassword,
       }}
     >
       {children}

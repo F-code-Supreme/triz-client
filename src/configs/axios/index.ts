@@ -34,11 +34,12 @@ class MyAxios {
   private initInterceptors() {
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        const token: string | null = localStorage.getItem(TokenType.ACCESS);
+        const item = localStorage.getItem(TokenType.ACCESS);
+        const token: string | null = item ? JSON.parse(item) : null;
         if (token) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          config.headers['authorization'] = `Bearer ${token}`;
+          config.headers['Authorization'] = `Bearer ${token}`;
         }
         console.log(`Request config:`, config);
         return config;
@@ -204,3 +205,5 @@ class MyAxios {
 }
 
 export const request = new MyAxios(axiosBaseOptions);
+
+export const useAxios = () => new MyAxios(axiosBaseOptions);

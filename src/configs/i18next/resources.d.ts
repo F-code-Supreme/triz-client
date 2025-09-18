@@ -141,6 +141,30 @@ interface Resources {
     "sign_in": "Sign In",
     "sign_up": "Sign Up"
   },
+  "pages.forgot_password": {
+    "form.description": "Enter your email address and we'll send you an OTP to reset your password.",
+    "form.email": "Email",
+    "form.submit": "Send Reset Link",
+    "form.submitting": "Sending...",
+    "form.title": "Forgot Password",
+    "page_meta_title": "Forgot Password"
+  },
+  "pages.forgot_password.new_password": {
+    "form.confirm_new_password": "Confirm New Password",
+    "form.description": "Please enter your new password.",
+    "form.new_password": "New Password",
+    "form.submit": "Reset Password",
+    "form.title": "Create New Password",
+    "page_meta_title": "Reset Password"
+  },
+  "pages.forgot_password.verify_otp": {
+    "form.description": "Please enter the OTP sent to your email to reset your password.",
+    "form.resend_otp": "Resend OTP",
+    "form.resend_otp_with_time": "Resend OTP in",
+    "form.submit": "Verify OTP",
+    "form.title": "Verify OTP",
+    "page_meta_title": "Verify OTP for Password Reset"
+  },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",
     "message": "We're sorry the page you requested could not be found. Please go back to the homepage!",

@@ -65,6 +65,16 @@ const LoginForm = () => {
               type="password"
             />
 
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                search={{ redirect }}
+                className="text-sm text-secondary hover:underline"
+              >
+                {t('form.forgot_password')}
+              </Link>
+            </div>
+
             <SubmitButton disabled={auth.isLoggingIn}>
               {auth.isLoggingIn ? (
                 <>

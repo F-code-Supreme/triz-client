@@ -1,17 +1,18 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
-import { request } from '@/configs/axios';
+import { useAxios } from '@/configs/axios';
 
 import { AuthKeys } from './keys';
 
 import type { IGetMeDataResponse } from './types';
 
-export const useGetMeQuery = (token: string | null) => {
+export const useGetMeQuery = (shouldQuery: boolean) => {
+  const _request = useAxios();
   return useQuery({
     queryKey: [AuthKeys.GetMeQuery],
-    queryFn: token
+    queryFn: shouldQuery
       ? async () => {
-          const response = await request.get<IGetMeDataResponse>('/auth/me');
+          const response = await _request.get<IGetMeDataResponse>('/auth/me');
 
           return response.data;
         }

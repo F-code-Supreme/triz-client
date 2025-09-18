@@ -10,7 +10,8 @@ import { TextInput } from '@/components/forms/form-fields/text-input';
 import GoogleSignInButton from '@/components/google/google-sign-in-button';
 import { Form } from '@/components/ui/form';
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
-import { PASSWORD_REGEX, STRING_EMPTY } from '@/constants';
+import { STRING_EMPTY } from '@/constants';
+import { PASSWORD_REGEX } from '@/constants/regex';
 import { Route } from '@/routes/register.index';
 
 const formSchema = z

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { request } from '@/configs/axios';
+import { request, useAxios } from '@/configs/axios';
 
 import type {
   ILoginPayload,
@@ -47,9 +47,10 @@ export const useRefreshTokenMutation = () => {
 };
 
 export const useResetForgotPasswordMutation = () => {
+  const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: IResetForgotPasswordPayload) => {
-      const response = await request.patch('/auth/resetPassword', payload);
+      const response = await _request.patch('/auth/resetPassword', payload);
 
       return response;
     },
@@ -57,9 +58,10 @@ export const useResetForgotPasswordMutation = () => {
 };
 
 export const useLogoutMutation = () => {
+  const _request = useAxios();
   return useMutation({
     mutationFn: async () => {
-      const response = await request.post('/auth/logout');
+      const response = await _request.post('/auth/logout');
 
       return response;
     },

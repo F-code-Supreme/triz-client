@@ -39,22 +39,32 @@ interface VerifyOtpFormProps {
   email: string;
   purpose?: OtpPurpose;
   onSuccess?: () => void;
+  onVerify?: (otp: string) => void;
+  isVerifying?: boolean;
 }
 
-const VerifyOtpForm = ({
+const VerifyOtpForm: React.FC<VerifyOtpFormProps> = ({
   email,
   purpose = OtpPurpose.REGISTRATION,
   onSuccess,
-}: VerifyOtpFormProps) => {
+  onVerify,
+  isVerifying: externalIsVerifying,
+}) => {
   const { t } = useTranslation(['pages.sign_up.verify_otp', 'datetime']);
-  const [canResend, setCanResend] = useState(false);
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
     countStart: 60,
-    stopAction: () => setCanResend(true),
   });
+  const [canResend, setCanResend] = useState(false);
 
-  const { mutate: verifyOtp, isPending: isVerifying } = useVerifyOtpMutation();
+  const { mutate: verifyOtp, isPending: internalIsVerifying } =
+    useVerifyOtpMutation();
   const { mutate: sendOtp, isPending: isResending } = useSendOtpMutation();
+
+  // Use external isVerifying state if provided, otherwise use internal state
+  const isVerifying =
+    externalIsVerifying !== undefined
+      ? externalIsVerifying
+      : internalIsVerifying;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,29 +75,43 @@ const VerifyOtpForm = ({
 
   useEffect(() => {
     startCountdown();
-    setCanResend(false);
+    setCanResend(false); // Ensure canResend is false when countdown starts
   }, [startCountdown]);
 
+  useEffect(() => {
+    if (countdown === 0) {
+      setCanResend(true);
+    } else {
+      setCanResend(false);
+    }
+  }, [countdown]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    verifyOtp(
-      {
-        email,
-        otp: values.otp,
-        purpose,
-      },
-      {
-        onSuccess: () => {
-          toast.success('OTP verified successfully!');
-          if (onSuccess) onSuccess();
+    if (onVerify) {
+      // Use the custom verification logic
+      onVerify(values.otp);
+    } else {
+      // Use the default verification logic
+      verifyOtp(
+        {
+          email,
+          otp: values.otp,
+          purpose,
         },
-        onError: (error) => {
-          toast.error(
-            error.response?.data?.message ||
-              'Failed to verify OTP. Please try again.',
-          );
+        {
+          onSuccess: () => {
+            toast.success('OTP verified successfully!');
+            if (onSuccess) onSuccess();
+          },
+          onError: (error) => {
+            toast.error(
+              error.response?.data?.message ||
+                'Failed to verify OTP. Please try again.',
+            );
+          },
         },
-      },
-    );
+      );
+    }
   }
 
   function handleResendOtp() {
@@ -99,10 +123,9 @@ const VerifyOtpForm = ({
       {
         onSuccess: () => {
           toast.success('OTP sent successfully!');
-          form.reset();
           resetCountdown();
-          startCountdown();
           setCanResend(false);
+          form.reset();
         },
         onError: (error) => {
           toast.error(

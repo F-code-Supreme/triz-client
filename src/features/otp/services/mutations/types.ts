@@ -25,4 +25,5 @@ export interface IVerifyOtpPayload {
 export interface IVerifyOtpDataResponse {
   purpose: OtpPurpose;
   email: string;
+  accessToken?: string;
 }
