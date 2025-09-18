@@ -125,7 +125,7 @@ const VerifyOtpForm = ({
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-center block">
-                    Enter 6-digit OTP
+                    {t('form.label')}
                   </FormLabel>
                   <FormControl>
                     <div className="flex justify-center">
@@ -152,7 +152,8 @@ const VerifyOtpForm = ({
             />
 
             <div className="text-center text-sm text-muted-foreground">
-              OTP sent to: <span className="font-medium">{email}</span>
+              {t('action.otp_sent_to')}{' '}
+              <span className="font-medium">{email}</span>
             </div>
 
             <Button
@@ -163,7 +164,7 @@ const VerifyOtpForm = ({
               {isVerifying ? (
                 <>
                   <Spinner className="mr-2 h-4 w-4" />
-                  Verifying...
+                  {t('form.submiting')}
                 </>
               ) : (
                 t('form.submit')
@@ -182,7 +183,7 @@ const VerifyOtpForm = ({
                   {isResending ? (
                     <>
                       <Spinner className="mr-2 h-4 w-4" />
-                      Sending...
+                      {t('form.resending_otp')}
                     </>
                   ) : (
                     t('form.resend_otp')
@@ -207,7 +208,7 @@ const VerifyOtpForm = ({
           search={{ redirect: '' }}
           className="text-secondary underline"
         >
-          Back to Login
+          {t('action.back_to_sign_in')}
         </Link>
       </div>
     </FormCard>

@@ -13,7 +13,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
+import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
+import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
+import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -34,22 +37,44 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
   path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
   id: '/register/verify-otp',
   path: '/register/verify-otp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordVerifyOtpRoute = ForgotPasswordVerifyOtpRouteImport.update({
+  id: '/forgot-password/verify-otp',
+  path: '/forgot-password/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordNewPasswordRoute =
+  ForgotPasswordNewPasswordRouteImport.update({
+    id: '/forgot-password/new-password',
+    path: '/forgot-password/new-password',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
+  '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
+  '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesById {
@@ -57,20 +82,40 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRoute
   '/login': typeof LoginRoute
+  '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
+  '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/register/': typeof RegisterIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register/verify-otp' | '/register'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/forgot-password/new-password'
+    | '/forgot-password/verify-otp'
+    | '/register/verify-otp'
+    | '/forgot-password'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register/verify-otp' | '/register'
+  to:
+    | '/'
+    | '/login'
+    | '/forgot-password/new-password'
+    | '/forgot-password/verify-otp'
+    | '/register/verify-otp'
+    | '/forgot-password'
+    | '/register'
   id:
     | '__root__'
     | '/'
     | '/_auth'
     | '/login'
+    | '/forgot-password/new-password'
+    | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/forgot-password/'
     | '/register/'
   fileRoutesById: FileRoutesById
 }
@@ -78,7 +123,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
+  ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
+  ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
+  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
@@ -112,11 +160,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password/': {
+      id: '/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register/verify-otp': {
       id: '/register/verify-otp'
       path: '/register/verify-otp'
       fullPath: '/register/verify-otp'
       preLoaderRoute: typeof RegisterVerifyOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/verify-otp': {
+      id: '/forgot-password/verify-otp'
+      path: '/forgot-password/verify-otp'
+      fullPath: '/forgot-password/verify-otp'
+      preLoaderRoute: typeof ForgotPasswordVerifyOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/new-password': {
+      id: '/forgot-password/new-password'
+      path: '/forgot-password/new-password'
+      fullPath: '/forgot-password/new-password'
+      preLoaderRoute: typeof ForgotPasswordNewPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -126,7 +195,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
+  ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
+  ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
+  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
 }
 export const routeTree = rootRouteImport

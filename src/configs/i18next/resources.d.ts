@@ -170,10 +170,15 @@ interface Resources {
     "page_meta_title": "Sign up"
   },
   "pages.sign_up.verify_otp": {
+    "action.back_to_sign_in": "Back to Sign In",
+    "action.otp_sent_to": "OTP sent to:",
     "form.description": "Please enter the OTP sent to your email.",
+    "form.label": "Enter 6-digit OTP",
     "form.resend_otp": "Resend OTP",
     "form.resend_otp_with_time": "Resend OTP in",
+    "form.resending_otp": "Resending...",
     "form.submit": "Verify OTP",
+    "form.submiting": "Verifying...",
     "form.title": "OTP Verification",
     "page_meta_title": "OTP Verification"
   },
