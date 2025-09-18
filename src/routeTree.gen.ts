@@ -9,29 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
-import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterIndexRouteImport } from './routes/register.index'
+import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 
-const VerifyOtpRoute = VerifyOtpRouteImport.update({
-  id: '/verify-otp',
-  path: '/verify-otp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -39,65 +29,61 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
+  id: '/register/verify-otp',
+  path: '/register/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/verify-otp': typeof VerifyOtpRoute
+  '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/verify-otp': typeof VerifyOtpRoute
+  '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRoute
+  '/_auth': typeof AuthRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/verify-otp': typeof VerifyOtpRoute
+  '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/register/': typeof RegisterIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/verify-otp'
+  fullPaths: '/' | '/login' | '/register/verify-otp' | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/verify-otp'
+  to: '/' | '/login' | '/register/verify-otp' | '/register'
   id:
     | '__root__'
     | '/'
-    | '/_authenticated'
+    | '/_auth'
     | '/login'
-    | '/register'
-    | '/verify-otp'
+    | '/register/verify-otp'
+    | '/register/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRoute: typeof AuthenticatedRoute
+  AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  VerifyOtpRoute: typeof VerifyOtpRoute
+  RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
+  RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/verify-otp': {
-      id: '/verify-otp'
-      path: '/verify-otp'
-      fullPath: '/verify-otp'
-      preLoaderRoute: typeof VerifyOtpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -105,11 +91,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
+    '/_auth': {
+      id: '/_auth'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthenticatedRouteImport
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -119,15 +105,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register/': {
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register/verify-otp': {
+      id: '/register/verify-otp'
+      path: '/register/verify-otp'
+      fullPath: '/register/verify-otp'
+      preLoaderRoute: typeof RegisterVerifyOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRoute: AuthenticatedRoute,
+  AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
-  VerifyOtpRoute: VerifyOtpRoute,
+  RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
+  RegisterIndexRoute: RegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import RegisterPage from '@/pages/main/register';
 
-export const Route = createFileRoute('/register')({
+export const Route = createFileRoute('/register/')({
   validateSearch: (search) => ({
     redirect: (search.redirect as string) || '/',
   }),

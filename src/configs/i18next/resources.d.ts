@@ -155,6 +155,7 @@ interface Resources {
     "form.no_account": "Don't have an account?",
     "form.sign_up": "Sign up",
     "form.submit": "Login",
+    "form.submiting": "Logging in...",
     "form.title": "Login",
     "page_meta_title": "Sign in"
   },
@@ -164,6 +165,7 @@ interface Resources {
     "form.register_with_google": "Sign up with Google",
     "form.sign_in": "Sign in",
     "form.submit": "Sign up",
+    "form.submiting": "Signing up...",
     "form.title": "Sign up",
     "page_meta_title": "Sign up"
   },

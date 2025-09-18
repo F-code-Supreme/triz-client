@@ -1,9 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { STRING_EMPTY } from '@/constants';
-import VerifyOtpPage from '@/pages/main/otp/verify-otp';
+import VerifyOtpPage from '@/pages/main/register/verify-otp';
 
-export const Route = createFileRoute('/verify-otp')({
+export const Route = createFileRoute('/register/verify-otp')({
   validateSearch: (search) => ({
     redirect: (search.redirect as string) || '/',
     email: search.email as string,

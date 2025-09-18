@@ -8,7 +8,7 @@ import VerifyOtpForm from '@/features/otp/components/verify-otp-form';
 import { useSendOtpMutation } from '@/features/otp/services/mutations';
 import { OtpPurpose } from '@/features/otp/services/mutations/types';
 import { AuthLayout } from '@/layouts/auth-layout';
-import { Route } from '@/routes/verify-otp';
+import { Route } from '@/routes/register.verify-otp';
 
 const VerifyOtpPage = () => {
   const { t } = useTranslation('pages.sign_up.verify_otp');

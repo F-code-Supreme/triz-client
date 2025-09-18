@@ -3,6 +3,7 @@
   "form.title": "Đăng nhập",
   "form.description": "Chào mừng bạn đến với Triz, vui lòng đăng nhập vào tài khoản của bạn.",
   "form.submit": "Đăng nhập",
+  "form.submiting": "Đang đăng nhập...",
   "form.login_with_google": "Đăng nhập với Google",
   "form.forgot_password": "Quên mật khẩu?",
   "form.no_account": "Chưa có tài khoản?",

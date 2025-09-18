@@ -49,7 +49,7 @@ const VerifyOtpForm = ({
   const { t } = useTranslation(['pages.sign_up.verify_otp', 'datetime']);
   const [canResend, setCanResend] = useState(false);
   const [countdown, { startCountdown, resetCountdown }] = useCountdown({
-    countStart: 15,
+    countStart: 60,
     stopAction: () => setCanResend(true),
   });
 
@@ -99,7 +99,9 @@ const VerifyOtpForm = ({
       {
         onSuccess: () => {
           toast.success('OTP sent successfully!');
+          form.reset();
           resetCountdown();
+          startCountdown();
           setCanResend(false);
         },
         onError: (error) => {

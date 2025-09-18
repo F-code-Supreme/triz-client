@@ -59,7 +59,7 @@ class MyAxios {
         if (data instanceof Blob) {
           return response;
         } else {
-          return data.data;
+          return data;
         }
       },
       (error: AxiosError) => {
