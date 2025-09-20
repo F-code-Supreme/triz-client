@@ -34,7 +34,7 @@ const VerifyOtpPage = () => {
   }, []);
 
   const handleSuccess = () => {
-    navigate({ to: '/login', search: { redirect: '' } });
+    navigate({ to: '/login' });
   };
 
   return (

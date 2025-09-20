@@ -6,5 +6,7 @@
   "forum": "Forum",
   "chat_ai": "Chat AI",
   "sign_in": "Đăng nhập",
-  "sign_up": "Đăng ký"
+  "sign_up": "Đăng ký",
+  "dropdown_menu.profile": "Hồ sơ",
+  "dropdown_menu.sign_out": "Đăng xuất"
 }

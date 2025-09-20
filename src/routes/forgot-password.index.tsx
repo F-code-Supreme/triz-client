@@ -1,10 +1,12 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import z from 'zod';
 
+import { STRING_EMPTY } from '@/constants';
 import ForgotPasswordPage from '@/pages/main/forgot-password';
 
 export const Route = createFileRoute('/forgot-password/')({
-  validateSearch: (search) => ({
-    redirect: (search.redirect as string) || '/',
+  validateSearch: z.object({
+    redirect: z.string().optional().catch(STRING_EMPTY),
   }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {

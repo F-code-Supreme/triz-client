@@ -226,11 +226,7 @@ const VerifyOtpForm: React.FC<VerifyOtpFormProps> = ({
       </Form>
 
       <div className="mt-4 text-center text-sm">
-        <Link
-          to="/login"
-          search={{ redirect: '' }}
-          className="text-secondary underline"
-        >
+        <Link to="/login" className="text-secondary underline">
           {t('action.back_to_sign_in')}
         </Link>
       </div>

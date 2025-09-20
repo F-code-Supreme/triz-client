@@ -106,7 +106,6 @@ const VerifyOtpPage = () => {
                     // Navigate to new password page
                     navigate({
                       to: '/forgot-password/new-password',
-                      search: { redirect: '' },
                     });
                   } else {
                     toast.error('No access token received. Please try again.');

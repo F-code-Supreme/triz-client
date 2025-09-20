@@ -1,21 +1,24 @@
 import { createContext, useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+import { STRING_EMPTY } from '@/constants';
+import { useBoolean } from '@/hooks';
 import { useLocalStorage } from '@/hooks/use-local-storage/use-local-storage';
+import { sleep } from '@/utils';
+import { decodeToken, isTokenExpired } from '@/utils/jwt/jwt';
 
 import { useLoginMutation, useRegisterMutation } from '../services/mutations';
-import { useGetMeQuery } from '../services/queries';
-import { TokenType, type User } from '../types';
+import { TokenType } from '../types';
 
 import type {
   ILoginPayload,
   IRegisterPayload,
 } from '../services/mutations/types';
+import type { User, AppJwtPayload } from '../types';
 import type { PropsWithChildren } from 'react';
 
 export type AuthState = {
   isAuthenticated: boolean;
-  isAuthenticating: boolean;
   user: User | null;
   persist: boolean;
   refreshToken: string | null;
@@ -32,7 +35,6 @@ export type AuthState = {
 
 const AuthContext = createContext<AuthState>({
   isAuthenticated: false,
-  isAuthenticating: false,
   user: null,
   persist: false,
   refreshToken: null,
@@ -48,7 +50,10 @@ const AuthContext = createContext<AuthState>({
 });
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { value: isAuthenticated, setValue: setIsAuthenticated } =
+    useBoolean(false);
+  const { value: isAuthenticating, setValue: setIsAuthenticating } =
+    useBoolean(true);
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useLocalStorage<string | null>(
     TokenType.ACCESS,
@@ -62,29 +67,41 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const { mutate: loginMutate, isPending: isLoggingIn } = useLoginMutation();
   const { mutate: registerMutate, isPending: isRegistering } =
     useRegisterMutation();
-  const { data: userData, isLoading: isAuthenticating } = useGetMeQuery(
-    !!accessToken && isAuthenticated,
-  );
 
   useEffect(() => {
-    if (userData) {
+    setIsAuthenticating(true);
+
+    if (!accessToken || isTokenExpired(accessToken)) {
+      setIsAuthenticated(false);
+      setUser(null);
+      setIsAuthenticating(false);
+      return;
+    }
+
+    const payload = decodeToken<AppJwtPayload>(accessToken);
+    if (payload) {
+      setIsAuthenticated(true);
       setUser({
-        id: userData.id,
-        email: userData.email,
-        roles: userData.roles,
+        id: payload.userId,
+        email: payload.sub || STRING_EMPTY,
+        roles: payload.authorities,
       });
     } else {
+      setIsAuthenticated(false);
       setUser(null);
     }
-  }, [userData]);
+
+    setIsAuthenticating(false);
+  }, [accessToken, setIsAuthenticated, setIsAuthenticating]);
 
   const login = useCallback(
     (data: ILoginPayload, cb?: () => void) => {
       loginMutate(data, {
-        onSuccess: ({ data }) => {
+        onSuccess: async ({ data }) => {
           setAccessToken(data.accessToken);
           setRefreshToken(data.refreshToken);
-          setIsAuthenticated(true);
+          // Add a tiny delay to ensure state updates propagate before executing the callback
+          await sleep(1);
           if (cb) cb();
         },
         onError: (error) => {
@@ -118,7 +135,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const logout = useCallback(() => {
     setAccessToken(null);
     setRefreshToken(null);
-    setIsAuthenticated(false);
   }, [setAccessToken, setRefreshToken]);
 
   const refreshTokenAuth = useCallback(
@@ -139,14 +155,16 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const resetPassword = useCallback(() => {
     setAccessToken(null);
     setRefreshToken(null);
-    setIsAuthenticated(false);
   }, [setAccessToken, setRefreshToken]);
+
+  if (isAuthenticating) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        isAuthenticating,
         user,
         persist,
         refreshToken,

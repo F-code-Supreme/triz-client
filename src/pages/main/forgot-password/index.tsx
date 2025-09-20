@@ -31,7 +31,6 @@ const formSchema = z.object({
 
 const ForgotPasswordPage = () => {
   const { t } = useTranslation('pages.forgot_password');
-  const { redirect } = Route.useSearch();
   const navigate = Route.useNavigate();
   const { mutate: sendOtp, isPending } = useSendOtpMutation();
 
@@ -53,7 +52,7 @@ const ForgotPasswordPage = () => {
           toast.success('Reset password email sent successfully!');
           navigate({
             to: '/forgot-password/verify-otp',
-            search: { redirect: redirect || '/', email: values.email },
+            search: { email: values.email },
           });
         },
         onError: (error) => {

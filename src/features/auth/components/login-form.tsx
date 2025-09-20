@@ -43,7 +43,7 @@ const LoginForm = () => {
         email: values.email,
         password: values.password,
       },
-      () => navigate({ search: { redirect } }),
+      () => navigate({ to: redirect || '/' }),
     );
   }
 
@@ -68,7 +68,6 @@ const LoginForm = () => {
             <div className="flex justify-end">
               <Link
                 to="/forgot-password"
-                search={{ redirect }}
                 className="text-sm text-secondary hover:underline"
               >
                 {t('form.forgot_password')}
@@ -91,13 +90,7 @@ const LoginForm = () => {
       </Form>
       <div className="mt-4 text-center text-sm">
         {t('form.no_account')}{' '}
-        <Link
-          search={{
-            redirect,
-          }}
-          to="/register"
-          className="text-secondary underline"
-        >
+        <Link to="/register" className="text-secondary underline">
           {t('form.sign_up')}
         </Link>
       </div>

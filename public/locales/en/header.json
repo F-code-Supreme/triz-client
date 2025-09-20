@@ -6,5 +6,7 @@
   "forum": "Forum",
   "chat_ai": "Chat AI",
   "sign_in": "Sign In",
-  "sign_up": "Sign Up"
+  "sign_up": "Sign Up",
+  "dropdown_menu.profile": "Profile",
+  "dropdown_menu.sign_out": "Sign Out"
 }

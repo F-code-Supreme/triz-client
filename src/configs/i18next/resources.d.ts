@@ -133,6 +133,8 @@ interface Resources {
   },
   "header": {
     "chat_ai": "Chat AI",
+    "dropdown_menu.profile": "Profile",
+    "dropdown_menu.sign_out": "Sign Out",
     "forum": "Forum",
     "home": "Home",
     "learn_triz": "Learn TRIZ",
@@ -171,6 +173,9 @@ interface Resources {
     "not_found": "Page not found",
     "page_meta_title": "Not found",
     "under_construction": "This feature is under maintenance, we will comeback soon!"
+  },
+  "pages.profile": {
+    "page_meta_title": "Profile"
   },
   "pages.sign_in": {
     "form.description": "Welcome to Triz, please sign in to your account.",

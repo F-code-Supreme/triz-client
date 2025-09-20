@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { User, LogOut } from 'lucide-react';
 import * as React from 'react';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +7,13 @@ import { useTranslation } from 'react-i18next';
 import HamburgerIcon from '@/assets/hamburger-icon';
 import LocaleSwitcher from '@/components/locale-switcher';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -18,6 +26,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import useAuth from '@/features/auth/hooks/use-auth';
+import useLogout from '@/features/auth/hooks/use-logout';
 import { useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
 
@@ -43,6 +53,8 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
 export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
   ({ className, navigationLinks, ...props }, ref) => {
     const { t } = useTranslation('header');
+    const { isAuthenticated } = useAuth();
+    const logout = useLogout();
 
     // Default navigation links if none provided
     const defaultNavigationLinks: Navbar03NavItem[] = [
@@ -120,28 +132,53 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         </NavigationMenuItem>
                       ))}
                       <div className="w-full border-t pt-2 mt-2">
-                        <NavigationMenuItem className="w-full">
-                          <Link
-                            search={{
-                              redirect: window.location.pathname,
-                            }}
-                            to="/login"
-                            className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
-                          >
-                            {t('sign_in')}
-                          </Link>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem className="w-full">
-                          <Link
-                            search={{
-                              redirect: window.location.pathname,
-                            }}
-                            to="/register"
-                            className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
-                          >
-                            {t('sign_up')}
-                          </Link>
-                        </NavigationMenuItem>
+                        {isAuthenticated ? (
+                          <>
+                            <NavigationMenuItem className="w-full">
+                              <Link
+                                to="/profile"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                <User className="mr-2 h-4 w-4" />
+                                Profile
+                              </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full">
+                              <button
+                                onClick={logout}
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline text-left"
+                              >
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Logout
+                              </button>
+                            </NavigationMenuItem>
+                          </>
+                        ) : (
+                          <>
+                            <NavigationMenuItem className="w-full">
+                              <Link
+                                search={{
+                                  redirect: window.location.pathname,
+                                }}
+                                to="/login"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                {t('sign_in')}
+                              </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full">
+                              <Link
+                                search={{
+                                  redirect: window.location.pathname,
+                                }}
+                                to="/register"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                {t('sign_up')}
+                              </Link>
+                            </NavigationMenuItem>
+                          </>
+                        )}
                       </div>
                     </NavigationMenuList>
                   </NavigationMenu>
@@ -186,28 +223,61 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
 
             {/* Auth Buttons & Locale Switcher */}
             <div className="flex items-center space-x-4">
-              <div className="hidden sm:flex items-center space-x-2">
-                <Button variant="ghost" asChild>
-                  <Link
-                    search={{
-                      redirect: window.location.pathname,
-                    }}
-                    to="/login"
-                  >
-                    {t('sign_in')}
-                  </Link>
-                </Button>
-                <Button asChild>
-                  <Link
-                    search={{
-                      redirect: window.location.pathname,
-                    }}
-                    to="/register"
-                  >
-                    {t('sign_up')}
-                  </Link>
-                </Button>
-              </div>
+              {isAuthenticated ? (
+                <div className="hidden sm:flex items-center space-x-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full"
+                      >
+                        <User className="h-4 w-4" />
+                        <span className="sr-only">Open user menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link to="/profile" className="cursor-pointer">
+                          <User className="mr-2 h-4 w-4" />
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={logout}
+                        className="cursor-pointer"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center space-x-2">
+                  <Button variant="ghost" asChild>
+                    <Link
+                      search={{
+                        redirect: window.location.pathname,
+                      }}
+                      to="/login"
+                    >
+                      {t('sign_in')}
+                    </Link>
+                  </Button>
+                  <Button asChild>
+                    <Link
+                      search={{
+                        redirect: window.location.pathname,
+                      }}
+                      to="/register"
+                    >
+                      {t('sign_up')}
+                    </Link>
+                  </Button>
+                </div>
+              )}
 
               <LocaleSwitcher />
             </div>
