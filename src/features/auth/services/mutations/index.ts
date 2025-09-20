@@ -8,6 +8,7 @@ import type {
   IRegisterPayload,
   IRefreshTokenPayload,
   IResetForgotPasswordPayload,
+  IGoogleLoginPayload,
 } from './types';
 
 export const useLoginMutation = () => {
@@ -15,6 +16,19 @@ export const useLoginMutation = () => {
     mutationFn: async (payload: ILoginPayload) => {
       const response = await request.post<ILoginDataResponse>(
         '/auth/login',
+        payload,
+      );
+
+      return response;
+    },
+  });
+};
+
+export const useGoogleLoginMutation = () => {
+  return useMutation({
+    mutationFn: async (payload: IGoogleLoginPayload) => {
+      const response = await request.post<ILoginDataResponse>(
+        '/auth/google',
         payload,
       );
 

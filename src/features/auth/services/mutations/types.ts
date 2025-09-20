@@ -4,6 +4,10 @@ export interface ILoginPayload {
   password: string;
 }
 
+export interface IGoogleLoginPayload {
+  idToken: string;
+}
+
 export interface ILoginDataResponse {
   roles: string[];
   tokenType: string;

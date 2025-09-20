@@ -1,25 +1,23 @@
-import { useGoogleLogin } from '@react-oauth/google';
-import { ReactSVG } from 'react-svg';
+import { GoogleLogin } from '@react-oauth/google';
 
-import GoogleIcon from '@/assets/google-icon.svg';
-
-import { Button } from '../ui/button';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 type GoogleSignInButtonProps = {
-  title: string;
+  onSuccess?: () => void;
 };
 
-const GoogleSignInButton = ({ title }: GoogleSignInButtonProps) => {
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
-    flow: 'auth-code',
-  });
+const GoogleSignInButton = ({ onSuccess }: GoogleSignInButtonProps) => {
+  const { loginGoogle } = useAuth();
 
   return (
-    <Button onClick={() => login()}>
-      <ReactSVG src={GoogleIcon} className="mr-2" />
-      {title}
-    </Button>
+    <GoogleLogin
+      onSuccess={(credentialResponse) => {
+        if (credentialResponse.credential) {
+          loginGoogle({ idToken: credentialResponse.credential }, onSuccess);
+        }
+      }}
+      useOneTap
+    />
   );
 };
 

@@ -6,10 +6,15 @@ import { useBoolean, useLocalStorage, useSessionStorage } from '@/hooks';
 import { sleep } from '@/utils';
 import { decodeToken, isTokenExpired } from '@/utils/jwt/jwt';
 
-import { useLoginMutation, useRegisterMutation } from '../services/mutations';
+import {
+  useGoogleLoginMutation,
+  useLoginMutation,
+  useRegisterMutation,
+} from '../services/mutations';
 import { TokenType } from '../types';
 
 import type {
+  IGoogleLoginPayload,
   ILoginPayload,
   IRegisterPayload,
 } from '../services/mutations/types';
@@ -22,6 +27,8 @@ export type AuthState = {
   refreshToken: string | null;
   login: (data: ILoginPayload, cb?: () => void) => void;
   isLoggingIn: boolean;
+  loginGoogle: (data: IGoogleLoginPayload, cb?: () => void) => void;
+  isGoogleLoggingIn: boolean;
   register: (data: IRegisterPayload, cb?: () => void) => void;
   isRegistering: boolean;
   logout: () => void;
@@ -36,6 +43,8 @@ const AuthContext = createContext<AuthState>({
   refreshToken: null,
   login: () => {},
   isLoggingIn: false,
+  loginGoogle: () => {},
+  isGoogleLoggingIn: false,
   register: () => {},
   isRegistering: false,
   logout: () => {},
@@ -76,6 +85,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     : setSessionRefreshToken;
 
   const { mutate: loginMutate, isPending: isLoggingIn } = useLoginMutation();
+  const { mutate: googleLoginMutate, isPending: isGoogleLoggingIn } =
+    useGoogleLoginMutation();
   const { mutate: registerMutate, isPending: isRegistering } =
     useRegisterMutation();
 
@@ -161,6 +172,27 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     [loginMutate, setAccessToken, setRefreshToken],
   );
 
+  const loginGoogle = useCallback(
+    (data: IGoogleLoginPayload, cb?: () => void) => {
+      googleLoginMutate(data, {
+        onSuccess: async ({ data }) => {
+          setAccessToken(data.accessToken);
+          setRefreshToken(data.refreshToken);
+          // Add a tiny delay to ensure state updates propagate before executing the callback
+          await sleep(1);
+          if (cb) cb();
+        },
+        onError: (error) => {
+          toast.error(
+            error.response?.data.message ||
+              'Failed to login with Google. Please try again.',
+          );
+        },
+      });
+    },
+    [googleLoginMutate, setAccessToken, setRefreshToken],
+  );
+
   const register = useCallback(
     (data: IRegisterPayload, cb?: () => void) => {
       registerMutate(data, {
@@ -224,6 +256,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         user,
         refreshToken,
         login,
+        loginGoogle,
+        isGoogleLoggingIn,
         isLoggingIn,
         register,
         isRegistering,

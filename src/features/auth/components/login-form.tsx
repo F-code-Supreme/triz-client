@@ -97,7 +97,9 @@ const LoginForm = () => {
                 t('form.submit')
               )}
             </SubmitButton>
-            <GoogleSignInButton title={t('form.login_with_google')} />
+            <GoogleSignInButton
+              onSuccess={() => navigate({ to: redirect || '/' })}
+            />
           </div>
         </form>
       </Form>
