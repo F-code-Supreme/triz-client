@@ -132,11 +132,15 @@
 
 @theme inline {
   @keyframes aurora {
-  from {
-    backgroundPosition: 50% 50%, 50% 50%;
+    from {
+      backgroundposition:
+        50% 50%,
+        50% 50%;
     }
-  to {
-    backgroundPosition: 350% 50%, 350% 50%;
+    to {
+      backgroundposition:
+        350% 50%,
+        350% 50%;
     }
   }
 }
