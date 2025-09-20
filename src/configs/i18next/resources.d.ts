@@ -212,6 +212,13 @@ interface Resources {
     "form.title": "OTP Verification",
     "page_meta_title": "OTP Verification"
   },
+  "pages.unauthorized": {
+    "back_to_homepage": "Back to homepage",
+    "message": "You don't have permission to access this resource. Please sign in with an authorized account or contact your administrator.",
+    "page_meta_title": "Unauthorized",
+    "sign_in": "Sign In",
+    "unauthorized": "Access Denied"
+  },
   "sidebar": {
     "app_integrations": "App integrations",
     "app_integrations.authentications": "Authentications",

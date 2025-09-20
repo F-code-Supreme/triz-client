@@ -1,7 +1,7 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-import NotFound from '@/pages/global/not-found';
+import NotFoundPage from '@/pages/global/not-found';
 
 import type { AuthState } from '@/features/auth/contexts/auth.context';
 
@@ -16,7 +16,5 @@ export const Route = createRootRouteWithContext<AppRouterContext>()({
       <TanStackRouterDevtools />
     </>
   ),
-  notFoundComponent: () => {
-    return <NotFound />;
-  },
+  notFoundComponent: NotFoundPage,
 });

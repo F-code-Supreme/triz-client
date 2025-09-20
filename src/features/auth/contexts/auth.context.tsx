@@ -18,7 +18,7 @@ import type {
   ILoginPayload,
   IRegisterPayload,
 } from '../services/mutations/types';
-import type { User, AppJwtPayload } from '../types';
+import type { User, AppJwtPayload, Role } from '../types';
 import type { PropsWithChildren } from 'react';
 
 export type AuthState = {
@@ -35,6 +35,8 @@ export type AuthState = {
   refreshTokenAuth: (accessToken: string, refreshToken: string) => void;
   verifyOtpPasswordReset: (accessToken: string) => void;
   resetPassword: () => void;
+  hasRole: (role: Role) => boolean;
+  hasAnyRole: (roles: Role[]) => boolean;
 };
 
 const AuthContext = createContext<AuthState>({
@@ -51,6 +53,8 @@ const AuthContext = createContext<AuthState>({
   refreshTokenAuth: () => {},
   verifyOtpPasswordReset: () => {},
   resetPassword: () => {},
+  hasRole: () => false,
+  hasAnyRole: () => false,
 });
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -106,7 +110,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       setUser({
         id: payload.userId,
         email: payload.sub || STRING_EMPTY,
-        roles: payload.authorities,
+        roles: [payload.authorities],
       });
     } else {
       setIsAuthenticated(false);
@@ -245,6 +249,20 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     setRefreshToken(null);
   }, [setAccessToken, setRefreshToken]);
 
+  const hasRole = useCallback(
+    (role: Role) => {
+      return user?.roles.includes(role) ?? false;
+    },
+    [user?.roles],
+  );
+
+  const hasAnyRole = useCallback(
+    (roles: Role[]) => {
+      return roles.some((role) => user?.roles.includes(role)) ?? false;
+    },
+    [user?.roles],
+  );
+
   if (isAuthenticating) {
     return null;
   }
@@ -265,6 +283,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         refreshTokenAuth,
         verifyOtpPasswordReset,
         resetPassword,
+        hasRole,
+        hasAnyRole,
       }}
     >
       {children}

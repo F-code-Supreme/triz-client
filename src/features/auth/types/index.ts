@@ -13,7 +13,7 @@ export enum TokenType {
 export interface User {
   id: string;
   email: string;
-  roles: Role;
+  roles: Role[];
 }
 
 export interface AppJwtPayload extends JwtPayload {
