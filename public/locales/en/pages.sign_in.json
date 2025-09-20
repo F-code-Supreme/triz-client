@@ -7,5 +7,6 @@
   "form.login_with_google": "Login with Google",
   "form.forgot_password": "Forgot password?",
   "form.no_account": "Don't have an account?",
-  "form.sign_up": "Sign up"
+  "form.sign_up": "Sign up",
+  "form.remember_me": "Remember me"
 }

@@ -34,8 +34,14 @@ class MyAxios {
   private initInterceptors() {
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        const item = localStorage.getItem(TokenType.ACCESS);
-        const token: string | null = item ? JSON.parse(item) : null;
+        const persistItem = localStorage.getItem('persist');
+        const persist = persistItem
+          ? (JSON.parse(persistItem) as boolean)
+          : false;
+        const item = persist
+          ? localStorage.getItem(TokenType.ACCESS)
+          : sessionStorage.getItem(TokenType.ACCESS);
+        const token = item ? (JSON.parse(item) as string) : null;
         if (token) {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore

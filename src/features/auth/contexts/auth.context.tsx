@@ -2,8 +2,7 @@ import { createContext, useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { STRING_EMPTY } from '@/constants';
-import { useBoolean } from '@/hooks';
-import { useLocalStorage } from '@/hooks/use-local-storage/use-local-storage';
+import { useBoolean, useLocalStorage, useSessionStorage } from '@/hooks';
 import { sleep } from '@/utils';
 import { decodeToken, isTokenExpired } from '@/utils/jwt/jwt';
 
@@ -20,9 +19,7 @@ import type { PropsWithChildren } from 'react';
 export type AuthState = {
   isAuthenticated: boolean;
   user: User | null;
-  persist: boolean;
   refreshToken: string | null;
-  setPersist: (value: boolean) => void;
   login: (data: ILoginPayload, cb?: () => void) => void;
   isLoggingIn: boolean;
   register: (data: IRegisterPayload, cb?: () => void) => void;
@@ -36,9 +33,7 @@ export type AuthState = {
 const AuthContext = createContext<AuthState>({
   isAuthenticated: false,
   user: null,
-  persist: false,
   refreshToken: null,
-  setPersist: () => false,
   login: () => {},
   isLoggingIn: false,
   register: () => {},
@@ -55,15 +50,31 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const { value: isAuthenticating, setValue: setIsAuthenticating } =
     useBoolean(true);
   const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useLocalStorage<string | null>(
-    TokenType.ACCESS,
-    null,
-  );
-  const [refreshToken, setRefreshToken] = useLocalStorage<string | null>(
-    TokenType.REFRESH,
-    null,
-  );
-  const [persist, setPersist] = useLocalStorage('persist', false);
+
+  const [persist] = useLocalStorage('persist', false);
+
+  // Use conditional storage based on persist preference
+  const [localAccessToken, setLocalAccessToken] = useLocalStorage<
+    string | null
+  >(TokenType.ACCESS, null);
+  const [sessionAccessToken, setSessionAccessToken] = useSessionStorage<
+    string | null
+  >(TokenType.ACCESS, null);
+  const [localRefreshToken, setLocalRefreshToken] = useLocalStorage<
+    string | null
+  >(TokenType.REFRESH, null);
+  const [sessionRefreshToken, setSessionRefreshToken] = useSessionStorage<
+    string | null
+  >(TokenType.REFRESH, null);
+
+  // Use the appropriate storage based on persist setting
+  const accessToken = persist ? localAccessToken : sessionAccessToken;
+  const refreshToken = persist ? localRefreshToken : sessionRefreshToken;
+  const setAccessToken = persist ? setLocalAccessToken : setSessionAccessToken;
+  const setRefreshToken = persist
+    ? setLocalRefreshToken
+    : setSessionRefreshToken;
+
   const { mutate: loginMutate, isPending: isLoggingIn } = useLoginMutation();
   const { mutate: registerMutate, isPending: isRegistering } =
     useRegisterMutation();
@@ -93,6 +104,41 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
     setIsAuthenticating(false);
   }, [accessToken, setIsAuthenticated, setIsAuthenticating]);
+
+  // Handle persist state changes - transfer tokens between storage types
+  useEffect(() => {
+    if (persist) {
+      // Moving to localStorage - transfer from sessionStorage if exists
+      if (sessionAccessToken) {
+        setLocalAccessToken(sessionAccessToken);
+        setSessionAccessToken(null);
+      }
+      if (sessionRefreshToken) {
+        setLocalRefreshToken(sessionRefreshToken);
+        setSessionRefreshToken(null);
+      }
+    } else {
+      // Moving to sessionStorage - transfer from localStorage if exists
+      if (localAccessToken) {
+        setSessionAccessToken(localAccessToken);
+        setLocalAccessToken(null);
+      }
+      if (localRefreshToken) {
+        setSessionRefreshToken(localRefreshToken);
+        setLocalRefreshToken(null);
+      }
+    }
+  }, [
+    persist,
+    localAccessToken,
+    sessionAccessToken,
+    localRefreshToken,
+    sessionRefreshToken,
+    setLocalAccessToken,
+    setSessionAccessToken,
+    setLocalRefreshToken,
+    setSessionRefreshToken,
+  ]);
 
   const login = useCallback(
     (data: ILoginPayload, cb?: () => void) => {
@@ -133,9 +179,19 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   );
 
   const logout = useCallback(() => {
-    setAccessToken(null);
-    setRefreshToken(null);
-  }, [setAccessToken, setRefreshToken]);
+    setLocalAccessToken(null);
+    setLocalRefreshToken(null);
+    setSessionAccessToken(null);
+    setSessionRefreshToken(null);
+    setIsAuthenticated(false);
+    setUser(null);
+  }, [
+    setLocalAccessToken,
+    setLocalRefreshToken,
+    setSessionAccessToken,
+    setSessionRefreshToken,
+    setIsAuthenticated,
+  ]);
 
   const refreshTokenAuth = useCallback(
     (accessToken: string, refreshToken: string) => {
@@ -166,9 +222,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       value={{
         isAuthenticated,
         user,
-        persist,
         refreshToken,
-        setPersist,
         login,
         isLoggingIn,
         register,

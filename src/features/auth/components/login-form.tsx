@@ -8,9 +8,12 @@ import { FormCard } from '@/components/card/form-card';
 import { SubmitButton } from '@/components/forms/buttons/submit-button';
 import { TextInput } from '@/components/forms/form-fields/text-input';
 import GoogleSignInButton from '@/components/google/google-sign-in-button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Form } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { STRING_EMPTY } from '@/constants';
+import { useLocalStorage } from '@/hooks';
 import { Route } from '@/routes/login';
 
 const formSchema = z.object({
@@ -28,6 +31,7 @@ const LoginForm = () => {
   const { redirect } = Route.useSearch();
   const navigate = Route.useNavigate();
   const { t } = useTranslation('pages.sign_in');
+  const [persist, setPersist] = useLocalStorage('persist', false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,6 +68,15 @@ const LoginForm = () => {
               label="Password"
               type="password"
             />
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                checked={persist}
+                onCheckedChange={(checked) => setPersist(checked === true)}
+                id="rememberMe"
+              />
+              <Label htmlFor="rememberMe">{t('form.remember_me')}</Label>
+            </div>
 
             <div className="flex justify-end">
               <Link

@@ -7,5 +7,6 @@
   "form.login_with_google": "Đăng nhập với Google",
   "form.forgot_password": "Quên mật khẩu?",
   "form.no_account": "Chưa có tài khoản?",
-  "form.sign_up": "Đăng ký"
+  "form.sign_up": "Đăng ký",
+  "form.remember_me": "Ghi nhớ đăng nhập"
 }

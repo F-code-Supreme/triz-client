@@ -182,6 +182,7 @@ interface Resources {
     "form.forgot_password": "Forgot password?",
     "form.login_with_google": "Login with Google",
     "form.no_account": "Don't have an account?",
+    "form.remember_me": "Remember me",
     "form.sign_up": "Sign up",
     "form.submit": "Login",
     "form.submiting": "Logging in...",

@@ -240,7 +240,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       <DropdownMenuItem asChild>
                         <Link to="/profile" className="cursor-pointer">
                           <User className="mr-2 h-4 w-4" />
-                          Profile
+                          {t('dropdown_menu.profile')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
@@ -249,7 +249,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         className="cursor-pointer"
                       >
                         <LogOut className="mr-2 h-4 w-4" />
-                        Logout
+                        {t('dropdown_menu.sign_out')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
