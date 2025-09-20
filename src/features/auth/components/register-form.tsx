@@ -101,7 +101,7 @@ export const RegisterForm = () => {
                 t('form.submit')
               )}
             </SubmitButton>
-            <GoogleSignInButton title={t('form.register_with_google')} />
+            <GoogleSignInButton />
           </div>
         </form>
       </Form>
