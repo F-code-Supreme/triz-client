@@ -11,6 +11,7 @@ import './index.css';
 import './configs/i18next';
 import './configs/i18next/formatters';
 
+import { ThemeProvider } from './components/theme/theme-provider';
 import { AuthProvider } from './features/auth/contexts/auth.context';
 import useAuth from './features/auth/hooks/use-auth';
 import { router } from './router';
@@ -29,9 +30,11 @@ const App = () => {
         clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}
       >
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <InnerApp />
-          </AuthProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              <InnerApp />
+            </AuthProvider>
+          </ThemeProvider>
           <Toaster />
         </QueryClientProvider>
       </GoogleOAuthProvider>
