@@ -1,33 +1,40 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'sonner';
 
 import './index.css';
-// Import the generated route tree
-import { routeTree } from './routeTree.gen';
+
+// Import i18n configuration
+import './configs/i18next';
+import './configs/i18next/formatters';
+
+import { AuthProvider } from './features/auth/contexts/auth.context';
+import useAuth from './features/auth/hooks/use-auth';
+import { router } from './router';
 
 const queryClient = new QueryClient();
-const publicPath = import.meta.env.VITE_PUBLIC_PATH as string;
 
-// Create a new router instance
-const router = createRouter({ basepath: publicPath, routeTree });
-
-// Register the router instance for type safety
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}
+const InnerApp = () => {
+  const auth = useAuth();
+  return <RouterProvider router={router} context={{ auth }} />;
+};
 
 const App = () => {
   return (
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <Toaster />
-      </QueryClientProvider>
+      <GoogleOAuthProvider
+        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}
+      >
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <InnerApp />
+          </AuthProvider>
+          <Toaster />
+        </QueryClientProvider>
+      </GoogleOAuthProvider>
     </StrictMode>
   );
 };

@@ -1,20 +1,20 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 
-export const Route = createRootRoute({
+import NotFoundPage from '@/pages/global/not-found';
+
+import type { AuthState } from '@/features/auth/contexts/auth.context';
+
+interface AppRouterContext {
+  auth: AuthState;
+}
+
+export const Route = createRootRouteWithContext<AppRouterContext>()({
   component: () => (
     <>
-      <div className="container mx-auto py-2 px-8 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>
-        <Link to="/login" className="[&.active]:font-bold">
-          Login
-        </Link>
-      </div>
-      <hr />
       <Outlet />
       <TanStackRouterDevtools />
     </>
   ),
+  notFoundComponent: NotFoundPage,
 });

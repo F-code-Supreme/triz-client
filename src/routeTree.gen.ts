@@ -9,12 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterIndexRouteImport } from './routes/register.index'
+import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
+import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
+import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
+import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
+import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
+import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
+import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,40 +41,165 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
+  id: '/register/verify-otp',
+  path: '/register/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordVerifyOtpRoute = ForgotPasswordVerifyOtpRouteImport.update({
+  id: '/forgot-password/verify-otp',
+  path: '/forgot-password/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordNewPasswordRoute =
+  ForgotPasswordNewPasswordRouteImport.update({
+    id: '/forgot-password/new-password',
+    path: '/forgot-password/new-password',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthProfileRoute = AuthProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthAdminRoute = AuthAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/admin': typeof AuthAdminRouteWithChildren
+  '/profile': typeof AuthProfileRoute
+  '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
+  '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
+  '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/register': typeof RegisterIndexRoute
+  '/admin/dashboard': typeof AuthAdminDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/admin': typeof AuthAdminRouteWithChildren
+  '/profile': typeof AuthProfileRoute
+  '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
+  '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
+  '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/register': typeof RegisterIndexRoute
+  '/admin/dashboard': typeof AuthAdminDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/_auth/admin': typeof AuthAdminRouteWithChildren
+  '/_auth/profile': typeof AuthProfileRoute
+  '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
+  '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
+  '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/register/': typeof RegisterIndexRoute
+  '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/unauthorized'
+    | '/admin'
+    | '/profile'
+    | '/forgot-password/new-password'
+    | '/forgot-password/verify-otp'
+    | '/register/verify-otp'
+    | '/forgot-password'
+    | '/register'
+    | '/admin/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/' | '/login'
+  to:
+    | '/'
+    | '/login'
+    | '/unauthorized'
+    | '/admin'
+    | '/profile'
+    | '/forgot-password/new-password'
+    | '/forgot-password/verify-otp'
+    | '/register/verify-otp'
+    | '/forgot-password'
+    | '/register'
+    | '/admin/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/login'
+    | '/unauthorized'
+    | '/_auth/admin'
+    | '/_auth/profile'
+    | '/forgot-password/new-password'
+    | '/forgot-password/verify-otp'
+    | '/register/verify-otp'
+    | '/forgot-password/'
+    | '/register/'
+    | '/_auth/admin/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
+  ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
+  ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
+  RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
+  ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
+  RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -65,12 +209,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register/': {
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/': {
+      id: '/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register/verify-otp': {
+      id: '/register/verify-otp'
+      path: '/register/verify-otp'
+      fullPath: '/register/verify-otp'
+      preLoaderRoute: typeof RegisterVerifyOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/verify-otp': {
+      id: '/forgot-password/verify-otp'
+      path: '/forgot-password/verify-otp'
+      fullPath: '/forgot-password/verify-otp'
+      preLoaderRoute: typeof ForgotPasswordVerifyOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password/new-password': {
+      id: '/forgot-password/new-password'
+      path: '/forgot-password/new-password'
+      fullPath: '/forgot-password/new-password'
+      preLoaderRoute: typeof ForgotPasswordNewPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/profile': {
+      id: '/_auth/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthProfileRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/admin': {
+      id: '/_auth/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthAdminRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/admin/dashboard': {
+      id: '/_auth/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AuthAdminDashboardRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
   }
 }
 
+interface AuthAdminRouteChildren {
+  AuthAdminDashboardRoute: typeof AuthAdminDashboardRoute
+}
+
+const AuthAdminRouteChildren: AuthAdminRouteChildren = {
+  AuthAdminDashboardRoute: AuthAdminDashboardRoute,
+}
+
+const AuthAdminRouteWithChildren = AuthAdminRoute._addFileChildren(
+  AuthAdminRouteChildren,
+)
+
+interface AuthRouteChildren {
+  AuthAdminRoute: typeof AuthAdminRouteWithChildren
+  AuthProfileRoute: typeof AuthProfileRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthAdminRoute: AuthAdminRouteWithChildren,
+  AuthProfileRoute: AuthProfileRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
+  ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
+  ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
+  RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
+  ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
+  RegisterIndexRoute: RegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

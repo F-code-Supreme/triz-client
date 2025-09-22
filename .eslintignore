@@ -19,3 +19,7 @@ yarn-error.log*
 
 # Generated files
 src/routeTree.gen.ts
+resources.d.ts
+
+# Locales
+locales/

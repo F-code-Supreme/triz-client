@@ -1,0 +1,11 @@
+{
+  "day_one": "Ngày",
+  "day_other": "Ngày",
+  "day_left_one": "{{count}} ngày còn lại",
+  "day_left_other": "{{count}} ngày còn lại",
+
+  "date": "Ngày",
+
+  "seconds_left_one": "{{count}} giây",
+  "seconds_left_other": "{{count}} giây"
+}

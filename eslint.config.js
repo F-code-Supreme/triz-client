@@ -30,8 +30,11 @@ export default [
       'yarn-error.log*',
       // Generated files
       'src/routeTree.gen.ts',
+      'resources.d.ts',
       // Config files
       '**/.prettierrc.cjs',
+      // Locales
+      'locales/**',
     ],
     languageOptions: {
       globals: {
@@ -154,7 +157,6 @@ export default [
           },
         },
       ],
-      'unicorn/prevent-abbreviations': 'warn',
       'sonarjs/no-duplicate-string': 'warn',
       'sonarjs/cognitive-complexity': ['error', 15],
 

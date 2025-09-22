@@ -16,13 +16,13 @@ export default ({ command, mode }: ConfigEnv) => {
   console.log('Current environment configuration:', currentEnvironment);
   return defineConfig({
     plugins: [
-      react({
-        // Add React refresh runtime
-        jsxRuntime: 'automatic',
-      }),
       tanstackRouter({
         target: 'react',
         autoCodeSplitting: true,
+      }),
+      react({
+        // Add React refresh runtime
+        jsxRuntime: 'automatic',
       }),
     ],
     css: {

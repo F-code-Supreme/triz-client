@@ -1,0 +1,43 @@
+{
+  "total": "Total",
+  "total_with_count": "Total: {{count}}",
+
+  "or": "Or",
+  "or_lowercase": "or",
+
+  "yes": "Yes",
+  "no": "No",
+
+  "page": "Page",
+
+  "empty": "Empty",
+  "free": "Free",
+  "premium": "Premium",
+  "private": "Private",
+  "public": "Public",
+  "required": "Required",
+  "success": "Success",
+  "error": "Error",
+  "warning": "Warning",
+  "info": "Info",
+  "all": "All",
+  "copied": "Copied",
+  "from": "From",
+  "to": "To",
+  "dont_show_again": "Don't show again",
+  "no_data": "No data",
+  "date": "Date",
+  "order": "Order",
+
+  "day_one": "Day",
+  "day_other": "Days",
+
+  "not_found": "Not found",
+  "not_found_with_entity_type": "{{entity_type}} not found",
+
+  "showing": "Showing",
+  "showing_with_count": "Showing {{count}}",
+  "showing_with_total": "Showing {{count}} of {{total}}",
+
+  "filter_tooltip": "This is the total count based on the selected filter"
+}

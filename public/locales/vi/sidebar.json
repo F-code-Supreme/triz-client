@@ -1,0 +1,58 @@
+{
+  "dashboard": "Bảng điều khiển",
+  "organizations": "Tổ chức",
+
+  "user_management": "Quản lý người dùng",
+  "user_management.users": "Người dùng",
+  "user_management.roles": "Vai trò",
+  "user_management.permissions": "Quyền hạn",
+
+  "branding": "Thương hiệu",
+  "branding.custom_domains": "Tên miền tùy chỉnh",
+  "branding.email_templates": "Mẫu email",
+  "branding.phone_templates": "Mẫu điện thoại",
+
+  "app_integrations": "Tích hợp ứng dụng",
+  "app_integrations.authentications": "Xác thực",
+  "app_integrations.push_notification": "Thông báo đẩy",
+  "app_integrations.payment_gateway": "Cổng thanh toán",
+  "app_integrations.smtp": "SMTP",
+  "app_integrations.sms": "SMS",
+
+  "devices": "Thiết bị",
+
+  "subscription": "Gói đăng ký",
+  "subscription.features": "Tính năng",
+  "subscription.package": "Gói",
+
+  "coupons": "Mã giảm giá",
+  "licenses": "Giấy phép",
+
+  "billing": "Thanh toán",
+  "billing.invoices": "Hóa đơn",
+  "billing.payments": "Thanh toán",
+  "billing.subscription_types": "Loại đăng ký",
+
+  "issues": "Vấn đề",
+  "events": "Sự kiện",
+
+  "monitoring": "Giám sát",
+  "monitoring.tracking_activities": "Theo dõi hoạt động",
+  "monitoring.tracking_emails": "Theo dõi email",
+
+  "system": "Hệ thống",
+  "system.currency": "Tiền tệ",
+  "system.country": "Quốc gia",
+  "system.state": "Tiểu bang",
+  "system.city": "Thành phố",
+  "system.timezone": "Múi giờ",
+  "system.language": "Ngôn ngữ",
+  "system.exchange_rate": "Tỷ giá",
+  "system.resource_type": "Loại tài nguyên",
+
+  "settings": "Cài đặt",
+
+  "brands": "Thương hiệu",
+  "pricing": "Giá cả",
+  "wallet": "Ví"
+}
