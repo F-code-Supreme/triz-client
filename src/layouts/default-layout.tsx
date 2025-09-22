@@ -1,23 +1,25 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-interface Meta {
-  title: string;
-}
+import { Navbar03 } from '@/components/ui/navbar';
 
-export const DefaultLayout = ({
-  children,
-  meta,
-}: {
+import type { Meta } from '@/types';
+
+interface DefaultLayoutProps {
   children: React.ReactNode;
   meta: Meta;
-}) => {
+}
+
+export const DefaultLayout = ({ children, meta }: DefaultLayoutProps) => {
   return (
     <HelmetProvider>
       <Helmet>
         <meta charSet="utf-8" />
         <title>{meta.title}</title>
       </Helmet>
-      <div className="container mx-auto p-8">{children}</div>
+      <div>
+        <Navbar03 />
+        <main className="container mx-auto p-8">{children}</main>
+      </div>
     </HelmetProvider>
   );
 };

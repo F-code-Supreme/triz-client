@@ -23,6 +23,7 @@ i18n
     supportedLngs: Object.keys(supportedLanguages),
     debug: false,
     interpolation: {
+      skipOnVariables: false,
       escapeValue: false, // not needed for react as it escapes by default
     },
     load: 'languageOnly',

@@ -1,15 +1,11 @@
 {
   "day_one": "Day",
   "day_other": "Days",
-  "day_left_one": "Days left",
-  "day_left_other": "Days left",
-  "day_left_with_count_one": "{{count}} t(day_left, lowercase)",
-  "day_left_with_count_other": "{{count}} t(days_left, lowercase)",
+  "day_left_one": "{{count}} day left",
+  "day_left_other": "{{count}} days left",
 
   "date": "Date",
 
-  "second_one": "Second",
-  "second_other": "Seconds",
-  "second_with_count_one": "({{count}}) $t(second_one, lowercase)",
-  "second_with_count_other": "({{count}}) $t(second_other, lowercase)"
+  "seconds_left_one": "{{count}} second",
+  "seconds_left_other": "{{count}} seconds"
 }

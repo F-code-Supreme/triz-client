@@ -1,0 +1,12 @@
+{
+  "page_meta_title": "Sign in",
+  "form.title": "Login",
+  "form.description": "Welcome to Triz, please sign in to your account.",
+  "form.submit": "Login",
+  "form.submiting": "Logging in...",
+  "form.login_with_google": "Login with Google",
+  "form.forgot_password": "Forgot password?",
+  "form.no_account": "Don't have an account?",
+  "form.sign_up": "Sign up",
+  "form.remember_me": "Remember me"
+}

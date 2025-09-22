@@ -10,7 +10,7 @@
   "endOfLine": "lf",
   "singleAttributePerLine": false,
   "quoteProps": "as-needed",
-  "embeddedLanguageFormatting": "auto",
+  "embeddedLanguageFormatting": "off",
   "proseWrap": "preserve",
   "overrides": [
     {

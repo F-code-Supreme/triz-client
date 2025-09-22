@@ -1,15 +1,11 @@
 {
   "day_one": "Ngày",
   "day_other": "Ngày",
-  "day_left_one": "Ngày còn lại",
-  "day_left_other": "Ngày còn lại",
-  "day_left_with_count_one": "{{count}} t(day_left, lowercase)",
-  "day_left_with_count_other": "{{count}} t(days_left, lowercase)",
+  "day_left_one": "{{count}} ngày còn lại",
+  "day_left_other": "{{count}} ngày còn lại",
 
   "date": "Ngày",
 
-  "second_one": "Giây",
-  "second_other": "Giây",
-  "second_with_count_one": "({{count}}) $t(second_one, lowercase)",
-  "second_with_count_other": "({{count}}) $t(second_other, lowercase)"
+  "seconds_left_one": "{{count}} giây",
+  "seconds_left_other": "{{count}} giây"
 }

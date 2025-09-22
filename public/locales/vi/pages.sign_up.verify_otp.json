@@ -1,0 +1,13 @@
+{
+  "page_meta_title": "Xác thực OTP",
+  "form.title": "Xác thực OTP",
+  "form.description": "Vui lòng nhập OTP đã được gửi đến email của bạn.",
+  "form.label": "Nhập OTP 6 chữ số",
+  "form.resend_otp_with_time": "Gửi lại OTP trong",
+  "form.resend_otp": "Gửi lại OTP",
+  "form.resending_otp": "Đang gửi lại OTP...",
+  "form.submit": "Xác thực OTP",
+  "form.submiting": "Đang xác thực...",
+  "action.otp_sent_to": "OTP đã được gửi đến:",
+  "action.back_to_sign_in": "Quay lại Đăng nhập"
+}

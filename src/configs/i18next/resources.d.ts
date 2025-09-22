@@ -124,16 +124,48 @@ interface Resources {
   },
   "datetime": {
     "date": "Date",
-    "day_left_one": "Days left",
-    "day_left_other": "Days left",
-    "day_left_with_count_one": "{{count}} t(day_left, lowercase)",
-    "day_left_with_count_other": "{{count}} t(days_left, lowercase)",
+    "day_left_one": "{{count}} day left",
+    "day_left_other": "{{count}} days left",
     "day_one": "Day",
     "day_other": "Days",
-    "second_one": "Second",
-    "second_other": "Seconds",
-    "second_with_count_one": "({{count}}) $t(second_one, lowercase)",
-    "second_with_count_other": "({{count}}) $t(second_other, lowercase)"
+    "seconds_left_one": "{{count}} second",
+    "seconds_left_other": "{{count}} seconds"
+  },
+  "header": {
+    "chat_ai": "Chat AI",
+    "dropdown_menu.profile": "Profile",
+    "dropdown_menu.sign_out": "Sign Out",
+    "forum": "Forum",
+    "home": "Home",
+    "learn_triz": "Learn TRIZ",
+    "logo_title": "Center for Scientific and Technical Creativity (CSTC)",
+    "quiz": "Quiz",
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up"
+  },
+  "pages.forgot_password": {
+    "form.description": "Enter your email address and we'll send you an OTP to reset your password.",
+    "form.email": "Email",
+    "form.submit": "Send Reset Link",
+    "form.submitting": "Sending...",
+    "form.title": "Forgot Password",
+    "page_meta_title": "Forgot Password"
+  },
+  "pages.forgot_password.new_password": {
+    "form.confirm_new_password": "Confirm New Password",
+    "form.description": "Please enter your new password.",
+    "form.new_password": "New Password",
+    "form.submit": "Reset Password",
+    "form.title": "Create New Password",
+    "page_meta_title": "Reset Password"
+  },
+  "pages.forgot_password.verify_otp": {
+    "form.description": "Please enter the OTP sent to your email to reset your password.",
+    "form.resend_otp": "Resend OTP",
+    "form.resend_otp_with_time": "Resend OTP in",
+    "form.submit": "Verify OTP",
+    "form.title": "Verify OTP",
+    "page_meta_title": "Verify OTP for Password Reset"
   },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",
@@ -141,6 +173,51 @@ interface Resources {
     "not_found": "Page not found",
     "page_meta_title": "Not found",
     "under_construction": "This feature is under maintenance, we will comeback soon!"
+  },
+  "pages.profile": {
+    "page_meta_title": "Profile"
+  },
+  "pages.sign_in": {
+    "form.description": "Welcome to Triz, please sign in to your account.",
+    "form.forgot_password": "Forgot password?",
+    "form.login_with_google": "Login with Google",
+    "form.no_account": "Don't have an account?",
+    "form.remember_me": "Remember me",
+    "form.sign_up": "Sign up",
+    "form.submit": "Login",
+    "form.submiting": "Logging in...",
+    "form.title": "Login",
+    "page_meta_title": "Sign in"
+  },
+  "pages.sign_up": {
+    "form.description": "Welcome to Triz, please create an account.",
+    "form.have_account": "Already have an account?",
+    "form.register_with_google": "Sign up with Google",
+    "form.sign_in": "Sign in",
+    "form.submit": "Sign up",
+    "form.submiting": "Signing up...",
+    "form.title": "Sign up",
+    "page_meta_title": "Sign up"
+  },
+  "pages.sign_up.verify_otp": {
+    "action.back_to_sign_in": "Back to Sign In",
+    "action.otp_sent_to": "OTP sent to:",
+    "form.description": "Please enter the OTP sent to your email.",
+    "form.label": "Enter 6-digit OTP",
+    "form.resend_otp": "Resend OTP",
+    "form.resend_otp_with_time": "Resend OTP in",
+    "form.resending_otp": "Resending...",
+    "form.submit": "Verify OTP",
+    "form.submiting": "Verifying...",
+    "form.title": "OTP Verification",
+    "page_meta_title": "OTP Verification"
+  },
+  "pages.unauthorized": {
+    "back_to_homepage": "Back to homepage",
+    "message": "You don't have permission to access this resource. Please sign in with an authorized account or contact your administrator.",
+    "page_meta_title": "Unauthorized",
+    "sign_in": "Sign In",
+    "unauthorized": "Access Denied"
   },
   "sidebar": {
     "app_integrations": "App integrations",

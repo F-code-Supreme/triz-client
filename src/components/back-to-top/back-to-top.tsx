@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 
-import { useEventListener } from '@/hooks/use-event-listener/use-event-listener';
+import { useEventListener } from '@/hooks';
 
 export const BackToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
