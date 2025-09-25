@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from './button';
 import { PlayCircle } from 'lucide-react';
 
