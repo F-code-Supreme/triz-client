@@ -3,12 +3,12 @@ import { PlayCircle } from 'lucide-react';
 
 function HeroSection() {
   return (
-    <section className="relative flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white">
+    <section className="relative flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <div className="w-full max-w-5xl px-4 pt-8 mx-auto">
         <div className="text-center space-y-12">
           <div className="space-y-6">
             <div className="relative inline-block">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 leading-tight">
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
                 Khám Phá TRIZ
                 <span className="relative ml-3">
                   <svg
@@ -31,13 +31,13 @@ function HeroSection() {
                   </svg>
                 </span>
                 <br />
-                <span className="text-slate-900">
+                <span className="text-slate-900 dark:text-white">
                   Phương Pháp Sáng Tạo Có Hệ Thống
                 </span>
               </h1>
 
               <div>
-                <p className="text-lg lg:text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed mt-6">
+                <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
                   TRIZ là bộ công cụ giúp bạn giải quyết vấn đề một cách khoa
                   học,
                   <br />
@@ -72,7 +72,7 @@ function HeroSection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-slate-200 text-slate-900 px-8 py-4 text-lg font-medium rounded-lg hover:bg-slate-50 flex items-center gap-3"
+                className="border-2 border-slate-200 dark:border-slate-700 dark:text-slate-300 text-slate-900 px-8 py-4 text-lg font-medium rounded-lg hover:bg-slate-50 flex items-center gap-3"
               >
                 <PlayCircle className="w-6 h-6" />
                 Bắt đầu học ngay

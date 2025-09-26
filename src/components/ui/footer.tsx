@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 
 function Footer() {
   return (
-    <div className="relative bg-slate-900 sm:20 md:mt-32">
+    <div className="relative bg-slate-800 sm:20 md:mt-32">
       {/* CTA Section */}
       <div
         className="

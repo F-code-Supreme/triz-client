@@ -64,12 +64,12 @@ const HomePage = () => {
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="space-y-6">
               <div className="space-y-8">
-                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
                   Giới thiệu
                   <br />
                   <span className="text-blue-600">tổng quan về TRIZ</span>
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   TRIZ (Theory of Inventive Problem Solving) là phương pháp luận
                   sáng tạo có hệ thống do Genrich Altshuller phát triển từ năm
                   1946, dựa trên phân tích hàng trăm nghìn bằng sáng chế để rút
@@ -78,7 +78,7 @@ const HomePage = () => {
               </div>
 
               <div className="space-y-8">
-                <h3 className="text-xl font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
                   Tại sao cần học TRIZ?
                 </h3>
                 <div className="space-y-6">
@@ -90,7 +90,9 @@ const HomePage = () => {
                   ].map((item, index) => (
                     <div key={index} className="flex items-start gap-4">
                       <div className="w-3 h-3 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                      <p className="text-lg text-slate-600">{item}</p>
+                      <p className="text-lg text-slate-600 dark:text-slate-300">
+                        {item}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -107,7 +109,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className=" py-14">
+      <div className="py-14 ">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             {/* Hình ảnh */}
@@ -123,14 +125,14 @@ const HomePage = () => {
             {/* Nội dung */}
             <div className="space-y-2 order-1 md:order-2">
               <div className="space-y-6">
-                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+                <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
                   Giới thiệu về
                   <br />
                   <span className="text-blue-600">phương pháp luận</span>
                   <br />
                   sáng tạo và đổi mới
                 </h2>
-                <p className="text-lg text-slate-600 leading-relaxed">
+                <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   PPLSTVĐM (Creativity and Innovation Methodologies) là hệ thống
                   phương pháp và kỹ năng giúp nâng cao năng suất tư duy, tiến
                   tới điều khiển quá trình suy nghĩ sáng tạo.
@@ -138,12 +140,12 @@ const HomePage = () => {
               </div>
 
               <div>
-                <h2 className="text-xl font-semibold text-slate-900">
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
                   Ứng dụng tại Việt Nam:
                 </h2>
               </div>
 
-              <div className="space-y-4 text-lg text-slate-400 leading-relaxed">
+              <div className="space-y-4 text-lg text-slate-400 dark:text-slate-300 leading-relaxed">
                 <p>
                   GS Phan Dũng là người đầu tiên hệ thống hóa, dịch và phổ biến
                   TRIZ tại Việt Nam từ thập niên 1980, thông qua các khóa đào
@@ -160,9 +162,9 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="py-14">
+      <div className="py-14 ">
         <div className="item-center text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
             Các nội dung <span className="text-blue-600">cốt lỗi</span> của TRIZ
           </h2>
         </div>
@@ -171,20 +173,22 @@ const HomePage = () => {
           {coreValues.map((value, index) => (
             <div
               key={index}
-              className="bg-white p-4 rounded-2xl shadow-md text-start space-y-4 transition-transform duration-200 hover:scale-105 hover:shadow-xl"
+              className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-md text-start space-y-4 transition-transform duration-200 hover:scale-105 hover:shadow-xl"
               style={{ border: '1px solid #e0e7ef' }}
             >
               <img src={value.iconUrl} alt={value.tile} />
-              <h3 className="text-2xl font-semibold text-slate-900 mt-4">
+              <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mt-4">
                 {value.tile}
               </h3>
-              <p className="text-lg text-slate-500 mt-2">{value.description}</p>
+              <p className="text-lg text-slate-500 dark:text-slate-300 mt-2">
+                {value.description}
+              </p>
             </div>
           ))}
         </div>
 
         <div className="flex justify-center">
-          <button className="border rounded-md px-6 py-3  flex items-center gap-3 hover:bg-blue-50 hover:border-slate-400 transition-colors">
+          <button className="border rounded-md px-6 py-3 flex items-center gap-3 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 transition-colors">
             <div className="flex justify-content-center items-center gap-4">
               <span>
                 <svg
@@ -193,38 +197,39 @@ const HomePage = () => {
                   viewBox="0 0 16 16"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="text-slate-900 dark:text-slate-50"
                 >
                   <path
                     d="M8 8H2"
-                    stroke="#0F172A"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.6667 4H2"
-                    stroke="#0F172A"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M8 12H2"
-                    stroke="#0F172A"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.6667 8L14 10L10.6667 12V8Z"
-                    stroke="#0F172A"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </span>
-              <h4 className="text-lg font-semibold text-slate-900">
+              <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
                 Bắt đầu học ngay
               </h4>
             </div>
@@ -232,15 +237,15 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto py-14">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl  py-14 ">
         <div className="md:row-start-1 md:col-span-2">
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
             <span className="text-blue-600">Tại sao TRIZ</span> quan trọng?
           </h2>
         </div>
 
-        <div className="max-w-md mx-auto text-start border space-y-6 p-4 rounded-xl shadow-2xl bg-gradient-to-t from-blue-200 via-white to-white row-span-2 md:row-start-2">
-          <h4 className=" py-2 text-2xl font-semibold text-slate-900 mt-4">
+        <div className="max-w-md mx-auto text-start border space-y-6 p-4 rounded-xl shadow-2xl bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 row-span-2 md:row-start-2">
+          <h4 className=" py-2 text-2xl font-semibold text-slate-900 dark:text-white mt-4">
             Chuyển sáng tạo từ "ngẫu hứng" sang "có hệ thống"{' '}
           </h4>
           <img
@@ -248,7 +253,7 @@ const HomePage = () => {
             alt="Systematic Creativity"
           />
 
-          <p className=" text-slate-600 leading-relaxed">
+          <p className=" text-slate-600 dark:text-slate-300 leading-relaxed">
             Thay vì chờ cảm hứng hoặc dựa vào “tài năng bẩm sinh”, TRIZ cung cấp{' '}
             <span className="font-bold text-black">
               công cụ và quy trình rõ ràng
@@ -259,14 +264,14 @@ const HomePage = () => {
         </div>
 
         <div className="row-span-4 md:row-start-2 space-y-10">
-          <div className="max-w-md mx-auto text-start space-y-6 p-6 border  rounded-xl shadow-2xl">
-            <h4 className=" pb-20 text-2xl font-semibold text-slate-900 ">
+          <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl dark:bg-slate-800">
+            <h4 className=" pb-20 text-2xl font-semibold text-slate-900 dark:text-white ">
               Nâng cao năng lực tư duy sáng tạo
             </h4>
             <div>
-              <p>
+              <p className="dark:text-slate-300">
                 Khi luyện tập TRIZ, người học phát triển thói quen{' '}
-                <span className="font-bold text-black">
+                <span className="font-bold text-black dark:text-white">
                   tư duy hệ thống, nhìn nhận tài nguyên, tìm giải pháp lý tưởng,
                 </span>{' '}
                 giúp họ ngày càng sáng tạo hơn.
@@ -274,17 +279,19 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl">
-            <h4 className=" pb-36 text-2xl font-semibold text-slate-900 ">
+          <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl dark:bg-slate-800">
+            <h4 className=" pb-36 text-2xl font-semibold text-slate-900 dark:text-white ">
               Giải quyết mâu thuẫn – cốt lõi của sáng tạo
             </h4>
             <div>
-              <p>
+              <p className="dark:text-slate-300">
                 Hầu hết các vấn đề sáng tạo đều bắt nguồn từ{' '}
-                <span className="font-bold text-black">mâu thuẫn</span> (ví dụ:
-                thiết kế điện thoại vừa mỏng nhẹ, vừa pin lâu). TRIZ giúp bạn
-                vượt qua mâu thuẫn mà không cần đánh đổi, nhờ{' '}
-                <span className="font-bold text-black">
+                <span className="font-bold text-black dark:text-white">
+                  mâu thuẫn
+                </span>{' '}
+                (ví dụ: thiết kế điện thoại vừa mỏng nhẹ, vừa pin lâu). TRIZ
+                giúp bạn vượt qua mâu thuẫn mà không cần đánh đổi, nhờ{' '}
+                <span className="font-bold text-black dark:text-white">
                   40 bộ nguyên tắc sáng tạo và ma trận mâu thuẫn
                 </span>
                 .
@@ -294,14 +301,14 @@ const HomePage = () => {
         </div>
 
         <div className=" md:row-start-1 row-span-4 space-y-6">
-          <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl">
-            <h4 className="pb-6 text-2xl font-semibold text-slate-900">
+          <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl dark:bg-slate-800">
+            <h4 className="pb-6 text-2xl font-semibold text-slate-900 dark:text-white">
               Tăng tốc độ giải quyết vấn đề
             </h4>
             <div>
-              <p>
+              <p className="dark:text-slate-300">
                 Khi luyện tập TRIZ, người học phát triển thói quen{' '}
-                <span className="font-bold text-black">
+                <span className="font-bold text-black dark:text-white">
                   tư duy hệ thống, nhìn nhận tài nguyên, tìm giải pháp lý tưởng,
                 </span>{' '}
                 giúp họ ngày càng sáng tạo hơn.
@@ -309,15 +316,15 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="max-w-md mx-auto text-start border space-y-6 p-4 rounded-xl shadow-2xl bg-gradient-to-b from-blue-200 via-white to-white">
-            <h4 className=" py-2 text-2xl font-semibold text-slate-900 mt-4">
+          <div className="max-w-md mx-auto text-start border space-y-6 p-4 rounded-xl shadow-2xl bg-gradient-to-b from-blue-200 via-white to-white dark:bg-gradient-to-b dark:from-slate-800 dark:via-slate-900 dark:to-slate-900">
+            <h4 className=" py-2 text-2xl font-semibold text-slate-900 dark:text-white mt-4">
               Ứng dụng đa lĩnh vực
             </h4>
             <img
               src="/src/assets/images/Frame 1410086252.png"
               alt="Systematic Creativity"
             />
-            <p className=" text-slate-600 leading-relaxed">
+            <p className=" text-slate-600 dark:text-slate-300 leading-relaxed">
               Không chỉ giới hạn trong kỹ thuật, TRIZ còn ứng dụng mạnh mẽ trong
               <span className="font-bold text-black">
                 kinh doanh, quản lý, giáo dục, nghệ thuật và đời sống
@@ -329,12 +336,12 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center py-14 text-center">
-        <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
+      <div className="flex flex-col items-center justify-center py-14 text-center ">
+        <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
           Nền tảng học TRIZ <span className="text-blue-600">toàn diện</span>
         </h2>
 
-        <p className=" text-slate-600 leading-relaxed mt-6 max-w-3xl">
+        <p className=" text-slate-600 dark:text-slate-300 leading-relaxed mt-6 max-w-3xl">
           Khám phá hệ thống học tập tích hợp từ lý thuyết đến thực hành, kết nối
           cộng đồng, luyện tư duy qua quiz và nhận hỗ trợ từ trợ lý AI. Mọi công
           cụ bạn cần để học và áp dụng TRIZ đều có mặt tại đây.
@@ -344,7 +351,7 @@ const HomePage = () => {
           {trizComprehensive.map((item, index) => (
             <div
               key={index}
-              className="p-2 border rounded-xl shadow-2xl max-w-xs w-full "
+              className="p-2 border rounded-xl shadow-2xl max-w-xs w-full bg-white dark:bg-slate-800"
             >
               <img
                 src={item.imageUrl}
@@ -352,13 +359,15 @@ const HomePage = () => {
                 className="mx-auto rounded-md pb-3"
               />
 
-              <h4 className="text-xl font-semibold text-slate-900 py-6">
+              <h4 className="text-xl font-semibold text-slate-900 dark:text-white py-6">
                 {item.title}
               </h4>
 
-              <p className="text-slate-600 py-4">{item.des}</p>
+              <p className="text-slate-600 dark:text-slate-300 py-4">
+                {item.des}
+              </p>
 
-              <div className="text-blue-600 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
+              <div className="text-blue-600 dark:text-blue-400 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
                 <Link to={`/`}>Tìm hiểu thêm</Link>
                 <svg
                   width="21"
