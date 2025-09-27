@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Add Theme Provider + Theme Switcher on Header for development (should be in settings in future)
+- Add Theme Provider + Theme Switcher on Header for development (should be in settings in future).
+
+- Add Home page.
 
 ### Changed
 
