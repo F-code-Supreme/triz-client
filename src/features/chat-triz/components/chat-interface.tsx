@@ -4,9 +4,9 @@ import { type FormEventHandler, useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
-  Conversation,
   ConversationContent,
   ConversationScrollButton,
+  Conversation,
 } from '@/components/ui/shadcn-io/ai/conversation';
 import { Loader } from '@/components/ui/shadcn-io/ai/loader';
 import {
@@ -48,12 +48,14 @@ type ChatMessage = {
   sources?: Array<{ title: string; url: string }>;
   isStreaming?: boolean;
 };
+
 const models = [
   { id: 'gpt-4o', name: 'GPT-4o' },
   { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet' },
   { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro' },
   { id: 'llama-3.1-70b', name: 'Llama 3.1 70B' },
 ];
+
 const sampleResponses = [
   {
     content:
@@ -153,11 +155,13 @@ const ChatInterface = () => {
     },
     [],
   );
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
     (event) => {
       event.preventDefault();
 
       if (!inputValue.trim() || isTyping) return;
+
       // Add user message
       const userMessage: ChatMessage = {
         id: nanoid(),
@@ -195,6 +199,7 @@ const ChatInterface = () => {
     },
     [inputValue, isTyping, simulateTyping],
   );
+
   const handleReset = useCallback(() => {
     setMessages([
       {
@@ -213,10 +218,11 @@ const ChatInterface = () => {
     setIsTyping(false);
     setStreamingMessageId(null);
   }, []);
+
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border bg-background shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3">
+      <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3 h-14">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
@@ -343,4 +349,5 @@ const ChatInterface = () => {
     </div>
   );
 };
+
 export default ChatInterface;
