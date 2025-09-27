@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { useAxios } from '@/configs/axios';
+// import { useAxios } from '@/configs/axios';
 import { STRING_EMPTY } from '@/constants';
 
 import { ChatKeys } from './keys';
@@ -9,12 +9,13 @@ import type { ConversationsResponse } from '../../types';
 
 export const useGetConversationsQuery = (
   searchQuery = STRING_EMPTY,
-  archived = false,
+  // archived = false,
 ) => {
-  const _request = useAxios();
+  // const _request = useAxios();
   return useInfiniteQuery({
     queryKey: [ChatKeys.GetConversationsQuery, searchQuery],
-    queryFn: async ({ signal, pageParam = 0 }) => {
+    // queryFn: async ({ signal, pageParam = 0 }) => {
+    queryFn: async () => {
       // const response = await _request.post<ConversationsResponse>(
       //   `/conversations/me/search`,
       //   {
