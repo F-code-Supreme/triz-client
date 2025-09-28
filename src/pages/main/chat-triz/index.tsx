@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatInterface from '@/features/chat-triz/components/chat-interface';
-import ConversationList from '@/features/chat-triz/components/conversation-list';
+import ConversationList from '@/features/conversation/components/conversation-list';
 import { ChatLayout } from '@/layouts/chat-layout';
 
-import type { Conversation } from '@/features/chat-triz/types';
+import type { Conversation } from '@/features/conversation/types';
 
 const ChatTrizPage = () => {
   const { t } = useTranslation('pages.chat_triz');

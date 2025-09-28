@@ -9,10 +9,9 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { STRING_EMPTY } from '@/constants';
+import { useGetConversationsQuery } from '@/features/conversation/services/queries';
 import { useDebounce } from '@/hooks';
 import { cn } from '@/lib/utils';
-
-import { useGetConversationsQuery } from '../services/queries';
 
 import type { Conversation } from '../types';
 
