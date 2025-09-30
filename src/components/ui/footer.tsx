@@ -1,11 +1,12 @@
 import { Link } from '@tanstack/react-router';
 
-function Footer() {
+function Footer({ show = false }: { show: boolean }) {
   return (
     <div className="relative bg-slate-800 sm:20 md:mt-32">
       {/* CTA Section */}
-      <div
-        className="
+      {show && (
+        <div
+          className="
         w-[90%] max-w-5xl mx-auto 
         bg-gradient-to-br from-blue-500 to-blue-800
         rounded-2xl shadow-xl
@@ -14,55 +15,56 @@ function Footer() {
         md:absolute md:-top-32 md:left-1/2 md:-translate-x-1/2 md:px-10 md:py-8 md:flex-row md:justify-between md:items-center md:gap-8
         z-10
       "
-      >
-        <div className="text-center md:text-start md:px-10">
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 md:mb-8 max-w-2xl mx-auto">
-            Hãy cùng TRIZ biến ý tưởng thành giải pháp thực tế
-          </h2>
-          <div className="flex flex-col gap-4 md:flex-row md:gap-5 justify-center items-center">
-            <button className="bg-white text-blue-600 px-6 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition-colors w-full md:w-auto">
-              Đăng ký tài khoản
-            </button>
-            <button className="border border-slate-200 text-slate-50 px-6 py-4 rounded-xl font-medium text-lg hover:bg-white/10 transition-colors flex items-center gap-2 w-full md:w-auto justify-center">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M2 8H8"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M2 4H10.67"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M2 12H8"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M10.67 8L14 10L10.67 12V8Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Bắt đầu học ngay
-            </button>
+        >
+          <div className="text-center md:text-start md:px-10">
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 md:mb-8 max-w-2xl mx-auto">
+              Hãy cùng TRIZ biến ý tưởng thành giải pháp thực tế
+            </h2>
+            <div className="flex flex-col gap-4 md:flex-row md:gap-5 justify-center items-center">
+              <button className="bg-white text-blue-600 px-6 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition-colors w-full md:w-auto">
+                Đăng ký tài khoản
+              </button>
+              <button className="border border-slate-200 text-slate-50 px-6 py-4 rounded-xl font-medium text-lg hover:bg-white/10 transition-colors flex items-center gap-2 w-full md:w-auto justify-center">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M2 8H8"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M2 4H10.67"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M2 12H8"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M10.67 8L14 10L10.67 12V8Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Bắt đầu học ngay
+              </button>
+            </div>
+          </div>
+          <div className="mt-6 md:mt-0">
+            <img
+              src="src/assets/images/Frame 1410086255.png"
+              alt="Frame 1410086255"
+              className="mx-auto rounded-2xl pb-3 w-full max-w-xs"
+            />
           </div>
         </div>
-        <div className="mt-6 md:mt-0">
-          <img
-            src="src/assets/images/Frame 1410086255.png"
-            alt="Frame 1410086255"
-            className="mx-auto rounded-2xl pb-3 w-full max-w-xs"
-          />
-        </div>
-      </div>
+      )}
 
       {/* Main Footer */}
       <div className="px-4 pb-8 pt-16 md:pt-72">

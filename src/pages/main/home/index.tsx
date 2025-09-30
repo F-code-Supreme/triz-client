@@ -1,6 +1,10 @@
 import { BackToTop } from '@/components/back-to-top/back-to-top';
+import IntroduceMethodology from '@/assets/svg/IntroduceMethodology';
+import IntroduceTRIZsvg from '@/assets/svg/IntroduceTRIZ';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
+import Impromptu from '@/assets/svg/impromptu';
+import MultiDisciplinary from '@/assets/svg/MultiDisciplinary';
 
 const HomePage = () => {
   const coreValues = [
@@ -58,6 +62,8 @@ const HomePage = () => {
       meta={{
         title: 'Khám Phá TRIZ - Phương Pháp Sáng Tạo Có Hệ Thống',
       }}
+      showHeroAndFooter={true}
+      showWithTRIZFooter={true}
     >
       <div className="py-14 ">
         <div className="container mx-auto px-6">
@@ -100,10 +106,11 @@ const HomePage = () => {
             </div>
 
             <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200 hover:scale-105 hover:shadow-inherit">
-              <img
+              {/* <img
                 src="/src/assets/images/Frame 1410086138.png"
                 alt="TRIZ Overview"
-              />
+              /> */}
+              <IntroduceTRIZsvg />
             </div>
           </div>
         </div>
@@ -115,10 +122,11 @@ const HomePage = () => {
             {/* Hình ảnh */}
             <div className="relative framework-visualization order-2 md:order-1">
               <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200 hover:scale-105 hover:shadow-inherit">
-                <img
+                {/* <img
                   src="/src/assets/images/Frame 1410086139.png"
                   alt="TRIZ Introduction"
-                />
+                /> */}
+                <IntroduceMethodology />
               </div>
             </div>
 
@@ -248,10 +256,11 @@ const HomePage = () => {
           <h4 className=" py-2 text-2xl font-semibold text-slate-900 dark:text-white mt-4">
             Chuyển sáng tạo từ "ngẫu hứng" sang "có hệ thống"{' '}
           </h4>
-          <img
+          {/* <img
             src="/src/assets/images/Frame 1410086251.png"
             alt="Systematic Creativity"
-          />
+          /> */}
+          <Impromptu />
 
           <p className=" text-slate-600 dark:text-slate-300 leading-relaxed">
             Thay vì chờ cảm hứng hoặc dựa vào “tài năng bẩm sinh”, TRIZ cung cấp{' '}
@@ -320,10 +329,11 @@ const HomePage = () => {
             <h4 className=" py-2 text-2xl font-semibold text-slate-900 dark:text-white mt-4">
               Ứng dụng đa lĩnh vực
             </h4>
-            <img
+            {/* <img
               src="/src/assets/images/Frame 1410086252.png"
               alt="Systematic Creativity"
-            />
+            /> */}
+            <MultiDisciplinary />
             <p className=" text-slate-600 dark:text-slate-300 leading-relaxed">
               Không chỉ giới hạn trong kỹ thuật, TRIZ còn ứng dụng mạnh mẽ trong
               <span className="font-bold text-black">

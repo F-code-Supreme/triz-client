@@ -8,12 +8,16 @@ import Footer from '@/components/ui/footer';
 interface DefaultLayoutProps {
   children: React.ReactNode;
   meta: Meta;
+  showHeroAndFooter?: boolean;
+  showWithTRIZFooter?: boolean;
 }
 
-export const DefaultLayout = ({ children, meta }: DefaultLayoutProps) => {
-  const location = useLocation();
-
-  console.log('Current location:', location);
+export const DefaultLayout = ({
+  children,
+  meta,
+  showHeroAndFooter = false,
+  showWithTRIZFooter = false,
+}: DefaultLayoutProps) => {
   return (
     <HelmetProvider>
       <Helmet>
@@ -22,10 +26,10 @@ export const DefaultLayout = ({ children, meta }: DefaultLayoutProps) => {
       </Helmet>
       <div>
         <Navbar03 />
-        {location.pathname === '/' && <HeroSection />}
+        {showHeroAndFooter && <HeroSection />}
 
-        <main className="container mx-auto p-8">{children}</main>
-        {location.pathname === '/' && <Footer />}
+        <main className="container mx-auto md:p-8 sm:p-4">{children}</main>
+        {showHeroAndFooter && <Footer show={showWithTRIZFooter} />}
       </div>
     </HelmetProvider>
   );
