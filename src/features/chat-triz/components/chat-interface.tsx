@@ -226,7 +226,7 @@ const ChatInterface = () => {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
-            <span className="font-medium text-sm">AI Assistant</span>
+            <span className="font-medium text-sm">ChatTriz</span>
           </div>
           <div className="h-4 w-px bg-border" />
           <span className="text-muted-foreground text-xs">
