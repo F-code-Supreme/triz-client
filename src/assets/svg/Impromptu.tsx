@@ -1,4 +1,4 @@
-function Impromptu() {
+const Impromptu = () => {
   return (
     <svg
       width="368"
@@ -14,12 +14,12 @@ function Impromptu() {
       <path
         d="M177.686 101.02H368"
         className="stroke-slate-300 dark:stroke-slate-600"
-        stroke-width="0.901961"
+        strokeWidth="0.901961"
       />
       <path
         d="M177.686 139.804H368"
         className="stroke-slate-300 dark:stroke-slate-600"
-        stroke-width="0.901961"
+        strokeWidth="0.901961"
       />
       <path
         d="M72.1568 -0.000334394L72.2641 8.65926L79.7099 4.23657L72.1568 -0.000334394ZM143.412 119.96L144.057 119.577L76.2488 5.42007L75.604 5.80309L74.9592 6.1861L142.767 120.343L143.412 119.96Z"
@@ -48,8 +48,8 @@ function Impromptu() {
       <path
         d="M143.412 119.96L208.353 17.1369"
         className="stroke-yellow-500"
-        stroke-width="1.5"
-        stroke-dasharray="2.71 2.71"
+        strokeWidth="1.5"
+        strokeDasharray="2.71 2.71"
       />
       <path
         d="M154.235 55.9212L148.716 62.5947L157.255 64.038L154.235 55.9212ZM143.412 119.96L144.151 120.085L153.85 62.7018L153.11 62.5768L152.371 62.4518L142.672 119.835L143.412 119.96Z"
@@ -129,14 +129,14 @@ function Impromptu() {
         r="11.6275"
         fill="#CBD5E1"
         stroke="#0F172A"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <circle
         cx="312.98"
         cy="119.96"
         r="6.21569"
         stroke="#2563EB"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <path
         d="M291.108 179.816L279.608 190.965V184H240.824V174.98H279.608V168.667L291.108 179.816Z"
@@ -144,6 +144,6 @@ function Impromptu() {
       />
     </svg>
   );
-}
+};
 
 export default Impromptu;

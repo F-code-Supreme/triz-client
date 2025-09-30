@@ -1,4 +1,4 @@
-function MultiDisciplinary() {
+const MultiDisciplinary = () => {
   return (
     <svg
       width="388"
@@ -22,8 +22,8 @@ function MultiDisciplinary() {
       <path
         d="M195 108L219 1"
         className="stroke-yellow-500"
-        stroke-width="1.5"
-        stroke-dasharray="4 4"
+        strokeWidth="1.5"
+        strokeDasharray="4 4"
       />
       <path
         d="M122 108L129.5 112.33L129.5 103.67L122 108ZM194 108L194 107.25L128.75 107.25L128.75 108L128.75 108.75L194 108.75L194 108Z"
@@ -57,7 +57,7 @@ function MultiDisciplinary() {
         r="11"
         fill="#CBD5E1"
         stroke="#0F172A"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <path
         d="M284.284 241.149L272.784 252.299V245.333H202V236.314H272.784V230L284.284 241.149Z"
@@ -73,10 +73,10 @@ function MultiDisciplinary() {
         r="11"
         fill="#CBD5E1"
         stroke="#0F172A"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );
-}
+};
 
 export default MultiDisciplinary;

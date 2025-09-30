@@ -1,4 +1,5 @@
-function IntroduceTRIZsvg() {
+/* eslint-disable unicorn/filename-case */
+const IntroduceTRIZsvg = () => {
   return (
     <svg
       width="600"
@@ -11,7 +12,7 @@ function IntroduceTRIZsvg() {
         <path
           d="M629 348.561C629 460.917 537.89 552 425.5 552C313.11 552 222 460.917 222 348.561C222 236.205 339.658 95.9133 425.5 145.123C508.341 295.751 629 236.205 629 348.561Z"
           fill="url(#paint0_linear_2177_9183)"
-          fill-opacity="0.64"
+          fillOpacity="0.64"
         />
         <g filter="url(#filter1_f_2177_9183)">
           <rect
@@ -41,8 +42,8 @@ function IntroduceTRIZsvg() {
           height="682.958"
           rx="39.4788"
           className="fill-white dark:fill-slate-800 stroke-slate-50 dark:stroke-slate-700"
-          fill-opacity="0.64"
-          stroke-width="1.04242"
+          fillOpacity="0.64"
+          strokeWidth="1.04242"
         />
         <rect
           opacity="0.56"
@@ -3605,7 +3606,7 @@ function IntroduceTRIZsvg() {
             fill="#0F172A"
           />
         </g>
-        <g clip-path="url(#clip1_2177_9183)">
+        <g clipPath="url(#clip1_2177_9183)">
           <g filter="url(#filter15_ii_2177_9183)">
             <rect
               x="369"
@@ -3623,7 +3624,7 @@ function IntroduceTRIZsvg() {
             height="271.216"
             rx="20.608"
             stroke="#F8FAFC"
-            stroke-width="1.21606"
+            strokeWidth="1.21606"
           />
           <g filter="url(#filter16_f_2177_9183)">
             <circle
@@ -3763,9 +3764,9 @@ function IntroduceTRIZsvg() {
           width="700"
           height="696"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -3798,9 +3799,9 @@ function IntroduceTRIZsvg() {
           width="848.533"
           height="308.558"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -3831,9 +3832,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -3866,9 +3867,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -3901,9 +3902,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -3936,9 +3937,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -3971,9 +3972,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4006,9 +4007,9 @@ function IntroduceTRIZsvg() {
           width="636"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4041,9 +4042,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4076,9 +4077,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4111,9 +4112,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4146,9 +4147,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4181,9 +4182,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4216,9 +4217,9 @@ function IntroduceTRIZsvg() {
           width="190"
           height="102"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4251,9 +4252,9 @@ function IntroduceTRIZsvg() {
           width="116.864"
           height="274.864"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -4303,9 +4304,9 @@ function IntroduceTRIZsvg() {
           width="189"
           height="189"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -4324,9 +4325,9 @@ function IntroduceTRIZsvg() {
           width="189"
           height="189"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend
             mode="normal"
             in="SourceGraphic"
@@ -4345,9 +4346,9 @@ function IntroduceTRIZsvg() {
           width="120"
           height="278"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -4399,8 +4400,8 @@ function IntroduceTRIZsvg() {
           y2="361.626"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#3B82F6" />
-          <stop offset="1" stop-color="#7DD3FC" />
+          <stop stopColor="#3B82F6" />
+          <stop offset="1" stopColor="#7DD3FC" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_2177_9183"
@@ -4410,8 +4411,8 @@ function IntroduceTRIZsvg() {
           y2="214"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#3B82F6" />
-          <stop offset="1" stop-color="#FEF9C3" />
+          <stop stopColor="#3B82F6" />
+          <stop offset="1" stopColor="#FEF9C3" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_2177_9183"
@@ -4421,8 +4422,8 @@ function IntroduceTRIZsvg() {
           y2="452.5"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FEF9C3" />
-          <stop offset="1" stop-color="#2563EB" />
+          <stop stopColor="#FEF9C3" />
+          <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_2177_9183"
@@ -4432,8 +4433,8 @@ function IntroduceTRIZsvg() {
           y2="439.909"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2563EB" />
-          <stop offset="1" stop-color="#153885" />
+          <stop stopColor="#2563EB" />
+          <stop offset="1" stopColor="#153885" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_2177_9183"
@@ -4443,8 +4444,8 @@ function IntroduceTRIZsvg() {
           y2="439.909"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2563EB" />
-          <stop offset="1" stop-color="#153885" />
+          <stop stopColor="#2563EB" />
+          <stop offset="1" stopColor="#153885" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_2177_9183"
@@ -4454,8 +4455,8 @@ function IntroduceTRIZsvg() {
           y2="439.909"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2563EB" />
-          <stop offset="1" stop-color="#153885" />
+          <stop stopColor="#2563EB" />
+          <stop offset="1" stopColor="#153885" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_2177_9183"
@@ -4465,8 +4466,8 @@ function IntroduceTRIZsvg() {
           y2="439.909"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2563EB" />
-          <stop offset="1" stop-color="#153885" />
+          <stop stopColor="#2563EB" />
+          <stop offset="1" stopColor="#153885" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_2177_9183"
@@ -4476,8 +4477,8 @@ function IntroduceTRIZsvg() {
           y2="80.5"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#CBD5E1" stop-opacity="0" />
-          <stop offset="1" stop-color="#2563EB" />
+          <stop stopColor="#CBD5E1" stopOpacity="0" />
+          <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient
           id="paint8_linear_2177_9183"
@@ -4487,8 +4488,8 @@ function IntroduceTRIZsvg() {
           y2="502"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#CBD5E1" stop-opacity="0" />
-          <stop offset="1" stop-color="#2563EB" />
+          <stop stopColor="#CBD5E1" stopOpacity="0" />
+          <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient
           id="paint9_linear_2177_9183"
@@ -4498,8 +4499,8 @@ function IntroduceTRIZsvg() {
           y2="292"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1D4ED8" />
-          <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+          <stop stopColor="#1D4ED8" />
+          <stop offset="1" stopColor="#1D4ED8" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint10_linear_2177_9183"
@@ -4509,8 +4510,8 @@ function IntroduceTRIZsvg() {
           y2="139.762"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1D4ED8" />
-          <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+          <stop stopColor="#1D4ED8" />
+          <stop offset="1" stopColor="#1D4ED8" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint11_linear_2177_9183"
@@ -4520,8 +4521,8 @@ function IntroduceTRIZsvg() {
           y2="80.5"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#CBD5E1" stop-opacity="0" />
-          <stop offset="1" stop-color="#2563EB" />
+          <stop stopColor="#CBD5E1" stopOpacity="0" />
+          <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient
           id="paint12_linear_2177_9183"
@@ -4531,8 +4532,8 @@ function IntroduceTRIZsvg() {
           y2="502"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#CBD5E1" stop-opacity="0" />
-          <stop offset="1" stop-color="#2563EB" />
+          <stop stopColor="#CBD5E1" stopOpacity="0" />
+          <stop offset="1" stopColor="#2563EB" />
         </linearGradient>
         <linearGradient
           id="paint13_linear_2177_9183"
@@ -4542,8 +4543,8 @@ function IntroduceTRIZsvg() {
           y2="292"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1D4ED8" />
-          <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+          <stop stopColor="#1D4ED8" />
+          <stop offset="1" stopColor="#1D4ED8" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint14_linear_2177_9183"
@@ -4553,8 +4554,8 @@ function IntroduceTRIZsvg() {
           y2="376.238"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1D4ED8" />
-          <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+          <stop stopColor="#1D4ED8" />
+          <stop offset="1" stopColor="#1D4ED8" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint15_linear_2177_9183"
@@ -4564,8 +4565,8 @@ function IntroduceTRIZsvg() {
           y2="151.762"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1D4ED8" />
-          <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+          <stop stopColor="#1D4ED8" />
+          <stop offset="1" stopColor="#1D4ED8" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint16_linear_2177_9183"
@@ -4575,8 +4576,8 @@ function IntroduceTRIZsvg() {
           y2="536.238"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#1D4ED8" />
-          <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+          <stop stopColor="#1D4ED8" />
+          <stop offset="1" stopColor="#1D4ED8" stopOpacity="0" />
         </linearGradient>
         <clipPath id="clip1_2177_9183">
           <rect x="369" y="209" width="112" height="270" rx="20" fill="white" />
@@ -4584,6 +4585,6 @@ function IntroduceTRIZsvg() {
       </defs>
     </svg>
   );
-}
+};
 
 export default IntroduceTRIZsvg;

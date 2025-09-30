@@ -1,10 +1,11 @@
-import { BackToTop } from '@/components/back-to-top/back-to-top';
+import { Link } from '@tanstack/react-router';
+
+import Impromptu from '@/assets/svg/Impromptu';
 import IntroduceMethodology from '@/assets/svg/IntroduceMethodology';
 import IntroduceTRIZsvg from '@/assets/svg/IntroduceTRIZ';
-import { DefaultLayout } from '@/layouts/default-layout';
-import { Link } from '@tanstack/react-router';
-import Impromptu from '@/assets/svg/Impromptu';
 import MultiDisciplinary from '@/assets/svg/MultiDisciplinary';
+import { BackToTop } from '@/components/back-to-top/back-to-top';
+import { DefaultLayout } from '@/layouts/default-layout';
 
 const HomePage = () => {
   const coreValues = [

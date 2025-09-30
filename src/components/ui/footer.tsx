@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 
-function Footer({ show = false }: { show: boolean }) {
+const Footer = ({ show = false }: { show: boolean }) => {
   return (
     <div className="relative bg-slate-800 sm:20 md:mt-32">
       {/* CTA Section */}
@@ -153,6 +153,6 @@ function Footer({ show = false }: { show: boolean }) {
       </div>
     </div>
   );
-}
+};
 
 export default Footer;

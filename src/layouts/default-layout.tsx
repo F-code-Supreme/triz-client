@@ -1,8 +1,10 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Navbar03 } from '@/components/ui/navbar';
-import type { Meta } from '@/types';
-import HeroSection from '@/components/ui/hero-section';
+
 import Footer from '@/components/ui/footer';
+import HeroSection from '@/components/ui/hero-section';
+import { Navbar03 } from '@/components/ui/navbar';
+
+import type { Meta } from '@/types';
 
 interface DefaultLayoutProps {
   children: React.ReactNode;

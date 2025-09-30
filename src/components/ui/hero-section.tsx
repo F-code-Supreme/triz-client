@@ -1,7 +1,8 @@
-import { Button } from './button';
 import { PlayCircle } from 'lucide-react';
 
-function HeroSection() {
+import { Button } from './button';
+
+const HeroSection = () => {
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <div className="w-full max-w-5xl px-4 pt-8 mx-auto">
@@ -196,6 +197,6 @@ function HeroSection() {
       </div>
     </section>
   );
-}
+};
 
 export default HeroSection;
