@@ -1,7 +1,6 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Navbar03 } from '@/components/ui/navbar';
 import type { Meta } from '@/types';
-import { useLocation } from '@tanstack/react-router';
 import HeroSection from '@/components/ui/hero-section';
 import Footer from '@/components/ui/footer';
 

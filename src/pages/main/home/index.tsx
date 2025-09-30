@@ -3,7 +3,7 @@ import IntroduceMethodology from '@/assets/svg/IntroduceMethodology';
 import IntroduceTRIZsvg from '@/assets/svg/IntroduceTRIZ';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
-import Impromptu from '@/assets/svg/impromptu';
+import Impromptu from '@/assets/svg/Impromptu';
 import MultiDisciplinary from '@/assets/svg/MultiDisciplinary';
 
 const HomePage = () => {
