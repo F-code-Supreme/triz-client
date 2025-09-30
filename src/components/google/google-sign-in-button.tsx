@@ -1,5 +1,6 @@
 import { GoogleLogin } from '@react-oauth/google';
 
+import i18n from '@/configs/i18next';
 import useAuth from '@/features/auth/hooks/use-auth';
 
 type GoogleSignInButtonProps = {
@@ -17,6 +18,7 @@ const GoogleSignInButton = ({ onSuccess }: GoogleSignInButtonProps) => {
         }
       }}
       useOneTap
+      locale={i18n.language || 'vi'}
     />
   );
 };

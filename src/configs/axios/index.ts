@@ -3,6 +3,8 @@ import axios from 'axios';
 import { axiosBaseOptions } from '@/configs/axios/axios-setup';
 import { TokenType } from '@/features/auth/types';
 
+import i18n from '../i18next';
+
 import type {
   AxiosDownload,
   Upload,
@@ -47,6 +49,7 @@ class MyAxios {
           // @ts-ignore
           config.headers['Authorization'] = `Bearer ${token}`;
         }
+        config.headers['Accept-Language'] = i18n.language || 'vi';
         console.log(`Request config:`, config);
         return config;
       },

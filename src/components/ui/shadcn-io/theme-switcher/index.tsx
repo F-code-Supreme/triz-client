@@ -1,5 +1,3 @@
-'use client';
-
 import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -89,7 +87,9 @@ export const ThemeSwitcher = ({
             <Icon
               className={cn(
                 'relative z-10 m-auto h-4 w-4',
-                isActive ? 'text-foreground' : 'text-muted-foreground',
+                isActive
+                  ? 'text-secondary-foreground'
+                  : 'text-muted-foreground',
               )}
             />
           </button>
