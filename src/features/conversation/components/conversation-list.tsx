@@ -1,6 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
-import { MessageSquare, Search } from 'lucide-react';
+import { MessageSquare, Search, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -39,7 +39,7 @@ const ConversationItem = ({
     <Button
       variant={isSelected ? 'secondary' : 'ghost'}
       className={cn(
-        'w-full h-auto p-2 justify-start text-left',
+        'w-full h-auto px-4 py-2 justify-start text-left',
         'hover:bg-accent/50 transition-colors',
         isSelected && 'bg-secondary',
       )}
@@ -62,7 +62,7 @@ const ConversationItem = ({
 
 const DateHeader = ({ dateLabel }: { dateLabel: string }) => {
   return (
-    <div className="px-2 py-2 text-xs font-medium text-muted-foreground bg-background/80 sticky top-0 z-10 border-b">
+    <div className="px-4 py-2 text-xs font-medium text-muted-foreground bg-background/80 sticky top-0 z-10 border-b">
       {dateLabel}
     </div>
   );
@@ -87,12 +87,16 @@ interface ConversationListProps {
   selectedConversationId?: string;
   onConversationSelect: (conversation: Conversation) => void;
   className?: string;
+  isCollapsed: boolean;
+  toggleCollapse: () => void;
 }
 
 const ConversationList = ({
   selectedConversationId,
   onConversationSelect,
   className,
+  isCollapsed,
+  toggleCollapse,
 }: ConversationListProps) => {
   const { t } = useTranslation('action');
   const [searchQuery, setSearchQuery] = useState(STRING_EMPTY);
@@ -162,7 +166,7 @@ const ConversationList = ({
     estimateSize: useCallback(
       (index: number) => {
         const item = groupedData[index];
-        return item?.type === 'date' ? 40 : 80;
+        return item?.type === 'date' ? 40 : 60;
       },
       [groupedData],
     ),
@@ -208,14 +212,27 @@ const ConversationList = ({
   return (
     <div
       className={cn(
-        'flex flex-col h-full bg-background border rounded-xl',
+        'flex flex-col h-full bg-background border border-r-0 rounded-xl rounded-r-none',
         className,
       )}
     >
       {/* Search Header */}
-      <div className="p-2 border-b bg-muted/50 h-14"></div>
+      <div className="p-4 border-b bg-muted/50 h-14">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6"
+          onClick={toggleCollapse}
+        >
+          {isCollapsed ? (
+            <PanelLeft className="h-4 w-4" />
+          ) : (
+            <PanelLeftClose className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
       {/* Search Header */}
-      <div className="p-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="px-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="relative">
           <Search className="absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input

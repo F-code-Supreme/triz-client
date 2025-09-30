@@ -220,7 +220,7 @@ const ChatInterface = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl border bg-background shadow-sm">
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-xl rounded-l-none border bg-background shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3 h-14">
         <div className="flex items-center gap-3">

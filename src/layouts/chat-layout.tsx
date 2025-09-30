@@ -16,9 +16,11 @@ export const ChatLayout = ({ children, meta }: ChatLayoutProps) => {
         <meta charSet="utf-8" />
         <title>{meta.title}</title>
       </Helmet>
-      <div className="h-screen flex flex-col">
+      <div className="min-h-svh flex flex-col w-full">
         <Navbar03 />
-        <main className="container mx-auto p-8">{children}</main>
+        <main className="container h-[calc(100svh-4rem-1px)] mx-auto p-8">
+          {children}
+        </main>
       </div>
     </HelmetProvider>
   );

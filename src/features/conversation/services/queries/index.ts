@@ -33,62 +33,15 @@ export const useGetConversationsQuery = (
 
       // Mock response conversation
       const mockConversations: ConversationsResponse = {
-        data: [
-          {
-            id: '1',
-            title: 'Conversation 1',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '2',
-            title: 'Conversation 2',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '3',
-            title: 'Conversation 3',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '4',
-            title: 'Conversation 4',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '5',
-            title: 'Conversation 5',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '6',
-            title: 'Conversation 6',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '7',
-            title: 'Conversation 7',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '8',
-            title: 'Conversation 8',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '9',
-            title: 'Conversation 9',
-            updatedAt: new Date().toISOString(),
-          },
-          {
-            id: '10',
-            title: 'Conversation 10',
-            updatedAt: new Date().toISOString(),
-          },
-        ],
+        data: new Array(18).fill(0).map((_, i) => ({
+          id: (i + 1).toString(),
+          title: `Conversation ${i + 1}`,
+          updatedAt: new Date().toISOString(),
+        })),
         page: {
           number: 0,
           size: 20,
-          totalElements: 8,
+          totalElements: 18,
           totalPages: 1,
         },
       };
