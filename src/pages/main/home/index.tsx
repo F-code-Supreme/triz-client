@@ -254,7 +254,8 @@ const HomePage = () => {
 
         <div className="max-w-md mx-auto text-start border space-y-6 p-4 rounded-xl shadow-2xl bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-800 dark:via-slate-900 dark:to-slate-900 row-span-2 md:row-start-2">
           <h4 className=" py-2 text-2xl font-semibold text-slate-900 dark:text-white mt-4">
-            Chuyển sáng tạo từ "ngẫu hứng" sang "có hệ thống"{' '}
+            Chuyển sáng tạo từ &quot;ngẫu hứng&quot; sang &quot;có hệ
+            thống&quot;{' '}
           </h4>
           {/* <img
             src="/src/assets/images/Frame 1410086251.png"
@@ -389,16 +390,16 @@ const HomePage = () => {
                   <path
                     d="M4.66669 10H16.3334"
                     stroke="#2563EB"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.66667"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M10.5 4.1665L16.3333 9.99984L10.5 15.8332"
                     stroke="#2563EB"
-                    stroke-width="1.66667"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.66667"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 {/* thêm route sau */}
