@@ -1,8 +1,15 @@
-import { MicIcon, PaperclipIcon, RotateCcwIcon } from 'lucide-react';
+import {
+  MicIcon,
+  PaperclipIcon,
+  RotateCcwIcon,
+  CopyIcon,
+  CheckIcon,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '@/components/ui/button';
+import { Action, Actions } from '@/components/ui/shadcn-io/ai/actions';
 import {
   ConversationContent,
   ConversationScrollButton,
@@ -51,6 +58,7 @@ const ChatInterface = () => {
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState(STRING_EMPTY);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Fetch messages for active conversation
   const { data: messagesData } = useGetConversationQuery(activeConversationId);
@@ -142,6 +150,18 @@ const ChatInterface = () => {
     setActiveConversationId(null);
   };
 
+  const handleCopy = async (content: string | null, messageId: string) => {
+    if (!content) return;
+
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedId(messageId);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+    }
+  };
+
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl rounded-l-none border bg-background shadow-sm">
       {/* Header */}
@@ -165,32 +185,61 @@ const ChatInterface = () => {
       {/* Conversation Area */}
       <Conversation className="flex-1">
         <ConversationContent className="space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className="space-y-3">
-              <Message from={convertRoleToLowerCase(message.role)}>
-                <MessageContent>
-                  {message.isStreaming && message.content === STRING_EMPTY ? (
-                    <div className="flex items-center gap-2">
-                      <Loader size={14} />
-                      <span className="text-muted-foreground text-sm">
-                        Thinking...
-                      </span>
-                    </div>
-                  ) : (
-                    <Response>{message.content}</Response>
-                  )}
-                </MessageContent>
-                <MessageAvatar
-                  src={
-                    message.role === 'USER'
-                      ? 'https://github.com/dovazencot.png'
-                      : 'https://github.com/vercel.png'
-                  }
-                  name={message.role === 'USER' ? 'User' : 'AI'}
-                />
-              </Message>
-            </div>
-          ))}
+          {messages.map((message, index) => {
+            const isLastMessage = index === messages.length - 1;
+            return (
+              <div key={message.id} className="group relative space-y-3">
+                <Message from={convertRoleToLowerCase(message.role)}>
+                  <MessageContent>
+                    {message.isStreaming && message.content === STRING_EMPTY ? (
+                      <div className="flex items-center gap-2">
+                        <Loader size={14} />
+                        <span className="text-muted-foreground text-sm">
+                          Thinking...
+                        </span>
+                      </div>
+                    ) : (
+                      <Response>{message.content}</Response>
+                    )}
+                  </MessageContent>
+                  <MessageAvatar
+                    src={
+                      message.role === 'USER'
+                        ? 'https://github.com/dovazencot.png'
+                        : 'https://github.com/vercel.png'
+                    }
+                    name={message.role === 'USER' ? 'User' : 'AI'}
+                  />
+                </Message>
+                {message.content && (
+                  <div
+                    className={`${
+                      message.role === 'USER'
+                        ? 'mr-10 flex justify-end'
+                        : 'ml-10'
+                    } ${
+                      isLastMessage
+                        ? 'opacity-100'
+                        : 'opacity-0 group-hover:opacity-100'
+                    } transition-opacity duration-200`}
+                  >
+                    <Actions>
+                      <Action
+                        tooltip="Copy"
+                        onClick={() => handleCopy(message.content, message.id)}
+                      >
+                        {copiedId === message.id ? (
+                          <CheckIcon className="size-4" />
+                        ) : (
+                          <CopyIcon className="size-4" />
+                        )}
+                      </Action>
+                    </Actions>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </ConversationContent>
         <ConversationScrollButton />
       </Conversation>
