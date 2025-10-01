@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/resizable';
 import ChatInterface from '@/features/chat-triz/components/chat-interface';
 import ConversationList from '@/features/conversation/components/conversation-list';
+import { useConversationsQueryStore } from '@/features/conversation/store/use-conversations-query-store';
 import { ChatLayout } from '@/layouts/chat-layout';
 
 import type { Conversation } from '@/features/conversation/types';
@@ -16,14 +17,13 @@ import type { ImperativePanelHandle } from 'react-resizable-panels';
 const ChatTrizPage = () => {
   const panelRef = useRef<ImperativePanelHandle>(null);
   const { t } = useTranslation('pages.chat_triz');
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { activeConversationId, setActiveConversationId } =
+    useConversationsQueryStore();
+
   // Handle conversation selection
   const handleConversationSelect = (conversation: Conversation) => {
-    setSelectedConversation(conversation);
-    // TODO: Load messages for the selected conversation
-    // You can implement this by creating another query hook for messages
+    setActiveConversationId(conversation.id);
   };
 
   return (
@@ -40,7 +40,7 @@ const ChatTrizPage = () => {
           ref={panelRef}
         >
           <ConversationList
-            selectedConversationId={selectedConversation?.id}
+            selectedConversationId={activeConversationId ?? undefined}
             onConversationSelect={handleConversationSelect}
             isCollapsed={isCollapsed}
             toggleCollapse={() =>
