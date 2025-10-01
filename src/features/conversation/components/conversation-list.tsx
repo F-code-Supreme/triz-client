@@ -116,7 +116,7 @@ const ConversationList = ({
   const groupedData = useMemo<GroupedConversation[]>(() => {
     if (!data?.pages) return [];
 
-    const conversations = data.pages.flatMap((page) => page.data || []);
+    const conversations = data.pages.flatMap((page) => page.content || []);
     const filtered = conversations.filter((conv) =>
       conv.title?.toLowerCase().includes(debouncedSearchQuery.toLowerCase()),
     );

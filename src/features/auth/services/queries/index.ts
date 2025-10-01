@@ -15,7 +15,7 @@ export const useGetMeQuery = () => {
         signal,
       });
 
-      return response.data;
+      return response;
     },
   });
 };

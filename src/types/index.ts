@@ -10,7 +10,7 @@ export interface Meta {
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
+  content: T[];
   page: {
     size: number;
     number: number;
