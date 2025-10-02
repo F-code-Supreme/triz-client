@@ -1,3 +1,100 @@
+import React from 'react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+// Custom carousel for mobile with dots indicator
+import type { CarouselApi } from '@/components/ui/carousel';
+
+interface TrizItem {
+  imageUrl: string;
+  title: string;
+  des: string;
+}
+
+function CustomMobileCarousel({ items }: { items: TrizItem[] }) {
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+  const apiRef = React.useRef<CarouselApi | null>(null);
+
+  const handleSetApi = (api: CarouselApi) => {
+    apiRef.current = api;
+    if (api) {
+      setSelectedIndex(api.selectedScrollSnap());
+      api.on('select', () => setSelectedIndex(api.selectedScrollSnap()));
+    }
+  };
+
+  return (
+    <div className="w-full flex flex-col items-center">
+      <Carousel setApi={handleSetApi} opts={{ loop: false }}>
+        <CarouselContent>
+          {items.map((item: TrizItem, index: number) => (
+            <CarouselItem key={index} className="flex justify-center">
+              <div className="p-2 border rounded-xl shadow-2xl max-w-xs w-full bg-white dark:bg-slate-800">
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className="mx-auto rounded-md pb-3"
+                />
+                <h4 className="text-xl font-semibold text-slate-900 dark:text-white py-6">
+                  {item.title}
+                </h4>
+                <p className="text-slate-600 dark:text-slate-300 py-4">
+                  {item.des}
+                </p>
+                <div className="text-blue-600 dark:text-blue-400 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
+                  <Link to={`/`}>Tìm hiểu thêm</Link>
+                  <svg
+                    width="21"
+                    height="20"
+                    viewBox="0 0 21 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4.66669 10H16.3334"
+                      stroke="#2563EB"
+                      strokeWidth="1.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M10.5 4.1665L16.3333 9.99984L10.5 15.8332"
+                      stroke="#2563EB"
+                      strokeWidth="1.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  {/* thêm route sau */}
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+      {/* Dots indicator */}
+      <div className="flex justify-center gap-2 mt-4">
+        {items.map((_, idx: number) => (
+          <button
+            key={idx}
+            className={`w-2 h-2 rounded-full transition-all duration-200 ${selectedIndex === idx ? 'bg-blue-600 scale-125' : 'bg-slate-300 dark:bg-slate-600'}`}
+            aria-label={`Chuyển đến slide ${idx + 1}`}
+            onClick={() => {
+              if (
+                apiRef.current &&
+                typeof apiRef.current.scrollTo === 'function'
+              ) {
+                apiRef.current.scrollTo(idx);
+              }
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 import { Link } from '@tanstack/react-router';
 
 import Impromptu from '@/assets/svg/Impromptu';
@@ -111,6 +208,7 @@ const HomePage = () => {
                 src="/src/assets/images/Frame 1410086138.png"
                 alt="TRIZ Overview"
               /> */}
+              {/* chỉnh lại responsive */}
               <IntroduceTRIZsvg />
             </div>
           </div>
@@ -127,6 +225,8 @@ const HomePage = () => {
                   src="/src/assets/images/Frame 1410086139.png"
                   alt="TRIZ Introduction"
                 /> */}
+
+                {/* chỉnh lại responsive */}
                 <IntroduceMethodology />
               </div>
             </div>
@@ -359,7 +459,8 @@ const HomePage = () => {
           cụ bạn cần để học và áp dụng TRIZ đều có mặt tại đây.
         </p>
 
-        <div className="grid md:grid-cols-4 gap-4 mt-10">
+        {/* Grid for desktop */}
+        <div className="hidden md:grid md:grid-cols-4 gap-4 mt-10">
           {trizComprehensive.map((item, index) => (
             <div
               key={index}
@@ -370,15 +471,12 @@ const HomePage = () => {
                 alt={item.title}
                 className="mx-auto rounded-md pb-3"
               />
-
               <h4 className="text-xl font-semibold text-slate-900 dark:text-white py-6">
                 {item.title}
               </h4>
-
               <p className="text-slate-600 dark:text-slate-300 py-4">
                 {item.des}
               </p>
-
               <div className="text-blue-600 dark:text-blue-400 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
                 <Link to={`/`}>Tìm hiểu thêm</Link>
                 <svg
@@ -407,6 +505,11 @@ const HomePage = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Carousel for mobile */}
+        <div className="md:hidden w-full mt-10">
+          <CustomMobileCarousel items={trizComprehensive} />
         </div>
       </div>
 

@@ -2,11 +2,10 @@
 const IntroduceTRIZsvg = () => {
   return (
     <svg
-      width="600"
-      height="500"
       viewBox="0 0 850 696"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-auto max-w-[600px]"
     >
       <g filter="url(#filter0_d_2177_9183)">
         <path
