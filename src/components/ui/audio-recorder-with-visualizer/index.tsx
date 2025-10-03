@@ -1,4 +1,4 @@
-import { Download, Mic, Trash } from 'lucide-react';
+import { Check, Mic, Trash } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -10,12 +10,14 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
+import { useSpeechRecognitionIntegration } from './hooks/use-speech-recognition';
 import { useAudioRecorderStore } from './store/use-audio-recorder-store';
 import { useTheme } from '../../theme/theme-provider';
 
 type Props = {
   className?: string;
   timerClassName?: string;
+  onRecordingComplete?: (transcript: string) => void;
 };
 
 let timerTimeout: NodeJS.Timeout;
@@ -28,6 +30,7 @@ const padWithLeadingZeros = (num: number, length: number): string => {
 export const AudioRecorderWithVisualizer = ({
   className,
   timerClassName,
+  onRecordingComplete,
 }: Props) => {
   const { theme } = useTheme();
 
@@ -38,6 +41,9 @@ export const AudioRecorderWithVisualizer = ({
     stopRecording,
     resetRecording,
   } = useAudioRecorderStore();
+
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognitionIntegration();
 
   const [timer, setTimer] = useState<number>(0);
   // Calculate the hours, minutes, and seconds from the timer
@@ -62,14 +68,23 @@ export const AudioRecorderWithVisualizer = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<any>(null);
 
+  const handleStartRecording = () => {
+    resetTranscript();
+    startRecording();
+  };
+
   const handleStopRecording = () => {
     stopRecording();
     setTimer(0);
     clearTimeout(timerTimeout);
+    if (onRecordingComplete) {
+      onRecordingComplete(transcript);
+    }
   };
 
   const handleResetRecording = () => {
     resetRecording();
+    resetTranscript();
     setTimer(0);
     clearTimeout(timerTimeout);
 
@@ -161,74 +176,103 @@ export const AudioRecorderWithVisualizer = ({
     };
   }, [isRecording, theme, mediaRecorderRefs]);
 
+  if (!browserSupportsSpeechRecognition) {
+    return (
+      <div className="p-4 text-center text-sm text-muted-foreground">
+        Browser doesn&apos;t support speech recognition.
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={cn(
-        'flex h-16 rounded-md relative w-full items-center justify-center gap-2 max-w-5xl',
-        {
-          'border p-1': isRecording,
-          'border-none p-0': !isRecording,
-        },
-        className,
-      )}
-    >
-      {isRecording ? (
-        <Timer
-          hourLeft={hourLeft}
-          hourRight={hourRight}
-          minuteLeft={minuteLeft}
-          minuteRight={minuteRight}
-          secondLeft={secondLeft}
-          secondRight={secondRight}
-          timerClassName={timerClassName}
+    <div>
+      <div
+        className={cn(
+          'flex h-16 rounded-md relative w-full items-center justify-center gap-2 max-w-5xl',
+          {
+            'border p-1': isRecording,
+            'border-none p-0': !isRecording,
+          },
+          className,
+        )}
+      >
+        {isRecording ? (
+          <Timer
+            hourLeft={hourLeft}
+            hourRight={hourRight}
+            minuteLeft={minuteLeft}
+            minuteRight={minuteRight}
+            secondLeft={secondLeft}
+            secondRight={secondRight}
+            timerClassName={timerClassName}
+          />
+        ) : null}
+        <canvas
+          ref={canvasRef}
+          className={`h-full w-full bg-background ${
+            !isRecording ? 'hidden' : 'flex'
+          }`}
         />
-      ) : null}
-      <canvas
-        ref={canvasRef}
-        className={`h-full w-full bg-background ${
-          !isRecording ? 'hidden' : 'flex'
-        }`}
-      />
-      <div className="flex gap-2">
-        <TooltipProvider>
-          {/* ========== Delete recording button ========== */}
-          {isRecording ? (
+        <div className="flex gap-2">
+          <TooltipProvider>
+            {/* ========== Delete recording button ========== */}
+            {isRecording ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleResetRecording}
+                    size={'icon'}
+                    variant={'destructive'}
+                  >
+                    <Trash size={15} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="m-2">
+                  <span>Reset recording</span>
+                </TooltipContent>
+              </Tooltip>
+            ) : null}
+
+            {/* ========== Start and send recording button ========== */}
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  onClick={handleResetRecording}
-                  size={'icon'}
-                  variant={'destructive'}
-                >
-                  <Trash size={15} />
-                </Button>
+                {!isRecording ? (
+                  <Button onClick={handleStartRecording} size={'icon'}>
+                    <Mic size={15} />
+                  </Button>
+                ) : (
+                  <Button onClick={handleStopRecording} size={'icon'}>
+                    <Check size={15} />
+                  </Button>
+                )}
               </TooltipTrigger>
               <TooltipContent className="m-2">
-                <span>Reset recording</span>
+                <span>
+                  {!isRecording ? 'Start recording' : 'Accept recording'}
+                </span>
               </TooltipContent>
             </Tooltip>
-          ) : null}
+          </TooltipProvider>
+        </div>
+      </div>
 
-          {/* ========== Start and send recording button ========== */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              {!isRecording ? (
-                <Button onClick={() => startRecording()} size={'icon'}>
-                  <Mic size={15} />
-                </Button>
-              ) : (
-                <Button onClick={handleStopRecording} size={'icon'}>
-                  <Download size={15} />
-                </Button>
-              )}
-            </TooltipTrigger>
-            <TooltipContent className="m-2">
-              <span>
-                {!isRecording ? 'Start recording' : 'Download recording'}
-              </span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      {/* Transcript display */}
+      <div
+        className={cn(
+          'mt-2 min-h-[4rem] max-h-40 w-full max-w-5xl overflow-y-auto rounded-md border bg-background p-3 text-sm',
+          {
+            'border-primary': isRecording,
+            'border-muted': !isRecording,
+          },
+        )}
+      >
+        {transcript || (
+          <span className="text-muted-foreground">
+            {isRecording
+              ? 'Listening...'
+              : 'Your transcript will appear here...'}
+          </span>
+        )}
       </div>
     </div>
   );

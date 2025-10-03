@@ -250,7 +250,11 @@ const ChatInterface = () => {
       {/* Input Area */}
       <div className="border-t p-4 pb-2">
         {isRecording ? (
-          <AudioRecorderWithVisualizer />
+          <AudioRecorderWithVisualizer
+            onRecordingComplete={(transcript) => {
+              setInputValue(transcript);
+            }}
+          />
         ) : (
           <PromptInput onSubmit={handleSubmit}>
             <PromptInputTextarea

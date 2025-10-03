@@ -1,4 +1,7 @@
+import SpeechRecognition from 'react-speech-recognition';
 import { create } from 'zustand';
+
+import { STRING_EMPTY } from '@/constants';
 
 interface MediaRecorderRefs {
   stream: MediaStream | null;
@@ -11,10 +14,12 @@ interface AudioRecorderState {
   isRecording: boolean;
   isRecordingFinished: boolean;
   recordedBlob: Blob | null;
+  transcript: string;
   mediaRecorderRefs: MediaRecorderRefs;
   setIsRecording: (isRecording: boolean) => void;
   setIsRecordingFinished: (isFinished: boolean) => void;
   setRecordedBlob: (blob: Blob | null) => void;
+  setTranscript: (transcript: string) => void;
   setMediaRecorderRefs: (refs: MediaRecorderRefs) => void;
   startRecording: () => Promise<void>;
   stopRecording: () => void;
@@ -26,6 +31,7 @@ const initialState = {
   isRecording: false,
   isRecordingFinished: false,
   recordedBlob: null,
+  transcript: STRING_EMPTY,
   mediaRecorderRefs: {
     stream: null,
     analyser: null,
@@ -43,6 +49,7 @@ export const useAudioRecorderStore = create<AudioRecorderState>((set) => ({
   setIsRecordingFinished: (isFinished: boolean) =>
     set({ isRecordingFinished: isFinished }),
   setRecordedBlob: (blob: Blob | null) => set({ recordedBlob: blob }),
+  setTranscript: (transcript: string) => set({ transcript }),
   setMediaRecorderRefs: (refs: MediaRecorderRefs) =>
     set({ mediaRecorderRefs: refs }),
   startRecording: async () => {
@@ -54,6 +61,10 @@ export const useAudioRecorderStore = create<AudioRecorderState>((set) => ({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
+      await SpeechRecognition.startListening({
+        continuous: true,
+        language: 'en-US',
+      });
       // Set recording state
       set({ isRecording: true });
 
@@ -103,18 +114,19 @@ export const useAudioRecorderStore = create<AudioRecorderState>((set) => ({
       });
       set({ recordedBlob: recordBlob });
 
-      // Download the blob
-      const downloadLink = document.createElement('a');
-      downloadLink.href = URL.createObjectURL(recordBlob);
-      downloadLink.download = `Audio_${new Date().getMilliseconds()}.mp3`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+      // // Download the blob
+      // const downloadLink = document.createElement('a');
+      // downloadLink.href = URL.createObjectURL(recordBlob);
+      // downloadLink.download = `Audio_${new Date().getMilliseconds()}.mp3`;
+      // document.body.appendChild(downloadLink);
+      // downloadLink.click();
+      // document.body.removeChild(downloadLink);
 
-      recordingChunks = [];
+      // recordingChunks = [];
     };
 
     recorder.stop();
+    SpeechRecognition.stopListening();
     set({ isRecording: false, isRecordingFinished: true });
   },
   resetRecording: () => {
@@ -140,9 +152,11 @@ export const useAudioRecorderStore = create<AudioRecorderState>((set) => ({
       audioContext.close();
     }
 
+    SpeechRecognition.stopListening();
     set({
       isRecording: false,
       isRecordingFinished: true,
+      transcript: STRING_EMPTY,
       mediaRecorderRefs: initialState.mediaRecorderRefs,
     });
   },

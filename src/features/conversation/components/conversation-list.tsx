@@ -359,23 +359,6 @@ const ConversationList = ({
     handleLoadMore();
   }
 
-  if (isError) {
-    return (
-      <div className={cn('flex flex-col h-full', className)}>
-        <div className="p-4 text-center text-red-500">
-          <p>Failed to load conversations</p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.location.reload()}
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       className={cn(
@@ -430,13 +413,26 @@ const ConversationList = ({
             ))}
           </div>
         ) : groupedData.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground">
-            <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No conversations found</p>
-            {debouncedSearchQuery && (
-              <p className="text-sm mt-2">Try adjusting your search terms</p>
-            )}
-          </div>
+          isError ? (
+            <div className="p-4 flex flex-col gap-4 text-center text-red-500">
+              <p>Failed to load conversations</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : (
+            <div className="p-8 text-center text-muted-foreground">
+              <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No conversations found</p>
+              {debouncedSearchQuery && (
+                <p className="text-sm mt-2">Try adjusting your search terms</p>
+              )}
+            </div>
+          )
         ) : (
           <div
             style={{
