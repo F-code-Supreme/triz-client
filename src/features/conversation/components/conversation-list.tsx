@@ -95,9 +95,9 @@ const ConversationItem = ({
   return (
     <div
       className={cn(
-        'group relative w-full h-auto px-4 py-2 rounded-md transition-colors',
-        'hover:bg-primary/80',
-        isSelected && 'bg-primary',
+        'group relative w-full h-auto px-4 py-2 rounded-md transition-colors bg-transparent',
+        'hover:bg-primary/20',
+        isSelected && 'bg-primary hover:bg-primary/80',
       )}
     >
       <Button
@@ -141,9 +141,8 @@ const ConversationItem = ({
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity',
-                  isSelected &&
-                    'opacity-100 bg-transparent hover:bg-primary/30',
+                  'h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/30',
+                  isSelected && 'opacity-100 bg-transparent',
                 )}
               >
                 <MoreVertical
