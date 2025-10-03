@@ -1,6 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+
+import { ChatKeys } from '../queries/keys';
 
 import type {
   IArchiveConversationPayload,
@@ -9,6 +11,7 @@ import type {
 import type { Conversation } from '../../types';
 
 export const useArchiveConversationMutation = () => {
+  const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: IArchiveConversationPayload) => {
@@ -21,10 +24,16 @@ export const useArchiveConversationMutation = () => {
 
       return response;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ChatKeys.GetConversationsQuery],
+      });
+    },
   });
 };
 
 export const useRenameConversationMutation = () => {
+  const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: IRenameConversationPayload) => {
@@ -37,10 +46,16 @@ export const useRenameConversationMutation = () => {
 
       return response;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ChatKeys.GetConversationsQuery],
+      });
+    },
   });
 };
 
 export const useDeleteConversationMutation = () => {
+  const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
     mutationFn: async (conversationId: string) => {
@@ -49,6 +64,11 @@ export const useDeleteConversationMutation = () => {
       );
 
       return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ChatKeys.GetConversationsQuery],
+      });
     },
   });
 };

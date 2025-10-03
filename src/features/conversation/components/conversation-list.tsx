@@ -1,14 +1,33 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
-import { MessageSquare, Search, PanelLeftClose, PanelLeft } from 'lucide-react';
+import {
+  MessageSquare,
+  Search,
+  PanelLeftClose,
+  PanelLeft,
+  MoreVertical,
+  Edit,
+  Archive,
+} from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { STRING_EMPTY } from '@/constants';
+import {
+  useArchiveConversationMutation,
+  useRenameConversationMutation,
+} from '@/features/conversation/services/mutations';
 import { useGetConversationsQuery } from '@/features/conversation/services/queries';
 import { useDebounce } from '@/hooks';
 import { cn } from '@/lib/utils';
@@ -30,33 +49,134 @@ const ConversationItem = ({
   conversation,
   isSelected,
   onClick,
+  onRename,
+  onArchive,
 }: {
   conversation: Conversation;
   isSelected: boolean;
   onClick: (conversation: Conversation) => void;
+  onRename: (conversationId: string, newTitle: string) => void;
+  onArchive: (conversation: Conversation) => void;
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(
+    conversation.title || STRING_EMPTY,
+  );
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleStartEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    setEditTitle(conversation.title || STRING_EMPTY);
+    setTimeout(() => inputRef.current?.select(), 0);
+  };
+
+  const handleSaveEdit = () => {
+    const trimmedTitle = editTitle.trim();
+    if (trimmedTitle && trimmedTitle !== conversation.title) {
+      onRename(conversation.id, trimmedTitle);
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditTitle(conversation.title || STRING_EMPTY);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSaveEdit();
+    } else if (e.key === 'Escape') {
+      handleCancelEdit();
+    }
+  };
+
   return (
-    <Button
-      variant={isSelected ? 'secondary' : 'ghost'}
+    <div
       className={cn(
-        'w-full h-auto px-4 py-2 justify-start text-left',
-        'hover:bg-accent/50 transition-colors',
-        isSelected && 'bg-secondary',
+        'group relative w-full h-auto px-4 py-2 rounded-md transition-colors',
+        'hover:bg-primary/80',
+        isSelected && 'bg-primary',
       )}
-      onClick={() => onClick(conversation)}
     >
-      <div className="flex items-start gap-3 w-full min-w-0">
-        <div className="flex-1 min-w-0 space-y-1">
-          <p className="text-sm font-medium truncate">
-            {conversation.title || 'New Conversation'}
-          </p>
+      <Button
+        variant="ghost"
+        className="flex items-start gap-3 w-full min-w-0 h-auto p-0 hover:bg-transparent focus-visible:ring-0"
+        onClick={() => !isEditing && onClick(conversation)}
+      >
+        <div className="flex-1 min-w-0 space-y-1 text-left">
+          {isEditing ? (
+            <Input
+              ref={inputRef}
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              onBlur={handleSaveEdit}
+              onKeyDown={handleKeyDown}
+              className={cn(
+                'h-7 text-sm font-medium border-none focus-visible:ring-0 focus-visible:ring-offset-0',
+                isSelected && 'bg-primary/20 text-primary-foreground',
+              )}
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <p
+              className={cn(
+                'text-sm font-medium truncate',
+                isSelected && 'text-primary-foreground',
+              )}
+            >
+              {conversation.title || 'New Conversation'}
+            </p>
+          )}
           <p className="text-xs text-muted-foreground">
             {conversation.updatedAt &&
               format(parseISO(conversation.updatedAt), 'HH:mm')}
           </p>
         </div>
-      </div>
-    </Button>
+        {!isEditing && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  'h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity',
+                  isSelected &&
+                    'opacity-100 bg-transparent hover:bg-primary/30',
+                )}
+              >
+                <MoreVertical
+                  className={cn(
+                    'h-4 w-4',
+                    isSelected && 'text-primary-foreground',
+                  )}
+                />
+                <span className="sr-only">More actions</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <DropdownMenuItem onClick={handleStartEdit}>
+                <Edit className="mr-2 h-4 w-4" />
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onArchive(conversation);
+                }}
+              >
+                <Archive className="mr-2 h-4 w-4" />
+                Archive
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </Button>
+    </div>
   );
 };
 
@@ -111,6 +231,51 @@ const ConversationList = ({
     hasNextPage,
     isFetchingNextPage,
   } = useGetConversationsQuery(debouncedSearchQuery);
+
+  // Mutations
+  const { mutate: renameMutation } = useRenameConversationMutation();
+  const { mutate: archiveMutation } = useArchiveConversationMutation();
+
+  // Handlers for actions
+  const handleRename = (conversationId: string, newTitle: string) => {
+    renameMutation(
+      {
+        conversationId,
+        title: newTitle,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Conversation renamed successfully');
+        },
+        onError: (error) => {
+          toast.error(
+            (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || 'Failed to rename conversation',
+          );
+        },
+      },
+    );
+  };
+
+  const handleArchive = (conversation: Conversation) => {
+    archiveMutation(
+      {
+        conversationId: conversation.id,
+        archived: true,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Conversation archived successfully');
+        },
+        onError: (error) => {
+          toast.error(
+            (error as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message || 'Failed to archive conversation',
+          );
+        },
+      },
+    );
+  };
 
   // Group conversations by date
   const groupedData = useMemo<GroupedConversation[]>(() => {
@@ -216,7 +381,6 @@ const ConversationList = ({
         className,
       )}
     >
-      {/* Search Header */}
       <div className="p-4 border-b bg-muted/50 h-14">
         <Button
           variant="ghost"
@@ -292,6 +456,8 @@ const ConversationList = ({
                         selectedConversationId === item.conversation.id
                       }
                       onClick={onConversationSelect}
+                      onRename={handleRename}
+                      onArchive={handleArchive}
                     />
                   ) : null}
                 </div>

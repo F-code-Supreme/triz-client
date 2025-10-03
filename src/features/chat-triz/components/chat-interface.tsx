@@ -244,7 +244,7 @@ const ChatInterface = () => {
         <ConversationScrollButton />
       </Conversation>
       {/* Input Area */}
-      <div className="border-t p-4">
+      <div className="border-t p-4 pb-2">
         <PromptInput onSubmit={handleSubmit}>
           <PromptInputTextarea
             value={inputValue}
@@ -268,6 +268,10 @@ const ChatInterface = () => {
             />
           </PromptInputToolbar>
         </PromptInput>
+      </div>
+      <div className="text-center pb-2 text-xs text-muted-foreground">
+        Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một
+        số câu trả lời sai lệch.
       </div>
     </div>
   );
