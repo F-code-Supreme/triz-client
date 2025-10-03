@@ -21,9 +21,12 @@ const ChatTrizPage = () => {
   const { activeConversationId, setActiveConversationId } =
     useConversationsQueryStore();
 
-  // Handle conversation selection
   const handleConversationSelect = (conversation: Conversation) => {
     setActiveConversationId(conversation.id);
+  };
+
+  const handleNewChat = () => {
+    setActiveConversationId(null);
   };
 
   return (
@@ -42,6 +45,7 @@ const ChatTrizPage = () => {
           <ConversationList
             selectedConversationId={activeConversationId ?? undefined}
             onConversationSelect={handleConversationSelect}
+            onNewChat={handleNewChat}
             isCollapsed={isCollapsed}
             toggleCollapse={() =>
               isCollapsed

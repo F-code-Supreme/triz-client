@@ -8,6 +8,7 @@ import {
   MoreVertical,
   Edit,
   Archive,
+  Plus,
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -205,6 +206,7 @@ const ConversationSkeleton = () => {
 interface ConversationListProps {
   selectedConversationId?: string;
   onConversationSelect: (conversation: Conversation) => void;
+  onNewChat: () => void;
   className?: string;
   isCollapsed: boolean;
   toggleCollapse: () => void;
@@ -213,6 +215,7 @@ interface ConversationListProps {
 const ConversationList = ({
   selectedConversationId,
   onConversationSelect,
+  onNewChat,
   className,
   isCollapsed,
   toggleCollapse,
@@ -380,7 +383,7 @@ const ConversationList = ({
         className,
       )}
     >
-      <div className="p-4 border-b bg-muted/50 h-14">
+      <div className="flex items-center justify-between p-4 border-b bg-muted/50 h-14">
         <Button
           variant="ghost"
           size="icon"
@@ -393,6 +396,17 @@ const ConversationList = ({
             <PanelLeftClose className="h-4 w-4" />
           )}
         </Button>
+        {!isCollapsed && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={onNewChat}
+            title="New Chat"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        )}
       </div>
       {/* Search Header */}
       <div className="px-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
