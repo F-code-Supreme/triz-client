@@ -8,6 +8,8 @@ import {
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
+import { AudioRecorderWithVisualizer } from '@/components/ui/audio-recorder-with-visualizer';
+import { useAudioRecorderStore } from '@/components/ui/audio-recorder-with-visualizer/store/use-audio-recorder-store';
 import { Button } from '@/components/ui/button';
 import { Action, Actions } from '@/components/ui/shadcn-io/ai/actions';
 import {
@@ -55,6 +57,8 @@ const convertRoleToLowerCase = (
 const ChatInterface = () => {
   const { activeConversationId, setActiveConversationId } =
     useConversationsQueryStore();
+
+  const { isRecording, startRecording } = useAudioRecorderStore();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState(STRING_EMPTY);
@@ -245,29 +249,35 @@ const ChatInterface = () => {
       </Conversation>
       {/* Input Area */}
       <div className="border-t p-4 pb-2">
-        <PromptInput onSubmit={handleSubmit}>
-          <PromptInputTextarea
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask me anything about development, coding, or technology..."
-            disabled={isTyping}
-          />
-          <PromptInputToolbar>
-            <PromptInputTools>
-              <PromptInputButton disabled={isTyping}>
-                <PaperclipIcon size={16} />
-              </PromptInputButton>
-              <PromptInputButton disabled={isTyping}>
-                <MicIcon size={16} />
-                <span>Voice</span>
-              </PromptInputButton>
-            </PromptInputTools>
-            <PromptInputSubmit
-              disabled={!inputValue.trim() || isTyping}
-              status={isTyping ? 'streaming' : 'ready'}
+        {isRecording ? (
+          <AudioRecorderWithVisualizer />
+        ) : (
+          <PromptInput onSubmit={handleSubmit}>
+            <PromptInputTextarea
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Ask me anything about development, coding, or technology..."
+              disabled={isTyping}
             />
-          </PromptInputToolbar>
-        </PromptInput>
+            <PromptInputToolbar>
+              <PromptInputTools>
+                <PromptInputButton disabled={isTyping}>
+                  <PaperclipIcon size={16} />
+                </PromptInputButton>
+                <PromptInputButton
+                  disabled={isTyping}
+                  onClick={() => startRecording()}
+                >
+                  <MicIcon size={16} />
+                </PromptInputButton>
+              </PromptInputTools>
+              <PromptInputSubmit
+                disabled={!inputValue.trim() || isTyping}
+                status={isTyping ? 'streaming' : 'ready'}
+              />
+            </PromptInputToolbar>
+          </PromptInput>
+        )}
       </div>
       <div className="text-center pb-2 text-xs text-muted-foreground">
         Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một
