@@ -1,6 +1,7 @@
 import SpeechRecognition from 'react-speech-recognition';
 import { create } from 'zustand';
 
+import i18n from '@/configs/i18next';
 import { STRING_EMPTY } from '@/constants';
 
 interface MediaRecorderRefs {
@@ -63,7 +64,7 @@ export const useAudioRecorderStore = create<AudioRecorderState>((set) => ({
 
       await SpeechRecognition.startListening({
         continuous: true,
-        language: 'en-US',
+        language: i18n.language,
       });
       // Set recording state
       set({ isRecording: true });
