@@ -7,7 +7,7 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import ChatInterface from '@/features/chat-triz/components/chat-interface';
-import ConversationList from '@/features/conversation/components/conversation-list';
+import ConversationSidebar from '@/features/conversation/components/conversation-sidebar';
 import { useConversationsQueryStore } from '@/features/conversation/store/use-conversations-query-store';
 import { ChatLayout } from '@/layouts/chat-layout';
 
@@ -29,12 +29,20 @@ const ChatTrizPage = () => {
     setActiveConversationId(null);
   };
 
+  const handleCollapsedChange = (collapsed: boolean) => {
+    if (collapsed) {
+      panelRef.current?.collapse();
+    } else {
+      panelRef.current?.expand();
+    }
+  };
+
   return (
     <ChatLayout meta={{ title: t('page_meta_title') }}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel
           defaultSize={20}
-          minSize={15}
+          minSize={10}
           maxSize={30}
           collapsible={true}
           collapsedSize={4}
@@ -42,16 +50,12 @@ const ChatTrizPage = () => {
           onExpand={() => setIsCollapsed(false)}
           ref={panelRef}
         >
-          <ConversationList
+          <ConversationSidebar
             selectedConversationId={activeConversationId ?? undefined}
             onConversationSelect={handleConversationSelect}
             onNewChat={handleNewChat}
             isCollapsed={isCollapsed}
-            toggleCollapse={() =>
-              isCollapsed
-                ? panelRef.current?.expand()
-                : panelRef.current?.collapse()
-            }
+            onCollapsedChange={handleCollapsedChange}
           />
         </ResizablePanel>
         <ResizableHandle withHandle />

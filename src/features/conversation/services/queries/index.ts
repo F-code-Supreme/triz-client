@@ -7,7 +7,6 @@ import { ChatKeys } from './keys';
 
 import type { IGetConversationDataResponse } from './types';
 import type { ConversationsResponse } from '../../types';
-import type { Message } from '@/features/chat-triz/types';
 
 export const useGetConversationsQuery = (
   searchQuery = STRING_EMPTY,
@@ -50,23 +49,6 @@ export const useGetConversationQuery = (conversationId: string | null) => {
     queryFn: async () => {
       const response = await _request.get<IGetConversationDataResponse>(
         `/conversations/${conversationId}`,
-      );
-
-      return response.data;
-    },
-    enabled: !!conversationId,
-  });
-};
-
-export const useGetConversationMessagesQuery = (
-  conversationId: string | null,
-) => {
-  const _request = useAxios();
-  return useQuery({
-    queryKey: [ChatKeys.GetConversationQuery, conversationId, 'messages'],
-    queryFn: async () => {
-      const response = await _request.get<{ messages: Message[] }>(
-        `/conversations/${conversationId}/messages`,
       );
 
       return response.data;

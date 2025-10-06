@@ -3,18 +3,25 @@ import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import {
   MessageSquare,
   Search,
-  PanelLeftClose,
-  PanelLeft,
   MoreVertical,
   Edit,
   Archive,
-  Plus,
+  History,
+  ChevronDown,
+  PanelLeft,
+  PanelLeftClose,
+  SquarePen,
 } from 'lucide-react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,14 +31,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { STRING_EMPTY } from '@/constants';
 import {
   useArchiveConversationMutation,
   useRenameConversationMutation,
 } from '@/features/conversation/services/mutations';
-import { useGetConversationsQuery } from '@/features/conversation/services/queries';
 import { useDebounce } from '@/hooks';
 import { cn } from '@/lib/utils';
+
+import { useGetConversationsQuery } from '../services/queries';
 
 import type { Conversation } from '../types';
 
@@ -203,25 +217,26 @@ const ConversationSkeleton = () => {
   );
 };
 
-interface ConversationListProps {
+interface ConversationSidebarProps {
   selectedConversationId?: string;
   onConversationSelect: (conversation: Conversation) => void;
   onNewChat: () => void;
   className?: string;
   isCollapsed: boolean;
-  toggleCollapse: () => void;
+  onCollapsedChange: (collapsed: boolean) => void;
 }
 
-const ConversationList = ({
+const ConversationSidebar = ({
   selectedConversationId,
   onConversationSelect,
   onNewChat,
   className,
   isCollapsed,
-  toggleCollapse,
-}: ConversationListProps) => {
+  onCollapsedChange,
+}: ConversationSidebarProps) => {
   const { t } = useTranslation('action');
   const [searchQuery, setSearchQuery] = useState(STRING_EMPTY);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -359,19 +374,28 @@ const ConversationList = ({
     handleLoadMore();
   }
 
+  const handleHistoryClick = () => {
+    if (isCollapsed) {
+      onCollapsedChange(false);
+      setIsHistoryOpen(true);
+    }
+  };
+
   return (
     <div
       className={cn(
-        'flex flex-col h-full bg-background border border-r-0 rounded-xl rounded-r-none',
+        'flex flex-col h-full bg-background border border-r-0 rounded-xl rounded-r-none transition-all duration-300',
+        isCollapsed ? 'w-16' : 'w-full',
         className,
       )}
     >
-      <div className="flex items-center justify-between p-4 border-b bg-muted/50 h-14">
+      {/* Header */}
+      <div className="p-4 flex items-center border-b bg-muted/50 h-14">
         <Button
           variant="ghost"
           size="icon"
-          className="h-6 w-6"
-          onClick={toggleCollapse}
+          className="h-4 w-4"
+          onClick={() => onCollapsedChange(!isCollapsed)}
         >
           {isCollapsed ? (
             <PanelLeft className="h-4 w-4" />
@@ -379,114 +403,187 @@ const ConversationList = ({
             <PanelLeftClose className="h-4 w-4" />
           )}
         </Button>
-        {!isCollapsed && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={onNewChat}
-            title="New Chat"
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
-        )}
       </div>
-      {/* Search Header */}
-      <div className="px-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="relative">
-          <Search className="absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t('search')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-6 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-          />
+
+      {isCollapsed ? (
+        <div className="flex flex-col">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-full justify-start h-10 p-4"
+                  onClick={onNewChat}
+                >
+                  <SquarePen className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>New Chat</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-full justify-start h-10 p-4"
+                  onClick={handleHistoryClick}
+                >
+                  <History className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>History</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-      </div>
-
-      {/* Conversation List */}
-      <ScrollArea className="flex-1" ref={parentRef}>
-        {isLoading ? (
-          <div className="space-y-1">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <ConversationSkeleton key={i} />
-            ))}
+      ) : (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start gap-2 p-4 h-10"
+          onClick={onNewChat}
+        >
+          <div className="flex items-center gap-2">
+            <SquarePen className="h-4 w-4" />
+            <span className="text-sm font-medium">New Chat</span>
           </div>
-        ) : groupedData.length === 0 ? (
-          isError ? (
-            <div className="p-4 flex flex-col gap-4 text-center text-red-500">
-              <p>Failed to load conversations</p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.location.reload()}
-              >
-                Retry
-              </Button>
-            </div>
-          ) : (
-            <div className="p-8 text-center text-muted-foreground">
-              <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No conversations found</p>
-              {debouncedSearchQuery && (
-                <p className="text-sm mt-2">Try adjusting your search terms</p>
-              )}
-            </div>
-          )
-        ) : (
-          <div
-            style={{
-              height: virtualizer.getTotalSize(),
-              width: '100%',
-              position: 'relative',
-            }}
-          >
-            {virtualItems.map((virtualItem) => {
-              const item = groupedData[virtualItem.index];
+        </Button>
+      )}
 
-              return (
+      {/* History Accordion */}
+      {!isCollapsed && (
+        <Collapsible
+          open={isHistoryOpen}
+          onOpenChange={setIsHistoryOpen}
+          className="flex-1 flex flex-col overflow-hidden"
+        >
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex items-center justify-between w-full p-4 h-10"
+            >
+              <div className="flex items-center gap-2">
+                <History className="h-4 w-4" />
+                <span className="text-sm font-medium">History</span>
+              </div>
+              <ChevronDown
+                className={cn(
+                  'h-4 w-4 transition-transform',
+                  isHistoryOpen && 'rotate-180',
+                )}
+              />
+            </Button>
+          </CollapsibleTrigger>
+
+          <CollapsibleContent className="flex-1 flex flex-col overflow-hidden">
+            {/* Search */}
+            <div className="px-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+              <div className="relative">
+                <Search className="absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder={t('search')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-6 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
+            </div>
+
+            {/* Conversation List */}
+            <ScrollArea className="flex-1" ref={parentRef}>
+              {isLoading ? (
+                <div className="space-y-1">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <ConversationSkeleton key={i} />
+                  ))}
+                </div>
+              ) : groupedData.length === 0 ? (
+                isError ? (
+                  <div className="p-4 text-center">
+                    <p className="text-sm text-red-500 mb-2">
+                      Failed to load conversations
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.location.reload()}
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-muted-foreground">
+                    <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No conversations found</p>
+                    {debouncedSearchQuery && (
+                      <p className="text-sm mt-2">
+                        Try adjusting your search terms
+                      </p>
+                    )}
+                  </div>
+                )
+              ) : (
                 <div
-                  key={virtualItem.key}
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
+                    height: virtualizer.getTotalSize(),
                     width: '100%',
-                    height: `${virtualItem.size}px`,
-                    transform: `translateY(${virtualItem.start}px)`,
+                    position: 'relative',
                   }}
                 >
-                  {item?.type === 'date' ? (
-                    <DateHeader dateLabel={item.dateLabel} />
-                  ) : item?.type === 'conversation' ? (
-                    <ConversationItem
-                      conversation={item.conversation}
-                      isSelected={
-                        selectedConversationId === item.conversation.id
-                      }
-                      onClick={onConversationSelect}
-                      onRename={handleRename}
-                      onArchive={handleArchive}
-                    />
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        )}
+                  {virtualItems.map((virtualItem) => {
+                    const item = groupedData[virtualItem.index];
 
-        {/* Loading more indicator */}
-        {isFetchingNextPage && (
-          <div className="p-4 text-center">
-            <div className="space-y-1">
-              <ConversationSkeleton />
-              <ConversationSkeleton />
-            </div>
-          </div>
-        )}
-      </ScrollArea>
+                    return (
+                      <div
+                        key={virtualItem.key}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: `${virtualItem.size}px`,
+                          transform: `translateY(${virtualItem.start}px)`,
+                        }}
+                      >
+                        {item?.type === 'date' ? (
+                          <DateHeader dateLabel={item.dateLabel} />
+                        ) : item?.type === 'conversation' ? (
+                          <ConversationItem
+                            conversation={item.conversation}
+                            isSelected={
+                              selectedConversationId === item.conversation.id
+                            }
+                            onClick={onConversationSelect}
+                            onRename={handleRename}
+                            onArchive={handleArchive}
+                          />
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Loading more indicator */}
+              {isFetchingNextPage && (
+                <div className="p-4 text-center">
+                  <div className="space-y-1">
+                    <ConversationSkeleton />
+                    <ConversationSkeleton />
+                  </div>
+                </div>
+              )}
+            </ScrollArea>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
     </div>
   );
 };
 
-export default ConversationList;
+export default ConversationSidebar;
