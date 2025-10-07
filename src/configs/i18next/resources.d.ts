@@ -143,6 +143,9 @@ interface Resources {
     "sign_in": "Sign In",
     "sign_up": "Sign Up"
   },
+  "pages.chat_triz": {
+    "page_meta_title": "Chat TRIZ"
+  },
   "pages.forgot_password": {
     "form.description": "Enter your email address and we'll send you an OTP to reset your password.",
     "form.email": "Email",

@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { User, LogOut } from 'lucide-react';
 import * as React from 'react';
-import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import HamburgerIcon from '@/assets/hamburger-icon';
@@ -31,6 +30,9 @@ import useLogout from '@/features/auth/hooks/use-logout';
 import { useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
 
+import { ThemeSwitcher } from './shadcn-io/theme-switcher';
+import { useTheme } from '../theme/theme-provider';
+
 // Types
 export interface Navbar03NavItem {
   href?: string;
@@ -52,6 +54,7 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
 
 export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
   ({ className, navigationLinks, ...props }, ref) => {
+    const { theme, setTheme } = useTheme();
     const { t } = useTranslation('header');
     const { isAuthenticated } = useAuth();
     const logout = useLogout();
@@ -62,12 +65,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
       { href: '#', label: t('learn_triz') },
       { href: '#', label: t('quiz') },
       { href: '#', label: t('forum') },
-      { href: '#', label: t('chat_ai') },
+      { href: '/chat-triz', label: t('chat_ai') },
     ];
 
     const navLinks = navigationLinks || defaultNavigationLinks;
     const isMobile = useMediaQuery('(max-width: 767px)'); // 767px is md breakpoint
-    const containerRef = useRef<HTMLElement>(null);
+    const containerRef = React.useRef<HTMLElement>(null);
 
     // Combine refs
     const combinedRef = React.useCallback(
@@ -279,6 +282,11 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                 </div>
               )}
 
+              <ThemeSwitcher
+                defaultValue="system"
+                value={theme}
+                onChange={setTheme}
+              />
               <LocaleSwitcher />
             </div>
           </div>

@@ -8,3 +8,13 @@ export interface Response<T> {
 export interface Meta {
   title: string;
 }
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  page: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}

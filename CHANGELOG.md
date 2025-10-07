@@ -10,6 +10,30 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+## [0.10.7.23] - 2025-10-07
+
+### Added
+
+- Add Theme Provider + Theme Switcher on Header for development (should be in settings in future).
+
+- Add Chatbot UI with copy message action.
+
+- Implement Conversation features: Rename, Archive, Create new Conversation.
+
+- Implement ChatTriz features: Chat.
+
+- Add audio recorder with visualizer and transcript.
+
+- Add warning chatbot content: “Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một số câu trả lời sai lệch”.
+
+- Add Home page.
+
+### Changed
+
+### Removed
+
+- Remove package "immer".
+
 ## [0.9.22.19] - 2025-09-22
 
 ### Added
