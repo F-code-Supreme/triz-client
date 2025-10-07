@@ -1,11 +1,18 @@
+import { Link } from '@tanstack/react-router';
 import React from 'react';
+
+import Impromptu from '@/assets/svg/Impromptu';
+import IntroduceMethodology from '@/assets/svg/IntroduceMethodology';
+import IntroduceTRIZsvg from '@/assets/svg/IntroduceTRIZ';
+import MultiDisciplinary from '@/assets/svg/MultiDisciplinary';
+import { BackToTop } from '@/components/back-to-top/back-to-top';
 import {
+  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
-// Custom carousel for mobile with dots indicator
-import type { CarouselApi } from '@/components/ui/carousel';
+import { DefaultLayout } from '@/layouts/default-layout';
 
 interface TrizItem {
   imageUrl: string;
@@ -13,7 +20,7 @@ interface TrizItem {
   des: string;
 }
 
-function CustomMobileCarousel({ items }: { items: TrizItem[] }) {
+const CustomMobileCarousel = ({ items }: { items: TrizItem[] }) => {
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const apiRef = React.useRef<CarouselApi | null>(null);
 
@@ -94,15 +101,7 @@ function CustomMobileCarousel({ items }: { items: TrizItem[] }) {
       </div>
     </div>
   );
-}
-import { Link } from '@tanstack/react-router';
-
-import Impromptu from '@/assets/svg/Impromptu';
-import IntroduceMethodology from '@/assets/svg/IntroduceMethodology';
-import IntroduceTRIZsvg from '@/assets/svg/IntroduceTRIZ';
-import MultiDisciplinary from '@/assets/svg/MultiDisciplinary';
-import { BackToTop } from '@/components/back-to-top/back-to-top';
-import { DefaultLayout } from '@/layouts/default-layout';
+};
 
 const HomePage = () => {
   const coreValues = [
