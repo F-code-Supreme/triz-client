@@ -42,7 +42,7 @@ import {
   useArchiveConversationMutation,
   useRenameConversationMutation,
 } from '@/features/conversation/services/mutations';
-import { useDebounce } from '@/hooks';
+import { useDebounce, useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 import { useGetConversationsQuery } from '../services/queries';
@@ -239,6 +239,7 @@ const ConversationSidebar = ({
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const parentRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const {
     data,
@@ -391,18 +392,20 @@ const ConversationSidebar = ({
     >
       {/* Header */}
       <div className="p-4 flex items-center border-b bg-muted/50 h-14">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-4 w-4"
-          onClick={() => onCollapsedChange(!isCollapsed)}
-        >
-          {isCollapsed ? (
-            <PanelLeft className="h-4 w-4" />
-          ) : (
-            <PanelLeftClose className="h-4 w-4" />
-          )}
-        </Button>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-4 w-4"
+            onClick={() => onCollapsedChange(!isCollapsed)}
+          >
+            {isCollapsed ? (
+              <PanelLeft className="h-4 w-4" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" />
+            )}
+          </Button>
+        )}
       </div>
 
       {isCollapsed ? (
@@ -423,7 +426,9 @@ const ConversationSidebar = ({
                 <p>New Chat</p>
               </TooltipContent>
             </Tooltip>
+          </TooltipProvider>
 
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

@@ -4,6 +4,7 @@ import {
   RotateCcwIcon,
   CopyIcon,
   CheckIcon,
+  Menu,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -54,7 +55,11 @@ const convertRoleToLowerCase = (
   return 'system';
 };
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  onMobileMenuClick?: () => void;
+}
+
+const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
   const { activeConversationId, setActiveConversationId } =
     useConversationsQueryStore();
 
@@ -171,6 +176,15 @@ const ChatInterface = () => {
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3 h-14">
         <div className="flex items-center gap-3">
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 md:hidden"
+            onClick={onMobileMenuClick}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
             <span className="font-medium text-sm">ChatTriz</span>
@@ -183,7 +197,7 @@ const ChatInterface = () => {
           className="h-8 px-2"
         >
           <RotateCcwIcon className="size-4" />
-          <span className="ml-1">Reset</span>
+          <span className="ml-1 hidden sm:inline">Reset</span>
         </Button>
       </div>
       {/* Conversation Area */}
