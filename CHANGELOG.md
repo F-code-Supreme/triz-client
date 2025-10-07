@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
-## [0.10.4.8] - 2025-10-04
+## [0.10.7.23] - 2025-10-07
 
 ### Added
 
@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - Add audio recorder with visualizer and transcript.
 
 - Add warning chatbot content: “Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một số câu trả lời sai lệch”.
+
+- Add Home page.
 
 ### Changed
 
