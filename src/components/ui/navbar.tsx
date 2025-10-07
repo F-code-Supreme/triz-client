@@ -65,7 +65,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
       { href: '#', label: t('learn_triz') },
       { href: '#', label: t('quiz') },
       { href: '#', label: t('forum') },
-      { href: '#', label: t('chat_ai') },
+      { href: '/chat-triz', label: t('chat_ai') },
     ];
 
     const navLinks = navigationLinks || defaultNavigationLinks;
