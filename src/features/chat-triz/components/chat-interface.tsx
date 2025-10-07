@@ -1,8 +1,18 @@
-import { MicIcon, PaperclipIcon, RotateCcwIcon } from 'lucide-react';
-import { nanoid } from 'nanoid';
-import { type FormEventHandler, useCallback, useState } from 'react';
+import {
+  MicIcon,
+  PaperclipIcon,
+  RotateCcwIcon,
+  CopyIcon,
+  CheckIcon,
+  Menu,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
+import { AudioRecorderWithVisualizer } from '@/components/ui/audio-recorder-with-visualizer';
+import { useAudioRecorderStore } from '@/components/ui/audio-recorder-with-visualizer/store/use-audio-recorder-store';
 import { Button } from '@/components/ui/button';
+import { Action, Actions } from '@/components/ui/shadcn-io/ai/actions';
 import {
   ConversationContent,
   ConversationScrollButton,
@@ -17,221 +27,168 @@ import {
 import {
   PromptInput,
   PromptInputButton,
-  PromptInputModelSelect,
-  PromptInputModelSelectContent,
-  PromptInputModelSelectItem,
-  PromptInputModelSelectTrigger,
-  PromptInputModelSelectValue,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
 } from '@/components/ui/shadcn-io/ai/prompt-input';
-import {
-  Reasoning,
-  ReasoningContent,
-  ReasoningTrigger,
-} from '@/components/ui/shadcn-io/ai/reasoning';
-import {
-  Source,
-  Sources,
-  SourcesContent,
-  SourcesTrigger,
-} from '@/components/ui/shadcn-io/ai/source';
+import { Response } from '@/components/ui/shadcn-io/ai/response';
+import { STRING_EMPTY } from '@/constants';
+import { useChatMutation } from '@/features/chat-triz/services/mutations';
+import { useGetConversationQuery } from '@/features/conversation/services/queries';
+import { useConversationsQueryStore } from '@/features/conversation/store/use-conversations-query-store';
 
 type ChatMessage = {
   id: string;
-  content: string;
-  role: 'user' | 'assistant';
-  timestamp: Date;
-  reasoning?: string;
-  sources?: Array<{ title: string; url: string }>;
+  content: string | null;
+  role: 'USER' | 'ASSISTANT' | null;
+  createdAt: string | null;
+  parentId: string | null;
   isStreaming?: boolean;
 };
 
-const models = [
-  { id: 'gpt-4o', name: 'GPT-4o' },
-  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet' },
-  { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro' },
-  { id: 'llama-3.1-70b', name: 'Llama 3.1 70B' },
-];
+const convertRoleToLowerCase = (
+  role: 'USER' | 'ASSISTANT' | null,
+): 'user' | 'assistant' | 'system' => {
+  if (role === 'USER') return 'user';
+  if (role === 'ASSISTANT') return 'assistant';
+  return 'system';
+};
 
-const sampleResponses = [
-  {
-    content:
-      "I'd be happy to help you with that! React is a powerful JavaScript library for building user interfaces. What specific aspect would you like to explore?",
-    reasoning:
-      'The user is asking about React, which is a broad topic. I should provide a helpful overview while asking for more specific information to give a more targeted response.',
-    sources: [
-      { title: 'React Official Documentation', url: 'https://react.dev' },
-      { title: 'React Developer Tools', url: 'https://react.dev/learn' },
-    ],
-  },
-  {
-    content:
-      'Next.js is an excellent framework built on top of React that provides server-side rendering, static site generation, and many other powerful features out of the box.',
-    reasoning:
-      'The user mentioned Next.js, so I should explain its relationship to React and highlight its key benefits for modern web development.',
-    sources: [
-      { title: 'Next.js Documentation', url: 'https://nextjs.org/docs' },
-      {
-        title: 'Vercel Next.js Guide',
-        url: 'https://vercel.com/guides/nextjs',
-      },
-    ],
-  },
-  {
-    content:
-      "TypeScript adds static type checking to JavaScript, which helps catch errors early and improves code quality. It's particularly valuable in larger applications.",
-    reasoning:
-      'TypeScript is becoming increasingly important in modern development. I should explain its benefits while keeping the explanation accessible.',
-    sources: [
-      {
-        title: 'TypeScript Handbook',
-        url: 'https://www.typescriptlang.org/docs',
-      },
-      {
-        title: 'TypeScript with React',
-        url: 'https://react.dev/learn/typescript',
-      },
-    ],
-  },
-];
+interface ChatInterfaceProps {
+  onMobileMenuClick?: () => void;
+}
 
-const ChatInterface = () => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: nanoid(),
-      content:
-        "Hello! I'm your AI assistant. I can help you with coding questions, explain concepts, and provide guidance on web development topics. What would you like to know?",
-      role: 'assistant',
-      timestamp: new Date(),
-      sources: [
-        { title: 'Getting Started Guide', url: '#' },
-        { title: 'API Documentation', url: '#' },
-      ],
-    },
-  ]);
+const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
+  const { activeConversationId, setActiveConversationId } =
+    useConversationsQueryStore();
 
-  const [inputValue, setInputValue] = useState('');
-  const [selectedModel, setSelectedModel] = useState(models[0].id);
-  const [isTyping, setIsTyping] = useState(false);
-  const [_, setStreamingMessageId] = useState<string | null>(null);
+  const { isRecording, startRecording } = useAudioRecorderStore();
 
-  const simulateTyping = useCallback(
-    (
-      messageId: string,
-      content: string,
-      reasoning?: string,
-      sources?: Array<{ title: string; url: string }>,
-    ) => {
-      let currentIndex = 0;
-      const typeInterval = setInterval(() => {
-        setMessages((prev) =>
-          prev.map((msg) => {
-            if (msg.id === messageId) {
-              const currentContent = content.slice(0, currentIndex);
-              return {
-                ...msg,
-                content: currentContent,
-                isStreaming: currentIndex < content.length,
-                reasoning:
-                  currentIndex >= content.length ? reasoning : undefined,
-                sources: currentIndex >= content.length ? sources : undefined,
-              };
-            }
-            return msg;
-          }),
-        );
-        currentIndex += Math.random() > 0.1 ? 1 : 0; // Simulate variable typing speed
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputValue, setInputValue] = useState(STRING_EMPTY);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-        if (currentIndex >= content.length) {
-          clearInterval(typeInterval);
-          setIsTyping(false);
-          setStreamingMessageId(null);
-        }
-      }, 50);
-      return () => clearInterval(typeInterval);
-    },
-    [],
-  );
+  // Fetch messages for active conversation
+  const { data: messagesData } = useGetConversationQuery(activeConversationId);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = useCallback(
-    (event) => {
-      event.preventDefault();
+  // Chat mutation
+  const { mutateAsync: chatMutation, isPending: isTyping } = useChatMutation();
 
-      if (!inputValue.trim() || isTyping) return;
+  // Load messages when conversation changes
+  useEffect(() => {
+    if (messagesData?.mappings) {
+      setMessages(Object.values(messagesData.mappings).slice(1));
+    } else {
+      setMessages([]);
+    }
+  }, [messagesData]);
 
-      // Add user message
-      const userMessage: ChatMessage = {
-        id: nanoid(),
-        content: inputValue.trim(),
-        role: 'user',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, userMessage]);
-      setInputValue('');
-      setIsTyping(true);
-      // Simulate AI response with delay
-      setTimeout(() => {
-        const responseData =
-          sampleResponses[Math.floor(Math.random() * sampleResponses.length)];
-        const assistantMessageId = nanoid();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-        const assistantMessage: ChatMessage = {
-          id: assistantMessageId,
-          content: '',
-          role: 'assistant',
-          timestamp: new Date(),
-          isStreaming: true,
-        };
-        setMessages((prev) => [...prev, assistantMessage]);
-        setStreamingMessageId(assistantMessageId);
+    if (!inputValue.trim() || isTyping) return;
 
-        // Start typing simulation
-        simulateTyping(
-          assistantMessageId,
-          responseData.content,
-          responseData.reasoning,
-          responseData.sources,
-        );
-      }, 800);
-    },
-    [inputValue, isTyping, simulateTyping],
-  );
+    const messageContent = inputValue.trim();
+    const messageId = uuidv4();
+    const newConversationId = activeConversationId || uuidv4();
 
-  const handleReset = useCallback(() => {
-    setMessages([
-      {
-        id: nanoid(),
-        content:
-          "Hello! I'm your AI assistant. I can help you with coding questions, explain concepts, and provide guidance on web development topics. What would you like to know?",
-        role: 'assistant',
-        timestamp: new Date(),
-        sources: [
-          { title: 'Getting Started Guide', url: '#' },
-          { title: 'API Documentation', url: '#' },
-        ],
-      },
-    ]);
-    setInputValue('');
-    setIsTyping(false);
-    setStreamingMessageId(null);
-  }, []);
+    // Find the last assistant message to use as parent
+    const lastAssistantMessage = [...messages]
+      .reverse()
+      .find((msg) => msg.role === 'ASSISTANT');
+    const parentId = lastAssistantMessage?.id || null;
+
+    // Add user message optimistically
+    const userMessage: ChatMessage = {
+      id: messageId,
+      content: messageContent,
+      role: 'USER',
+      createdAt: new Date().toISOString(),
+      parentId,
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue(STRING_EMPTY);
+
+    const loadingMessageId = uuidv4();
+    const loadingMessage: ChatMessage = {
+      id: loadingMessageId,
+      content: STRING_EMPTY,
+      role: 'ASSISTANT',
+      createdAt: new Date().toISOString(),
+      parentId: messageId,
+      isStreaming: true,
+    };
+    setMessages((prev) => [...prev, loadingMessage]);
+
+    try {
+      const response = await chatMutation({
+        id: messageId,
+        content: messageContent,
+        parentId,
+        conversationId: newConversationId,
+      });
+
+      // Update conversation ID if new
+      if (!activeConversationId) {
+        setActiveConversationId(response.data.conversationId);
+      }
+
+      // Replace loading message with actual response
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === loadingMessageId
+            ? {
+                ...response.data.message,
+                isStreaming: false,
+              }
+            : msg,
+        ),
+      );
+    } catch (error) {
+      // Remove loading message on error
+      setMessages((prev) => prev.filter((msg) => msg.id !== loadingMessageId));
+      console.error('Failed to send message:', error);
+    }
+  };
+
+  const handleReset = () => {
+    setMessages([]);
+    setInputValue(STRING_EMPTY);
+    setActiveConversationId(null);
+  };
+
+  const handleCopy = async (content: string | null, messageId: string) => {
+    if (!content) return;
+
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedId(messageId);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch (error) {
+      console.error('Failed to copy:', error);
+    }
+  };
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-xl rounded-l-none border bg-background shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-3 h-14">
         <div className="flex items-center gap-3">
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 md:hidden"
+            onClick={onMobileMenuClick}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
             <span className="font-medium text-sm">ChatTriz</span>
           </div>
-          <div className="h-4 w-px bg-border" />
-          <span className="text-muted-foreground text-xs">
-            {models.find((m) => m.id === selectedModel)?.name}
-          </span>
         </div>
         <Button
           variant="ghost"
@@ -240,111 +197,109 @@ const ChatInterface = () => {
           className="h-8 px-2"
         >
           <RotateCcwIcon className="size-4" />
-          <span className="ml-1">Reset</span>
+          <span className="ml-1 hidden sm:inline">Reset</span>
         </Button>
       </div>
       {/* Conversation Area */}
       <Conversation className="flex-1">
         <ConversationContent className="space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className="space-y-3">
-              <Message from={message.role}>
-                <MessageContent>
-                  {message.isStreaming && message.content === '' ? (
-                    <div className="flex items-center gap-2">
-                      <Loader size={14} />
-                      <span className="text-muted-foreground text-sm">
-                        Thinking...
-                      </span>
-                    </div>
-                  ) : (
-                    message.content
-                  )}
-                </MessageContent>
-                <MessageAvatar
-                  src={
-                    message.role === 'user'
-                      ? 'https://github.com/dovazencot.png'
-                      : 'https://github.com/vercel.png'
-                  }
-                  name={message.role === 'user' ? 'User' : 'AI'}
-                />
-              </Message>
-              {/* Reasoning */}
-              {message.reasoning && (
-                <div className="ml-10">
-                  <Reasoning
-                    isStreaming={message.isStreaming}
-                    defaultOpen={false}
+          {messages.map((message, index) => {
+            const isLastMessage = index === messages.length - 1;
+            return (
+              <div key={message.id} className="group relative space-y-3">
+                <Message from={convertRoleToLowerCase(message.role)}>
+                  <MessageContent>
+                    {message.isStreaming && message.content === STRING_EMPTY ? (
+                      <div className="flex items-center gap-2">
+                        <Loader size={14} />
+                        <span className="text-muted-foreground text-sm">
+                          Thinking...
+                        </span>
+                      </div>
+                    ) : (
+                      <Response>{message.content}</Response>
+                    )}
+                  </MessageContent>
+                  <MessageAvatar
+                    src={
+                      message.role === 'USER'
+                        ? 'https://github.com/dovazencot.png'
+                        : 'https://github.com/vercel.png'
+                    }
+                    name={message.role === 'USER' ? 'User' : 'AI'}
+                  />
+                </Message>
+                {message.content && (
+                  <div
+                    className={`${
+                      message.role === 'USER'
+                        ? 'mr-10 flex justify-end'
+                        : 'ml-10'
+                    } ${
+                      isLastMessage
+                        ? 'opacity-100'
+                        : 'opacity-0 group-hover:opacity-100'
+                    } transition-opacity duration-200`}
                   >
-                    <ReasoningTrigger />
-                    <ReasoningContent>{message.reasoning}</ReasoningContent>
-                  </Reasoning>
-                </div>
-              )}
-              {/* Sources */}
-              {message.sources && message.sources.length > 0 && (
-                <div className="ml-10">
-                  <Sources>
-                    <SourcesTrigger count={message.sources.length} />
-                    <SourcesContent>
-                      {message.sources.map((source, index) => (
-                        <Source
-                          key={index}
-                          href={source.url}
-                          title={source.title}
-                        />
-                      ))}
-                    </SourcesContent>
-                  </Sources>
-                </div>
-              )}
-            </div>
-          ))}
+                    <Actions>
+                      <Action
+                        tooltip="Copy"
+                        onClick={() => handleCopy(message.content, message.id)}
+                      >
+                        {copiedId === message.id ? (
+                          <CheckIcon className="size-4" />
+                        ) : (
+                          <CopyIcon className="size-4" />
+                        )}
+                      </Action>
+                    </Actions>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </ConversationContent>
         <ConversationScrollButton />
       </Conversation>
       {/* Input Area */}
-      <div className="border-t p-4">
-        <PromptInput onSubmit={handleSubmit}>
-          <PromptInputTextarea
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask me anything about development, coding, or technology..."
-            disabled={isTyping}
+      <div className="border-t p-4 pb-2">
+        {isRecording ? (
+          <AudioRecorderWithVisualizer
+            onRecordingComplete={(transcript) => {
+              setInputValue(transcript);
+            }}
           />
-          <PromptInputToolbar>
-            <PromptInputTools>
-              <PromptInputButton disabled={isTyping}>
-                <PaperclipIcon size={16} />
-              </PromptInputButton>
-              <PromptInputButton disabled={isTyping}>
-                <MicIcon size={16} />
-                <span>Voice</span>
-              </PromptInputButton>
-              <PromptInputModelSelect
-                value={selectedModel}
-                onValueChange={setSelectedModel}
-                disabled={isTyping}
-              >
-                <PromptInputModelSelectTrigger>
-                  <PromptInputModelSelectValue />
-                </PromptInputModelSelectTrigger>
-                <PromptInputModelSelectContent>
-                  {models.map((model) => (
-                    <PromptInputModelSelectItem key={model.id} value={model.id}>
-                      {model.name}
-                    </PromptInputModelSelectItem>
-                  ))}
-                </PromptInputModelSelectContent>
-              </PromptInputModelSelect>
-            </PromptInputTools>
-            <PromptInputSubmit
-              disabled={!inputValue.trim() || isTyping}
-              status={isTyping ? 'streaming' : 'ready'}
+        ) : (
+          <PromptInput onSubmit={handleSubmit}>
+            <PromptInputTextarea
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Ask me anything about development, coding, or technology..."
+              disabled={isTyping}
             />
-          </PromptInputToolbar>
-        </PromptInput>
+            <PromptInputToolbar>
+              <PromptInputTools>
+                <PromptInputButton disabled={isTyping}>
+                  <PaperclipIcon size={16} />
+                </PromptInputButton>
+                <PromptInputButton
+                  disabled={isTyping}
+                  onClick={() => startRecording()}
+                >
+                  <MicIcon size={16} />
+                </PromptInputButton>
+              </PromptInputTools>
+              <PromptInputSubmit
+                disabled={!inputValue.trim() || isTyping}
+                status={isTyping ? 'streaming' : 'ready'}
+              />
+            </PromptInputToolbar>
+          </PromptInput>
+        )}
+      </div>
+      <div className="text-center pb-2 text-xs text-muted-foreground">
+        Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một
+        số câu trả lời sai lệch.
       </div>
     </div>
   );

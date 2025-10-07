@@ -10,14 +10,4 @@ export interface Conversation {
   archived?: boolean;
 }
 
-export interface Message {
-  id: string;
-  content?: string;
-  role: 'user' | 'assistant';
-  conversationId?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export type ConversationsResponse = PaginatedResponse<Conversation>;
-export type MessagesResponse = PaginatedResponse<Message>;

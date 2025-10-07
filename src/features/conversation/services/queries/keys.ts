@@ -1,4 +1,4 @@
 export enum ChatKeys {
   GetConversationsQuery = 'chat/getConversations',
-  GetMessagesQuery = 'chat/getMessages',
+  GetConversationQuery = 'chat/getConversation',
 }

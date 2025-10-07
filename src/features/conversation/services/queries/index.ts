@@ -1,52 +1,37 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-// import { useAxios } from '@/configs/axios';
+import { useAxios } from '@/configs/axios';
 import { STRING_EMPTY } from '@/constants';
 
 import { ChatKeys } from './keys';
 
+import type { IGetConversationDataResponse } from './types';
 import type { ConversationsResponse } from '../../types';
 
 export const useGetConversationsQuery = (
   searchQuery = STRING_EMPTY,
-  // archived = false,
+  archived = false,
 ) => {
-  // const _request = useAxios();
+  const _request = useAxios();
   return useInfiniteQuery({
     queryKey: [ChatKeys.GetConversationsQuery, searchQuery],
-    // queryFn: async ({ signal, pageParam = 0 }) => {
-    queryFn: async () => {
-      // const response = await _request.post<ConversationsResponse>(
-      //   `/conversations/me/search`,
-      //   {
-      //     signal,
-      //     params: {
-      //       page: pageParam,
-      //       size: 20,
-      //     },
-      //     data: {
-      //       archived,
-      //       title: searchQuery,
-      //     },
-      //   },
-      // );
-
-      // Mock response conversation
-      const mockConversations: ConversationsResponse = {
-        data: new Array(18).fill(0).map((_, i) => ({
-          id: (i + 1).toString(),
-          title: `Conversation ${i + 1}`,
-          updatedAt: new Date().toISOString(),
-        })),
-        page: {
-          number: 0,
-          size: 20,
-          totalElements: 18,
-          totalPages: 1,
+    queryFn: async ({ signal, pageParam = 0 }) => {
+      const response = await _request.post<ConversationsResponse>(
+        `/conversations/me/search`,
+        {
+          signal,
+          params: {
+            page: pageParam,
+            size: 20,
+          },
+          data: {
+            archived,
+            title: searchQuery,
+          },
         },
-      };
+      );
 
-      return mockConversations;
+      return response.data;
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
@@ -54,5 +39,20 @@ export const useGetConversationsQuery = (
         ? lastPage.page.number + 1
         : undefined;
     },
+  });
+};
+
+export const useGetConversationQuery = (conversationId: string | null) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [ChatKeys.GetConversationQuery, conversationId],
+    queryFn: async () => {
+      const response = await _request.get<IGetConversationDataResponse>(
+        `/conversations/${conversationId}`,
+      );
+
+      return response.data;
+    },
+    enabled: !!conversationId,
   });
 };
