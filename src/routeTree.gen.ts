@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
+import { Route as BooksRouteImport } from './routes/books'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
@@ -36,6 +37,11 @@ const LoginRoute = LoginRouteImport.update({
 const ChatTrizRoute = ChatTrizRouteImport.update({
   id: '/chat-triz',
   path: '/chat-triz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BooksRoute = BooksRouteImport.update({
+  id: '/books',
+  path: '/books',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -91,6 +97,7 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/books'
     | '/chat-triz'
     | '/login'
     | '/unauthorized'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/books'
     | '/chat-triz'
     | '/login'
     | '/unauthorized'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/books'
     | '/chat-triz'
     | '/login'
     | '/unauthorized'
@@ -182,6 +194,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  BooksRoute: typeof BooksRoute
   ChatTrizRoute: typeof ChatTrizRoute
   LoginRoute: typeof LoginRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
@@ -213,6 +226,13 @@ declare module '@tanstack/react-router' {
       path: '/chat-triz'
       fullPath: '/chat-triz'
       preLoaderRoute: typeof ChatTrizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/books': {
+      id: '/books'
+      path: '/books'
+      fullPath: '/books'
+      preLoaderRoute: typeof BooksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -315,6 +335,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  BooksRoute: BooksRoute,
   ChatTrizRoute: ChatTrizRoute,
   LoginRoute: LoginRoute,
   UnauthorizedRoute: UnauthorizedRoute,
