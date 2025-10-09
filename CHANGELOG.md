@@ -34,6 +34,8 @@ All notable changes to this project will be documented in this file.
 
 - Remove package "immer".
 
+- Remove "a" tag from navbar for proper navigation.
+
 ## [0.9.22.19] - 2025-09-22
 
 ### Added
