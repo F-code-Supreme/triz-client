@@ -117,21 +117,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                     <NavigationMenuList className="flex-col items-start gap-0">
                       {navLinks.map((link, index) => (
                         <NavigationMenuItem key={index} className="w-full">
-                          {link.href === '/' ? (
-                            <Link
-                              to={link.href}
-                              className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
-                            >
-                              {link.label}
-                            </Link>
-                          ) : (
-                            <a
-                              href={link.href}
-                              className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
-                            >
-                              {link.label}
-                            </a>
-                          )}
+                          <Link
+                            to={link.href}
+                            className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                          >
+                            {link.label}
+                          </Link>
                         </NavigationMenuItem>
                       ))}
                       <div className="w-full border-t pt-2 mt-2">
@@ -212,11 +203,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         asChild
                         className={cn(navigationMenuTriggerStyle())}
                       >
-                        {link.href === '/' ? (
-                          <Link to={link.href}>{link.label}</Link>
-                        ) : (
-                          <a href={link.href}>{link.label}</a>
-                        )}
+                        <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
