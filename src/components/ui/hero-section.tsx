@@ -1,5 +1,7 @@
 import { PlayCircle } from 'lucide-react';
 
+import HeroImg from '@/assets/images/Frame 1410086253.png';
+
 import { Button } from './button';
 
 const HeroSection = () => {
@@ -165,7 +167,7 @@ const HeroSection = () => {
             {/* Main illustration */}
             <div className="relative rounded-2xl overflow-hidden">
               <img
-                src="/src/assets/images/Frame 1410086253.png"
+                src={HeroImg}
                 alt="TRIZ Team Illustration - Four people collaborating"
                 className="w-full h-auto object-contain max-h-96 lg:max-h-[450px]"
               />

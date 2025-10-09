@@ -1,6 +1,14 @@
 import { Link } from '@tanstack/react-router';
 import React from 'react';
 
+import trizComprehensive3 from '@/assets/images/Frame 1410086247.png';
+import trizComprehensive4 from '@/assets/images/Frame 1410086248.png';
+import trizComprehensive2 from '@/assets/images/Frame 1410086249.png';
+import trizComprehensive1 from '@/assets/images/Frame 1410086250.png';
+import coreValueIcon1 from '@/assets/images/Frame 18.png';
+import coreValueIcon2 from '@/assets/images/Frame 19.png';
+import coreValueIcon3 from '@/assets/images/Frame 20.png';
+import coreValueIcon4 from '@/assets/images/Frame 21.png';
 import Impromptu from '@/assets/svg/Impromptu';
 import IntroduceMethodology from '@/assets/svg/IntroduceMethodology';
 import IntroduceTRIZsvg from '@/assets/svg/IntroduceTRIZ';
@@ -106,25 +114,25 @@ const CustomMobileCarousel = ({ items }: { items: TrizItem[] }) => {
 const HomePage = () => {
   const coreValues = [
     {
-      iconUrl: '/src/assets/images/Frame 18.png',
+      iconUrl: coreValueIcon1,
       tile: 'Nguyên tắc sáng tạo',
       description:
         'TRIZ tổng hợp 40 nguyên tắc giúp tìm ra các ý tưởng mới mẻ, sáng tạo và hiệu quả (Phân nhỏ – Đảo ngược – Thay đổi màu sắc – Kết hợp – Biến hại thành lợi – Thay thế cơ học bằng quang học…).',
     },
     {
-      iconUrl: '/src/assets/images/Frame 19.png',
+      iconUrl: coreValueIcon2,
       tile: 'Các quy luật phát triển hệ thống kỹ thuật',
       description:
         'Hệ thống, sản phẩm hay giải pháp luôn phát triển theo những xu hướng nhất định (tăng tính linh hoạt, tăng mức độ lý tưởng, tự động hóa,giảm sự can thiệp của con người…).',
     },
     {
-      iconUrl: '/src/assets/images/Frame 20.png',
+      iconUrl: coreValueIcon3,
       tile: 'Phân tích tài nguyên',
       description:
         'Học cách khai thác hiệu quả những tài nguyên sẵn có như: năng lượng,vật liệu, thông tin, không gian, thời gian… giúp tối ưu giải pháp mà không cần thêm chi phí hay nguồn lực mới.',
     },
     {
-      iconUrl: '/src/assets/images/Frame 21.png',
+      iconUrl: coreValueIcon4,
       tile: 'Giải quyết mâu thuẫn',
       description:
         'Mấu chốt của sáng tạo là vượt qua các mâu thuẫn trong thiết kế hoặc giải pháp. TRIZ cung cấp công cụ mạnh mẽ như: ma trận mâu thuẫn, 40 nguyên tắc sáng tạo, ARIZ – thuật toán giải bài toán sáng chế.',
@@ -133,22 +141,22 @@ const HomePage = () => {
 
   const trizComprehensive = [
     {
-      imageUrl: '/src/assets/images/Frame 1410086250.png',
+      imageUrl: trizComprehensive1,
       title: 'Học TRIZ',
       des: 'Khóa học lý thuyết, thực hành, bài tập và tình huống thực tế.',
     },
     {
-      imageUrl: '/src/assets/images/Frame 1410086249.png',
+      imageUrl: trizComprehensive2,
       title: 'Làm Quiz',
       des: 'Trắc nghiệm kiểm tra kiến thức, đánh giá tiến độ, ôn tập.',
     },
     {
-      imageUrl: '/src/assets/images/Frame 1410086247.png',
+      imageUrl: trizComprehensive3,
       title: 'Forum (Thảo luận)',
       des: 'Cộng đồng trao đổi, hỏi – đáp các vấn đề thực tiễn áp dụng TRIZ.',
     },
     {
-      imageUrl: '/src/assets/images/Frame 1410086248.png',
+      imageUrl: trizComprehensive4,
       title: 'Chat AI',
       des: 'Trợ lý thông minh hỗ trợ bạn học và áp dụng TRIZ theo thời gian thực.',
     },
@@ -204,7 +212,7 @@ const HomePage = () => {
 
             <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200 hover:scale-105 hover:shadow-inherit">
               {/* <img
-                src="/src/assets/images/Frame 1410086138.png"
+                src="./src/assets/images/Frame 1410086138.png"
                 alt="TRIZ Overview"
               /> */}
               {/* chỉnh lại responsive */}
@@ -221,7 +229,7 @@ const HomePage = () => {
             <div className="relative framework-visualization order-2 md:order-1">
               <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200 hover:scale-105 hover:shadow-inherit">
                 {/* <img
-                  src="/src/assets/images/Frame 1410086139.png"
+                  src="./src/assets/images/Frame 1410086139.png"
                   alt="TRIZ Introduction"
                 /> */}
 
@@ -358,7 +366,7 @@ const HomePage = () => {
             thống&quot;{' '}
           </h4>
           {/* <img
-            src="/src/assets/images/Frame 1410086251.png"
+            src="./src/assets/images/Frame 1410086251.png"
             alt="Systematic Creativity"
           /> */}
           <Impromptu />
@@ -431,7 +439,7 @@ const HomePage = () => {
               Ứng dụng đa lĩnh vực
             </h4>
             {/* <img
-              src="/src/assets/images/Frame 1410086252.png"
+              src="./src/assets/images/Frame 1410086252.png"
               alt="Systematic Creativity"
             /> */}
             <MultiDisciplinary />
