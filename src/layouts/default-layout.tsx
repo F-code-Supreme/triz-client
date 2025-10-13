@@ -1,7 +1,6 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import Footer from '@/components/ui/footer';
-import HeroSection from '@/components/ui/hero-section';
 import { Navbar03 } from '@/components/ui/navbar';
 
 import type { Meta } from '@/types';
@@ -9,17 +8,17 @@ import type { Meta } from '@/types';
 interface DefaultLayoutProps {
   children?: React.ReactNode;
   meta: Meta;
-  isPrinciplePage?: boolean;
-  showHeroAndFooter?: boolean;
-  showWithTRIZFooter?: boolean;
+  showFooterCTA?: boolean;
+  showFooter?: boolean;
+  className?: string;
 }
 
 export const DefaultLayout = ({
   children,
   meta,
-  isPrinciplePage = false,
-  showHeroAndFooter = false,
-  showWithTRIZFooter = false,
+  showFooterCTA = false,
+  showFooter = false,
+  className = 'container mx-auto md:p-8 sm:p-4',
 }: DefaultLayoutProps) => {
   return (
     <HelmetProvider>
@@ -29,14 +28,8 @@ export const DefaultLayout = ({
       </Helmet>
       <div>
         <Navbar03 />
-        {showHeroAndFooter && <HeroSection />}
-        <main
-          className={`${isPrinciplePage ? '' : 'container mx-auto md:p-8 sm:p-4'}`}
-        >
-          {children}
-        </main>
-
-        {showHeroAndFooter && <Footer show={showWithTRIZFooter} />}
+        <main className={className}>{children}</main>
+        {showFooter && <Footer showCTA={showFooterCTA} />}
       </div>
     </HelmetProvider>
   );

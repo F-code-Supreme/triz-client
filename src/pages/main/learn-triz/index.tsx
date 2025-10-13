@@ -7,10 +7,7 @@ const LearnTRIZPage = () => {
   const { t: _t } = useTranslation();
 
   return (
-    <DefaultLayout
-      meta={{ title: '40 Nguyên Tắc Sáng Tạo' }}
-      isPrinciplePage={true}
-    >
+    <DefaultLayout meta={{ title: '40 Nguyên Tắc Sáng Tạo' }} className="">
       <PrincipleSection />
     </DefaultLayout>
   );
