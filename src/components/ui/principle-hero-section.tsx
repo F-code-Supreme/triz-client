@@ -1,6 +1,3 @@
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
-
 import {
   DaoNguoc,
   PhanNho,
@@ -11,10 +8,9 @@ import {
   PhanTrongLuc,
   LienTucTacDong,
 } from '@/assets/images/principles';
+import { PrincipleList } from '@/components/ui/principle-list';
 
 const PrincipleSection = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   const principles = [
     {
       id: 1,
@@ -50,40 +46,13 @@ const PrincipleSection = () => {
     },
   ];
 
-  const rotations = [
-    'rotate-[-12deg] mt-12',
-    'rotate-[-6deg] mt-4',
-    'rotate-0',
-    'rotate-[6deg] mt-4',
-    'rotate-[12deg] mt-12',
-  ];
-
-  const getVisiblePrinciples = () => {
-    const visible = [];
-    for (let i = 0; i < 5; i++) {
-      const index = (currentIndex + i) % principles.length;
-      visible.push(principles[index]);
-    }
-    return visible;
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % principles.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex(
-      (prev) => (prev - 1 + principles.length) % principles.length,
-    );
-  };
-
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
-      <div className="w-full max-w-7xl px-4 pt-8 mx-auto">
-        <div className="text-center sm:space-y-3">
+      <div className="w-full max-w-8xl px-4 pt-8 mx-auto">
+        <div className="text-center">
           <div className="space-y-6">
             <div className="relative inline-block">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
                 Khám Phá
                 <br />
                 <span className="relative ">
@@ -117,41 +86,8 @@ const PrincipleSection = () => {
               </div>
             </div>
           </div>
-          {/* Card List */}
-          <div className="flex flex-nowrap justify-center md:justify-between ">
-            {getVisiblePrinciples().map((principle, index) => (
-              <div
-                key={`${principle.id}-${currentIndex}`}
-                className="
-                  flex-shrink-0 h-30 sm:h-auto transition-all duration-300 ease-in-out
-                  w-16 sm:w-32 md:w-40 lg:w-[18%] 
-                "
-              >
-                <img
-                  src={principle.image.default}
-                  alt={`TRIZ Principle ${principle.id}`}
-                  className={`
-                    w-full object-contain hover:scale-110 transition-transform duration-300 ease-in-out
-                    ${rotations[index]}
-                  `}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <button
-              onClick={handlePrev}
-              className="bg-white h-8 w-8 sm:h-12 sm:w-12 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-            >
-              <ArrowLeft />
-            </button>
-            <button
-              onClick={handleNext}
-              className="bg-white  h-8 w-8 sm:h-12 sm:w-12 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
-            >
-              <ArrowRight />
-            </button>
-          </div>
+
+          <PrincipleList principles={principles} />
         </div>
       </div>
     </section>
