@@ -80,10 +80,10 @@ const PrincipleSection = () => {
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
       <div className="w-full max-w-7xl px-4 pt-8 mx-auto">
-        <div className="text-center space-y-3">
+        <div className="text-center sm:space-y-3">
           <div className="space-y-6">
             <div className="relative inline-block">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
                 Khám Phá
                 <br />
                 <span className="relative ">
@@ -106,28 +106,34 @@ const PrincipleSection = () => {
                     />
                   </svg>
                 </span>
-                <span className="text-slate-900 dark:text-white">
+                <span className=" text-slate-900 dark:text-white">
                   40 Nguyên Tắc Sáng Tạo
                 </span>
               </h1>
               <div>
-                <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
+                <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
                   Mở khóa tư duy đột phá từ nền tảng khoa học sáng tạo
                 </p>
               </div>
             </div>
           </div>
           {/* Card List */}
-          <div className=" flex flex-nowrap justify-between ">
+          <div className="flex flex-nowrap justify-center md:justify-between ">
             {getVisiblePrinciples().map((principle, index) => (
               <div
                 key={`${principle.id}-${currentIndex}`}
-                className="w-48 lg:w-[18%] flex-shrink-0 h-auto"
+                className="
+                  flex-shrink-0 h-30 sm:h-auto transition-all duration-300 ease-in-out
+                  w-16 sm:w-32 md:w-40 lg:w-[18%] 
+                "
               >
                 <img
                   src={principle.image.default}
                   alt={`TRIZ Principle ${principle.id}`}
-                  className={`w-full object-contain ${rotations[index]} hover:scale-110 transition-all duration-300 ease-in-out`}
+                  className={`
+                    w-full object-contain hover:scale-110 transition-transform duration-300 ease-in-out
+                    ${rotations[index]}
+                  `}
                 />
               </div>
             ))}
@@ -135,13 +141,13 @@ const PrincipleSection = () => {
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={handlePrev}
-              className="bg-white h-12 w-12 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+              className="bg-white h-8 w-8 sm:h-12 sm:w-12 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
             >
               <ArrowLeft />
             </button>
             <button
               onClick={handleNext}
-              className="bg-white h-12 w-12 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+              className="bg-white  h-8 w-8 sm:h-12 sm:w-12 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
             >
               <ArrowRight />
             </button>

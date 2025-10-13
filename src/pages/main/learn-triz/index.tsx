@@ -7,7 +7,7 @@ const LearnTRIZPage = () => {
 
   return (
     <DefaultLayout
-      meta={{ title: '40 nguyên tắc' }}
+      meta={{ title: '40 Nguyên Tắc Sáng tạo' }}
       isLearnTRIZPage
     ></DefaultLayout>
   );
