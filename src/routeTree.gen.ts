@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as TrizPrinciplesRouteImport } from './routes/triz-principles'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,9 +30,19 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
   path: '/unauthorized',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrizPrinciplesRoute = TrizPrinciplesRouteImport.update({
+  id: '/triz-principles',
+  path: '/triz-principles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnTrizRoute = LearnTrizRouteImport.update({
+  id: '/learn-triz',
+  path: '/learn-triz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatTrizRoute = ChatTrizRouteImport.update({
@@ -92,7 +104,9 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat-triz': typeof ChatTrizRoute
+  '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/triz-principles': typeof TrizPrinciplesRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
@@ -106,7 +120,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat-triz': typeof ChatTrizRoute
+  '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/triz-principles': typeof TrizPrinciplesRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
@@ -122,7 +138,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/chat-triz': typeof ChatTrizRoute
+  '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/triz-principles': typeof TrizPrinciplesRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_auth/admin': typeof AuthAdminRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
@@ -138,7 +156,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/chat-triz'
+    | '/learn-triz'
     | '/login'
+    | '/triz-principles'
     | '/unauthorized'
     | '/admin'
     | '/profile'
@@ -152,7 +172,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/chat-triz'
+    | '/learn-triz'
     | '/login'
+    | '/triz-principles'
     | '/unauthorized'
     | '/admin'
     | '/profile'
@@ -167,7 +189,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/chat-triz'
+    | '/learn-triz'
     | '/login'
+    | '/triz-principles'
     | '/unauthorized'
     | '/_auth/admin'
     | '/_auth/profile'
@@ -183,7 +207,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   ChatTrizRoute: typeof ChatTrizRoute
+  LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
+  TrizPrinciplesRoute: typeof TrizPrinciplesRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
@@ -201,11 +227,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnauthorizedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/triz-principles': {
+      id: '/triz-principles'
+      path: '/triz-principles'
+      fullPath: '/triz-principles'
+      preLoaderRoute: typeof TrizPrinciplesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn-triz': {
+      id: '/learn-triz'
+      path: '/learn-triz'
+      fullPath: '/learn-triz'
+      preLoaderRoute: typeof LearnTrizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat-triz': {
@@ -316,7 +356,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   ChatTrizRoute: ChatTrizRoute,
+  LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
+  TrizPrinciplesRoute: TrizPrinciplesRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
