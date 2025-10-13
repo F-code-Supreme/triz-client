@@ -158,4 +158,4 @@ const PrincipleSection = () => {
   );
 };
 
-export default PrincipleSection;
+export { PrincipleSection };

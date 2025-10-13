@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { PrincipleSection } from '@/components/ui/principle-hero-section';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const LearnTRIZPage = () => {
@@ -7,9 +8,11 @@ const LearnTRIZPage = () => {
 
   return (
     <DefaultLayout
-      meta={{ title: '40 Nguyên Tắc Sáng tạo' }}
-      isLearnTRIZPage
-    ></DefaultLayout>
+      meta={{ title: '40 Nguyên Tắc Sáng Tạo' }}
+      isPrinciplePage={true}
+    >
+      <PrincipleSection />
+    </DefaultLayout>
   );
 };
 export default LearnTRIZPage;
