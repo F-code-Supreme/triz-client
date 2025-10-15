@@ -1,3 +1,15 @@
 {
-  "page_meta_title": "Hồ sơ"
+  "page_meta_title": "Hồ sơ",
+  "personal_info": "Thông tin cá nhân",
+  "email_label": "Email",
+  "display_name_label": "Tên hiển thị",
+  "display_name_placeholder": "Chưa cập nhật",
+  "created_date_label": "Ngày tạo tài khoản",
+  "services_features": "Dịch vụ & Tính năng",
+  "payment_management": "Thanh toán",
+  "payment_desc": "Quản lý phương thức thanh toán",
+  "achievements": "Thành tích",
+  "achievements_desc": "Xem thành tích và điểm thưởng",
+  "support": "Hỗ trợ",
+  "support_desc": "Liên hệ với đội ngũ hỗ trợ"
 }

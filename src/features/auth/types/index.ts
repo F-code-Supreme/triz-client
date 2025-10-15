@@ -14,6 +14,7 @@ export interface User {
   id: string;
   email: string;
   roles: Role[];
+  name?: string;
 }
 
 export interface AppJwtPayload extends JwtPayload {
