@@ -37,7 +37,7 @@ const PrincipleList: React.FC<CarouselTestProps> = ({ principles }) => {
       gsap.set(card, {
         attr: {
           class:
-            'absolute w-[15vw] max-w-[300px] min-w-[120px] aspect-[3/4] shadow-md flex items-center justify-center select-none rounded-lg  ',
+            'absolute w-[15vw] max-w-[300px] min-w-[120px] flex items-center justify-center select-none rounded-lg  ',
         },
         xPercent: -50,
         transformOrigin: '50% 340%',
