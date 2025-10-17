@@ -1,4 +1,5 @@
-import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
+import { vi, enUS } from 'date-fns/locale';
 import {
   User,
   Mail,
@@ -11,14 +12,14 @@ import {
   Shield,
   Settings,
 } from 'lucide-react';
-import { format } from 'date-fns';
-import { vi, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
+
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/_auth.profile';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 
 const COLORS = [
   '#F44336',

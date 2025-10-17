@@ -178,7 +178,19 @@ interface Resources {
     "under_construction": "This feature is under maintenance, we will comeback soon!"
   },
   "pages.profile": {
-    "page_meta_title": "Profile"
+    "achievements": "Achievements",
+    "achievements_desc": "View achievements and rewards",
+    "created_date_label": "Account Creation Date",
+    "display_name_label": "Display Name",
+    "display_name_placeholder": "Not updated",
+    "email_label": "Email",
+    "page_meta_title": "Profile",
+    "payment_desc": "Manage payment methods",
+    "payment_management": "Payment",
+    "personal_info": "Personal Information",
+    "services_features": "Services & Features",
+    "support": "Support",
+    "support_desc": "Contact support team"
   },
   "pages.sign_in": {
     "form.description": "Welcome to Triz, please sign in to your account.",
