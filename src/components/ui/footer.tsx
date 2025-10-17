@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router';
 
-const Footer = ({ show = false }: { show: boolean }) => {
+const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
   return (
     <div className="relative bg-slate-800 sm:20 md:mt-32">
       {/* CTA Section */}
-      {show && (
+      {showCTA && (
         <div
           className="
         w-[90%] max-w-5xl mx-auto 
