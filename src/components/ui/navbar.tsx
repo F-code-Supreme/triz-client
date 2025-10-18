@@ -62,7 +62,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     // Default navigation links if none provided
     const defaultNavigationLinks: Navbar03NavItem[] = [
       { href: '/', label: t('home'), active: true },
-      { href: '#', label: t('learn_triz') },
+      { href: '/learn-triz', label: t('learn_triz') },
       { href: '#', label: t('quiz') },
       { href: '#', label: t('forum') },
       { href: '/chat-triz', label: t('chat_ai') },

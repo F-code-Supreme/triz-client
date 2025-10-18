@@ -28,6 +28,8 @@ All notable changes to this project will be documented in this file.
 
 - Add Home page.
 
+- Add principal cards list showcase with animation (more update card later)
+
 ### Changed
 
 ### Removed
