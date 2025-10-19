@@ -69,11 +69,11 @@ const ProfilePage = () => {
     return name.charAt(0).toUpperCase();
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const locale = i18n.language === 'vi' ? vi : enUS;
-    return format(date, 'dd MMMM, yyyy', { locale });
-  };
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   const locale = i18n.language === 'vi' ? vi : enUS;
+  //   return format(date, 'dd MMMM, yyyy', { locale });
+  // };
 
   const userEmail = auth.user?.email || '';
   const userName = auth.user?.name || '';
