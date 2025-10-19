@@ -52,7 +52,8 @@ const achievements = [
 ];
 
 const ProfilePage = () => {
-  const { t, i18n } = useTranslation('pages.profile');
+  // const { t, i18n } = useTranslation('pages.profile');
+  const { t } = useTranslation('pages.profile');
   const { auth } = Route.useRouteContext();
   console.log('Auth user:', auth);
   const [isEditing, setIsEditing] = useState(false);
