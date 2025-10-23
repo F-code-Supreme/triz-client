@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as MemoryCardRouteImport } from './routes/memory-card'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
@@ -27,6 +28,11 @@ import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.das
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
   path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoryCardRoute = MemoryCardRouteImport.update({
+  id: '/memory-card',
+  path: '/memory-card',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/chat-triz': typeof ChatTrizRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/chat-triz': typeof ChatTrizRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/chat-triz': typeof ChatTrizRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_auth/admin': typeof AuthAdminRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/chat-triz'
     | '/learn-triz'
     | '/login'
+    | '/memory-card'
     | '/unauthorized'
     | '/admin'
     | '/profile'
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/chat-triz'
     | '/learn-triz'
     | '/login'
+    | '/memory-card'
     | '/unauthorized'
     | '/admin'
     | '/profile'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/chat-triz'
     | '/learn-triz'
     | '/login'
+    | '/memory-card'
     | '/unauthorized'
     | '/_auth/admin'
     | '/_auth/profile'
@@ -197,6 +209,7 @@ export interface RootRouteChildren {
   ChatTrizRoute: typeof ChatTrizRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
+  MemoryCardRoute: typeof MemoryCardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       path: '/unauthorized'
       fullPath: '/unauthorized'
       preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memory-card': {
+      id: '/memory-card'
+      path: '/memory-card'
+      fullPath: '/memory-card'
+      preLoaderRoute: typeof MemoryCardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -338,6 +358,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatTrizRoute: ChatTrizRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
+  MemoryCardRoute: MemoryCardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
