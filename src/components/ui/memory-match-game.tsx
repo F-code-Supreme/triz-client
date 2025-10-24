@@ -67,9 +67,6 @@ const MemoryCardItem: React.FC<{
               src={card.image}
               alt={card.label || `Principle ${card.id}`}
               className="max-h-full max-w-full object-contain p-2"
-              style={{
-                transform: 'scale(0.9)',
-              }}
             />
           ) : (
             <span style={{ fontSize: '2rem' }}>
@@ -217,7 +214,7 @@ const MemoryMatchGame: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-700 p-8 flex items-center justify-center">
-      <div className="max-w-2xl w-full">
+      <div className="max-w-3xl w-full">
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
             Memory Match Challenge
@@ -249,7 +246,7 @@ const MemoryMatchGame: React.FC = () => {
         )}
 
         <div
-          className="grid gap-4 mb-6 max-w-md mx-auto"
+          className="grid gap-4 mb-6 mx-auto"
           style={{
             gridTemplateColumns: `repeat(4, minmax(0, 1fr))`,
           }}
