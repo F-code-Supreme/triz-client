@@ -3,10 +3,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 
 interface CarouselTestProps {
-  principles: Array<{
-    id: number;
-    image: { default: string };
-  }>;
+  principles: Array<{ id: number; image: string }>;
 }
 
 const PrincipleList: React.FC<CarouselTestProps> = ({ principles }) => {
@@ -27,7 +24,7 @@ const PrincipleList: React.FC<CarouselTestProps> = ({ principles }) => {
 
       // Cycle through principles
       const principleIndex = i % principles.length;
-      img.src = principles[principleIndex].image.default;
+      img.src = principles[principleIndex].image;
       img.alt = `TRIZ Principle ${principles[principleIndex].id}`;
       img.className = 'w-full h-full object-contain';
 
