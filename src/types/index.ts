@@ -18,3 +18,8 @@ export interface PaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+export interface DataTimestamp {
+  createdAt: string;
+  updatedAt: string;
+}
