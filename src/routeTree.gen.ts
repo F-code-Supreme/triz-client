@@ -22,6 +22,7 @@ import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-passwor
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
+import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
 import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
@@ -91,6 +92,11 @@ const ForgotPasswordNewPasswordRoute =
     path: '/forgot-password/new-password',
     getParentRoute: () => rootRouteImport,
   } as any)
+const BooksBookIdRoute = BooksBookIdRouteImport.update({
+  id: '/$bookId',
+  path: '/$bookId',
+  getParentRoute: () => BooksRoute,
+} as any)
 const AuthProfileRoute = AuthProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -109,7 +115,7 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/books': typeof BooksRoute
+  '/books': typeof BooksRouteWithChildren
   '/chat-triz': typeof ChatTrizRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
+  '/books/$bookId': typeof BooksBookIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
@@ -126,7 +133,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/books': typeof BooksRoute
+  '/books': typeof BooksRouteWithChildren
   '/chat-triz': typeof ChatTrizRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
+  '/books/$bookId': typeof BooksBookIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
@@ -145,7 +153,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/books': typeof BooksRoute
+  '/books': typeof BooksRouteWithChildren
   '/chat-triz': typeof ChatTrizRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/_auth/admin': typeof AuthAdminRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
+  '/books/$bookId': typeof BooksBookIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/admin'
     | '/profile'
+    | '/books/$bookId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/admin'
     | '/profile'
+    | '/books/$bookId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/_auth/admin'
     | '/_auth/profile'
+    | '/books/$bookId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
@@ -218,7 +230,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  BooksRoute: typeof BooksRoute
+  BooksRoute: typeof BooksRouteWithChildren
   ChatTrizRoute: typeof ChatTrizRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
@@ -324,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordNewPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/books/$bookId': {
+      id: '/books/$bookId'
+      path: '/$bookId'
+      fullPath: '/books/$bookId'
+      preLoaderRoute: typeof BooksBookIdRouteImport
+      parentRoute: typeof BooksRoute
+    }
     '/_auth/profile': {
       id: '/_auth/profile'
       path: '/profile'
@@ -372,10 +391,20 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface BooksRouteChildren {
+  BooksBookIdRoute: typeof BooksBookIdRoute
+}
+
+const BooksRouteChildren: BooksRouteChildren = {
+  BooksBookIdRoute: BooksBookIdRoute,
+}
+
+const BooksRouteWithChildren = BooksRoute._addFileChildren(BooksRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  BooksRoute: BooksRoute,
+  BooksRoute: BooksRouteWithChildren,
   ChatTrizRoute: ChatTrizRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
