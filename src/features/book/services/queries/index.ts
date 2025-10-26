@@ -1,6 +1,7 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 import { BookKeys } from './keys';
 
@@ -42,21 +43,22 @@ export const useGetBookByIdQuery = (bookId?: string) => {
   });
 };
 
-export const useGetBookProgressQuery = (bookId?: string, userId?: string) => {
+export const useGetBookProgressQuery = (bookId?: string) => {
+  const { user } = useAuth();
   const _request = useAxios();
   return useQuery({
-    queryKey: [BookKeys.GetBookProgressQuery, bookId, userId],
+    queryKey: [BookKeys.GetBookProgressQuery, bookId, user?.id],
     queryFn:
-      bookId && userId
+      bookId && user?.id
         ? async ({ signal }) => {
             const response = await _request.get<IGetBookProgressDataResponse>(
-              `/books/${bookId}/users/${userId}/progress`,
+              `/books/${bookId}/users/${user?.id}/progress`,
               { signal },
             );
 
             return response.data;
           }
         : skipToken,
-    enabled: !!bookId && !!userId,
+    enabled: !!bookId && !!user?.id,
   });
 };

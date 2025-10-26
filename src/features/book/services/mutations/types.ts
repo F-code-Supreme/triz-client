@@ -10,7 +10,6 @@ export interface IUpdateBookPayload extends Omit<Book, 'id'> {
 
 export interface ITrackProgressPayload {
   bookId: string;
-  userId: string;
   location: string;
 }
 

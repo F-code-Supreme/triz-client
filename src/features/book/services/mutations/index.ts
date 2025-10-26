@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { useAxios } from '@/configs/axios';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 import { BookKeys } from '../queries/keys';
 
@@ -102,13 +103,14 @@ export const useDeleteBookMutation = () => {
 };
 
 export const useTrackBookProgressMutation = () => {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: ITrackProgressPayload) => {
-      const { bookId, userId, location } = payload;
+      const { bookId, location } = payload;
       const response = await _request.put<ITrackProgressDataResponse>(
-        `/books/${bookId}/users/${userId}/track`,
+        `/books/${bookId}/users/${user?.id}/track`,
         {
           location,
         },
@@ -118,11 +120,7 @@ export const useTrackBookProgressMutation = () => {
     },
     onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
-        queryKey: [
-          BookKeys.GetBookProgressQuery,
-          payload.bookId,
-          payload.userId,
-        ],
+        queryKey: [BookKeys.GetBookProgressQuery, payload.bookId, user?.id],
       });
     },
   });
