@@ -15,6 +15,10 @@ export interface User {
   email: string;
   roles: Role[];
   name?: string;
+  avatarUrl?: string;
+  enabled?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AppJwtPayload extends JwtPayload {
