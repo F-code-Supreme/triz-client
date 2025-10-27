@@ -1,10 +1,10 @@
-import { PrincipleSection } from '@/components/ui/principle-hero-section';
+import { FlashcardSection } from '@/components/ui/flashcard-section';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const FlashcardPage = () => {
   return (
     <DefaultLayout meta={{ title: 'Học Flashcard' }} className="">
-      <PrincipleSection />
+      <FlashcardSection />
     </DefaultLayout>
   );
 };
