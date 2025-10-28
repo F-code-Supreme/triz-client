@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
-import { Route as FlashcardRouteImport } from './routes/flashcard'
+import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -40,9 +40,9 @@ const LearnTrizRoute = LearnTrizRouteImport.update({
   path: '/learn-triz',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FlashcardRoute = FlashcardRouteImport.update({
-  id: '/flashcard',
-  path: '/flashcard',
+const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
+  id: '/flashcard-deck',
+  path: '/flashcard-deck',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatTrizRoute = ChatTrizRouteImport.update({
@@ -104,7 +104,7 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat-triz': typeof ChatTrizRoute
-  '/flashcard': typeof FlashcardRoute
+  '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -120,7 +120,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat-triz': typeof ChatTrizRoute
-  '/flashcard': typeof FlashcardRoute
+  '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -138,7 +138,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/chat-triz': typeof ChatTrizRoute
-  '/flashcard': typeof FlashcardRoute
+  '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/unauthorized': typeof UnauthorizedRoute
@@ -156,7 +156,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/chat-triz'
-    | '/flashcard'
+    | '/flashcard-deck'
     | '/learn-triz'
     | '/login'
     | '/unauthorized'
@@ -172,7 +172,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/chat-triz'
-    | '/flashcard'
+    | '/flashcard-deck'
     | '/learn-triz'
     | '/login'
     | '/unauthorized'
@@ -189,7 +189,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/chat-triz'
-    | '/flashcard'
+    | '/flashcard-deck'
     | '/learn-triz'
     | '/login'
     | '/unauthorized'
@@ -207,7 +207,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   ChatTrizRoute: typeof ChatTrizRoute
-  FlashcardRoute: typeof FlashcardRoute
+  FlashcardDeckRoute: typeof FlashcardDeckRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
@@ -241,11 +241,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnTrizRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/flashcard': {
-      id: '/flashcard'
-      path: '/flashcard'
-      fullPath: '/flashcard'
-      preLoaderRoute: typeof FlashcardRouteImport
+    '/flashcard-deck': {
+      id: '/flashcard-deck'
+      path: '/flashcard-deck'
+      fullPath: '/flashcard-deck'
+      preLoaderRoute: typeof FlashcardDeckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat-triz': {
@@ -356,7 +356,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   ChatTrizRoute: ChatTrizRoute,
-  FlashcardRoute: FlashcardRoute,
+  FlashcardDeckRoute: FlashcardDeckRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
   UnauthorizedRoute: UnauthorizedRoute,
