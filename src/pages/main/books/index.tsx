@@ -1,29 +1,81 @@
-import { useState } from 'react';
-import { ReactReader } from 'react-reader';
+import { BookOpen } from 'lucide-react';
 
-import Book1 from '@/assets/epub/1.epub';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import BookItem from '@/features/book/components/book-list/book-item';
+import { useGetAllBooksQuery } from '@/features/book/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-import type { Contents } from 'epubjs';
+const BookSkeleton = () => (
+  <div className="space-y-4">
+    <Skeleton className="w-full h-48 rounded-lg" />
+    <Skeleton className="w-full h-4" />
+    <Skeleton className="w-3/4 h-4" />
+    <Skeleton className="w-1/2 h-4" />
+  </div>
+);
 
 const BookLibraryPage = () => {
-  const [location, setLocation] = useState<string | number>(0);
+  const { data, isLoading, error } = useGetAllBooksQuery();
+
+  const books = data?.content || [];
 
   return (
     <DefaultLayout meta={{ title: 'Book Library' }}>
-      <div className="h-screen">
-        <ReactReader
-          url={Book1}
-          location={location}
-          locationChanged={setLocation}
-          swipeable
-          getRendition={(_rendition) => {
-            _rendition.hooks.content.register((_: Contents) => {
-              // @ts-expect-error - manager type is missing in epubjs Rendition
-              _rendition.manager.container.style['scroll-behavior'] = 'smooth';
-            });
-          }}
-        />
+      <div className="space-y-8 py-8">
+        {/* Header */}
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold text-foreground flex items-center gap-3">
+            <BookOpen className="h-8 w-8" />
+            Book Library
+          </h1>
+          <p className="text-muted-foreground">
+            Explore our collection of educational books about TRIZ principles
+            and innovation
+          </p>
+        </div>
+
+        {/* Books Grid */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <BookSkeleton key={i} />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="rounded-lg border border-destructive bg-destructive/10 p-6 text-center">
+            <h3 className="text-lg font-semibold text-destructive mb-2">
+              Failed to Load Books
+            </h3>
+            <p className="text-destructive/80 mb-4">
+              An error occurred while loading the book library. Please try again
+              later.
+            </p>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="destructive"
+            >
+              Retry
+            </Button>
+          </div>
+        ) : books.length === 0 ? (
+          <div className="rounded-lg border border-dashed bg-muted/50 p-12 text-center">
+            <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
+              No Books Available
+            </h3>
+            <p className="text-muted-foreground">
+              The book library is currently empty. Please check back later for
+              new additions.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {books.map((book) => (
+              <BookItem key={book.id} book={book} />
+            ))}
+          </div>
+        )}
       </div>
     </DefaultLayout>
   );
