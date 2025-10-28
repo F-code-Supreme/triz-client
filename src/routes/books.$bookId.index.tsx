@@ -6,6 +6,6 @@ const BookDetailPage = Loadable(
   lazy(() => import('@/pages/main/books/detail')),
 );
 
-export const Route = createFileRoute('/books/$bookId')({
+export const Route = createFileRoute('/books/$bookId/')({
   component: BookDetailPage,
 });
