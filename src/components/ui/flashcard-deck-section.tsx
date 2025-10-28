@@ -2,7 +2,7 @@ import FallbackLoading from '@/components/fallback-loading';
 import FlashcardDecks from '@/features/flashcard-decks/components/flashcard-decks';
 import { useGetFlashcardDecksQuery } from '@/features/flashcard-decks/services/queries';
 
-const FlashcardSection = () => {
+const FlashcardDeckSection = () => {
   const { data, isPending } = useGetFlashcardDecksQuery();
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
@@ -54,4 +54,4 @@ const FlashcardSection = () => {
   );
 };
 
-export { FlashcardSection };
+export { FlashcardDeckSection };

@@ -143,4 +143,124 @@
         350% 50%;
     }
   }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-100px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  @keyframes slideOutToRight {
+    from {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(100px) scale(0.9);
+    }
+  }
+
+  @keyframes slideOutToLeft {
+    from {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-100px) scale(0.9);
+    }
+  }
+}
+
+@layer components {
+  .flashcard-container {
+    width: 100%;
+    cursor: pointer;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .flashcard-container.card-exit {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+
+  .flashcard-front,
+  .flashcard-back {
+    position: absolute;
+    width: 100%;
+    min-height: 400px;
+    backface-visibility: hidden;
+    @apply flex flex-col justify-center p-12 rounded-3xl border border-gray-400;
+  }
+
+  .flashcard-front {
+    @apply bg-white dark:bg-card;
+  }
+
+  .flashcard-back {
+    @apply bg-white dark:bg-card;
+    transform: rotateX(180deg);
+  }
+
+  .flashcard-container.flipped .flashcard-inner {
+    transform: rotateX(180deg);
+  }
+
+  .flashcard-container.card-enter {
+    animation: slideInUp 0.4s ease-out;
+  }
+
+  .flashcard-container.slide-next {
+    animation: slideInFromRight 0.4s ease-out;
+  }
+
+  .flashcard-container.slide-prev {
+    animation: slideInFromLeft 0.4s ease-out;
+  }
+
+  .flashcard-container.slide-exit-next {
+    animation: slideOutToLeft 0.3s ease-in;
+  }
+
+  .flashcard-container.slide-exit-prev {
+    animation: slideOutToRight 0.3s ease-in;
+  }
 }
