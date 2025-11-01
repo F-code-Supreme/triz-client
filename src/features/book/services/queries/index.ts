@@ -5,10 +5,11 @@ import useAuth from '@/features/auth/hooks/use-auth';
 
 import { BookKeys } from './keys';
 
-import type { BooksResponse, IGetBookProgressDataResponse } from './types';
-import type { Book } from '../../types';
+import type { BooksResponse, IGetAllBookProgressDataResponse } from './types';
+import type { Book, BookProgress } from '../../types';
 import type { DataTimestamp } from '@/types';
 
+// PUBLIC
 export const useGetAllBooksQuery = () => {
   return useQuery({
     queryKey: [BookKeys.GetAllBooksQuery],
@@ -41,6 +42,22 @@ export const useGetBookByIdQuery = (bookId?: string) => {
   });
 };
 
+// AUTHENTICATED USER
+export const useGetAllBookProgressQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [BookKeys.GetAllBookProgressQuery],
+    queryFn: async ({ signal }) => {
+      const response = await _request.get<IGetAllBookProgressDataResponse>(
+        `/books/me`,
+        { signal },
+      );
+
+      return response.data;
+    },
+  });
+};
+
 export const useGetBookProgressQuery = (bookId?: string) => {
   const { user, isAuthenticated } = useAuth();
   const _request = useAxios();
@@ -49,7 +66,7 @@ export const useGetBookProgressQuery = (bookId?: string) => {
     queryFn:
       isAuthenticated && bookId && user?.id
         ? async ({ signal }) => {
-            const response = await _request.get<IGetBookProgressDataResponse>(
+            const response = await _request.get<BookProgress & DataTimestamp>(
               `/books/${bookId}/users/${user?.id}/progress`,
               { signal },
             );

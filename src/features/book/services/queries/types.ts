@@ -1,8 +1,11 @@
-import type { Book } from '../../types';
+import type { Book, BookProgress } from '../../types';
 import type { DataTimestamp, PaginatedResponse } from '@/types';
 
-export interface IGetBookProgressDataResponse {
-  location: string;
+export type BooksResponse = PaginatedResponse<Book & DataTimestamp>;
+
+export interface IGetAllBookProgressDataItem extends Book {
+  progress: BookProgress;
 }
 
-export type BooksResponse = PaginatedResponse<Book & DataTimestamp>;
+export type IGetAllBookProgressDataResponse =
+  PaginatedResponse<IGetAllBookProgressDataItem>;

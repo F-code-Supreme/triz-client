@@ -10,13 +10,21 @@ import {
 } from '@/features/book/services/queries';
 
 import type { Contents } from 'epubjs';
+import type { DisplayedLocation } from 'epubjs/types/rendition';
+import type Section from 'epubjs/types/section';
 
 interface BookReaderProps {
   bookId: string;
 }
 
+interface ISection extends Section {
+  length: number;
+}
+
 const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
   const [location, setLocation] = useState<string | number>(0);
+  const [percentage, setPercentage] = useState(0);
+  const sectionsRef = useRef<ISection[]>([]);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedLocationRef = useRef<string | number>(0);
 
@@ -86,6 +94,56 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [bookId, location, isAuthenticated]);
 
+  /**
+   * Calculate reading progress percentage based on current location and sections
+   * Similar to reference implementation that calculates:
+   * 1. Percentage of previous sections
+   * 2. Current section percentage based on displayed page
+   */
+  const calculatePercentage = useCallback(
+    (currentLocation: { start?: DisplayedLocation }) => {
+      const sections = sectionsRef.current;
+      if (!sections.length || !currentLocation?.start) return 0;
+
+      try {
+        const currentHref = currentLocation.start.href;
+        const sectionIndex = sections.findIndex((s) => s.href === currentHref);
+
+        if (sectionIndex === -1) return 0;
+
+        // Calculate total content length
+        const totalLength = sections.reduce((acc, s) => acc + s.length, 0);
+        if (totalLength === 0) return 0;
+
+        // Calculate length of all previous sections
+        const previousSectionsLength = sections
+          .slice(0, sectionIndex)
+          .reduce((acc, s) => acc + s.length, 0);
+        const previousSectionsPercentage = previousSectionsLength / totalLength;
+
+        // Calculate current section's contribution
+        const currentSectionLength = sections[sectionIndex]!.length;
+        const currentSectionPercentage = currentSectionLength / totalLength;
+
+        // Get displayed page information
+        const displayedPage = currentLocation.start.displayed?.page ?? 0;
+        const totalPages = currentLocation.start.displayed?.total ?? 1;
+        const pagePercentage = displayedPage / totalPages;
+
+        // Total percentage
+        const totalPercentage =
+          (previousSectionsPercentage +
+            currentSectionPercentage * pagePercentage) *
+          100;
+
+        return Math.min(100, Math.max(0, Math.round(totalPercentage)));
+      } catch {
+        return 0;
+      }
+    },
+    [],
+  );
+
   const handleLocationChange = useCallback((loc: string | number) => {
     setLocation(loc);
   }, []);
@@ -138,13 +196,17 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
       {/* Header */}
       <div className="border-b bg-card px-6 py-4">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-foreground">
               {book.title || 'Untitled Book'}
             </h1>
             {book.author && (
               <p className="text-sm text-muted-foreground">by {book.author}</p>
             )}
+          </div>
+          <div className="text-right">
+            <p className="text-lg font-semibold text-primary">{percentage}%</p>
+            <p className="text-xs text-muted-foreground">Progress</p>
           </div>
         </div>
       </div>
@@ -160,6 +222,34 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
             allowScriptedContent: false,
           }}
           getRendition={(rendition) => {
+            // Extract sections with their content lengths
+            rendition.on('rendered', async () => {
+              try {
+                const spine =
+                  (await // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  rendition.book?.loaded.spine) as any;
+                const sections = spine.spineItems as ISection[];
+                const promises = sections.map((s) =>
+                  s.load(rendition.book.load.bind(rendition.book)),
+                );
+                Promise.all(promises).then(() => {
+                  const extractedSections = sections.map((item) => ({
+                    ...item,
+                    length: item.document?.body?.textContent?.length ?? 0,
+                  }));
+                  sectionsRef.current = extractedSections as ISection[];
+                });
+              } catch {
+                /* empty */
+              }
+            });
+
+            // Update percentage when location changes
+            rendition.on('relocated', () => {
+              const newPercentage = calculatePercentage(rendition.location);
+              setPercentage(newPercentage);
+            });
+
             rendition.hooks.content.register((contents: Contents) => {
               // Enable smooth scrolling
               if (contents.window?.document?.body) {

@@ -9,9 +9,10 @@ import type { Book } from '../../types';
 
 type BookItemProps = {
   book: Book;
+  progress?: number;
 };
 
-const BookItem = ({ book }: BookItemProps) => {
+const BookItem = ({ book, progress = 0 }: BookItemProps) => {
   return (
     <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
       {/* Book Cover */}
@@ -30,6 +31,23 @@ const BookItem = ({ book }: BookItemProps) => {
           )}
         </div>
       </Link>
+
+      {/* Progress Bar */}
+      {progress > 0 && (
+        <div className="px-4 pt-2 pb-0">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground font-medium min-w-fit">
+              {progress}%
+            </span>
+          </div>
+        </div>
+      )}
 
       <CardContent className="p-4 space-y-3">
         {/* Title */}

@@ -3,11 +3,11 @@ import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BookItem from '@/features/book/components/book-list/book-item';
 import BookSkeleton from '@/features/book/components/book-list/book-skeleton';
-import { useGetAllBooksQuery } from '@/features/book/services/queries';
+import { useGetAllBookProgressQuery } from '@/features/book/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const CustomerBookLibraryPage = () => {
-  const { data, isLoading, error } = useGetAllBooksQuery();
+  const { data, isLoading, error } = useGetAllBookProgressQuery();
 
   const books = data?.content || [];
 
@@ -63,7 +63,7 @@ const CustomerBookLibraryPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {books.map((book) => (
-              <BookItem key={book.id} book={book} />
+              <BookItem key={book.id} book={book} progress={0} />
             ))}
           </div>
         )}
