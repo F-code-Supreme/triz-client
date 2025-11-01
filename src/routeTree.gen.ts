@@ -25,6 +25,7 @@ import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-p
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
 import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
+import { Route as AuthBooksMeRouteImport } from './routes/_auth.books.me'
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -107,6 +108,11 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   path: '/books/$bookId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthBooksMeRoute = AuthBooksMeRouteImport.update({
+  id: '/books/me',
+  path: '/books/me',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/books/me': typeof AuthBooksMeRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/books/me': typeof AuthBooksMeRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesById {
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/_auth/books/me': typeof AuthBooksMeRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/register'
     | '/admin/dashboard'
+    | '/books/me'
     | '/books/$bookId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/register'
     | '/admin/dashboard'
+    | '/books/me'
     | '/books/$bookId'
   id:
     | '__root__'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/forgot-password/'
     | '/register/'
     | '/_auth/admin/dashboard'
+    | '/_auth/books/me'
     | '/books/$bookId/'
   fileRoutesById: FileRoutesById
 }
@@ -358,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksBookIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/books/me': {
+      id: '/_auth/books/me'
+      path: '/books/me'
+      fullPath: '/books/me'
+      preLoaderRoute: typeof AuthBooksMeRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/admin/dashboard': {
       id: '/_auth/admin/dashboard'
       path: '/dashboard'
@@ -383,11 +402,13 @@ const AuthAdminRouteWithChildren = AuthAdminRoute._addFileChildren(
 interface AuthRouteChildren {
   AuthAdminRoute: typeof AuthAdminRouteWithChildren
   AuthProfileRoute: typeof AuthProfileRoute
+  AuthBooksMeRoute: typeof AuthBooksMeRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthAdminRoute: AuthAdminRouteWithChildren,
   AuthProfileRoute: AuthProfileRoute,
+  AuthBooksMeRoute: AuthBooksMeRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
