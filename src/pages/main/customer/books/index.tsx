@@ -1,21 +1,12 @@
 import { BookOpen } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import BookItem from '@/features/book/components/book-list/book-item';
+import BookSkeleton from '@/features/book/components/book-list/book-skeleton';
 import { useGetAllBooksQuery } from '@/features/book/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-const BookSkeleton = () => (
-  <div className="space-y-4">
-    <Skeleton className="w-full h-48 rounded-lg" />
-    <Skeleton className="w-full h-4" />
-    <Skeleton className="w-3/4 h-4" />
-    <Skeleton className="w-1/2 h-4" />
-  </div>
-);
-
-const BookLibraryPage = () => {
+const CustomerBookLibraryPage = () => {
   const { data, isLoading, error } = useGetAllBooksQuery();
 
   const books = data?.content || [];
@@ -81,4 +72,4 @@ const BookLibraryPage = () => {
   );
 };
 
-export default BookLibraryPage;
+export default CustomerBookLibraryPage;
