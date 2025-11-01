@@ -1,6 +1,6 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
-import { useAxios } from '@/configs/axios';
+import { request, useAxios } from '@/configs/axios';
 import useAuth from '@/features/auth/hooks/use-auth';
 
 import { BookKeys } from './keys';
@@ -10,11 +10,10 @@ import type { Book } from '../../types';
 import type { DataTimestamp } from '@/types';
 
 export const useGetAllBooksQuery = () => {
-  const _request = useAxios();
   return useQuery({
     queryKey: [BookKeys.GetAllBooksQuery],
     queryFn: async ({ signal }) => {
-      const response = await _request.get<BooksResponse>('/books', {
+      const response = await request.get<BooksResponse>('/books/public', {
         signal,
       });
 
@@ -24,12 +23,11 @@ export const useGetAllBooksQuery = () => {
 };
 
 export const useGetBookByIdQuery = (bookId?: string) => {
-  const _request = useAxios();
   return useQuery({
     queryKey: [BookKeys.GetBookByIdQuery, bookId],
     queryFn: bookId
       ? async ({ signal }) => {
-          const response = await _request.get<Book & DataTimestamp>(
+          const response = await request.get<Book & DataTimestamp>(
             `/books/${bookId}`,
             {
               signal,
@@ -44,12 +42,12 @@ export const useGetBookByIdQuery = (bookId?: string) => {
 };
 
 export const useGetBookProgressQuery = (bookId?: string) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const _request = useAxios();
   return useQuery({
     queryKey: [BookKeys.GetBookProgressQuery, bookId, user?.id],
     queryFn:
-      bookId && user?.id
+      isAuthenticated && bookId && user?.id
         ? async ({ signal }) => {
             const response = await _request.get<IGetBookProgressDataResponse>(
               `/books/${bookId}/users/${user?.id}/progress`,

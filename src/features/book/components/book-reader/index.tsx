@@ -2,6 +2,7 @@ import { Loader } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactReader } from 'react-reader';
 
+import useAuth from '@/features/auth/hooks/use-auth';
 import { useTrackBookProgressMutation } from '@/features/book/services/mutations';
 import {
   useGetBookByIdQuery,
@@ -27,6 +28,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
   const { data: progress, isLoading: progressLoading } =
     useGetBookProgressQuery(bookId);
   const { mutate: trackProgress, isPending } = useTrackBookProgressMutation();
+  const { isAuthenticated } = useAuth();
 
   // Load saved progress when available
   useEffect(() => {
@@ -38,7 +40,8 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
 
   // Debounced progress tracking (waits 3 seconds of inactivity)
   useEffect(() => {
-    if (!bookId || isPending) return;
+    // Skip tracking for guest users
+    if (!isAuthenticated || !bookId || isPending) return;
 
     // Only track if location actually changed
     if (location === lastSavedLocationRef.current) return;
@@ -62,10 +65,13 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [bookId, location, isPending, trackProgress]);
+  }, [bookId, location, isPending, trackProgress, isAuthenticated]);
 
-  // Save progress on page unload
+  // Save progress on page unload (only for authenticated users)
   useEffect(() => {
+    // Skip for guest users
+    if (!isAuthenticated) return;
+
     const handleBeforeUnload = () => {
       if (location !== lastSavedLocationRef.current) {
         // Use synchronous request for unload
@@ -78,7 +84,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [bookId, location]);
+  }, [bookId, location, isAuthenticated]);
 
   const handleLocationChange = useCallback((loc: string | number) => {
     setLocation(loc);
