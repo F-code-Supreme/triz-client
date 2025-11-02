@@ -20,6 +20,7 @@ import {
   useDeleteHighlightMutation,
 } from '@/features/book-highlight/services/mutations';
 import { useGetHighlightsByBookQuery } from '@/features/book-highlight/services/queries';
+import { useMousePosition } from '@/hooks';
 
 import type { BookHighlight } from '@/features/book-highlight/types';
 import type { Contents, Rendition } from 'epubjs';
@@ -45,12 +46,17 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
   const [clickedHighlightId, setClickedHighlightId] = useState<string | null>(
     null,
   );
+  const [clickedHighlightPosition, setClickedHighlightPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [localHighlights, setLocalHighlights] = useState<BookHighlight[]>([]);
   const sectionsRef = useRef<ISection[]>([]);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedLocationRef = useRef<string | number>(0);
   const renditionRef = useRef<Rendition | null>(null);
+  const mousePositionRef = useMousePosition();
 
   const {
     data: book,
@@ -233,6 +239,17 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     [],
   );
 
+  const handleHighlightClick = useCallback(
+    (highlightId: string) => {
+      setClickedHighlightPosition({
+        x: mousePositionRef.current.x,
+        y: mousePositionRef.current.y,
+      });
+      setClickedHighlightId(highlightId);
+    },
+    [mousePositionRef],
+  );
+
   // Create highlight from selected text with optimistic update
   const handleCreateHighlight = useCallback(() => {
     if (!currentCFI) return;
@@ -254,10 +271,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
       'highlight',
       currentCFI,
       {},
-      () => {
-        // Show delete option when highlight is clicked
-        setClickedHighlightId(tempId);
-      },
+      () => handleHighlightClick(tempId),
       'epub-highlight',
       {
         fill: 'rgba(255, 255, 0, 0.3)', // Yellow highlight
@@ -275,7 +289,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
       bookId,
       range: currentCFI,
     });
-  }, [currentCFI, bookId, _createHighlight]);
+  }, [currentCFI, bookId, _createHighlight, handleHighlightClick]);
 
   // Delete highlight
   const handleDeleteHighlight = useCallback(() => {
@@ -299,6 +313,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
 
     // Clear clicked state
     setClickedHighlightId(null);
+    setClickedHighlightPosition(null);
   }, [localHighlights, clickedHighlightId, _deleteHighlight]);
 
   // Apply existing highlights to the rendered content with delete functionality
@@ -312,10 +327,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
           'highlight',
           highlight.range,
           {},
-          () => {
-            // Show delete option when highlight is clicked
-            setClickedHighlightId(highlight.id);
-          },
+          () => handleHighlightClick(highlight.id),
           'epub-highlight',
           {
             fill: 'rgba(255, 255, 0, 0.3)', // Yellow highlight
@@ -325,7 +337,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
         );
       });
     },
-    [highlights],
+    [highlights, handleHighlightClick],
   );
 
   // Apply highlights whenever local state changes
@@ -500,8 +512,12 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
           <div
             style={{
               position: 'fixed',
-              top: `${highlightPosition?.y ?? 100}px`,
-              left: `${highlightPosition?.x ?? 100}px`,
+              top: `${
+                highlightPosition?.y ?? clickedHighlightPosition?.y ?? 100
+              }px`,
+              left: `${
+                highlightPosition?.x ?? clickedHighlightPosition?.x ?? 100
+              }px`,
               pointerEvents: 'none',
             }}
           >
@@ -546,6 +562,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
                   className="h-8 w-8 p-0"
                   onClick={() => {
                     setHighlightPosition(null);
+                    setClickedHighlightPosition(null);
                     setIsPopoverOpen(false);
                   }}
                   title="Cancel"
@@ -574,11 +591,12 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
                     variant="outline"
                     onClick={() => {
                       setClickedHighlightId(null);
+                      setClickedHighlightPosition(null);
                       setIsPopoverOpen(false);
                     }}
                     title="Cancel"
                   >
-                    Cancel
+                    <X className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
