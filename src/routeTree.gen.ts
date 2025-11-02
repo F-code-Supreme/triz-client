@@ -13,6 +13,7 @@ import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as MemoryCardRouteImport } from './routes/memory-card'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
+import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -21,6 +22,7 @@ import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-passwor
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
+import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
 import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
@@ -43,6 +45,11 @@ const LoginRoute = LoginRouteImport.update({
 const LearnTrizRoute = LearnTrizRouteImport.update({
   id: '/learn-triz',
   path: '/learn-triz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
+  id: '/flashcard-deck',
+  path: '/flashcard-deck',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatTrizRoute = ChatTrizRouteImport.update({
@@ -85,6 +92,11 @@ const ForgotPasswordNewPasswordRoute =
     path: '/forgot-password/new-password',
     getParentRoute: () => rootRouteImport,
   } as any)
+const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
+  id: '/flashcard/$deckId',
+  path: '/flashcard/$deckId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthProfileRoute = AuthProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -104,12 +116,14 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat-triz': typeof ChatTrizRoute
+  '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
+  '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
@@ -120,12 +134,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat-triz': typeof ChatTrizRoute
+  '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/admin': typeof AuthAdminRouteWithChildren
   '/profile': typeof AuthProfileRoute
+  '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
@@ -138,12 +154,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/chat-triz': typeof ChatTrizRoute
+  '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_auth/admin': typeof AuthAdminRouteWithChildren
   '/_auth/profile': typeof AuthProfileRoute
+  '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
@@ -156,12 +174,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/chat-triz'
+    | '/flashcard-deck'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
     | '/admin'
     | '/profile'
+    | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
@@ -172,12 +192,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/chat-triz'
+    | '/flashcard-deck'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
     | '/admin'
     | '/profile'
+    | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
@@ -189,12 +211,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/chat-triz'
+    | '/flashcard-deck'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
     | '/_auth/admin'
     | '/_auth/profile'
+    | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
@@ -207,10 +231,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   ChatTrizRoute: typeof ChatTrizRoute
+  FlashcardDeckRoute: typeof FlashcardDeckRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
   MemoryCardRoute: typeof MemoryCardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
@@ -246,6 +272,13 @@ declare module '@tanstack/react-router' {
       path: '/learn-triz'
       fullPath: '/learn-triz'
       preLoaderRoute: typeof LearnTrizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flashcard-deck': {
+      id: '/flashcard-deck'
+      path: '/flashcard-deck'
+      fullPath: '/flashcard-deck'
+      preLoaderRoute: typeof FlashcardDeckRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat-triz': {
@@ -304,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordNewPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/flashcard/$deckId': {
+      id: '/flashcard/$deckId'
+      path: '/flashcard/$deckId'
+      fullPath: '/flashcard/$deckId'
+      preLoaderRoute: typeof FlashcardDeckIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth/profile': {
       id: '/_auth/profile'
       path: '/profile'
@@ -356,10 +396,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   ChatTrizRoute: ChatTrizRoute,
+  FlashcardDeckRoute: FlashcardDeckRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
   MemoryCardRoute: MemoryCardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
