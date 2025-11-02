@@ -1,3 +1,15 @@
 {
-  "page_meta_title": "Profile"
+  "page_meta_title": "Profile",
+  "personal_info": "Personal Information",
+  "email_label": "Email",
+  "display_name_label": "Display Name",
+  "display_name_placeholder": "Not updated",
+  "created_date_label": "Account Creation Date",
+  "services_features": "Services & Features",
+  "payment_management": "Payment",
+  "payment_desc": "Manage payment methods",
+  "achievements": "Achievements",
+  "achievements_desc": "View achievements and rewards",
+  "support": "Support",
+  "support_desc": "Contact support team"
 }
