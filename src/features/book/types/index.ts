@@ -21,4 +21,5 @@ export enum BookStatus {
 
 export interface BookProgress {
   location: string;
+  percentage: number;
 }

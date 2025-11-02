@@ -28,26 +28,30 @@ function analysisFilename(contentDisposition: string): string {
 
 class MyAxios {
   private readonly axiosInstance: AxiosInstance;
-  constructor(options: AxiosRequestConfig) {
+  private readonly auth: boolean;
+  constructor(options: AxiosRequestConfig, auth = false) {
     this.axiosInstance = axios.create(options);
+    this.auth = auth;
     this.initInterceptors();
   }
 
   private initInterceptors() {
     this.axiosInstance.interceptors.request.use(
       (config) => {
-        const persistItem = localStorage.getItem('persist');
-        const persist = persistItem
-          ? (JSON.parse(persistItem) as boolean)
-          : false;
-        const item = persist
-          ? localStorage.getItem(TokenType.ACCESS)
-          : sessionStorage.getItem(TokenType.ACCESS);
-        const token = item ? (JSON.parse(item) as string) : null;
-        if (token) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          config.headers['Authorization'] = `Bearer ${token}`;
+        if (this.auth) {
+          const persistItem = localStorage.getItem('persist');
+          const persist = persistItem
+            ? (JSON.parse(persistItem) as boolean)
+            : false;
+          const item = persist
+            ? localStorage.getItem(TokenType.ACCESS)
+            : sessionStorage.getItem(TokenType.ACCESS);
+          const token = item ? (JSON.parse(item) as string) : null;
+          if (token) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            config.headers['Authorization'] = `Bearer ${token}`;
+          }
         }
         config.headers['Accept-Language'] = i18n.language || 'vi';
         console.log(`Request config:`, config);
@@ -215,4 +219,4 @@ class MyAxios {
 
 export const request = new MyAxios(axiosBaseOptions);
 
-export const useAxios = () => new MyAxios(axiosBaseOptions);
+export const useAxios = () => new MyAxios(axiosBaseOptions, true);

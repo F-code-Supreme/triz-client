@@ -3,6 +3,7 @@ import { BookOpen, Calendar, User } from 'lucide-react';
 
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
 import type { Book } from '../../types';
@@ -10,9 +11,14 @@ import type { Book } from '../../types';
 type BookItemProps = {
   book: Book;
   progress?: number;
+  showProgress?: boolean;
 };
 
-const BookItem = ({ book, progress = 0 }: BookItemProps) => {
+const BookItem = ({
+  book,
+  progress = 0,
+  showProgress = false,
+}: BookItemProps) => {
   return (
     <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
       {/* Book Cover */}
@@ -32,15 +38,11 @@ const BookItem = ({ book, progress = 0 }: BookItemProps) => {
         </div>
       </Link>
 
-      {/* Progress Bar */}
-      {progress > 0 && (
-        <div className="px-4 pt-2 pb-0">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
+      {showProgress && (
+        <div className="px-4 pt-2">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <Progress value={progress} className="h-3" />
             </div>
             <span className="text-xs text-muted-foreground font-medium min-w-fit">
               {progress}%
@@ -49,7 +51,7 @@ const BookItem = ({ book, progress = 0 }: BookItemProps) => {
         </div>
       )}
 
-      <CardContent className="p-4 space-y-3">
+      <CardContent className="p-4 pt-2 space-y-3">
         {/* Title */}
         <div>
           <h3 className="font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">

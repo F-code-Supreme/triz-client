@@ -108,11 +108,12 @@ export const useTrackBookProgressMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: ITrackProgressPayload) => {
-      const { bookId, location } = payload;
+      const { bookId, location, percentage } = payload;
       const response = await _request.put<ITrackProgressDataResponse>(
         `/books/${bookId}/users/${user?.id}/track`,
         {
           location,
+          percentage,
         },
       );
 

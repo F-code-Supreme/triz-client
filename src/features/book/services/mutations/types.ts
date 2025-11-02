@@ -11,8 +11,10 @@ export interface IUpdateBookPayload extends Omit<Book, 'id'> {
 export interface ITrackProgressPayload {
   bookId: string;
   location: string;
+  percentage: number;
 }
 
 export interface ITrackProgressDataResponse {
   location: string;
+  percentage: number;
 }
