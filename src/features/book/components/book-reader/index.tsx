@@ -46,6 +46,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     null,
   );
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [localHighlights, setLocalHighlights] = useState<BookHighlight[]>([]);
   const sectionsRef = useRef<ISection[]>([]);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedLocationRef = useRef<string | number>(0);
@@ -80,6 +81,19 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
       setPercentage(progress.percentage);
     }
   }, [progress?.percentage]);
+
+  // Sync highlights from backend to local state on initial load
+  useEffect(() => {
+    if (highlights.length > 0) {
+      setLocalHighlights(highlights);
+    }
+  }, [highlights]);
+
+  useEffect(() => {
+    if (highlightPosition || clickedHighlightId) {
+      setIsPopoverOpen(true);
+    }
+  }, [highlightPosition, clickedHighlightId]);
 
   // Debounced progress tracking (waits 3 seconds of inactivity)
   useEffect(() => {
@@ -129,12 +143,6 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [bookId, location, isAuthenticated]);
-
-  useEffect(() => {
-    if (highlightPosition || clickedHighlightId) {
-      setIsPopoverOpen(true);
-    }
-  }, [highlightPosition, clickedHighlightId]);
 
   /**
    * Calculate reading progress percentage based on current location and sections
@@ -225,15 +233,44 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     [],
   );
 
-  // Create highlight from selected text
+  // Create highlight from selected text with optimistic update
   const handleCreateHighlight = useCallback(() => {
     if (!currentCFI) return;
 
+    // Create optimistic highlight with temporary ID
+    const tempId = `temp-${Date.now()}`;
+    const optimisticHighlight: BookHighlight = {
+      id: tempId,
+      range: currentCFI,
+    };
+
+    // Optimistic update to local state immediately
+    setLocalHighlights((prev) => [...prev, optimisticHighlight]);
+
+    if (!renditionRef.current) return;
+
+    // Add highlight annotation to rendition
+    renditionRef.current.annotations.add(
+      'highlight',
+      currentCFI,
+      {},
+      () => {
+        // Show delete option when highlight is clicked
+        setClickedHighlightId(tempId);
+      },
+      'epub-highlight',
+      {
+        fill: 'rgba(255, 255, 0, 0.3)', // Yellow highlight
+        cursor: 'pointer',
+        borderRadius: '2px',
+      },
+    );
+
     // Clear selection UI immediately
     setHighlightPosition(null);
-    setCurrentCFI('');
+    setCurrentCFI(STRING_EMPTY);
 
-    // Send to backend, which will trigger query invalidation and re-fetch
+    // Send to backend asynchronously
     _createHighlight({
       bookId,
       range: currentCFI,
@@ -242,45 +279,35 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
 
   // Delete highlight
   const handleDeleteHighlight = useCallback(() => {
-    if (!clickedHighlightId) return;
+    if (!clickedHighlightId || !renditionRef.current) return;
 
-    // Send delete request to backend (will invalidate and refetch)
+    // Find highlight in local state
+    const highlight = localHighlights.find((h) => h.id === clickedHighlightId);
+    if (!highlight) return;
+
+    // Remove highlight annotation from rendition
+    renditionRef.current.annotations.remove(highlight.range, 'highlight');
+    // Optimistic update - remove from local state immediately
+    setLocalHighlights((prev) =>
+      prev.filter((h) => h.id !== clickedHighlightId),
+    );
+
+    // Send delete request to backend asynchronously
     _deleteHighlight({
       highlightId: clickedHighlightId,
     });
 
     // Clear clicked state
     setClickedHighlightId(null);
-  }, [clickedHighlightId, _deleteHighlight]);
+  }, [localHighlights, clickedHighlightId, _deleteHighlight]);
 
   // Apply existing highlights to the rendered content with delete functionality
   const applyHighlights = useCallback(
-    (rendition: Rendition | null, allHighlights: BookHighlight[]) => {
-      if (!rendition) {
-        console.warn('APPLY_HIGHLIGHTS: Skipped, no rendition.');
-        return;
-      }
+    (rendition: Rendition | null) => {
+      if (!rendition) return;
 
-      console.log(
-        `APPLY_HIGHLIGHTS: Running. Got ${allHighlights.length} highlights to apply.`,
-      );
-      // Clear all existing highlights first by removing each one (single source of truth from backend)
-      const existingAnnotations =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (rendition.annotations as any)._annotations || {};
-      Object.keys(existingAnnotations).forEach((key) => {
-        const annotations = existingAnnotations[key];
-        if (Array.isArray(annotations)) {
-          annotations.forEach((annotation) => {
-            if (annotation.type === 'highlight') {
-              rendition.annotations.remove(annotation.range, 'highlight');
-            }
-          });
-        }
-      });
-
-      // Reapply all highlights from backend
-      allHighlights.forEach((highlight) => {
+      // Reapply all highlights from local state
+      highlights.forEach((highlight) => {
         rendition?.annotations.add(
           'highlight',
           highlight.range,
@@ -298,30 +325,15 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
         );
       });
     },
-    [setClickedHighlightId],
+    [highlights],
   );
 
+  // Apply highlights whenever local state changes
   useEffect(() => {
-    // This effect will run when highlights data changes OR when the rendition is ready
     if (renditionRef.current) {
-      console.log(
-        'EFFECT[highlights, rendition]: Applying highlights. Count:',
-        highlights.length,
-      );
-
-      // We use setTimeout to "yield" to the browser's render queue.
-      // epub.js's internal selection-clear render will run,
-      // and THEN our function will run, re-applying the highlights
-      // on top of the newly cleaned-up view.
-      const timerId = setTimeout(() => {
-        console.log('EFFECT[highlights]: Running delayed applyHighlights.');
-        applyHighlights(renditionRef.current, highlights);
-      }, 100); // 100ms is usually more than enough
-
-      // Cleanup the timer if the component unmounts or highlights change again
-      return () => clearTimeout(timerId);
+      applyHighlights(renditionRef.current);
     }
-  }, [highlights, applyHighlights]);
+  }, [applyHighlights]);
 
   if (bookLoading || progressLoading) {
     return (
@@ -399,15 +411,9 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
           getRendition={(rendition) => {
             renditionRef.current = rendition;
             // Extract sections with their content lengths
-            rendition.on('rendered', async (section: Section) => {
-              console.log(
-                'RENDERED EVENT: New section rendered.',
-                section.href,
-              );
-              // Apply highlights on new section load, using the LATEST highlights
-              // We can use the 'highlights' prop directly here because this
-              // getRendition function re-runs when the component re-renders
-              applyHighlights(renditionRef.current, highlights);
+            rendition.on('rendered', async (_section: Section) => {
+              // Apply highlights on new section load
+              applyHighlights(renditionRef.current);
               try {
                 const spine =
                   (await // eslint-disable-next-line @typescript-eslint/no-explicit-any
