@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
+import { Route as BooksRouteImport } from './routes/books'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
@@ -55,6 +56,11 @@ const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
 const ChatTrizRoute = ChatTrizRouteImport.update({
   id: '/chat-triz',
   path: '/chat-triz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BooksRoute = BooksRouteImport.update({
+  id: '/books',
+  path: '/books',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -115,6 +121,7 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -133,6 +140,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/books'
     | '/chat-triz'
     | '/flashcard-deck'
     | '/learn-triz'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/books'
     | '/chat-triz'
     | '/flashcard-deck'
     | '/learn-triz'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/books'
     | '/chat-triz'
     | '/flashcard-deck'
     | '/learn-triz'
@@ -230,6 +242,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  BooksRoute: typeof BooksRoute
   ChatTrizRoute: typeof ChatTrizRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   LearnTrizRoute: typeof LearnTrizRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/chat-triz'
       fullPath: '/chat-triz'
       preLoaderRoute: typeof ChatTrizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/books': {
+      id: '/books'
+      path: '/books'
+      fullPath: '/books'
+      preLoaderRoute: typeof BooksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -395,6 +415,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  BooksRoute: BooksRoute,
   ChatTrizRoute: ChatTrizRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   LearnTrizRoute: LearnTrizRoute,
