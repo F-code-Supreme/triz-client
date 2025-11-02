@@ -1,4 +1,5 @@
-import { Loader, Highlighter, X } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
+import { Loader, Highlighter, X, ChevronLeft } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactReader } from 'react-reader';
 
@@ -36,6 +37,7 @@ interface ISection extends Section {
 }
 
 const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
+  const navigate = useNavigate();
   const [location, setLocation] = useState<string | number>(0);
   const [percentage, setPercentage] = useState(0);
   const [highlightPosition, setHighlightPosition] = useState<{
@@ -395,6 +397,17 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
       {/* Header */}
       <div className="border-b bg-card px-6 py-4">
         <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              navigate({ to: isAuthenticated ? '/books/me' : '/books' })
+            }
+            className="mr-4"
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-foreground">
               {book.title || 'Untitled Book'}
