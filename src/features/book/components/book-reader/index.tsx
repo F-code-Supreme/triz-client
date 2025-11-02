@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Loader, Highlighter, X, ChevronLeft } from 'lucide-react';
+import { Loader, Highlighter, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ReactReader } from 'react-reader';
 
@@ -21,7 +21,10 @@ import {
   useDeleteHighlightMutation,
 } from '@/features/book-highlight/services/mutations';
 import { useGetHighlightsByBookQuery } from '@/features/book-highlight/services/queries';
+import { useGetBookmarksByBookQuery } from '@/features/bookmark/services/queries';
 import { useMousePosition } from '@/hooks';
+
+import { BookReaderHeader } from './header';
 
 import type { BookHighlight } from '@/features/book-highlight/types';
 import type { Contents, Rendition } from 'epubjs';
@@ -72,8 +75,16 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
   const { data: highlights = [] } = useGetHighlightsByBookQuery(
     isAuthenticated ? bookId : null,
   );
+  const { data: bookmarks = [] } = useGetBookmarksByBookQuery(
+    isAuthenticated ? bookId : undefined,
+  );
   const { mutate: _createHighlight } = useCreateHighlightMutation();
   const { mutate: _deleteHighlight } = useDeleteHighlightMutation();
+
+  // Check if current location is bookmarked
+  const isCurrentLocationBookmarked = bookmarks.some(
+    (b) => b.location === String(location),
+  );
 
   // Load saved progress when available
   useEffect(() => {
@@ -349,6 +360,17 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     }
   }, [applyHighlights]);
 
+  // Handle navigation to bookmark/highlight location
+  const handleBookmarkItemClick = useCallback(
+    (location: string, _type: 'bookmark' | 'highlight') => {
+      if (renditionRef.current) {
+        renditionRef.current.display(location);
+        setLocation(location);
+      }
+    },
+    [],
+  );
+
   if (bookLoading || progressLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-background">
@@ -394,34 +416,19 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-card px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() =>
-              navigate({ to: isAuthenticated ? '/books/me' : '/books' })
-            }
-            className="mr-4"
-          >
-            <ChevronLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-foreground">
-              {book.title || 'Untitled Book'}
-            </h1>
-            {book.author && (
-              <p className="text-sm text-muted-foreground">by {book.author}</p>
-            )}
-          </div>
-          <div className="text-right">
-            <p className="text-lg font-semibold text-primary">{percentage}%</p>
-            <p className="text-xs text-muted-foreground">Progress</p>
-          </div>
-        </div>
-      </div>
+      {/* Header with bookmarks and highlights */}
+      <BookReaderHeader
+        bookId={bookId}
+        bookTitle={book.title || 'Untitled Book'}
+        bookmarks={bookmarks}
+        highlights={highlights}
+        currentLocation={location}
+        isBookmarked={isCurrentLocationBookmarked}
+        onNavigateBack={() =>
+          navigate({ to: isAuthenticated ? '/books/me' : '/books' })
+        }
+        onBookmarkItemClick={handleBookmarkItemClick}
+      />
 
       {/* Reader Container */}
       <div className="flex-1 overflow-hidden bg-background">
