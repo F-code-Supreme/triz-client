@@ -13,7 +13,6 @@ import { Form } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { STRING_EMPTY } from '@/constants';
-import { Role } from '@/features/auth/types';
 import { useLocalStorage } from '@/hooks';
 import { Route } from '@/routes/login';
 
@@ -49,12 +48,7 @@ const LoginForm = () => {
         password: values.password,
       },
       () => {
-        // Check if user is admin and redirect accordingly
-        if (auth.hasRole(Role.ADMIN)) {
-          navigate({ to: '/admin' });
-        } else {
-          navigate({ to: redirect || '/' });
-        }
+        navigate({ to: redirect || '/' });
       },
     );
   }
@@ -108,11 +102,7 @@ const LoginForm = () => {
             <div className="flex justify-center">
               <GoogleSignInButton
                 onSuccess={() => {
-                  if (auth.hasRole(Role.ADMIN)) {
-                    navigate({ to: '/admin' });
-                  } else {
-                    navigate({ to: redirect || '/' });
-                  }
+                  navigate({ to: redirect || '/' });
                 }}
               />
             </div>
