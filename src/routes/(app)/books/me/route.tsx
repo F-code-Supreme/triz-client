@@ -7,6 +7,6 @@ const CustomerBookLibraryPage = Loadable(
   lazy(() => import('@/pages/main/customer/books')),
 );
 
-export const Route = createFileRoute('/_auth/books/me')({
+export const Route = createFileRoute('/(app)/books/me')({
   component: CustomerBookLibraryPage,
 });

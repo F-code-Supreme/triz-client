@@ -1,13 +1,16 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import z from 'zod';
 
-import { Role } from '@/features/auth/types';
 import AdminDashboardPage from '@/pages/main/admin/dashboard';
 
-export const Route = createFileRoute('/_auth/admin')({
+export const Route = createFileRoute('/admin')({
+  validateSearch: z.object({
+    redirect: z.string().optional().catch(''),
+  }),
   beforeLoad: ({ context, location }) => {
-    if (!context.auth.hasRole(Role.ADMIN)) {
+    if (!context.auth.isAuthenticated) {
       throw redirect({
-        to: '/unauthorized',
+        to: '/login',
         search: {
           redirect: location.href,
         },
