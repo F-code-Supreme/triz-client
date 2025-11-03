@@ -9,3 +9,4 @@ export { useCountdown } from './use-countdown/use-countdown';
 export { useEventListener } from './use-event-listener/use-event-listener';
 export { useEventCallback } from './use-event-callback/use-event-callback';
 export { useSessionStorage } from './use-session-storage/use-session-storage';
+export { useMousePosition } from './use-mouse-position/use-mouse-position';

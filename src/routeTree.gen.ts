@@ -15,17 +15,19 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as ChatTrizRouteImport } from './routes/chat-triz'
-import { Route as BooksRouteImport } from './routes/books'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
+import { Route as BooksIndexRouteImport } from './routes/books.index'
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
 import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
+import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
+import { Route as AuthBooksMeRouteImport } from './routes/_auth.books.me'
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -58,11 +60,6 @@ const ChatTrizRoute = ChatTrizRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BooksRoute = BooksRouteImport.update({
-  id: '/books',
-  path: '/books',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
@@ -80,6 +77,11 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
 const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
   id: '/forgot-password/',
   path: '/forgot-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BooksIndexRoute = BooksIndexRouteImport.update({
+  id: '/books/',
+  path: '/books/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
@@ -113,6 +115,16 @@ const AuthAdminRoute = AuthAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthRoute,
 } as any)
+const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
+  id: '/books/$bookId/',
+  path: '/books/$bookId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthBooksMeRoute = AuthBooksMeRouteImport.update({
+  id: '/books/me',
+  path: '/books/me',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -121,7 +133,6 @@ const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -134,13 +145,15 @@ export interface FileRoutesByFullPath {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/books': typeof BooksIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/books/me': typeof AuthBooksMeRoute
+  '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -153,15 +166,17 @@ export interface FileRoutesByTo {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/books': typeof BooksIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/books/me': typeof AuthBooksMeRoute
+  '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/books': typeof BooksRoute
   '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -174,15 +189,17 @@ export interface FileRoutesById {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/books/': typeof BooksIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/_auth/books/me': typeof AuthBooksMeRoute
+  '/books/$bookId/': typeof BooksBookIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/books'
     | '/chat-triz'
     | '/flashcard-deck'
     | '/learn-triz'
@@ -195,13 +212,15 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/books'
     | '/forgot-password'
     | '/register'
     | '/admin/dashboard'
+    | '/books/me'
+    | '/books/$bookId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/books'
     | '/chat-triz'
     | '/flashcard-deck'
     | '/learn-triz'
@@ -214,14 +233,16 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/books'
     | '/forgot-password'
     | '/register'
     | '/admin/dashboard'
+    | '/books/me'
+    | '/books/$bookId'
   id:
     | '__root__'
     | '/'
     | '/_auth'
-    | '/books'
     | '/chat-triz'
     | '/flashcard-deck'
     | '/learn-triz'
@@ -234,15 +255,17 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/books/'
     | '/forgot-password/'
     | '/register/'
     | '/_auth/admin/dashboard'
+    | '/_auth/books/me'
+    | '/books/$bookId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  BooksRoute: typeof BooksRoute
   ChatTrizRoute: typeof ChatTrizRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   LearnTrizRoute: typeof LearnTrizRoute
@@ -253,8 +276,10 @@ export interface RootRouteChildren {
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
+  BooksIndexRoute: typeof BooksIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
+  BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -301,13 +326,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatTrizRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/books': {
-      id: '/books'
-      path: '/books'
-      fullPath: '/books'
-      preLoaderRoute: typeof BooksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -334,6 +352,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/books/': {
+      id: '/books/'
+      path: '/books'
+      fullPath: '/books'
+      preLoaderRoute: typeof BooksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register/verify-otp': {
@@ -378,6 +403,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/books/$bookId/': {
+      id: '/books/$bookId/'
+      path: '/books/$bookId'
+      fullPath: '/books/$bookId'
+      preLoaderRoute: typeof BooksBookIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/books/me': {
+      id: '/_auth/books/me'
+      path: '/books/me'
+      fullPath: '/books/me'
+      preLoaderRoute: typeof AuthBooksMeRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/admin/dashboard': {
       id: '/_auth/admin/dashboard'
       path: '/dashboard'
@@ -403,11 +442,13 @@ const AuthAdminRouteWithChildren = AuthAdminRoute._addFileChildren(
 interface AuthRouteChildren {
   AuthAdminRoute: typeof AuthAdminRouteWithChildren
   AuthProfileRoute: typeof AuthProfileRoute
+  AuthBooksMeRoute: typeof AuthBooksMeRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthAdminRoute: AuthAdminRouteWithChildren,
   AuthProfileRoute: AuthProfileRoute,
+  AuthBooksMeRoute: AuthBooksMeRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -415,7 +456,6 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  BooksRoute: BooksRoute,
   ChatTrizRoute: ChatTrizRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   LearnTrizRoute: LearnTrizRoute,
@@ -426,8 +466,10 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
+  BooksIndexRoute: BooksIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
+  BooksBookIdIndexRoute: BooksBookIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -3,7 +3,7 @@ import { lazy } from 'react';
 
 import { Loadable } from '@/components/loadable';
 
-const HomePage = Loadable(lazy(() => import('@/pages/main/home')));
+const HomePage = Loadable(lazy(() => import('@/pages/main/public/home')));
 
 export const Route = createFileRoute('/')({
   component: HomePage,

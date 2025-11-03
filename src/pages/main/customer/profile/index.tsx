@@ -1,16 +1,17 @@
 // import { format } from 'date-fns';
 // import { vi, enUS } from 'date-fns/locale';
+import { format } from 'date-fns';
 import { Activity, Award, Edit3, X, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DefaultLayout } from '@/layouts/default-layout';
 import { useGetMeQuery } from '@/features/auth/services/queries';
-import { format } from 'date-fns';
+import { DefaultLayout } from '@/layouts/default-layout';
 
 const COLORS = [
   '#F44336',

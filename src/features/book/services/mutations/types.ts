@@ -1,0 +1,20 @@
+import type { Book } from '../../types';
+
+export interface IUploadBookPayload {
+  file: File;
+}
+
+export interface IUpdateBookPayload extends Omit<Book, 'id'> {
+  bookId: string;
+}
+
+export interface ITrackProgressPayload {
+  bookId: string;
+  location: string;
+  percentage: number;
+}
+
+export interface ITrackProgressDataResponse {
+  location: string;
+  percentage: number;
+}

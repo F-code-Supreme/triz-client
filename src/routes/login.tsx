@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import z from 'zod';
 
 import { STRING_EMPTY } from '@/constants';
-import LoginPage from '@/pages/main/login';
+import LoginPage from '@/pages/main/public/login';
 
 export const Route = createFileRoute('/login')({
   validateSearch: z.object({
