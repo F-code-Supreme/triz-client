@@ -6,7 +6,6 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { LayoutProvider } from '@/context/layout-provider';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { Role } from '@/features/auth/types';
-import { Route } from '@/routes/admin/route';
 
 import type { Meta } from '@/types';
 
@@ -16,7 +15,6 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout = ({ children, meta }: AdminLayoutProps) => {
-  const { redirect } = Route.useSearch();
   const { hasRole } = useAuth();
 
   if (!hasRole(Role.ADMIN)) {
@@ -24,7 +22,7 @@ export const AdminLayout = ({ children, meta }: AdminLayoutProps) => {
       <Navigate
         to="/unauthorized"
         search={{
-          redirect,
+          redirect: '/admin',
         }}
       />
     );
