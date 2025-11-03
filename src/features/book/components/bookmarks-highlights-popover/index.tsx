@@ -1,7 +1,8 @@
-import { Highlighter, Bookmark as BookmarkIcon } from 'lucide-react';
+import { Highlighter, Bookmark as BookmarkIcon, Notebook } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -31,7 +32,7 @@ interface BookmarksHighlightsPopoverProps {
 
 export const BookmarksHighlightsPopover: React.FC<
   BookmarksHighlightsPopoverProps
-> = ({ bookmarks, highlights, onItemClick, className }) => {
+> = ({ bookId, bookmarks, highlights, onItemClick, className }) => {
   const [activeTab, setActiveTab] = useState<TabType>('bookmarks');
   const [open, setOpen] = useState(false);
   const { isAuthenticated } = useAuth();
@@ -43,7 +44,7 @@ export const BookmarksHighlightsPopover: React.FC<
   const handleDeleteBookmark = useCallback(
     (bookmarkId: string) => {
       deleteBookmark(
-        { bookmarkId },
+        { bookmarkId, bookId },
         {
           onSuccess: () => {
             toast.success('Bookmark deleted');
@@ -115,11 +116,14 @@ export const BookmarksHighlightsPopover: React.FC<
           aria-label={`Bookmarks and highlights (${totalCount})`}
         >
           <div className="relative">
-            <BookmarkIcon className="h-5 w-5" />
+            <Notebook className="h-5 w-5" />
             {totalCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+              <Badge
+                className="absolute -right-4 -top-4 h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
+                variant="destructive"
+              >
                 {totalCount > 9 ? '9+' : totalCount}
-              </span>
+              </Badge>
             )}
           </div>
         </Button>

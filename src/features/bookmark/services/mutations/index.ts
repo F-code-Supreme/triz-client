@@ -45,7 +45,8 @@ export const useUpdateBookmarkMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: IUpdateBookmarkPayload) => {
-      const { bookmarkId, ...data } = payload;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { bookmarkId, bookId, ...data } = payload;
       const response = await _request.patch<Bookmark & DataTimestamp>(
         `/bookmarks/${bookmarkId}/users/${user?.id}`,
         data,
@@ -53,9 +54,13 @@ export const useUpdateBookmarkMutation = () => {
 
       return response;
     },
-    onSuccess: () => {
+    onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
-        queryKey: [BookmarkKeys.GetBookmarksByBookQuery],
+        queryKey: [
+          BookmarkKeys.GetBookmarksByBookQuery,
+          payload.bookId,
+          user?.id,
+        ],
       });
     },
   });
@@ -73,9 +78,13 @@ export const useDeleteBookmarkMutation = () => {
 
       return response;
     },
-    onSuccess: () => {
+    onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
-        queryKey: [BookmarkKeys.GetBookmarksByBookQuery],
+        queryKey: [
+          BookmarkKeys.GetBookmarksByBookQuery,
+          payload.bookId,
+          user?.id,
+        ],
       });
     },
   });

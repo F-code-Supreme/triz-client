@@ -16,8 +16,11 @@ import {
 } from '@/features/bookmark/services/mutations';
 import { cn } from '@/lib/utils';
 
+import type { Bookmark as BookmarkType } from '@/features/bookmark/types';
+
 interface BookmarkButtonProps {
   bookId: string;
+  bookmarks: BookmarkType[];
   isBookmarked: boolean;
   currentLocation: string | number;
   bookmarkTitle?: string;
@@ -30,6 +33,7 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
   currentLocation,
   bookmarkTitle,
   className,
+  bookmarks,
 }) => {
   const { isAuthenticated } = useAuth();
   const { mutate: createBookmark, isPending: isCreating } =
@@ -44,8 +48,11 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
     }
 
     if (isBookmarked && bookmarkTitle) {
+      const bookmark = bookmarks.find((b) => b.title === bookmarkTitle);
+      if (!bookmark) return;
+
       deleteBookmark(
-        { bookmarkId: bookmarkTitle }, // Using title as ID since we need the bookmark ID
+        { bookmarkId: bookmark.id, bookId },
         {
           onSuccess: () => {
             toast.success('Bookmark removed');
@@ -76,13 +83,16 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
     isAuthenticated,
     isBookmarked,
     bookmarkTitle,
+    bookmarks,
     deleteBookmark,
     createBookmark,
     bookId,
     currentLocation,
   ]);
 
-  const isPending = isCreating || isDeleting;
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <TooltipProvider>
@@ -90,7 +100,7 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({
         <TooltipTrigger asChild>
           <Button
             onClick={handleBookmarkClick}
-            disabled={isPending || !isAuthenticated}
+            disabled={isCreating || isDeleting}
             variant="ghost"
             size="icon"
             className={cn(

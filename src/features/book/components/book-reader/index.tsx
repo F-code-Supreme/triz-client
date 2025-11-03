@@ -62,6 +62,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
   const lastSavedLocationRef = useRef<string | number>(0);
   const renditionRef = useRef<Rendition | null>(null);
   const mousePositionRef = useMousePosition();
+  const firstRenderRef = useRef(false);
 
   const {
     data: book,
@@ -72,9 +73,8 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     useGetBookProgressQuery(bookId);
   const { mutate: trackProgress, isPending } = useTrackBookProgressMutation();
   const { isAuthenticated } = useAuth();
-  const { data: highlights = [] } = useGetHighlightsByBookQuery(
-    isAuthenticated ? bookId : null,
-  );
+  const { data: highlights = [], isSuccess: highlightsSuccess } =
+    useGetHighlightsByBookQuery(isAuthenticated ? bookId : null);
   const { data: bookmarks = [] } = useGetBookmarksByBookQuery(
     isAuthenticated ? bookId : undefined,
   );
@@ -334,7 +334,6 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
     (rendition: Rendition | null) => {
       if (!rendition) return;
 
-      // Reapply all highlights from local state
       highlights.forEach((highlight) => {
         rendition?.annotations.add(
           'highlight',
@@ -349,6 +348,8 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
           },
         );
       });
+
+      if (highlightsSuccess) firstRenderRef.current = true;
     },
     [highlights, handleHighlightClick],
   );
@@ -421,7 +422,7 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
         bookId={bookId}
         bookTitle={book.title || 'Untitled Book'}
         bookmarks={bookmarks}
-        highlights={highlights}
+        highlights={localHighlights}
         currentLocation={location}
         isBookmarked={isCurrentLocationBookmarked}
         onNavigateBack={() =>
@@ -445,7 +446,8 @@ const BookReader: React.FC<BookReaderProps> = ({ bookId }) => {
             // Extract sections with their content lengths
             rendition.on('rendered', async (_section: Section) => {
               // Apply highlights on new section load
-              applyHighlights(renditionRef.current);
+              if (!firstRenderRef.current)
+                applyHighlights(renditionRef.current);
               try {
                 const spine =
                   (await // eslint-disable-next-line @typescript-eslint/no-explicit-any

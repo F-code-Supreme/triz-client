@@ -80,6 +80,7 @@ export const BookReaderHeader: React.FC<BookReaderHeaderProps> = ({
         />
         <BookmarkButton
           bookId={bookId}
+          bookmarks={bookmarks}
           isBookmarked={isBookmarked}
           currentLocation={currentLocation}
           bookmarkTitle={currentBookmark?.title}

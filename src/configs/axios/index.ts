@@ -67,7 +67,7 @@ class MyAxios {
       (response) => {
         const { data } = response;
         console.log('data', data);
-        if (data.code !== 200 || response.status !== 200) {
+        if (data.code !== 200 && data.code !== 201) {
           throw new Error(data.message);
         }
         if (data instanceof Blob) {

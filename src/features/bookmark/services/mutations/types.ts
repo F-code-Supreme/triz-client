@@ -5,10 +5,12 @@ export interface ICreateBookmarkPayload {
 }
 
 export interface IUpdateBookmarkPayload {
+  bookId: string;
   bookmarkId: string;
   title?: string;
 }
 
 export interface IDeleteBookmarkPayload {
+  bookId: string;
   bookmarkId: string;
 }
