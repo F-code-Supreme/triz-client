@@ -1,6 +1,8 @@
+import { Link } from '@tanstack/react-router';
 import { BookOpen } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import useAuth from '@/features/auth/hooks/use-auth';
 import BookItem from '@/features/book/components/book-list/book-item';
 import BookSkeleton from '@/features/book/components/book-list/book-skeleton';
 import { useGetAllBooksQuery } from '@/features/book/services/queries';
@@ -8,6 +10,7 @@ import { DefaultLayout } from '@/layouts/default-layout';
 
 const BookLibraryPage = () => {
   const { data, isLoading, error } = useGetAllBooksQuery();
+  const { isAuthenticated } = useAuth();
 
   const books = data?.content || [];
 
@@ -15,15 +18,22 @@ const BookLibraryPage = () => {
     <DefaultLayout meta={{ title: 'Book Library' }}>
       <div className="space-y-8 py-8">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-foreground flex items-center gap-3">
-            <BookOpen className="h-8 w-8" />
-            Book Library
-          </h1>
-          <p className="text-muted-foreground">
-            Explore our collection of educational books about TRIZ principles
-            and innovation
-          </p>
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-2 flex-1">
+            <h1 className="text-4xl font-bold text-foreground flex items-center gap-3">
+              <BookOpen className="h-8 w-8" />
+              Book Library
+            </h1>
+            <p className="text-muted-foreground">
+              Explore our collection of educational books about TRIZ principles
+              and innovation
+            </p>
+          </div>
+          {isAuthenticated && (
+            <Button asChild className="h-10">
+              <Link to="/books/me">My Books</Link>
+            </Button>
+          )}
         </div>
 
         {/* Books Grid */}
