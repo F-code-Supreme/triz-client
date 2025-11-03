@@ -12,7 +12,10 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useDeleteHighlightMutation } from '@/features/book-highlight/services/mutations';
-import { useDeleteBookmarkMutation } from '@/features/bookmark/services/mutations';
+import {
+  useDeleteBookmarkMutation,
+  useUpdateBookmarkMutation,
+} from '@/features/bookmark/services/mutations';
 import { cn } from '@/lib/utils';
 
 import { BookmarkHighlightItem } from '../bookmark-highlight-item';
@@ -38,6 +41,8 @@ export const BookmarksHighlightsPopover: React.FC<
   const { isAuthenticated } = useAuth();
   const { mutate: deleteBookmark, isPending: isDeletingBookmark } =
     useDeleteBookmarkMutation();
+  const { mutate: updateBookmark, isPending: isUpdatingBookmark } =
+    useUpdateBookmarkMutation();
   const { mutate: deleteHighlight, isPending: isDeletingHighlight } =
     useDeleteHighlightMutation();
 
@@ -55,7 +60,24 @@ export const BookmarksHighlightsPopover: React.FC<
         },
       );
     },
-    [deleteBookmark],
+    [deleteBookmark, bookId],
+  );
+
+  const handleRenameBookmark = useCallback(
+    (bookmarkId: string, newTitle: string) => {
+      updateBookmark(
+        { bookmarkId, bookId, title: newTitle },
+        {
+          onSuccess: () => {
+            toast.success('Bookmark renamed');
+          },
+          onError: () => {
+            toast.error('Failed to rename bookmark');
+          },
+        },
+      );
+    },
+    [updateBookmark, bookId],
   );
 
   const handleDeleteHighlight = useCallback(
@@ -190,7 +212,8 @@ export const BookmarksHighlightsPopover: React.FC<
                     type="bookmark"
                     onDelete={handleDeleteBookmark}
                     onClick={handleBookmarkItemClick}
-                    isLoading={isDeletingBookmark}
+                    onRename={handleRenameBookmark}
+                    isLoading={isDeletingBookmark || isUpdatingBookmark}
                   />
                 ))
               ) : (
