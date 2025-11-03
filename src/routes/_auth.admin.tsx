@@ -1,7 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 
 import { Role } from '@/features/auth/types';
-import AdminDashboardPage from '@/pages/main/admin/dashboard';
 
 export const Route = createFileRoute('/_auth/admin')({
   beforeLoad: ({ context, location }) => {
@@ -14,5 +13,5 @@ export const Route = createFileRoute('/_auth/admin')({
       });
     }
   },
-  component: AdminDashboardPage,
+  component: () => <Outlet />,
 });
