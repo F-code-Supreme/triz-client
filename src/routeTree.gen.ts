@@ -17,12 +17,14 @@ import { Route as ChatTrizRouteImport } from './routes/chat-triz'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
+import { Route as QuizIndexRouteImport } from './routes/quiz.index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
 import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
+import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz.$quizId.index'
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -64,6 +66,11 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
   path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuizIndexRoute = QuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
   id: '/forgot-password/',
   path: '/forgot-password/',
@@ -95,6 +102,11 @@ const AuthAdminRoute = AuthAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthRoute,
 } as any)
+const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
+  id: '/quiz/$quizId/',
+  path: '/quiz/$quizId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -114,8 +126,10 @@ export interface FileRoutesByFullPath {
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/quiz': typeof QuizIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -130,8 +144,10 @@ export interface FileRoutesByTo {
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/quiz': typeof QuizIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -148,8 +164,10 @@ export interface FileRoutesById {
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/quiz/': typeof QuizIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
+  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -166,8 +184,10 @@ export interface FileRouteTypes {
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
     | '/forgot-password'
+    | '/quiz'
     | '/register'
     | '/admin/dashboard'
+    | '/quiz/$quizId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -182,8 +202,10 @@ export interface FileRouteTypes {
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
     | '/forgot-password'
+    | '/quiz'
     | '/register'
     | '/admin/dashboard'
+    | '/quiz/$quizId'
   id:
     | '__root__'
     | '/'
@@ -199,8 +221,10 @@ export interface FileRouteTypes {
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
     | '/forgot-password/'
+    | '/quiz/'
     | '/register/'
     | '/_auth/admin/dashboard'
+    | '/quiz/$quizId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -215,7 +239,9 @@ export interface RootRouteChildren {
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
+  QuizIndexRoute: typeof QuizIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
+  QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -276,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quiz/': {
+      id: '/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forgot-password/': {
       id: '/forgot-password/'
       path: '/forgot-password'
@@ -317,6 +350,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthAdminRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/quiz/$quizId/': {
+      id: '/quiz/$quizId/'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_auth/admin/dashboard': {
       id: '/_auth/admin/dashboard'
@@ -364,7 +404,9 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
+  QuizIndexRoute: QuizIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
+  QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
