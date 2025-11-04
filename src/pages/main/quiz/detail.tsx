@@ -141,9 +141,11 @@ const QuizDetail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [attemptId, setAttemptId] = useState<string>(
-    attemptIdFromUrl || attemptIdFromStorage || '',
-  );
+  // const [attemptId, setAttemptId] = useState<string>(
+  //   attemptIdFromUrl || attemptIdFromStorage || '',
+  // );
+
+  const attemptId = attemptIdFromUrl || attemptIdFromStorage || '';
 
   useEffect(() => {
     if (attemptId && quizId) {
