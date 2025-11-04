@@ -26,18 +26,12 @@ import { Route as BooksIndexRouteImport } from './routes/books.index'
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
-<<<<<<< HEAD
-import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
-import { Route as AuthAdminRouteImport } from './routes/_auth.admin'
-import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz.$quizId.index'
-import { Route as AuthAdminDashboardRouteImport } from './routes/_auth.admin.dashboard'
-=======
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
+import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz.$quizId.index'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -129,21 +123,7 @@ const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
   path: '/flashcard/$deckId',
   getParentRoute: () => rootRouteImport,
 } as any)
-<<<<<<< HEAD
-const AuthAdminRoute = AuthAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthRoute,
-} as any)
-const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
-  id: '/quiz/$quizId/',
-  path: '/quiz/$quizId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthAdminDashboardRoute = AuthAdminDashboardRouteImport.update({
-=======
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AdminRouteRoute,
@@ -152,6 +132,11 @@ const appProfileRouteRoute = appProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => appRouteRoute,
+} as any)
+const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
+  id: '/quiz/$quizId/',
+  path: '/quiz/$quizId/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
@@ -184,13 +169,9 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/quiz': typeof QuizIndexRoute
   '/register': typeof RegisterIndexRoute
-<<<<<<< HEAD
-  '/admin/dashboard': typeof AuthAdminDashboardRoute
-  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
-=======
   '/books/me': typeof appBooksMeRouteRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
@@ -212,13 +193,9 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/quiz': typeof QuizIndexRoute
   '/register': typeof RegisterIndexRoute
-<<<<<<< HEAD
-  '/admin/dashboard': typeof AuthAdminDashboardRoute
-  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
-=======
   '/books/me': typeof appBooksMeRouteRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -242,13 +219,9 @@ export interface FileRoutesById {
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/quiz/': typeof QuizIndexRoute
   '/register/': typeof RegisterIndexRoute
-<<<<<<< HEAD
-  '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
-  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
-=======
   '/(app)/books/me': typeof appBooksMeRouteRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -272,13 +245,9 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/quiz'
     | '/register'
-<<<<<<< HEAD
-    | '/admin/dashboard'
-    | '/quiz/$quizId'
-=======
     | '/books/me'
     | '/books/$bookId'
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+    | '/quiz/$quizId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -300,13 +269,9 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/quiz'
     | '/register'
-<<<<<<< HEAD
-    | '/admin/dashboard'
-    | '/quiz/$quizId'
-=======
     | '/books/me'
     | '/books/$bookId'
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+    | '/quiz/$quizId'
   id:
     | '__root__'
     | '/'
@@ -329,13 +294,9 @@ export interface FileRouteTypes {
     | '/forgot-password/'
     | '/quiz/'
     | '/register/'
-<<<<<<< HEAD
-    | '/_auth/admin/dashboard'
-    | '/quiz/$quizId/'
-=======
     | '/(app)/books/me'
     | '/books/$bookId/'
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+    | '/quiz/$quizId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -357,11 +318,8 @@ export interface RootRouteChildren {
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   QuizIndexRoute: typeof QuizIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
-<<<<<<< HEAD
-  QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
-=======
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+  QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -492,27 +450,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardDeckIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-<<<<<<< HEAD
-    '/_auth/admin': {
-      id: '/_auth/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthAdminRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/quiz/$quizId/': {
-      id: '/quiz/$quizId/'
-      path: '/quiz/$quizId'
-      fullPath: '/quiz/$quizId'
-      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/admin/dashboard': {
-      id: '/_auth/admin/dashboard'
-=======
     '/admin/dashboard': {
       id: '/admin/dashboard'
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
       path: '/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteRouteImport
@@ -524,6 +463,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile'
       preLoaderRoute: typeof appProfileRouteRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    '/quiz/$quizId/': {
+      id: '/quiz/$quizId/'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/books/$bookId/': {
       id: '/books/$bookId/'
@@ -587,11 +533,8 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   QuizIndexRoute: QuizIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-<<<<<<< HEAD
-  QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
-=======
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
->>>>>>> 7f3edae047a938da759ad4bcdf317a6a9a611806
+  QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
