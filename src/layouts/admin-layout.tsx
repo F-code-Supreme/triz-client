@@ -15,18 +15,6 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout = ({ children, meta }: AdminLayoutProps) => {
-  const { hasRole } = useAuth();
-
-  if (!hasRole(Role.ADMIN)) {
-    return (
-      <Navigate
-        to="/unauthorized"
-        search={{
-          redirect: '/admin',
-        }}
-      />
-    );
-  }
 
   return (
     <HelmetProvider>

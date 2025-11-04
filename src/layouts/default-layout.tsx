@@ -23,11 +23,7 @@ export const DefaultLayout = ({
   showFooter = false,
   className = 'container mx-auto md:p-8 sm:p-4',
 }: DefaultLayoutProps) => {
-  const { hasRole } = useAuth();
 
-  if (hasRole(Role.ADMIN)) {
-    return <Navigate to="/admin/dashboard" />;
-  }
 
   return (
     <HelmetProvider>

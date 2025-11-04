@@ -27,9 +27,12 @@ import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-pas
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
+import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
+import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
+import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -121,6 +124,11 @@ const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminCoursesRouteRoute = AdminCoursesRouteRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const appProfileRouteRoute = appProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -131,10 +139,20 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   path: '/books/$bookId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminCoursesCreateRouteRoute = AdminCoursesCreateRouteRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => AdminCoursesRouteRoute,
+} as any)
 const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
   id: '/books/me',
   path: '/books/me',
   getParentRoute: () => appRouteRoute,
+} as any)
+const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -148,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/profile': typeof appProfileRouteRoute
+  '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -156,7 +175,9 @@ export interface FileRoutesByFullPath {
   '/books': typeof BooksIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
+  '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -178,7 +199,9 @@ export interface FileRoutesByTo {
   '/books': typeof BooksIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
+  '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesById {
@@ -194,6 +217,7 @@ export interface FileRoutesById {
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/profile': typeof appProfileRouteRoute
+  '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -202,7 +226,9 @@ export interface FileRoutesById {
   '/books/': typeof BooksIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/(app)/books/me': typeof appBooksMeRouteRoute
+  '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -218,6 +244,7 @@ export interface FileRouteTypes {
     | '/memory-card'
     | '/unauthorized'
     | '/profile'
+    | '/admin/courses'
     | '/admin/dashboard'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -226,7 +253,9 @@ export interface FileRouteTypes {
     | '/books'
     | '/forgot-password'
     | '/register'
+    | '/admin/courses/'
     | '/books/me'
+    | '/admin/courses/create'
     | '/books/$bookId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -248,7 +277,9 @@ export interface FileRouteTypes {
     | '/books'
     | '/forgot-password'
     | '/register'
+    | '/admin/courses'
     | '/books/me'
+    | '/admin/courses/create'
     | '/books/$bookId'
   id:
     | '__root__'
@@ -263,6 +294,7 @@ export interface FileRouteTypes {
     | '/memory-card'
     | '/unauthorized'
     | '/(app)/profile'
+    | '/admin/courses'
     | '/admin/dashboard'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -271,7 +303,9 @@ export interface FileRouteTypes {
     | '/books/'
     | '/forgot-password/'
     | '/register/'
+    | '/admin/courses/'
     | '/(app)/books/me'
+    | '/admin/courses/create'
     | '/books/$bookId/'
   fileRoutesById: FileRoutesById
 }
@@ -424,6 +458,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/courses': {
+      id: '/admin/courses'
+      path: '/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminCoursesRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/(app)/profile': {
       id: '/(app)/profile'
       path: '/profile'
@@ -438,12 +479,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksBookIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/courses/create': {
+      id: '/admin/courses/create'
+      path: '/create'
+      fullPath: '/admin/courses/create'
+      preLoaderRoute: typeof AdminCoursesCreateRouteRouteImport
+      parentRoute: typeof AdminCoursesRouteRoute
+    }
     '/(app)/books/me': {
       id: '/(app)/books/me'
       path: '/books/me'
       fullPath: '/books/me'
       preLoaderRoute: typeof appBooksMeRouteRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    '/admin/courses/': {
+      id: '/admin/courses/'
+      path: '/'
+      fullPath: '/admin/courses/'
+      preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
+      parentRoute: typeof AdminCoursesRouteRoute
     }
   }
 }
@@ -462,11 +517,26 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
   appRouteRouteChildren,
 )
 
+interface AdminCoursesRouteRouteChildren {
+  AdminCoursesIndexRouteRoute: typeof AdminCoursesIndexRouteRoute
+  AdminCoursesCreateRouteRoute: typeof AdminCoursesCreateRouteRoute
+}
+
+const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
+  AdminCoursesIndexRouteRoute: AdminCoursesIndexRouteRoute,
+  AdminCoursesCreateRouteRoute: AdminCoursesCreateRouteRoute,
+}
+
+const AdminCoursesRouteRouteWithChildren =
+  AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
+
 interface AdminRouteRouteChildren {
+  AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
 }
 
