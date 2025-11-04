@@ -214,14 +214,14 @@ const CreateCoursePage = () => {
   };
 
   // Basic validation for step 1
-  const _validateStep1 = () => {
-    const newErrors: typeof errors = {};
-    if (!thumbnailFile) newErrors.thumbnail = 'Thumbnail is required';
-    if (!title.trim()) newErrors.title = 'Title is required';
-    if (!description.trim()) newErrors.description = 'Description is required';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // const _validateStep1 = () => {
+  //   const newErrors: typeof errors = {};
+  //   if (!thumbnailFile) newErrors.thumbnail = 'Thumbnail is required';
+  //   if (!title.trim()) newErrors.title = 'Title is required';
+  //   if (!description.trim()) newErrors.description = 'Description is required';
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
   const goNext = () => {
     if (step === 1) {
