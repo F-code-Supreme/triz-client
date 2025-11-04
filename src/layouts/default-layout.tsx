@@ -1,10 +1,7 @@
-import { Navigate } from '@tanstack/react-router';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import Footer from '@/components/ui/footer';
 import { Navbar03 } from '@/components/ui/navbar';
-import useAuth from '@/features/auth/hooks/use-auth';
-import { Role } from '@/features/auth/types';
 
 import type { Meta } from '@/types';
 

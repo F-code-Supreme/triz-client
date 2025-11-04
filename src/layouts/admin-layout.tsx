@@ -1,4 +1,3 @@
-import { Navigate } from '@tanstack/react-router';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { AdminSidebar } from '@/components/layout/admin-sidebar';
