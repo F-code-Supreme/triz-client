@@ -50,7 +50,7 @@ const CreateCoursePage = () => {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [setThumbnailFile] = useState<File | null>(null);
+  const [_, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
     title?: string;
