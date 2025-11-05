@@ -1,10 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
-import { Clock, BookOpen, Save, Send, Loader2 } from 'lucide-react';
+import {
+  Clock,
+  BookOpen,
+  Save,
+  Send,
+  Loader2,
+  Trophy,
+  CheckCircle,
+  RotateCcw,
+  Home,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
@@ -17,6 +33,127 @@ import {
   useSubmitQuizAttemptMutation,
 } from '@/features/quiz/service/mutations';
 import { toast } from 'sonner';
+
+const QuizResults = ({
+  results,
+  onClose,
+  onRetry,
+}: {
+  results: any;
+  onClose: () => void;
+  onRetry: () => void;
+}) => {
+  const formatTime = (dateString: string) => {
+    return new Date(dateString).toLocaleString('vi-VN');
+  };
+
+  const calculateDuration = (startTime: string, completedAt: string) => {
+    const start = new Date(startTime);
+    const end = new Date(completedAt);
+    const durationMs = end.getTime() - start.getTime();
+    const minutes = Math.floor(durationMs / (1000 * 60));
+    const seconds = Math.floor((durationMs % (1000 * 60)) / 1000);
+    return `${minutes} phút ${seconds} giây`;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+      >
+        <Card className="bg-white dark:bg-slate-900">
+          <CardHeader className="text-center pb-4">
+            <div className="mx-auto mb-4">
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                <Trophy className="w-8 h-8 text-slate-700 dark:text-white" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl font-bold text-slate-800 dark:text-white">
+              Hoàn thành Quiz!
+            </CardTitle>
+            <CardDescription className="text-slate-600 dark:text-slate-300">
+              Chúc mừng bạn đã hoàn thành bài quiz
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            {/* Score Display */}
+            <div className="text-center p-6 bg-slate-50 dark:bg-slate-800 rounded-lg">
+              <div className="text-4xl font-bold text-slate-800 dark:text-white mb-2">
+                {results.score}
+              </div>
+              <p className="text-muted-foreground">Điểm số của bạn</p>
+            </div>
+
+            {/* Time Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 border rounded-lg bg-white dark:bg-slate-900">
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="w-4 h-4 text-slate-700 dark:text-white" />
+                  <span className="font-medium">Thời gian làm bài</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {calculateDuration(results.startTime, results.completedAt)}
+                </p>
+              </div>
+
+              <div className="p-4 border rounded-lg bg-white dark:bg-slate-900">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle className="w-4 h-4 text-slate-700 dark:text-white" />
+                  <span className="font-medium">Hoàn thành lúc</span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {formatTime(results.completedAt)}
+                </p>
+              </div>
+            </div>
+
+            {/* Answer Summary */}
+            <div className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-800">
+              <h3 className="font-medium mb-3 text-slate-800 dark:text-white">
+                Tóm tắt kết quả
+              </h3>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Tổng số câu hỏi:</span>
+                  <span className="font-medium">
+                    {results.answers?.length || 0}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Số câu đã trả lời:</span>
+                  <span className="font-medium text-slate-800 dark:text-white">
+                    {results.answers?.length || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={onClose}
+                className="flex-1 gap-2 border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white"
+              >
+                <Home className="w-4 h-4" />
+                Thoát
+              </Button>
+              <Button
+                onClick={onRetry}
+                className="flex-1 gap-2 bg-slate-800 hover:bg-slate-900 text-white"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Làm lại
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+};
 
 const QuizSkeleton = () => (
   <QuizLayout meta={{ title: 'Đang tải quiz...' }}>
@@ -136,16 +273,16 @@ const QuizDetail = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, string>
   >({});
-  const [timeRemaining, setTimeRemaining] = useState(28 * 60 + 20);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  // const [attemptId, setAttemptId] = useState<string>(
-  //   attemptIdFromUrl || attemptIdFromStorage || '',
-  // );
+  const [quizResults, setQuizResults] = useState<any>(null);
+  const [showResults, setShowResults] = useState(false);
 
   const attemptId = attemptIdFromUrl || attemptIdFromStorage || '';
+
+  const [timeRemaining, setTimeRemaining] = useState(28 * 60 + 20);
 
   useEffect(() => {
     if (attemptId && quizId) {
@@ -225,14 +362,15 @@ const QuizDetail = () => {
         }),
       );
 
-      await submitQuizAttemptMutation.mutateAsync({
+      const result = await submitQuizAttemptMutation.mutateAsync({
         attemptId,
         answers,
       });
 
       toast.success('Nộp bài thành công!');
       setIsSubmitted(true);
-      navigate({ to: '/quiz' });
+      setQuizResults(result);
+      setShowResults(true);
     } catch (error) {
       console.error('Error submitting quiz:', error);
       toast.error('Có lỗi xảy ra khi nộp bài. Vui lòng thử lại.');
@@ -272,6 +410,19 @@ const QuizDetail = () => {
     if (index === currentQuestionIndex) return 'current';
     return 'unanswered';
   };
+
+  const handleCloseResults = () => {
+    setShowResults(false);
+    navigate({ to: '/quiz' });
+  };
+
+  const handleRetryQuiz = () => {
+    // Clear current attempt data
+    localStorage.removeItem(`quiz-attempt-${quizId}`);
+    setShowResults(false);
+    // Navigate back to quiz list or reload the page to start fresh
+    navigate({ to: `/quiz/${quizId}` });
+  };
   if (isLoading) {
     return <QuizSkeleton />;
   }
@@ -301,6 +452,13 @@ const QuizDetail = () => {
         title: `${quizData.title} `,
       }}
     >
+      {showResults && quizResults && (
+        <QuizResults
+          results={quizResults}
+          onClose={handleCloseResults}
+          onRetry={handleRetryQuiz}
+        />
+      )}
       <div className=" dark:from-slate-900 dark:to-slate-800">
         <div className="container mx-auto ">
           {/* Header */}

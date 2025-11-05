@@ -8,7 +8,7 @@ import {
 } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
 import { useState } from 'react';
-import { Clock, BookOpen, Play, Loader2 } from 'lucide-react';
+import { Clock, BookOpen, Play, Loader2, History } from 'lucide-react';
 import { Route } from '@/routes/quiz.index';
 import {
   Sheet,
@@ -57,8 +57,7 @@ const QuizListPage = () => {
 
       setConfirmOpen(false);
 
-      const attemptId =
-        (attemptResponse as any)?.id || (attemptResponse as any)?.attemptId;
+      const attemptId = (attemptResponse as any)?.id;
       navigate({
         to: `/quiz/${pendingQuizId}`,
         search: attemptId ? { attemptId } : {},
@@ -142,7 +141,7 @@ const QuizListPage = () => {
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-muted-foreground" />
                           <span className="text-muted-foreground text-sm">
-                            30 minutes
+                            {featuredData?.durationInMinutes || '—'} minutes
                           </span>
                         </div>
                       </div>
@@ -208,8 +207,10 @@ const QuizListPage = () => {
                   variant="outline"
                   size="sm"
                   className="self-start sm:self-auto"
+                  onClick={() => navigate({ to: '/quiz/history' })}
                 >
-                  Add filters
+                  <History className="w-4 h-4 mr-2" />
+                  History Quiz
                 </Button>
               </div>
 
@@ -220,9 +221,9 @@ const QuizListPage = () => {
                     quiz.description ||
                     quiz.summary ||
                     'No description available.';
-                  const cardCount =
-                    quiz.questions?.length ?? quiz.cardCount ?? 0;
-                  const duration = quiz.duration || '—';
+                  // const cardCount =
+                  //   quiz.questions?.length ?? quiz.cardCount ?? 0;
+                  const duration = quiz.durationInMinutes || '—';
                   const gradientClass =
                     'from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900';
 
@@ -238,12 +239,12 @@ const QuizListPage = () => {
                           <div
                             className={`text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300`}
                           >
-                            {cardCount} Question
+                            {/* {cardCount} Question */}
                           </div>
                           <div
                             className={`text-[10px] sm:text-xs text-slate-600 dark:text-slate-400`}
                           >
-                            {duration}
+                            {duration} minutes
                           </div>
                         </div>
 

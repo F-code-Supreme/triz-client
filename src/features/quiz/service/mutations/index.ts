@@ -5,6 +5,7 @@ import {
   GetQuizzesResponse,
   AutoSaveQuizAnswerPayload,
   SubmitQuizAttemptPayload,
+  GetUserQuizAttemptsResponse,
 } from './type';
 import { useMutation } from '@tanstack/react-query';
 
@@ -42,9 +43,8 @@ export const useStartQuizAttemptMutation = () => {
       userId: string;
     }) => {
       const res = await _request.post(
-        `/quiz-attempts/start`,
+        `/quiz-attempts/start/quiz/${quizId}/user/${userId}`,
         {},
-        { quizId, userId },
       );
       return res.data;
     },
@@ -99,7 +99,9 @@ export const useGetUserQuizAttemptsQuery = (userId: string) => {
   return useQuery({
     queryKey: ['userQuizAttempts', userId],
     queryFn: async () => {
-      const res = await _request.get(`/quiz-attempts/user/${userId}`);
+      const res = await _request.get<GetUserQuizAttemptsResponse>(
+        `/quiz-attempts/user/${userId}`,
+      );
       return res.data;
     },
     enabled: !!userId,

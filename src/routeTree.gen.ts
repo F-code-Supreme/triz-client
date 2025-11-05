@@ -29,6 +29,7 @@ import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-p
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
+import { Route as QuizHistoryIndexRouteImport } from './routes/quiz.history.index'
 import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz.$quizId.index'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
@@ -133,6 +134,11 @@ const appProfileRouteRoute = appProfileRouteRouteImport.update({
   path: '/profile',
   getParentRoute: () => appRouteRoute,
 } as any)
+const QuizHistoryIndexRoute = QuizHistoryIndexRouteImport.update({
+  id: '/quiz/history/',
+  path: '/quiz/history/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
   id: '/quiz/$quizId/',
   path: '/quiz/$quizId/',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/books/me': typeof appBooksMeRouteRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/quiz/$quizId': typeof QuizQuizIdIndexRoute
+  '/quiz/history': typeof QuizHistoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/books/me': typeof appBooksMeRouteRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/quiz/$quizId': typeof QuizQuizIdIndexRoute
+  '/quiz/history': typeof QuizHistoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/(app)/books/me': typeof appBooksMeRouteRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
   '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
+  '/quiz/history/': typeof QuizHistoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/books/me'
     | '/books/$bookId'
     | '/quiz/$quizId'
+    | '/quiz/history'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/books/me'
     | '/books/$bookId'
     | '/quiz/$quizId'
+    | '/quiz/history'
   id:
     | '__root__'
     | '/'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/(app)/books/me'
     | '/books/$bookId/'
     | '/quiz/$quizId/'
+    | '/quiz/history/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -320,6 +332,7 @@ export interface RootRouteChildren {
   RegisterIndexRoute: typeof RegisterIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
   QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
+  QuizHistoryIndexRoute: typeof QuizHistoryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -464,6 +477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appProfileRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/quiz/history/': {
+      id: '/quiz/history/'
+      path: '/quiz/history'
+      fullPath: '/quiz/history'
+      preLoaderRoute: typeof QuizHistoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quiz/$quizId/': {
       id: '/quiz/$quizId/'
       path: '/quiz/$quizId'
@@ -535,6 +555,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterIndexRoute: RegisterIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
   QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
+  QuizHistoryIndexRoute: QuizHistoryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -84,6 +84,7 @@ export interface GetQuizByIdResponse {
   id: string;
   title: string;
   description: string;
+  durationInMinutes: string;
   createdAt: string;
   updatedAt: string;
   createdBy: string | null;
@@ -96,4 +97,25 @@ export interface SubmitQuizAttemptPayload {
     questionId: string;
     selectedOptionIds: string[];
   }>;
+}
+
+export interface QuizAttemptAnswer {
+  id: string;
+  optionId: string;
+  quizAttemptId: string;
+  questionId: string;
+}
+
+export interface QuizAttempt {
+  id: string;
+  score: number;
+  startTime: string | null;
+  completedAt: string | null;
+  quizId: string;
+  userId: string;
+  answers: QuizAttemptAnswer[];
+}
+
+export interface GetUserQuizAttemptsResponse {
+  content: QuizAttempt[];
 }
