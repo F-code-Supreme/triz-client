@@ -1,3 +1,67 @@
+export type UpdateQuizPayload = {
+  title: string;
+  description: string;
+  questions: Array<{
+    content: string;
+    questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
+    options: Array<{
+      content: string;
+      isCorrect: boolean;
+    }>;
+  }>;
+};
+
+export type UpdateQuizResponse = {
+  title: string;
+  description: string;
+  questions: Array<{
+    content: string;
+    questionType: string;
+    options: Array<{
+      content: string;
+      isCorrect: boolean;
+    }>;
+  }>;
+};
+export type CreateQuizPayload = {
+  title: string;
+  description: string;
+  durationInMinutes: number;
+  questions: Array<{
+    content: string;
+    questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
+    options: Array<{
+      content: string;
+      isCorrect: boolean;
+    }>;
+  }>;
+};
+
+export type CreateQuizResponse = {
+  id: string;
+  title: string;
+  description: string;
+  durationInMinutes: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string | null;
+  questions: Array<{
+    id: string;
+    content: string;
+    questionType: string;
+    createdAt: string;
+    updatedAt: string;
+    quizId: string;
+    options: Array<{
+      id: string;
+      content: string;
+      isCorrect: boolean;
+      createdAt: string;
+      updatedAt: string;
+      questionId: string;
+    }>;
+  }>;
+};
 export interface AutoSaveQuizAnswerPayload {
   attemptId: string;
   questionId: string;
@@ -119,3 +183,32 @@ export interface QuizAttempt {
 export interface GetUserQuizAttemptsResponse {
   content: QuizAttempt[];
 }
+
+export type GetAdminQuizzesResponse = {
+  content: Array<{
+    id: string;
+    title: string;
+    description: string;
+    imageSource: string | null;
+    durationInMinutes: number | null;
+    createdAt: string;
+    updatedAt: string;
+    createdBy: string | null;
+    questions: Array<{
+      id: string;
+      content: string;
+      questionType: string;
+      createdAt: string;
+      updatedAt: string;
+      quizId: string;
+      options: Array<{
+        id: string;
+        content: string;
+        isCorrect: boolean;
+        createdAt: string;
+        updatedAt: string;
+        questionId: string;
+      }>;
+    }>;
+  }>;
+};

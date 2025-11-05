@@ -27,6 +27,7 @@ import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
+import { Route as AdminQuizzesRouteRouteImport } from './routes/admin/quizzes/route'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as QuizHistoryIndexRouteImport } from './routes/quiz.history.index'
@@ -124,6 +125,11 @@ const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
   path: '/flashcard/$deckId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminQuizzesRouteRoute = AdminQuizzesRouteRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/profile': typeof appProfileRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/profile': typeof appProfileRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/profile': typeof appProfileRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/profile'
     | '/admin/dashboard'
+    | '/admin/quizzes'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/profile'
     | '/admin/dashboard'
+    | '/admin/quizzes'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/(app)/profile'
     | '/admin/dashboard'
+    | '/admin/quizzes'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -463,6 +475,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardDeckIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/quizzes': {
+      id: '/admin/quizzes'
+      path: '/quizzes'
+      fullPath: '/admin/quizzes'
+      preLoaderRoute: typeof AdminQuizzesRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
@@ -524,10 +543,12 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 
 interface AdminRouteRouteChildren {
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
+  AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
