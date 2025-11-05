@@ -11,10 +11,13 @@ import type {
   IUpdateBookPayload,
   ITrackProgressPayload,
   ITrackProgressDataResponse,
+  IDeleteBookPayload,
+  IRestoreBookPayload,
 } from './types';
-import type { Book } from '../../types';
+import type { AdminBook } from '../../types';
 import type { DataTimestamp } from '@/types';
 
+// AUTHENTICATED USER
 export const useUploadBookMutation = () => {
   const _request = useAxios();
   const [progress, setProgress] = useState(0);
@@ -44,64 +47,6 @@ export const useUploadBookMutation = () => {
   return { ...mutation, progress };
 };
 
-export const useCreateBookMutation = () => {
-  const queryClient = useQueryClient();
-  const _request = useAxios();
-  return useMutation({
-    mutationFn: async (payload: Omit<Book, 'id'>) => {
-      const response = await _request.post<Book & DataTimestamp>(
-        '/books',
-        payload,
-      );
-
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery],
-      });
-    },
-  });
-};
-
-export const useUpdateBookMutation = () => {
-  const queryClient = useQueryClient();
-  const _request = useAxios();
-  return useMutation({
-    mutationFn: async (payload: IUpdateBookPayload) => {
-      const { bookId, ...data } = payload;
-      const response = await _request.put<Book & DataTimestamp>(
-        `/books/${bookId}`,
-        data,
-      );
-
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery],
-      });
-    },
-  });
-};
-
-export const useDeleteBookMutation = () => {
-  const queryClient = useQueryClient();
-  const _request = useAxios();
-  return useMutation({
-    mutationFn: async (bookId: string) => {
-      const response = await _request.delete(`/books/${bookId}`);
-
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery],
-      });
-    },
-  });
-};
-
 export const useTrackBookProgressMutation = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -122,6 +67,88 @@ export const useTrackBookProgressMutation = () => {
     onSuccess: (_, payload) => {
       queryClient.invalidateQueries({
         queryKey: [BookKeys.GetBookProgressQuery, payload.bookId, user?.id],
+      });
+    },
+  });
+};
+
+// ADMIN
+export const useCreateBookMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: Omit<AdminBook, 'id'>) => {
+      const response = await _request.post<AdminBook & DataTimestamp>(
+        '/books',
+        payload,
+      );
+
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [BookKeys.GetAllBooksQuery],
+      });
+    },
+  });
+};
+
+export const useUpdateBookMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: IUpdateBookPayload) => {
+      const { bookId, ...data } = payload;
+      const response = await _request.put<AdminBook & DataTimestamp>(
+        `/books/${bookId}`,
+        data,
+      );
+
+      return response;
+    },
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: [BookKeys.GetAllBooksQuery, payload.bookId],
+      });
+    },
+  });
+};
+
+export const useDeleteBookMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: IDeleteBookPayload) => {
+      const { bookId, force } = payload;
+      const response = await _request.delete(`/books/${bookId}`, {
+        force,
+      });
+
+      return response;
+    },
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: [BookKeys.GetAllBooksQuery, payload.bookId],
+      });
+    },
+  });
+};
+
+export const useRestoreBookMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: IRestoreBookPayload) => {
+      const { bookId } = payload;
+      const response = await _request.patch<AdminBook & DataTimestamp>(
+        `/books/${bookId}/restore`,
+      );
+
+      return response;
+    },
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: [BookKeys.GetAllBooksQuery, payload.bookId],
       });
     },
   });
