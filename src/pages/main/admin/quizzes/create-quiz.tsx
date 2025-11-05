@@ -62,10 +62,6 @@ function CreateQuizDialog({ open, setOpen, onSuccess }: CreateQuizDialogProps) {
     }
 
     try {
-      console.log('Submitting quiz with questions:', {
-        ...form,
-        questions,
-      });
       await createQuizMutation.mutateAsync({
         ...form,
         questions,
