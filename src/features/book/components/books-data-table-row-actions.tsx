@@ -1,4 +1,4 @@
-import { MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Eye, Pencil, Trash2, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,10 @@ import {
 
 import { BookPreviewSheet } from './book-preview-sheet';
 import { BooksFormDialog } from './books-form-dialog';
-import { useDeleteBookMutation } from '../services/mutations';
+import {
+  useDeleteBookMutation,
+  useRestoreBookMutation,
+} from '../services/mutations';
 
 import type { AdminBook } from '../types';
 
@@ -29,23 +32,33 @@ interface BooksDataTableRowActionsProps {
   row: {
     original: AdminBook;
   };
+  isDeleted?: boolean;
 }
 
 export const BooksDataTableRowActions = ({
   row,
+  isDeleted = false,
 }: BooksDataTableRowActionsProps) => {
   const book = row.original;
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isActionOpen, setIsActionOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const deleteBookMutation = useDeleteBookMutation();
+  const restoreBookMutation = useRestoreBookMutation();
 
   const handleDelete = async () => {
     await deleteBookMutation.mutateAsync({
       bookId: book.id,
     });
-    setIsDeleteOpen(false);
+    setIsActionOpen(false);
+  };
+
+  const handleRestore = async () => {
+    await restoreBookMutation.mutateAsync({
+      bookId: book.id,
+    });
+    setIsActionOpen(false);
   };
 
   return (
@@ -64,16 +77,27 @@ export const BooksDataTableRowActions = ({
             <Eye className="mr-2 h-4 w-4" />
             Preview
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
+          {!isDeleted && (
+            <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
-            className="text-destructive"
-            onClick={() => setIsDeleteOpen(true)}
+            className={isDeleted ? 'text-blue-600' : 'text-destructive'}
+            onClick={() => setIsActionOpen(true)}
           >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete
+            {isDeleted ? (
+              <>
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Restore
+              </>
+            ) : (
+              <>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </>
+            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -90,13 +114,16 @@ export const BooksDataTableRowActions = ({
         initialData={book}
       />
 
-      <Sheet open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+      <Sheet open={isActionOpen} onOpenChange={setIsActionOpen}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Delete Book</SheetTitle>
+            <SheetTitle>
+              {isDeleted ? 'Restore Book' : 'Delete Book'}
+            </SheetTitle>
             <SheetDescription>
-              Are you sure you want to delete &quot;{book.title}&quot;? This
-              action cannot be undone.
+              {isDeleted
+                ? `Are you sure you want to restore "${book.title}"? This will make the book visible again.`
+                : `Are you sure you want to delete "${book.title}"? This action cannot be undone.`}
             </SheetDescription>
           </SheetHeader>
           <div className="flex gap-3 justify-end pt-6">
@@ -106,11 +133,21 @@ export const BooksDataTableRowActions = ({
               </Button>
             </SheetClose>
             <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleteBookMutation.isPending}
+              variant={isDeleted ? 'default' : 'destructive'}
+              onClick={isDeleted ? handleRestore : handleDelete}
+              disabled={
+                isDeleted
+                  ? restoreBookMutation.isPending
+                  : deleteBookMutation.isPending
+              }
             >
-              {deleteBookMutation.isPending ? 'Deleting...' : 'Delete'}
+              {isDeleted
+                ? restoreBookMutation.isPending
+                  ? 'Restoring...'
+                  : 'Restore'
+                : deleteBookMutation.isPending
+                  ? 'Deleting...'
+                  : 'Delete'}
             </Button>
           </div>
         </SheetContent>

@@ -110,6 +110,11 @@ export const booksColumns: ColumnDef<AdminBook>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <BooksDataTableRowActions row={row} />,
+    cell: ({ row }) => (
+      <BooksDataTableRowActions
+        row={row}
+        isDeleted={Boolean(row.original.deletedAt)}
+      />
+    ),
   },
 ];
