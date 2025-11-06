@@ -1,52 +1,76 @@
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card';
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
+
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationPrevious,
-  PaginationNext,
-} from '@/components/ui/pagination';
-import { AdminLayout } from '@/layouts/admin-layout';
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { createQuizColumns } from '@/features/quiz/components/quiz-columns';
+import { QuizFormDialog } from '@/features/quiz/components/quiz-form-dialog';
+import { quizStatuses } from '@/features/quiz/data/data';
 import {
   useGetAdminQuizzesQuery,
   useDeleteQuizByIdMutation,
   useGetQuizByIdMutationAdmin,
 } from '@/features/quiz/service/mutations';
-import { useState } from 'react';
+import { AdminLayout } from '@/layouts/admin-layout';
 import CreateQuizDialog from './create-quiz';
 import DetailQuizDialog from './detail-quiz';
 
-const PAGE_SIZE = 8;
-
 const AdminQuizzesPage = () => {
-  const [page, setPage] = useState(1);
-  const { data, isLoading, isError, refetch } = useGetAdminQuizzesQuery();
-  const [open, setOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedQuiz, setSelectedQuiz] = useState<any>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [sorting, setSorting] = useState<
+    Array<{
+      id: string;
+      desc: boolean;
+    }>
+  >([]);
+  const [columnFilters, setColumnFilters] = useState<
+    Array<{
+      id: string;
+      value: unknown;
+    }>
+  >([]);
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({});
+  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+
+  const { data, isLoading, refetch } = useGetAdminQuizzesQuery();
   const deleteQuizMutation = useDeleteQuizByIdMutation();
   const { data: selectedQuizData } = useGetQuizByIdMutationAdmin(
     selectedQuizId || '',
   );
 
-  const quizzes = data?.content || [];
-  const total = quizzes.length;
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  const pagedQuizzes = quizzes.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const quizzes = useMemo(() => {
+    return data?.content || [];
+  }, [data]);
 
-  const handleDeleteQuiz = async (quizId: string) => {
+  const handleDeleteQuiz = async (quiz: any) => {
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
-        await deleteQuizMutation.mutateAsync(quizId);
+        await deleteQuizMutation.mutateAsync(quiz.id);
         if (typeof refetch === 'function') refetch();
       } catch (error) {
         console.error('Failed to delete quiz:', error);
@@ -54,148 +78,172 @@ const AdminQuizzesPage = () => {
     }
   };
 
-  const handleViewDetail = (quizId: string) => {
-    setSelectedQuizId(quizId);
+  const handleEditQuiz = (quiz: any) => {
+    setSelectedQuiz(quiz);
+    setIsEditOpen(true);
+  };
+
+  const handleViewDetail = (quiz: any) => {
+    setSelectedQuizId(quiz.id);
     setDetailOpen(true);
   };
 
+  const columns = createQuizColumns({
+    onEdit: handleEditQuiz,
+    onDelete: handleDeleteQuiz,
+    onViewDetail: handleViewDetail,
+  });
+
+  const table = useReactTable({
+    data: quizzes,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting as never,
+    onColumnFiltersChange: setColumnFilters as never,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      globalFilter,
+    },
+  });
+
   return (
     <AdminLayout meta={{ title: 'Manage Quizzes' }}>
-      <div className="space-y-6 p-4 flex flex-col min-h-full">
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">
-                Manage Quizzes
-              </h1>
-              <p className="text-muted-foreground">
-                Manage quizzes offered on the platform. You can add, edit, or
-                remove quizzes as needed.
-              </p>
-            </div>
-            <Button variant="default" size="lg" onClick={() => setOpen(true)}>
-              <span className="mr-2">+</span> Create Quiz
-            </Button>
-          </div>
-
-          <CreateQuizDialog
-            open={open}
-            setOpen={setOpen}
-            onSuccess={() => refetch?.()}
-          />
-
-          <DetailQuizDialog
-            open={detailOpen}
-            setOpen={setDetailOpen}
-            selectedQuizData={selectedQuizData}
-          />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4 flex-1">
-            {isLoading ? (
-              Array.from({ length: PAGE_SIZE }).map((_, idx) => (
-                <Card key={idx} className="animate-pulse h-[220px]" />
-              ))
-            ) : isError ? (
-              <div className="col-span-4 text-center text-destructive">
-                Error loading quizzes.
-              </div>
-            ) : pagedQuizzes.length === 0 ? (
-              <div className="col-span-4 text-center text-muted-foreground">
-                No quizzes found.
-              </div>
-            ) : (
-              pagedQuizzes.map((quiz) => (
-                <Card key={quiz.id}>
-                  {quiz.imageSource ? (
-                    <img
-                      src={quiz.imageSource}
-                      alt={quiz.title}
-                      className="h-32 w-full object-cover"
-                    />
-                  ) : (
-                    <div className="h-32 w-full bg-muted flex items-center justify-center text-muted-foreground text-lg">
-                      No Image
-                    </div>
-                  )}
-                  <CardHeader className="py-2 px-4 flex-1">
-                    <div className="flex flex-row items-center justify-between">
-                      <CardTitle className="text-base line-clamp-1">
-                        {quiz.title}
-                      </CardTitle>
-
-                      <div className="text-xs text-muted-foreground">
-                        {quiz.questions.length} questions
-                      </div>
-                    </div>
-                    <CardDescription className="line-clamp-2">
-                      {quiz.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="px-4 pb-4 space-y-2">
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1"
-                        onClick={() => handleViewDetail(quiz.id)}
-                      >
-                        View Details
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeleteQuiz(quiz.id)}
-                        disabled={deleteQuizMutation.status === 'pending'}
-                      >
-                        {deleteQuizMutation.status === 'pending'
-                          ? '...'
-                          : 'Delete'}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
+      <div className="space-y-6 p-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
+          <p className="text-muted-foreground">
+            Manage all quizzes in the system. Create, edit, or delete quizzes.
+          </p>
         </div>
 
-        {totalPages > 1 && (
-          <Pagination className="mt-8">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  size="default"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  aria-disabled={page === 1}
-                  tabIndex={page === 1 ? -1 : 0}
-                  className="cursor-pointer"
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }).map((_, idx) => (
-                <PaginationItem key={idx}>
-                  <PaginationLink
-                    size="default"
-                    isActive={page === idx + 1}
-                    onClick={() => setPage(idx + 1)}
-                    className="cursor-pointer"
-                  >
-                    {idx + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  size="default"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  aria-disabled={page === totalPages}
-                  tabIndex={page === totalPages ? -1 : 0}
-                  className="cursor-pointer"
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <div>
+              <CardTitle>Quizzes List</CardTitle>
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsCreateOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Quiz
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <DataTableToolbar
+              table={table}
+              searchPlaceholder="Search by title, description..."
+              searchKey="title"
+              filters={[
+                {
+                  columnId: 'questionType',
+                  title: 'Type',
+                  options: quizStatuses,
+                },
+              ]}
+            />
+
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-muted-foreground">Loading quizzes...</p>
+              </div>
+            ) : quizzes.length === 0 ? (
+              <div className="flex justify-center items-center h-64">
+                <p className="text-muted-foreground">
+                  No quizzes found. Create your first quiz!
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="border rounded-md overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                          {headerGroup.headers.map((header) => (
+                            <TableHead key={header.id}>
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                  )}
+                            </TableHead>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableHeader>
+                    <TableBody>
+                      {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && 'selected'}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <TableCell key={cell.id}>
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
+                            No results.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                <DataTablePagination table={table} />
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
+
+      <QuizFormDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        onSuccess={() => refetch?.()}
+      />
+
+      <QuizFormDialog
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        quiz={selectedQuiz}
+        onSuccess={() => refetch?.()}
+      />
+
+      <CreateQuizDialog
+        open={false}
+        setOpen={() => {}}
+        onSuccess={() => refetch?.()}
+      />
+
+      <DetailQuizDialog
+        open={detailOpen}
+        setOpen={setDetailOpen}
+        selectedQuizData={selectedQuizData}
+      />
     </AdminLayout>
   );
 };
