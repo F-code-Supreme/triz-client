@@ -1,6 +1,6 @@
 import type { AdminBook } from '../../types';
 
-export interface IUploadBookPayload {
+export interface IUploadFilePayload {
   file: File;
 }
 

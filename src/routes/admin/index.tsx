@@ -3,7 +3,7 @@ import z from 'zod';
 
 import AdminDashboardPage from '@/pages/main/admin/dashboard';
 
-export const Route = createFileRoute('/admin')({
+export const Route = createFileRoute('/admin/')({
   validateSearch: z.object({
     redirect: z.string().optional().catch(''),
   }),

@@ -46,6 +46,7 @@
     "@react-oauth/google": "^0.12.2",
     "@tanstack/react-query": "^5.86.0",
     "@tanstack/react-router": "^1.99.13",
+    "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
     "ai": "^5.0.49",
     "axios": "^1.11.0",

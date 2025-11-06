@@ -7,7 +7,7 @@ import useAuth from '@/features/auth/hooks/use-auth';
 import { BookKeys } from '../queries/keys';
 
 import type {
-  IUploadBookPayload,
+  IUploadFilePayload,
   IUpdateBookPayload,
   ITrackProgressPayload,
   ITrackProgressDataResponse,
@@ -18,35 +18,6 @@ import type { AdminBook } from '../../types';
 import type { DataTimestamp } from '@/types';
 
 // AUTHENTICATED USER
-export const useUploadBookMutation = () => {
-  const _request = useAxios();
-  const [progress, setProgress] = useState(0);
-
-  const mutation = useMutation({
-    mutationFn: async (payload: IUploadBookPayload) => {
-      const formData = new FormData();
-      formData.append('file', payload.file);
-
-      const response = await _request.upload<string>({
-        url: '/books/files',
-        formData,
-        onUploadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total,
-            );
-            setProgress(percentCompleted);
-          }
-        },
-      });
-
-      return response;
-    },
-  });
-
-  return { ...mutation, progress };
-};
-
 export const useTrackBookProgressMutation = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -73,6 +44,35 @@ export const useTrackBookProgressMutation = () => {
 };
 
 // ADMIN
+export const useUploadFileMutation = () => {
+  const _request = useAxios();
+  const [progress, setProgress] = useState(0);
+
+  const mutation = useMutation({
+    mutationFn: async (payload: IUploadFilePayload) => {
+      const formData = new FormData();
+      formData.append('file', payload.file);
+
+      const response = await _request.upload<string>({
+        url: '/books/files',
+        formData,
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total,
+            );
+            setProgress(percentCompleted);
+          }
+        },
+      });
+
+      return response;
+    },
+  });
+
+  return { ...mutation, progress };
+};
+
 export const useCreateBookMutation = () => {
   const queryClient = useQueryClient();
   const _request = useAxios();
@@ -87,7 +87,7 @@ export const useCreateBookMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery],
+        queryKey: [BookKeys.GetAllBooksAdminQuery],
       });
     },
   });
@@ -106,9 +106,9 @@ export const useUpdateBookMutation = () => {
 
       return response;
     },
-    onSuccess: (_, payload) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery, payload.bookId],
+        queryKey: [BookKeys.GetAllBooksAdminQuery],
       });
     },
   });
@@ -126,9 +126,9 @@ export const useDeleteBookMutation = () => {
 
       return response;
     },
-    onSuccess: (_, payload) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery, payload.bookId],
+        queryKey: [BookKeys.GetAllBooksAdminQuery],
       });
     },
   });
@@ -146,9 +146,9 @@ export const useRestoreBookMutation = () => {
 
       return response;
     },
-    onSuccess: (_, payload) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [BookKeys.GetAllBooksQuery, payload.bookId],
+        queryKey: [BookKeys.GetAllBooksAdminQuery],
       });
     },
   });
