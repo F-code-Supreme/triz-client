@@ -1,9 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadList,
+  FileUploadItem,
+  FileUploadItemPreview,
+  FileUploadItemMetadata,
+  FileUploadItemProgress,
+  FileUploadItemDelete,
+  FileUploadTrigger,
+} from '@/components/ui/file-upload';
 import {
   Form,
   FormControl,
@@ -31,6 +42,7 @@ import {
 import {
   useCreateBookMutation,
   useUpdateBookMutation,
+  useUploadFileMutation,
 } from '../services/mutations';
 import { BookStatus } from '../types';
 
@@ -40,8 +52,8 @@ const bookFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   author: z.string().optional().default(''),
   publisher: z.string().optional().default(''),
-  bCoverUrl: z.string().url().optional().default(''),
-  bUrl: z.string().url('Book URL must be a valid URL'),
+  bCoverUrl: z.string().optional().default(''),
+  bUrl: z.string().min(1, 'Book file is required'),
   status: z.enum([BookStatus.PUBLISHED, BookStatus.UNPUBLISHED]),
   displayOrder: z.coerce.number().int().default(0),
 });
@@ -61,7 +73,14 @@ export const BooksFormDialog = ({
 }: BooksFormDialogProps) => {
   const createMutation = useCreateBookMutation();
   const updateMutation = useUpdateBookMutation();
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const uploadMutation = useUploadFileMutation();
+  const isLoading =
+    createMutation.isPending ||
+    updateMutation.isPending ||
+    uploadMutation.isPending;
+
+  const [coverFiles, setCoverFiles] = useState<File[]>([]);
+  const [bookFiles, setBookFiles] = useState<File[]>([]);
 
   const form = useForm<BookFormValues>({
     resolver: zodResolver(bookFormSchema),
@@ -97,6 +116,8 @@ export const BooksFormDialog = ({
         status: BookStatus.PUBLISHED,
         displayOrder: 0,
       });
+      setCoverFiles([]);
+      setBookFiles([]);
     }
   }, [initialData, open, form]);
 
@@ -130,7 +151,7 @@ export const BooksFormDialog = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full max-w-xl">
+      <SheetContent className="w-full max-w-xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle>
             {initialData ? 'Edit Book' : 'Create New Book'}
@@ -187,15 +208,79 @@ export const BooksFormDialog = ({
             <FormField
               control={form.control}
               name="bUrl"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
-                  <FormLabel>Book URL *</FormLabel>
+                  <FormLabel>Book File (EPUB/PDF) *</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="https://example.com/book.pdf"
-                      type="url"
-                      {...field}
-                    />
+                    <FileUpload
+                      value={bookFiles}
+                      onValueChange={(files) => {
+                        setBookFiles(files);
+                        if (files.length > 0) {
+                          const file = files[0];
+                          form.setValue('bUrl', file.name);
+                        }
+                      }}
+                      onUpload={async (
+                        files,
+                        { onProgress, onSuccess, onError },
+                      ) => {
+                        for (const file of files) {
+                          try {
+                            onProgress(file, 0);
+                            const response = await uploadMutation.mutateAsync({
+                              file,
+                            });
+                            if (response.data) {
+                              form.setValue('bUrl', response.data);
+                              onProgress(file, 100);
+                              onSuccess(file);
+                            }
+                          } catch (error) {
+                            onError(
+                              file,
+                              error instanceof Error
+                                ? error
+                                : new Error('Upload failed'),
+                            );
+                          }
+                        }
+                      }}
+                      accept=".epub"
+                      maxFiles={1}
+                      maxSize={100 * 1024 * 1024} // 100MB
+                    >
+                      <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-muted-foreground">
+                            Drag and drop your book file here
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-2">
+                            or
+                          </div>
+                          <FileUploadTrigger asChild>
+                            <Button type="button" variant="link" size="sm">
+                              Click to browse
+                            </Button>
+                          </FileUploadTrigger>
+                        </div>
+
+                        <FileUploadList className="mt-4 space-y-2">
+                          {bookFiles.map((file) => (
+                            <FileUploadItem key={file.name} value={file}>
+                              <div className="flex items-center gap-3 w-full">
+                                <FileUploadItemPreview />
+                                <div className="flex-1">
+                                  <FileUploadItemMetadata />
+                                  <FileUploadItemProgress />
+                                </div>
+                                <FileUploadItemDelete />
+                              </div>
+                            </FileUploadItem>
+                          ))}
+                        </FileUploadList>
+                      </FileUploadDropzone>
+                    </FileUpload>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -205,15 +290,79 @@ export const BooksFormDialog = ({
             <FormField
               control={form.control}
               name="bCoverUrl"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
-                  <FormLabel>Cover Image URL</FormLabel>
+                  <FormLabel>Cover Image</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="https://example.com/cover.jpg"
-                      type="url"
-                      {...field}
-                    />
+                    <FileUpload
+                      value={coverFiles}
+                      onValueChange={(files) => {
+                        setCoverFiles(files);
+                        if (files.length > 0) {
+                          const file = files[0];
+                          form.setValue('bCoverUrl', file.name);
+                        }
+                      }}
+                      onUpload={async (
+                        files,
+                        { onProgress, onSuccess, onError },
+                      ) => {
+                        for (const file of files) {
+                          try {
+                            onProgress(file, 0);
+                            const response = await uploadMutation.mutateAsync({
+                              file,
+                            });
+                            if (response.data) {
+                              form.setValue('bCoverUrl', response.data);
+                              onProgress(file, 100);
+                              onSuccess(file);
+                            }
+                          } catch (error) {
+                            onError(
+                              file,
+                              error instanceof Error
+                                ? error
+                                : new Error('Upload failed'),
+                            );
+                          }
+                        }
+                      }}
+                      accept="image/*"
+                      maxFiles={1}
+                      maxSize={10 * 1024 * 1024} // 10MB
+                    >
+                      <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-muted-foreground">
+                            Drag and drop your cover image here
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-2">
+                            or
+                          </div>
+                          <FileUploadTrigger asChild>
+                            <Button type="button" variant="link" size="sm">
+                              Click to browse
+                            </Button>
+                          </FileUploadTrigger>
+                        </div>
+
+                        <FileUploadList className="mt-4 space-y-2">
+                          {coverFiles.map((file) => (
+                            <FileUploadItem key={file.name} value={file}>
+                              <div className="flex items-center gap-3 w-full">
+                                <FileUploadItemPreview />
+                                <div className="flex-1">
+                                  <FileUploadItemMetadata />
+                                  <FileUploadItemProgress />
+                                </div>
+                                <FileUploadItemDelete />
+                              </div>
+                            </FileUploadItem>
+                          ))}
+                        </FileUploadList>
+                      </FileUploadDropzone>
+                    </FileUpload>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

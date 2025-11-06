@@ -1,4 +1,4 @@
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 
+import { BookPreviewSheet } from './book-preview-sheet';
 import { BooksFormDialog } from './books-form-dialog';
 import { useDeleteBookMutation } from '../services/mutations';
 
@@ -36,6 +37,7 @@ export const BooksDataTableRowActions = ({
   const book = row.original;
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const deleteBookMutation = useDeleteBookMutation();
 
@@ -58,6 +60,10 @@ export const BooksDataTableRowActions = ({
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
+            <Eye className="mr-2 h-4 w-4" />
+            Preview
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
             <Pencil className="mr-2 h-4 w-4" />
             Edit
@@ -71,6 +77,12 @@ export const BooksDataTableRowActions = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <BookPreviewSheet
+        open={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        book={book}
+      />
 
       <BooksFormDialog
         open={isEditOpen}

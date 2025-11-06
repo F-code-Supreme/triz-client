@@ -9,9 +9,9 @@ import {
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -28,19 +28,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { booksColumns } from '@/features/book/components/books-columns';
+import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
+import { bookStatuses } from '@/features/book/data/data';
 import {
   useGetAllBooksAdminQuery,
   useGetAllDeletedBooksAdminQuery,
 } from '@/features/book/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
-import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
-
 const AdminBooksManagementPage = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [showDeleted, setShowDeleted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sorting, setSorting] = useState<
     Array<{
       id: string;
@@ -65,14 +64,8 @@ const AdminBooksManagementPage = () => {
 
   const books = useMemo(() => {
     const currentData = showDeleted ? deletedBooksData : booksData;
-    let filtered = currentData?.content || [];
-
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter((book) => book.status === statusFilter);
-    }
-
-    return filtered;
-  }, [booksData, deletedBooksData, showDeleted, statusFilter]);
+    return currentData?.content || [];
+  }, [booksData, deletedBooksData, showDeleted]);
 
   const table = useReactTable({
     data: books,
@@ -133,24 +126,18 @@ const AdminBooksManagementPage = () => {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <div className="flex gap-4 flex-col sm:flex-row">
-              <Input
-                placeholder="Search by title, author..."
-                value={globalFilter ?? ''}
-                onChange={(event) => setGlobalFilter(event.target.value)}
-                className="max-w-xs"
-              />
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Filter by status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="PUBLISHED">Published</SelectItem>
-                  <SelectItem value="UNPUBLISHED">Unpublished</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <DataTableToolbar
+              table={table}
+              searchPlaceholder="Search by title, author..."
+              searchKey="title"
+              filters={[
+                {
+                  columnId: 'status',
+                  title: 'Status',
+                  options: bookStatuses,
+                },
+              ]}
+            />
 
             {isLoading ? (
               <div className="flex justify-center items-center h-64">
@@ -215,30 +202,7 @@ const AdminBooksManagementPage = () => {
                   </Table>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-muted-foreground">
-                    Page {table.getState().pagination.pageIndex + 1} of{' '}
-                    {table.getPageCount()}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => table.previousPage()}
-                      disabled={!table.getCanPreviousPage()}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => table.nextPage()}
-                      disabled={!table.getCanNextPage()}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
+                <DataTablePagination table={table} />
               </>
             )}
           </CardContent>
