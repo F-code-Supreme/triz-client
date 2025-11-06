@@ -127,9 +127,9 @@ const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminQuizzesRouteRoute = AdminQuizzesRouteRouteImport.update({
-  id: '/quizzes',
-  path: '/quizzes',
-  getParentRoute: () => AdminRouteRoute,
+  id: '/admin/quizzes',
+  path: '/admin/quizzes',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
   id: '/admin/dashboard',
@@ -347,6 +347,7 @@ export interface RootRouteChildren {
   UnauthorizedRoute: typeof UnauthorizedRoute
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
@@ -491,10 +492,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/quizzes': {
       id: '/admin/quizzes'
-      path: '/quizzes'
+      path: '/admin/quizzes'
       fullPath: '/admin/quizzes'
       preLoaderRoute: typeof AdminQuizzesRouteRouteImport
-      parentRoute: typeof AdminRouteRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/dashboard': {
       id: '/admin/dashboard'
@@ -562,23 +563,6 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
   appRouteRouteChildren,
 )
 
-<<<<<<< HEAD
-interface AdminRouteRouteChildren {
-  AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
-  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
-}
-
-const AdminRouteRouteChildren: AdminRouteRouteChildren = {
-  AdminDashboardRouteRoute: AdminDashboardRouteRoute,
-  AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
-}
-
-const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
-  AdminRouteRouteChildren,
-)
-
-=======
->>>>>>> fa6c8648a93c88ddb0cb499c66ed2d39a7fff147
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
@@ -591,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   UnauthorizedRoute: UnauthorizedRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
+  AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
