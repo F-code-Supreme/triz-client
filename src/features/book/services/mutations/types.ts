@@ -1,10 +1,19 @@
-import type { Book } from '../../types';
+import type { AdminBook } from '../../types';
 
-export interface IUploadBookPayload {
+export interface IUploadFilePayload {
   file: File;
 }
 
-export interface IUpdateBookPayload extends Omit<Book, 'id'> {
+export interface IUpdateBookPayload extends Omit<AdminBook, 'id'> {
+  bookId: string;
+}
+
+export interface IDeleteBookPayload {
+  bookId: string;
+  force?: boolean;
+}
+
+export interface IRestoreBookPayload {
   bookId: string;
 }
 

@@ -5,7 +5,11 @@ import useAuth from '@/features/auth/hooks/use-auth';
 
 import { BookKeys } from './keys';
 
-import type { BooksResponse, IGetAllBookProgressDataResponse } from './types';
+import type {
+  BooksResponse,
+  IGetAllBookProgressDataResponse,
+  IGetAllBooksAdminDataResponse,
+} from './types';
 import type { Book, BookProgress } from '../../types';
 import type { DataTimestamp } from '@/types';
 
@@ -75,5 +79,40 @@ export const useGetBookProgressQuery = (bookId?: string) => {
           }
         : skipToken,
     enabled: !!bookId && !!user?.id,
+  });
+};
+
+// ADMIN
+export const useGetAllBooksAdminQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [BookKeys.GetAllBooksAdminQuery],
+    queryFn: async ({ signal }) => {
+      const response = await _request.get<IGetAllBooksAdminDataResponse>(
+        '/books',
+        {
+          signal,
+        },
+      );
+
+      return response.data;
+    },
+  });
+};
+
+export const useGetAllDeletedBooksAdminQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [BookKeys.GetAllBooksAdminQuery, 'deleted'],
+    queryFn: async ({ signal }) => {
+      const response = await _request.get<IGetAllBooksAdminDataResponse>(
+        '/books/deleted',
+        {
+          signal,
+        },
+      );
+
+      return response.data;
+    },
   });
 };

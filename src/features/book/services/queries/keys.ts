@@ -3,4 +3,5 @@ export enum BookKeys {
   GetBookByIdQuery = 'book/getBookById',
   GetAllBookProgressQuery = 'book/getAllBookProgress',
   GetBookProgressQuery = 'book/getBookProgress',
+  GetAllBooksAdminQuery = 'book/admin/getAllBooks',
 }
