@@ -1,15 +1,10 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import {
-  useGetQuizByIdMutation,
-  useGetQuizzesMutation,
-  useStartQuizAttemptMutation,
-} from '@/features/quiz/service/mutations';
-import { QuizLayout } from '@/layouts/quiz-layout';
-import { useState } from 'react';
 import { Clock, BookOpen, Play, Loader2, History } from 'lucide-react';
-import { Route } from '@/routes/quiz.index';
+import { useState } from 'react';
+import { toast } from 'sonner';
+
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Sheet,
   SheetContent,
@@ -19,7 +14,13 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import useAuth from '@/features/auth/hooks/use-auth';
-import { toast } from 'sonner';
+import {
+  useGetQuizByIdMutation,
+  useGetQuizzesMutation,
+  useStartQuizAttemptMutation,
+} from '@/features/quiz/service/mutations';
+import { QuizLayout } from '@/layouts/quiz-layout';
+import { Route } from '@/routes/(app)/quiz';
 
 const QuizListPage = () => {
   const { data, isLoading } = useGetQuizzesMutation();

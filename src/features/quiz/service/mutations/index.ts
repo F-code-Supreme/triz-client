@@ -1,13 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+
 import { useAxios } from '@/configs/axios';
-import {
+
+import type {
   GetQuizByIdResponse,
   GetQuizzesResponse,
   AutoSaveQuizAnswerPayload,
   SubmitQuizAttemptPayload,
   GetUserQuizAttemptsResponse,
 } from './type';
-import { useMutation } from '@tanstack/react-query';
 
 export const useGetQuizzesMutation = () => {
   const _request = useAxios();
