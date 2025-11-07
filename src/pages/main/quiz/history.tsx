@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Clock,
   Calendar,
@@ -10,18 +9,11 @@ import {
   Target,
   Eye,
 } from 'lucide-react';
+import React, { useState } from 'react';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -30,10 +22,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { QuizLayout } from '@/layouts/quiz-layout';
-import { useGetUserQuizAttemptsQuery } from '@/features/quiz/service/mutations';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { useGetUserQuizAttemptsQuery } from '@/features/quiz/service/mutations';
+import { QuizLayout } from '@/layouts/quiz-layout';
+
 import type { QuizAttempt } from '@/features/quiz/service/mutations/type';
 
 const formatDate = (dateString: string) => {

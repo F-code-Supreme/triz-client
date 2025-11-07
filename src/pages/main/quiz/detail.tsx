@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from '@tanstack/react-router';
+import { motion } from 'framer-motion';
 import {
   Clock,
   BookOpen,
@@ -11,8 +11,10 @@ import {
   RotateCcw,
   Home,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,17 +24,15 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import { QuizLayout } from '@/layouts/quiz-layout';
-import { cn } from '@/lib/utils';
 import {
   useGetQuizByIdMutation,
   useAutoSaveQuizAnswerMutation,
   useSubmitQuizAttemptMutation,
 } from '@/features/quiz/service/mutations';
-import { toast } from 'sonner';
+import { QuizLayout } from '@/layouts/quiz-layout';
+import { cn } from '@/lib/utils';
 
 const QuizResults = ({
   results,
@@ -246,6 +246,7 @@ const QuizSkeleton = () => (
   </QuizLayout>
 );
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const QuizDetail = () => {
   const navigate = useNavigate();
   const params = useParams({ strict: false });

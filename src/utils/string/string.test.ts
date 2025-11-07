@@ -7,6 +7,7 @@ import {
   removeWhitespace,
   isAlphanumeric,
   kebabCase,
+  formatNumber,
 } from './string';
 
 describe('String Utils', () => {
@@ -100,6 +101,28 @@ describe('String Utils', () => {
 
     it('should handle empty strings', () => {
       expect(kebabCase('')).toBe('');
+    });
+  });
+
+  describe('formatNumber', () => {
+    it('should format numbers with thousand separators', () => {
+      expect(formatNumber(1000)).toBe('1,000');
+      expect(formatNumber(1000000)).toBe('1,000,000');
+      expect(formatNumber(500)).toBe('500');
+      expect(formatNumber(0)).toBe('0');
+      expect(formatNumber(12345678)).toBe('12,345,678');
+    });
+
+    it('should support custom separators', () => {
+      expect(formatNumber(1000, '.')).toBe('1.000');
+      expect(formatNumber(1000000, ' ')).toBe('1 000 000');
+      expect(formatNumber(5000, '_')).toBe('5_000');
+    });
+
+    it('should handle small numbers without separators', () => {
+      expect(formatNumber(1)).toBe('1');
+      expect(formatNumber(99)).toBe('99');
+      expect(formatNumber(999)).toBe('999');
     });
   });
 });
