@@ -338,4 +338,10 @@ Submit your analysis as a PDF document including:
       url: 'https://example.com/contradiction-matrix',
     },
   ],
+  duration: 60,
+  order: 5,
+  isCompleted: false,
+  isUnlocked: true,
+  description:
+    'Apply ARIZ to solve a packaging process problem with conflicting requirements.',
 };
