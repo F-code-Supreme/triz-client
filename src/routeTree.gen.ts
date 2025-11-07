@@ -33,7 +33,10 @@ import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
+import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
+import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
+import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
 
@@ -157,10 +160,25 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   path: '/books/$bookId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appQuizIndexRoute = appQuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const AdminCoursesCreateRouteRoute = AdminCoursesCreateRouteRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => AdminCoursesRouteRoute,
+} as any)
+const appQuizHistoryRouteRoute = appQuizHistoryRouteRouteImport.update({
+  id: '/quiz/history',
+  path: '/quiz/history',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appQuizQuizIdRouteRoute = appQuizQuizIdRouteRouteImport.update({
+  id: '/quiz/$quizId',
+  path: '/quiz/$quizId',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
   id: '/books/me',
@@ -198,7 +216,10 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
+  '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
+  '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/quiz': typeof appQuizIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -225,7 +246,10 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
+  '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
+  '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/quiz': typeof appQuizIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesById {
@@ -255,7 +279,10 @@ export interface FileRoutesById {
   '/register/': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/(app)/books/me': typeof appBooksMeRouteRoute
+  '/(app)/quiz/$quizId': typeof appQuizQuizIdRouteRoute
+  '/(app)/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/(app)/quiz/': typeof appQuizIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -285,7 +312,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/courses/'
     | '/books/me'
+    | '/quiz/$quizId'
+    | '/quiz/history'
     | '/admin/courses/create'
+    | '/quiz'
     | '/books/$bookId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -312,7 +342,10 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/courses'
     | '/books/me'
+    | '/quiz/$quizId'
+    | '/quiz/history'
     | '/admin/courses/create'
+    | '/quiz'
     | '/books/$bookId'
   id:
     | '__root__'
@@ -341,7 +374,10 @@ export interface FileRouteTypes {
     | '/register/'
     | '/admin/courses/'
     | '/(app)/books/me'
+    | '/(app)/quiz/$quizId'
+    | '/(app)/quiz/history'
     | '/admin/courses/create'
+    | '/(app)/quiz/'
     | '/books/$bookId/'
   fileRoutesById: FileRoutesById
 }
@@ -539,12 +575,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksBookIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/quiz/': {
+      id: '/(app)/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof appQuizIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/admin/courses/create': {
       id: '/admin/courses/create'
       path: '/create'
       fullPath: '/admin/courses/create'
       preLoaderRoute: typeof AdminCoursesCreateRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
+    }
+    '/(app)/quiz/history': {
+      id: '/(app)/quiz/history'
+      path: '/quiz/history'
+      fullPath: '/quiz/history'
+      preLoaderRoute: typeof appQuizHistoryRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/quiz/$quizId': {
+      id: '/(app)/quiz/$quizId'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof appQuizQuizIdRouteRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(app)/books/me': {
       id: '/(app)/books/me'
@@ -568,6 +625,9 @@ interface appRouteRouteChildren {
   appProfileRouteRoute: typeof appProfileRouteRoute
   appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
+  appQuizQuizIdRouteRoute: typeof appQuizQuizIdRouteRoute
+  appQuizHistoryRouteRoute: typeof appQuizHistoryRouteRoute
+  appQuizIndexRoute: typeof appQuizIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
@@ -575,6 +635,9 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appProfileRouteRoute: appProfileRouteRoute,
   appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,
+  appQuizQuizIdRouteRoute: appQuizQuizIdRouteRoute,
+  appQuizHistoryRouteRoute: appQuizHistoryRouteRoute,
+  appQuizIndexRoute: appQuizIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

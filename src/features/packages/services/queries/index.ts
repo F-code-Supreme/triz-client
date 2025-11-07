@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+import { PackageKeys } from '@/features/packages/services/queries/keys';
 
 import type { PackageResponse } from '@/features/packages/types';
-
-import { PackageKeys } from '@/features/packages/services/queries/keys';
 
 export const useGetPackagesQuery = () => {
   const _request = useAxios();
