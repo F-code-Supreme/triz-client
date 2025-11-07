@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -53,7 +53,7 @@ interface TopupDialogProps {
 }
 
 export const TopupDialog: React.FC<TopupDialogProps> = ({
-  // open,
+  open,
   onOpenChange,
 }) => {
   const { mutate: topupWallet, isPending } = useTopupWalletMutation();
@@ -68,15 +68,15 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
   });
 
   // Reset form when dialog opens
-  //   useEffect(() => {
-  //     if (open) {
-  //       form.reset({
-  //         amount: 10000,
-  //         provider: 'PAYOS',
-  //       });
-  //       setSelectedPreset(10000);
-  //     }
-  //   }, [open, form]);
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        amount: 10000,
+        provider: 'PAYOS',
+      });
+      setSelectedPreset(10000);
+    }
+  }, [open, form]);
 
   const handlePresetAmount = (preset: number) => {
     form.setValue('amount', preset);
@@ -116,7 +116,7 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
   };
 
   return (
-    <Dialog open={false} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Top up Wallet</DialogTitle>

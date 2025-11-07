@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
@@ -57,8 +57,9 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
 
   const transactionsWithTimestamp = transactions as TransactionWithTimestamp[];
 
-  const filteredTransactions = transactionsWithTimestamp.filter(
-    (transaction) => {
+  // Memoize filtered transactions to prevent infinite re-renders
+  const filteredTransactions = useMemo(() => {
+    return transactionsWithTimestamp.filter((transaction) => {
       // Apply date range filter
       if (dateRange.from || dateRange.to) {
         const transactionDate = new Date(transaction.createdAt);
@@ -77,8 +78,8 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       }
 
       return true;
-    },
-  );
+    });
+  }, [transactionsWithTimestamp, dateRange]);
 
   const table = useReactTable({
     data: filteredTransactions,
