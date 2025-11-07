@@ -24,7 +24,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
   onDelete,
 }) => {
   return (
-    <Card className="flex flex-col h-full hover:shadow-lg transition-shadow">
+    <Card className="flex flex-col h-full shadow-md hover:shadow-lg transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">

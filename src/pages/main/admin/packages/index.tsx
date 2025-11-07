@@ -1,6 +1,8 @@
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Pagination,
@@ -18,142 +20,62 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import DeleteConfirmDialog from '@/features/packages/components/delete-confirm-dialog';
+import DeletedPackagesDialog from '@/features/packages/components/deleted-packages-dialog';
 import PackageCard from '@/features/packages/components/package-card';
 import PackageDialog from '@/features/packages/components/package-dialog';
-import { PackageStatus } from '@/features/packages/types';
+import {
+  useCreatePackageMutation,
+  useDeletePackageMutation,
+  useRestorePackageMutation,
+  useUpdatePackageMutation,
+} from '@/features/packages/services/mutations';
+import {
+  useGetDeletedPackagesQuery,
+  useGetPackagesQuery,
+} from '@/features/packages/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
+import type { CreatePackagePayload } from '@/features/packages/services/mutations/types';
 import type { Package } from '@/features/packages/types';
 
 const AdminManagePackagePage = () => {
-  // Constants
-  const CHECK_ICON_URL =
-    'https://res.cloudinary.com/djeel69su/image/upload/v1761448013/check_f8tm4n.webp';
-  const DEFAULT_TIMESTAMP = '2025-11-01T14:43:46.820820Z';
+  // Fetch packages from API
+  const { data, isLoading } = useGetPackagesQuery();
+  const { data: deletedPackagesData, isLoading: isLoadingDeleted } =
+    useGetDeletedPackagesQuery();
 
-  // Mock data based on the provided API response
-  const mockPackages: Package[] = useMemo(
-    () => [
-      {
-        id: 'abcf61de-4c3d-4663-9579-55657c569287',
-        name: 'Experimental Plan',
-        priceInTokens: 1000,
-        durationInDays: 30,
-        chatTokenPerDay: 500,
-        status: PackageStatus.INACTIVE,
-        features: [
-          {
-            iconUrl: 'https://example.com/icon1.png',
-            description: 'Unlimited AI conversations',
-          },
-          {
-            iconUrl: 'https://example.com/icon2.png',
-            description: 'Priority support',
-          },
-        ],
-        deletedAt: null,
-        createdAt: '2025-11-01T14:45:44.667886Z',
-        updatedAt: '2025-11-01T14:45:44.667959Z',
-      },
-      {
-        id: '7428c518-f8ce-4223-9a55-365611cfade3',
-        name: 'Basic Plan',
-        priceInTokens: 1000,
-        durationInDays: 30,
-        chatTokenPerDay: 500,
-        status: PackageStatus.ACTIVE,
-        features: [
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'Access to standard chat features',
-          },
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'Up to 5 conversations per day',
-          },
-        ],
-        deletedAt: null,
-        createdAt: DEFAULT_TIMESTAMP,
-        updatedAt: DEFAULT_TIMESTAMP,
-      },
-      {
-        id: '8da9feea-a28a-4a83-ad13-e1541e5d05e6',
-        name: 'Premium Plan',
-        priceInTokens: 5000,
-        durationInDays: 30,
-        chatTokenPerDay: 2000,
-        status: PackageStatus.ACTIVE,
-        features: [
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'Access to all chat features',
-          },
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'Unlimited daily conversations',
-          },
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'Get priority customer support',
-          },
-        ],
-        deletedAt: null,
-        createdAt: DEFAULT_TIMESTAMP,
-        updatedAt: DEFAULT_TIMESTAMP,
-      },
-      {
-        id: '7b682372-bd6e-4f30-ad2b-8e2285ca8328',
-        name: 'Enterprise Plan',
-        priceInTokens: 10000,
-        durationInDays: 90,
-        chatTokenPerDay: 5000,
-        status: PackageStatus.ACTIVE,
-        features: [
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'Complete access to all features',
-          },
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'No limits on usage',
-          },
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: '24/7 dedicated support team',
-          },
-          {
-            iconUrl: CHECK_ICON_URL,
-            description: 'API access and custom integrations',
-          },
-        ],
-        deletedAt: null,
-        createdAt: DEFAULT_TIMESTAMP,
-        updatedAt: DEFAULT_TIMESTAMP,
-      },
-    ],
-    [],
-  );
+  // Mutations
+  const createPackage = useCreatePackageMutation();
+  const updatePackage = useUpdatePackageMutation();
+  const deletePackage = useDeletePackageMutation();
+  const restorePackage = useRestorePackageMutation();
 
-  const [packages, setPackages] = useState<Package[]>(mockPackages);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(8);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletedDialogOpen, setDeletedDialogOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState<Package | null>(null);
+  const [deletingPackage, setDeletingPackage] = useState<Package | null>(null);
 
-  // Filter packages by status
+  // Get data
+  const packages = useMemo(() => data?.content || [], [data]);
+  const deletedPackages = useMemo(
+    () => deletedPackagesData?.content || [],
+    [deletedPackagesData],
+  );
+  const pageInfo = useMemo(() => data?.page, [data]);
+
+  // Filter packages by status (client-side filtering)
   const filteredPackages = useMemo(() => {
     if (statusFilter === 'ALL') return packages;
-    return packages.filter((pkg) => pkg.status === statusFilter);
+    return packages.filter((pkg: Package) => pkg.status === statusFilter);
   }, [packages, statusFilter]);
 
-  const total = filteredPackages.length;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-  const pagedItems = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filteredPackages.slice(start, start + pageSize);
-  }, [page, pageSize, filteredPackages]);
+  // Use pagination data
+  const total = pageInfo?.totalElements || 0;
+  const totalPages = pageInfo?.totalPages || 1;
+  const currentPage = (pageInfo?.number || 0) + 1;
 
   const handleCreate = () => {
     setEditingPackage(null);
@@ -165,39 +87,80 @@ const AdminManagePackagePage = () => {
     setDialogOpen(true);
   };
 
+  const handleDeleteClick = (pkg: Package) => {
+    setDeletingPackage(pkg);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!deletingPackage) return;
+
+    deletePackage.mutate(deletingPackage.id, {
+      onSuccess: () => {
+        toast.success('Package deleted successfully!');
+        setDeleteDialogOpen(false);
+        setDeletingPackage(null);
+      },
+      onError: (error) => {
+        console.error('Delete error:', error);
+        toast.error('Failed to delete package. Please try again.');
+      },
+    });
+  };
+
   const handleDelete = (id: string) => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure you want to delete this package?')) {
-      setPackages((prev) => prev.filter((pkg) => pkg.id !== id));
+    const pkg = packages.find((p) => p.id === id);
+    if (pkg) {
+      handleDeleteClick(pkg);
     }
   };
 
   const handleSave = (packageData: Partial<Package>) => {
     if (editingPackage) {
       // Update existing package
-      setPackages((prev) =>
-        prev.map((pkg) =>
-          pkg.id === editingPackage.id
-            ? { ...pkg, ...packageData, updatedAt: new Date().toISOString() }
-            : pkg,
-        ),
+      updatePackage.mutate(
+        {
+          id: editingPackage.id,
+          ...packageData,
+        },
+        {
+          onSuccess: () => {
+            setDialogOpen(false);
+            toast.success('Package updated successfully!');
+          },
+          onError: (error) => {
+            console.error('Update error:', error);
+            toast.error('Failed to update package. Please try again.');
+          },
+        },
       );
     } else {
-      // Create new package
-      const newPackage: Package = {
-        id: crypto.randomUUID(),
-        name: packageData.name || '',
-        priceInTokens: packageData.priceInTokens || 0,
-        durationInDays: packageData.durationInDays || 0,
-        chatTokenPerDay: packageData.chatTokenPerDay || 0,
-        status: packageData.status || PackageStatus.ACTIVE,
-        features: packageData.features || [],
-        deletedAt: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setPackages((prev) => [newPackage, ...prev]);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, createdAt, updatedAt, deletedAt, ...createData } =
+        packageData as Package;
+      createPackage.mutate(createData as CreatePackagePayload, {
+        onSuccess: () => {
+          toast.success('Package created successfully!');
+          setDialogOpen(false);
+        },
+        onError: (error) => {
+          console.error('Create error:', error);
+          toast.error('Failed to create package. Please try again.');
+        },
+      });
     }
+  };
+
+  const handleRestore = (pkg: Package) => {
+    restorePackage.mutate(pkg.id, {
+      onSuccess: () => {
+        toast.success('Package restored successfully!');
+      },
+      onError: (error) => {
+        console.error('Restore error:', error);
+        toast.error('Failed to restore package. Please try again.');
+      },
+    });
   };
 
   return (
@@ -214,10 +177,25 @@ const AdminManagePackagePage = () => {
               edit, or remove packages as needed.
             </p>
           </div>
-          <Button onClick={handleCreate}>
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Create Package
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setDeletedDialogOpen(true)}
+              className="gap-2"
+            >
+              <Trash2 className="h-4 w-4" />
+              Deleted Packages
+              {deletedPackages.length > 0 && (
+                <Badge variant="secondary" className="ml-1">
+                  {deletedPackages.length}
+                </Badge>
+              )}
+            </Button>
+            <Button onClick={handleCreate}>
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Create Package
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -235,35 +213,19 @@ const AdminManagePackagePage = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Items per page:</label>
-            <Select
-              value={pageSize.toString()}
-              onValueChange={(value) => {
-                setPageSize(parseInt(value));
-                setPage(1);
-              }}
-            >
-              <SelectTrigger className="w-[100px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="8">8</SelectItem>
-                <SelectItem value="12">12</SelectItem>
-                <SelectItem value="16">16</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="ml-auto text-sm text-muted-foreground">
             Total: {total} package{total !== 1 ? 's' : ''}
           </div>
         </div>
 
         {/* Grid */}
-        {pagedItems.length > 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : filteredPackages.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {pagedItems.map((pkg) => (
+            {filteredPackages.map((pkg: Package) => (
               <PackageCard
                 key={pkg.id}
                 package={pkg}
@@ -294,7 +256,6 @@ const AdminManagePackagePage = () => {
                     href="#"
                     onClick={(e: React.MouseEvent) => {
                       e.preventDefault();
-                      setPage((p) => Math.max(1, p - 1));
                     }}
                   />
                 </PaginationItem>
@@ -307,10 +268,9 @@ const AdminManagePackagePage = () => {
                         <PaginationLink
                           size="sm"
                           href="#"
-                          isActive={p === page}
+                          isActive={p === currentPage}
                           onClick={(e: React.MouseEvent) => {
                             e.preventDefault();
-                            setPage(p);
                           }}
                         >
                           {p}
@@ -332,14 +292,13 @@ const AdminManagePackagePage = () => {
                     href="#"
                     onClick={(e: React.MouseEvent) => {
                       e.preventDefault();
-                      setPage((p) => Math.min(totalPages, p + 1));
                     }}
                   />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
             <p className="text-sm text-muted-foreground">
-              Page {page} of {totalPages}
+              Page {currentPage} of {totalPages}
             </p>
           </div>
         )}
@@ -350,6 +309,24 @@ const AdminManagePackagePage = () => {
           onOpenChange={setDialogOpen}
           package={editingPackage}
           onSave={handleSave}
+        />
+
+        {/* Delete Confirmation Dialog */}
+        <DeleteConfirmDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          package={deletingPackage}
+          onConfirm={handleDeleteConfirm}
+          isDeleting={deletePackage.isPending}
+        />
+
+        {/* Deleted Packages Dialog */}
+        <DeletedPackagesDialog
+          open={deletedDialogOpen}
+          onOpenChange={setDeletedDialogOpen}
+          packages={deletedPackages}
+          onRestore={handleRestore}
+          isLoading={isLoadingDeleted}
         />
       </div>
     </AdminLayout>

@@ -18,8 +18,8 @@ export interface Package {
   chatTokenPerDay: number;
   status: PackageStatus;
   features: Feature[];
-  deletedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
+  deletedAt?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 export type PackageResponse = PaginatedResponse<Package>;
