@@ -68,5 +68,6 @@ export default ({ command, mode }: ConfigEnv) => {
       exclude: [...configDefaults.exclude, 'e2e/*'],
       dangerouslyIgnoreUnhandledErrors: true,
     },
+    assetsInclude: ['**/*.epub'],
   });
 };

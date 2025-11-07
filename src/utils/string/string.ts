@@ -54,3 +54,15 @@ export function kebabCase(string_: string): string {
     .replace(/[\s_]+/g, '-')
     .toLowerCase();
 }
+
+/**
+ * Formats a number with thousand separators
+ * @param value - The number to format
+ * @param separator - The separator to use (default: ',')
+ * @returns Formatted string with thousand separators
+ * @example formatNumber(1000) // "1,000"
+ * @example formatNumber(1000000) // "1,000,000"
+ */
+export function formatNumber(value: number, separator = ','): string {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+}

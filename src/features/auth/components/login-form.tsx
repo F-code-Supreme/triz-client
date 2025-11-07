@@ -47,7 +47,9 @@ const LoginForm = () => {
         email: values.email,
         password: values.password,
       },
-      () => navigate({ to: redirect || '/' }),
+      () => {
+        navigate({ to: redirect || '/' });
+      },
     );
   }
 
@@ -99,7 +101,9 @@ const LoginForm = () => {
             </SubmitButton>
             <div className="flex justify-center">
               <GoogleSignInButton
-                onSuccess={() => navigate({ to: redirect || '/' })}
+                onSuccess={() => {
+                  navigate({ to: redirect || '/' });
+                }}
               />
             </div>
           </div>

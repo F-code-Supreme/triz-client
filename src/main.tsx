@@ -1,7 +1,6 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
-import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'sonner';
 
@@ -25,20 +24,18 @@ const InnerApp = () => {
 
 const App = () => {
   return (
-    <StrictMode>
-      <GoogleOAuthProvider
-        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}
-      >
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <AuthProvider>
-              <InnerApp />
-            </AuthProvider>
-          </ThemeProvider>
-          <Toaster />
-        </QueryClientProvider>
-      </GoogleOAuthProvider>
-    </StrictMode>
+    <GoogleOAuthProvider
+      clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID as string}
+    >
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <InnerApp />
+          </AuthProvider>
+        </ThemeProvider>
+        <Toaster />
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   );
 };
 

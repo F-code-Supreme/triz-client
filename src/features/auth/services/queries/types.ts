@@ -7,4 +7,6 @@ export interface IGetMeDataResponse {
   roles: Role;
   createdAt: string;
   updatedAt: string;
+  fullName?: string;
+  avatarUrl?: string;
 }

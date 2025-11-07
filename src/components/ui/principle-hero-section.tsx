@@ -1,51 +1,50 @@
-import {
-  DaoNguoc,
-  PhanNho,
-  PhamChatCucBo,
-  TachKhoi,
-  PhanDoiXung,
-  DuPhong,
-  PhanTrongLuc,
-  LienTucTacDong,
-} from '@/assets/images/principles';
+import * as principlesImages from '@/assets/images/principles';
 import { PrincipleList } from '@/components/ui/principle-list';
 
-const PrincipleSection = () => {
-  const principles = [
-    {
-      id: 1,
-      image: PhanNho,
-    },
-    {
-      id: 2,
-      image: DaoNguoc,
-    },
-    {
-      id: 3,
-      image: PhamChatCucBo,
-    },
-    {
-      id: 4,
-      image: TachKhoi,
-    },
-    {
-      id: 5,
-      image: PhanDoiXung,
-    },
-    {
-      id: 6,
-      image: DuPhong,
-    },
-    {
-      id: 7,
-      image: PhanTrongLuc,
-    },
-    {
-      id: 8,
-      image: LienTucTacDong,
-    },
-  ];
+export const principles = [
+  { id: 1, image: principlesImages.PhanNho },
+  { id: 2, image: principlesImages.DaoNguoc },
+  { id: 3, image: principlesImages.PhamChatCucBo },
+  { id: 4, image: principlesImages.TachKhoi },
+  { id: 5, image: principlesImages.PhanDoiXung },
+  { id: 6, image: principlesImages.DuPhong },
+  { id: 7, image: principlesImages.PhanTrongLuc },
+  { id: 8, image: principlesImages.KetHop },
+  { id: 9, image: principlesImages.VanNang },
+  { id: 10, image: principlesImages.ChuaTrong },
+  { id: 11, image: principlesImages.UngXuatSoBo },
+  { id: 12, image: principlesImages.ThucHienSoBo },
+  { id: 13, image: principlesImages.DangThe },
+  { id: 14, image: principlesImages.CauTronHoa },
+  { id: 15, image: principlesImages.LinhDong },
+  { id: 16, image: principlesImages.GiaiThieuHoacThua },
+  { id: 17, image: principlesImages.ChuyenSangChieuKhac },
+  { id: 18, image: principlesImages.CoDongHoc },
+  { id: 19, image: principlesImages.TacDongChuKy },
+  { id: 20, image: principlesImages.LienTucTacDongCoIch },
+  { id: 21, image: principlesImages.VuotNhanh },
+  { id: 22, image: principlesImages.BienHaiThanhLoi },
+  { id: 23, image: principlesImages.QuanHePhanHoi },
+  { id: 24, image: principlesImages.SuDungTrungGian },
+  { id: 25, image: principlesImages.TuPhucVu },
+  { id: 26, image: principlesImages.SaoChep },
+  { id: 27, image: principlesImages.ReThayChoDat },
+  { id: 28, image: principlesImages.SoDoCoHoc },
+  { id: 29, image: principlesImages.SuDungLongKhi },
+  { id: 30, image: principlesImages.VoDeoMangMong },
+  { id: 31, image: principlesImages.VatLieuNhieuLo },
+  { id: 32, image: principlesImages.ThayDoiMauSac },
+  { id: 33, image: principlesImages.DongNhat },
+  { id: 34, image: principlesImages.PhanHuy },
+  { id: 35, image: principlesImages.ThongSoHoaLy },
+  { id: 36, image: principlesImages.SuDungChuyenPha },
+  { id: 37, image: principlesImages.NoNhiet },
+  { id: 38, image: principlesImages.OxyHoa },
+  { id: 39, image: principlesImages.DoTro },
+  { id: 40, image: principlesImages.VatLieuHopThanh },
+];
 
+const PrincipleSection = () => {
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
       <div className="w-full max-w-8xl px-4 pt-8 mx-auto">

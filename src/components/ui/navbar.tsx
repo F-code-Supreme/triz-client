@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, BookOpen } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -63,7 +63,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     const defaultNavigationLinks: Navbar03NavItem[] = [
       { href: '/', label: t('home'), active: true },
       { href: '/learn-triz', label: t('learn_triz') },
-      { href: '#', label: t('quiz') },
+      { href: '/quiz', label: t('quiz') },
       { href: '#', label: t('forum') },
       { href: '/chat-triz', label: t('chat_ai') },
     ];
@@ -135,6 +135,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                               >
                                 <User className="mr-2 h-4 w-4" />
                                 Profile
+                              </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full">
+                              <Link
+                                to="/books/me"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                <BookOpen className="mr-2 h-4 w-4" />
+                                My Books
                               </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
@@ -231,6 +240,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         <Link to="/profile" className="cursor-pointer">
                           <User className="mr-2 h-4 w-4" />
                           {t('dropdown_menu.profile')}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/books/me" className="cursor-pointer">
+                          <BookOpen className="mr-2 h-4 w-4" />
+                          My Books
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
