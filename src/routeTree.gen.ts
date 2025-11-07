@@ -15,7 +15,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
-import { Route as ChatTrizRouteImport } from './routes/chat-triz'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
@@ -28,7 +27,9 @@ import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-p
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
+import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
+import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 
@@ -60,11 +61,6 @@ const HomeRoute = HomeRouteImport.update({
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   id: '/flashcard-deck',
   path: '/flashcard-deck',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatTrizRoute = ChatTrizRouteImport.update({
-  id: '/chat-triz',
-  path: '/chat-triz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const appRouteRoute = appRouteRouteImport.update({
@@ -127,9 +123,19 @@ const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
   path: '/admin/books',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appWalletRouteRoute = appWalletRouteRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appProfileRouteRoute = appProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
+  id: '/chat-triz',
+  path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
@@ -145,14 +151,15 @@ const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof appRouteRouteWithChildren
-  '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
@@ -168,14 +175,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
-  '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
@@ -193,14 +201,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
-  '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
+  '/(app)/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
@@ -218,14 +227,15 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/chat-triz'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
+    | '/chat-triz'
     | '/profile'
+    | '/wallet'
     | '/admin/books'
     | '/admin/dashboard'
     | '/flashcard/$deckId'
@@ -241,14 +251,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/chat-triz'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
+    | '/chat-triz'
     | '/profile'
+    | '/wallet'
     | '/admin/books'
     | '/admin/dashboard'
     | '/flashcard/$deckId'
@@ -265,14 +276,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(app)'
-    | '/chat-triz'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
+    | '/(app)/chat-triz'
     | '/(app)/profile'
+    | '/(app)/wallet'
     | '/admin/books'
     | '/admin/dashboard'
     | '/flashcard/$deckId'
@@ -290,7 +302,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
-  ChatTrizRoute: typeof ChatTrizRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
@@ -352,13 +363,6 @@ declare module '@tanstack/react-router' {
       path: '/flashcard-deck'
       fullPath: '/flashcard-deck'
       preLoaderRoute: typeof FlashcardDeckRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chat-triz': {
-      id: '/chat-triz'
-      path: '/chat-triz'
-      fullPath: '/chat-triz'
-      preLoaderRoute: typeof ChatTrizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(app)': {
@@ -445,11 +449,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBooksRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/wallet': {
+      id: '/(app)/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof appWalletRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/profile': {
       id: '/(app)/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof appProfileRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/chat-triz': {
+      id: '/(app)/chat-triz'
+      path: '/chat-triz'
+      fullPath: '/chat-triz'
+      preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
     '/books/$bookId/': {
@@ -470,12 +488,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
+  appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
+  appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
+  appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,
 }
 
@@ -486,7 +508,6 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
-  ChatTrizRoute: ChatTrizRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
