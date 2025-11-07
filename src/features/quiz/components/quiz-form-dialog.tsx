@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
-import { Plus, Trash2 } from 'lucide-react';
-import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -22,7 +23,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -30,9 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
 
 const questionSchema = z.object({
   content: z.string().min(1, 'Question content is required'),
@@ -66,12 +66,12 @@ interface QuizFormDialogProps {
   onSuccess?: () => void;
 }
 
-export function QuizFormDialog({
+export const QuizFormDialog = ({
   open,
   onOpenChange,
   quiz,
   onSuccess,
-}: QuizFormDialogProps) {
+}: QuizFormDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const isEdit = !!quiz;
 
@@ -445,4 +445,4 @@ export function QuizFormDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};
