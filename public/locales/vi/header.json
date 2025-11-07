@@ -8,5 +8,7 @@
   "sign_in": "Đăng nhập",
   "sign_up": "Đăng ký",
   "dropdown_menu.profile": "Hồ sơ",
+  "dropdown_menu.my_books": "Sách của tôi",
+  "dropdown_menu.wallet": "Ví",
   "dropdown_menu.sign_out": "Đăng xuất"
 }
