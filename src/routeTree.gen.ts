@@ -26,6 +26,7 @@ import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
+import { Route as AdminPackagesRouteRouteImport } from './routes/admin/packages/route'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
@@ -119,6 +120,11 @@ const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
   path: '/flashcard/$deckId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPackagesRouteRoute = AdminPackagesRouteRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof appProfileRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/packages': typeof AdminPackagesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/profile': typeof appProfileRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/packages': typeof AdminPackagesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/(app)/profile': typeof appProfileRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/packages': typeof AdminPackagesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/admin/courses'
     | '/admin/dashboard'
+    | '/admin/packages'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/profile'
     | '/admin/dashboard'
+    | '/admin/packages'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/(app)/profile'
     | '/admin/courses'
     | '/admin/dashboard'
+    | '/admin/packages'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -451,6 +463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardDeckIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/packages': {
+      id: '/admin/packages'
+      path: '/packages'
+      fullPath: '/admin/packages'
+      preLoaderRoute: typeof AdminPackagesRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
@@ -533,11 +552,13 @@ const AdminCoursesRouteRouteWithChildren =
 interface AdminRouteRouteChildren {
   AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
+  AdminPackagesRouteRoute: AdminPackagesRouteRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
