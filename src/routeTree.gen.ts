@@ -25,6 +25,7 @@ import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
+import { Route as AdminQuizzesRouteRouteImport } from './routes/admin/quizzes/route'
 import { Route as AdminPackagesRouteRouteImport } from './routes/admin/packages/route'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
@@ -120,6 +121,11 @@ const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
   path: '/flashcard/$deckId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminQuizzesRouteRoute = AdminQuizzesRouteRouteImport.update({
+  id: '/admin/quizzes',
+  path: '/admin/quizzes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPackagesRouteRoute = AdminPackagesRouteRouteImport.update({
   id: '/admin/packages',
   path: '/admin/packages',
@@ -206,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
+  '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
+  '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
+  '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/dashboard'
     | '/admin/packages'
+    | '/admin/quizzes'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -332,6 +342,7 @@ export interface FileRouteTypes {
     | '/admin/books'
     | '/admin/dashboard'
     | '/admin/packages'
+    | '/admin/quizzes'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/dashboard'
     | '/admin/packages'
+    | '/admin/quizzes'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -394,6 +406,7 @@ export interface RootRouteChildren {
   AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
   AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
+  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
@@ -517,6 +530,13 @@ declare module '@tanstack/react-router' {
       path: '/flashcard/$deckId'
       fullPath: '/flashcard/$deckId'
       preLoaderRoute: typeof FlashcardDeckIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/quizzes': {
+      id: '/admin/quizzes'
+      path: '/admin/quizzes'
+      fullPath: '/admin/quizzes'
+      preLoaderRoute: typeof AdminQuizzesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/packages': {
@@ -670,6 +690,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
   AdminPackagesRouteRoute: AdminPackagesRouteRoute,
+  AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
