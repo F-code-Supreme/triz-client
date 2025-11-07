@@ -1,7 +1,10 @@
+import { Navigate } from '@tanstack/react-router';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import Footer from '@/components/ui/footer';
 import { Navbar03 } from '@/components/ui/navbar';
+import useAuth from '@/features/auth/hooks/use-auth';
+import { Role } from '@/features/auth/types';
 
 import type { Meta } from '@/types';
 
@@ -20,7 +23,11 @@ export const DefaultLayout = ({
   showFooter = false,
   className = 'container mx-auto md:p-8 sm:p-4',
 }: DefaultLayoutProps) => {
+  const { hasRole } = useAuth();
 
+  if (hasRole(Role.ADMIN)) {
+    return <Navigate to="/admin/dashboard" />;
+  }
 
   return (
     <HelmetProvider>
