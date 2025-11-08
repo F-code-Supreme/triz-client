@@ -6,6 +6,7 @@ import {
   CreditCard,
   GraduationCap,
   BookCheck,
+  Receipt,
 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';
@@ -76,6 +77,11 @@ export const adminSidebarData: AdminSidebarData = {
           title: 'Quizzes',
           url: '/admin/quizzes',
           icon: BookCheck,
+        },
+        {
+          title: 'Transactions',
+          url: '/admin/transactions',
+          icon: Receipt,
         },
       ],
     },
