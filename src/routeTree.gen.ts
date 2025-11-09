@@ -41,11 +41,8 @@ import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/cour
 import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
 import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
-<<<<<<< HEAD
-import { Route as AdminCourseCourseIdIndexRouteImport } from './routes/admin/course.$courseId.index'
-=======
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
+import { Route as AdminCourseCourseIdIndexRouteImport } from './routes/admin/course.$courseId.index'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -207,20 +204,17 @@ const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
   path: '/books/me',
   getParentRoute: () => appRouteRoute,
 } as any)
-<<<<<<< HEAD
+const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminCoursesRouteRoute,
+} as any)
 const AdminCourseCourseIdIndexRoute =
   AdminCourseCourseIdIndexRouteImport.update({
     id: '/admin/course/$courseId/',
     path: '/admin/course/$courseId/',
     getParentRoute: () => rootRouteImport,
   } as any)
-=======
-const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminCoursesRouteRoute,
-} as any)
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 
 export interface FileRoutesByFullPath {
   '/': typeof appRouteRouteWithChildren
@@ -255,12 +249,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/quiz': typeof appQuizIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
-<<<<<<< HEAD
-  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
-  '/quiz/history': typeof QuizHistoryIndexRoute
   '/admin/course/$courseId': typeof AdminCourseCourseIdIndexRoute
-=======
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
@@ -294,12 +283,7 @@ export interface FileRoutesByTo {
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/quiz': typeof appQuizIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
-<<<<<<< HEAD
-  '/quiz/$quizId': typeof QuizQuizIdIndexRoute
-  '/quiz/history': typeof QuizHistoryIndexRoute
   '/admin/course/$courseId': typeof AdminCourseCourseIdIndexRoute
-=======
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -336,12 +320,7 @@ export interface FileRoutesById {
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
-<<<<<<< HEAD
-  '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
-  '/quiz/history/': typeof QuizHistoryIndexRoute
   '/admin/course/$courseId/': typeof AdminCourseCourseIdIndexRoute
-=======
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -375,13 +354,10 @@ export interface FileRouteTypes {
     | '/books/me'
     | '/quiz/$quizId'
     | '/quiz/history'
-<<<<<<< HEAD
-    | '/admin/course/$courseId'
-=======
     | '/admin/courses/create'
     | '/quiz'
     | '/books/$bookId'
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
+    | '/admin/course/$courseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -412,13 +388,10 @@ export interface FileRouteTypes {
     | '/books/me'
     | '/quiz/$quizId'
     | '/quiz/history'
-<<<<<<< HEAD
-    | '/admin/course/$courseId'
-=======
     | '/admin/courses/create'
     | '/quiz'
     | '/books/$bookId'
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
+    | '/admin/course/$courseId'
   id:
     | '__root__'
     | '/'
@@ -454,12 +427,7 @@ export interface FileRouteTypes {
     | '/admin/courses/create'
     | '/(app)/quiz/'
     | '/books/$bookId/'
-<<<<<<< HEAD
-    | '/quiz/$quizId/'
-    | '/quiz/history/'
     | '/admin/course/$courseId/'
-=======
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -487,12 +455,7 @@ export interface RootRouteChildren {
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
-<<<<<<< HEAD
-  QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
-  QuizHistoryIndexRoute: typeof QuizHistoryIndexRoute
   AdminCourseCourseIdIndexRoute: typeof AdminCourseCourseIdIndexRoute
-=======
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 
 declare module '@tanstack/react-router' {
@@ -721,21 +684,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appBooksMeRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-<<<<<<< HEAD
-    '/admin/course/$courseId/': {
-      id: '/admin/course/$courseId/'
-      path: '/admin/course/$courseId'
-      fullPath: '/admin/course/$courseId'
-      preLoaderRoute: typeof AdminCourseCourseIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-=======
     '/admin/courses/': {
       id: '/admin/courses/'
       path: '/'
       fullPath: '/admin/courses/'
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
+    }
+    '/admin/course/$courseId/': {
+      id: '/admin/course/$courseId/'
+      path: '/admin/course/$courseId'
+      fullPath: '/admin/course/$courseId'
+      preLoaderRoute: typeof AdminCourseCourseIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -802,12 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
-<<<<<<< HEAD
-  QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
-  QuizHistoryIndexRoute: QuizHistoryIndexRoute,
   AdminCourseCourseIdIndexRoute: AdminCourseCourseIdIndexRoute,
-=======
->>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
