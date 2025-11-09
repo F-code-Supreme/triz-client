@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
-import { Plus, Trash2, Upload, X } from 'lucide-react';
+import { Plus, Trash2, Upload } from 'lucide-react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
