@@ -9,13 +9,13 @@ interface QuizFormDialogProps {
   onSuccess?: () => void;
 }
 
-export function QuizFormDialog({
+export const QuizFormDialog = ({
   open,
   onOpenChange,
   quiz,
   quizId,
   onSuccess,
-}: QuizFormDialogProps) {
+}: QuizFormDialogProps) => {
   const isEdit = !!quiz || !!quizId;
   const editQuizId = quizId || quiz?.id;
 
@@ -37,4 +37,4 @@ export function QuizFormDialog({
       onSuccess={onSuccess}
     />
   );
-}
+};
