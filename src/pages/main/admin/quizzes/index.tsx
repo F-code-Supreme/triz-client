@@ -121,7 +121,7 @@ const AdminQuizzesPage = () => {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
           <p className="text-muted-foreground">
-            Manage all quizzes in the system. Create, edit, or delete quizzes.
+            Manage all quizzes in the system.
           </p>
         </div>
 
