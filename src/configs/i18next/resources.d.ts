@@ -140,6 +140,7 @@ interface Resources {
     "forum": "Forum",
     "home": "Home",
     "learn_triz": "Learn TRIZ",
+    "course": "Course",
     "logo_title": "Center for Scientific and Technical Creativity (CSTC)",
     "quiz": "Quiz",
     "sign_in": "Sign In",

@@ -66,9 +66,9 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={className}
+      className={cn('flex flex-col min-h-[500px] h-full', className)}
     >
-      <Card className="h-full overflow-hidden hover:shadow-lg transition-all duration-300 group">
+      <Card className="flex flex-col h-full overflow-hidden hover:shadow-lg transition-all duration-300 group">
         {/* Course Thumbnail */}
         <Link to="/course/detail">
           <div className="relative w-full h-48 bg-gradient-to-br from-sky-200 to-blue-400 overflow-hidden">
@@ -114,7 +114,7 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
           </div>
         )}
 
-        <CardContent className="p-4 space-y-3">
+        <CardContent className="flex-1 p-4 space-y-3 flex flex-col justify-between">
           {/* Course Category & Level */}
           <div className="flex items-center justify-between">
             <Badge variant="outline" className="text-xs">
