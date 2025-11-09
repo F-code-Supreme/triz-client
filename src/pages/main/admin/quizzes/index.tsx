@@ -12,7 +12,6 @@ import { useMemo, useState } from 'react';
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 import {
   Table,
   TableBody,
@@ -30,6 +29,7 @@ import {
   useGetQuizByIdMutationAdmin,
 } from '@/features/quiz/service/mutations';
 import { AdminLayout } from '@/layouts/admin-layout';
+
 import CreateQuizDialog from './create-quiz';
 import DetailQuizDialog from './detail-quiz';
 
@@ -68,6 +68,7 @@ const AdminQuizzesPage = () => {
   }, [data]);
 
   const handleDeleteQuiz = async (quiz: any) => {
+    // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
         await deleteQuizMutation.mutateAsync(quiz.id);

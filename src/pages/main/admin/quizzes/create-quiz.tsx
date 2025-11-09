@@ -1,3 +1,7 @@
+import { useState } from 'react';
+import { toast } from 'sonner';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -5,9 +9,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectTrigger,
@@ -15,9 +17,8 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { useState } from 'react';
+import { Textarea } from '@/components/ui/textarea';
 import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
-import { toast } from 'sonner';
 
 interface CreateQuizDialogProps {
   open: boolean;
@@ -25,7 +26,11 @@ interface CreateQuizDialogProps {
   onSuccess?: () => void;
 }
 
-function CreateQuizDialog({ open, setOpen, onSuccess }: CreateQuizDialogProps) {
+const CreateQuizDialog = ({
+  open,
+  setOpen,
+  onSuccess,
+}: CreateQuizDialogProps) => {
   const createQuizMutation = useCreateQuizMutation();
 
   const [form, setForm] = useState({
@@ -83,7 +88,8 @@ function CreateQuizDialog({ open, setOpen, onSuccess }: CreateQuizDialogProps) {
         questionType: 'SINGLE_CHOICE',
       });
       setAddingQuestion(false);
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
       toast.error('Failed to create quiz');
     }
   };
@@ -342,6 +348,6 @@ function CreateQuizDialog({ open, setOpen, onSuccess }: CreateQuizDialogProps) {
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default CreateQuizDialog;

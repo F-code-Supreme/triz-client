@@ -133,8 +133,10 @@ interface Resources {
   },
   "header": {
     "chat_ai": "Chat AI",
+    "dropdown_menu.my_books": "My Books",
     "dropdown_menu.profile": "Profile",
     "dropdown_menu.sign_out": "Sign Out",
+    "dropdown_menu.wallet": "Wallet",
     "forum": "Forum",
     "home": "Home",
     "learn_triz": "Learn TRIZ",

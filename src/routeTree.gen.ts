@@ -15,11 +15,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
-import { Route as ChatTrizRouteImport } from './routes/chat-triz'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
-import { Route as QuizIndexRouteImport } from './routes/quiz.index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
 import { Route as CourseIndexRouteImport } from './routes/course.index'
 import { Route as BooksIndexRouteImport } from './routes/books.index'
@@ -30,14 +28,24 @@ import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-p
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as CourseDetailRouteImport } from './routes/course.detail'
 import { Route as AdminQuizzesRouteRouteImport } from './routes/admin/quizzes/route'
+import { Route as AdminPackagesRouteRouteImport } from './routes/admin/packages/route'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
+import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
+import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
-import { Route as QuizHistoryIndexRouteImport } from './routes/quiz.history.index'
-import { Route as QuizQuizIdIndexRouteImport } from './routes/quiz.$quizId.index'
+import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
+import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
+import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
+import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
+import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
+<<<<<<< HEAD
 import { Route as AdminCourseCourseIdIndexRouteImport } from './routes/admin/course.$courseId.index'
+=======
+import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -69,11 +77,6 @@ const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   path: '/flashcard-deck',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ChatTrizRoute = ChatTrizRouteImport.update({
-  id: '/chat-triz',
-  path: '/chat-triz',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
   getParentRoute: () => rootRouteImport,
@@ -86,11 +89,6 @@ const IndexRoute = IndexRouteImport.update({
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizIndexRoute = QuizIndexRouteImport.update({
-  id: '/quiz/',
-  path: '/quiz/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
@@ -144,9 +142,19 @@ const AdminQuizzesRouteRoute = AdminQuizzesRouteRouteImport.update({
   path: '/admin/quizzes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPackagesRouteRoute = AdminPackagesRouteRouteImport.update({
+  id: '/admin/packages',
+  path: '/admin/packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
   id: '/admin/dashboard',
   path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCoursesRouteRoute = AdminCoursesRouteRouteImport.update({
+  id: '/admin/courses',
+  path: '/admin/courses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
@@ -154,50 +162,81 @@ const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
   path: '/admin/books',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appWalletRouteRoute = appWalletRouteRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appProfileRouteRoute = appProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => appRouteRoute,
 } as any)
-const QuizHistoryIndexRoute = QuizHistoryIndexRouteImport.update({
-  id: '/quiz/history/',
-  path: '/quiz/history/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QuizQuizIdIndexRoute = QuizQuizIdIndexRouteImport.update({
-  id: '/quiz/$quizId/',
-  path: '/quiz/$quizId/',
-  getParentRoute: () => rootRouteImport,
+const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
+  id: '/chat-triz',
+  path: '/chat-triz',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appQuizIndexRoute = appQuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const AdminCoursesCreateRouteRoute = AdminCoursesCreateRouteRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => AdminCoursesRouteRoute,
+} as any)
+const appQuizHistoryRouteRoute = appQuizHistoryRouteRouteImport.update({
+  id: '/quiz/history',
+  path: '/quiz/history',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appQuizQuizIdRouteRoute = appQuizQuizIdRouteRouteImport.update({
+  id: '/quiz/$quizId',
+  path: '/quiz/$quizId',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
   id: '/books/me',
   path: '/books/me',
   getParentRoute: () => appRouteRoute,
 } as any)
+<<<<<<< HEAD
 const AdminCourseCourseIdIndexRoute =
   AdminCourseCourseIdIndexRouteImport.update({
     id: '/admin/course/$courseId/',
     path: '/admin/course/$courseId/',
     getParentRoute: () => rootRouteImport,
   } as any)
+=======
+const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminCoursesRouteRoute,
+} as any)
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 
 export interface FileRoutesByFullPath {
   '/': typeof appRouteRouteWithChildren
-  '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
+  '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/course/detail': typeof CourseDetailRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
@@ -208,26 +247,35 @@ export interface FileRoutesByFullPath {
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
-  '/quiz': typeof QuizIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
+  '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
+  '/quiz/history': typeof appQuizHistoryRouteRoute
+  '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/quiz': typeof appQuizIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
+<<<<<<< HEAD
   '/quiz/$quizId': typeof QuizQuizIdIndexRoute
   '/quiz/history': typeof QuizHistoryIndexRoute
   '/admin/course/$courseId': typeof AdminCourseCourseIdIndexRoute
+=======
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
-  '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/course/detail': typeof CourseDetailRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
@@ -238,28 +286,38 @@ export interface FileRoutesByTo {
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
-  '/quiz': typeof QuizIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
+  '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
+  '/quiz/history': typeof appQuizHistoryRouteRoute
+  '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/quiz': typeof appQuizIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
+<<<<<<< HEAD
   '/quiz/$quizId': typeof QuizQuizIdIndexRoute
   '/quiz/history': typeof QuizHistoryIndexRoute
   '/admin/course/$courseId': typeof AdminCourseCourseIdIndexRoute
+=======
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
-  '/chat-triz': typeof ChatTrizRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
+  '/(app)/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
+  '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/course/detail': typeof CourseDetailRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
@@ -270,28 +328,38 @@ export interface FileRoutesById {
   '/books/': typeof BooksIndexRoute
   '/course/': typeof CourseIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
-  '/quiz/': typeof QuizIndexRoute
   '/register/': typeof RegisterIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/(app)/books/me': typeof appBooksMeRouteRoute
+  '/(app)/quiz/$quizId': typeof appQuizQuizIdRouteRoute
+  '/(app)/quiz/history': typeof appQuizHistoryRouteRoute
+  '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/(app)/quiz/': typeof appQuizIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
+<<<<<<< HEAD
   '/quiz/$quizId/': typeof QuizQuizIdIndexRoute
   '/quiz/history/': typeof QuizHistoryIndexRoute
   '/admin/course/$courseId/': typeof AdminCourseCourseIdIndexRoute
+=======
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/chat-triz'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
+    | '/chat-triz'
     | '/profile'
+    | '/wallet'
     | '/admin/books'
+    | '/admin/courses'
     | '/admin/dashboard'
+    | '/admin/packages'
     | '/admin/quizzes'
     | '/course/detail'
     | '/flashcard/$deckId'
@@ -302,26 +370,33 @@ export interface FileRouteTypes {
     | '/books'
     | '/course'
     | '/forgot-password'
-    | '/quiz'
     | '/register'
+    | '/admin/courses/'
     | '/books/me'
-    | '/books/$bookId'
     | '/quiz/$quizId'
     | '/quiz/history'
+<<<<<<< HEAD
     | '/admin/course/$courseId'
+=======
+    | '/admin/courses/create'
+    | '/quiz'
+    | '/books/$bookId'
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/chat-triz'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
+    | '/chat-triz'
     | '/profile'
+    | '/wallet'
     | '/admin/books'
     | '/admin/dashboard'
+    | '/admin/packages'
     | '/admin/quizzes'
     | '/course/detail'
     | '/flashcard/$deckId'
@@ -332,27 +407,35 @@ export interface FileRouteTypes {
     | '/books'
     | '/course'
     | '/forgot-password'
-    | '/quiz'
     | '/register'
+    | '/admin/courses'
     | '/books/me'
-    | '/books/$bookId'
     | '/quiz/$quizId'
     | '/quiz/history'
+<<<<<<< HEAD
     | '/admin/course/$courseId'
+=======
+    | '/admin/courses/create'
+    | '/quiz'
+    | '/books/$bookId'
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
   id:
     | '__root__'
     | '/'
     | '/(app)'
-    | '/chat-triz'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/memory-card'
     | '/unauthorized'
+    | '/(app)/chat-triz'
     | '/(app)/profile'
+    | '/(app)/wallet'
     | '/admin/books'
+    | '/admin/courses'
     | '/admin/dashboard'
+    | '/admin/packages'
     | '/admin/quizzes'
     | '/course/detail'
     | '/flashcard/$deckId'
@@ -363,19 +446,25 @@ export interface FileRouteTypes {
     | '/books/'
     | '/course/'
     | '/forgot-password/'
-    | '/quiz/'
     | '/register/'
+    | '/admin/courses/'
     | '/(app)/books/me'
+    | '/(app)/quiz/$quizId'
+    | '/(app)/quiz/history'
+    | '/admin/courses/create'
+    | '/(app)/quiz/'
     | '/books/$bookId/'
+<<<<<<< HEAD
     | '/quiz/$quizId/'
     | '/quiz/history/'
     | '/admin/course/$courseId/'
+=======
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
-  ChatTrizRoute: typeof ChatTrizRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
@@ -383,7 +472,9 @@ export interface RootRouteChildren {
   MemoryCardRoute: typeof MemoryCardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
+  AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
   AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   CourseDetailRoute: typeof CourseDetailRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
@@ -394,12 +485,14 @@ export interface RootRouteChildren {
   BooksIndexRoute: typeof BooksIndexRoute
   CourseIndexRoute: typeof CourseIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
-  QuizIndexRoute: typeof QuizIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
+<<<<<<< HEAD
   QuizQuizIdIndexRoute: typeof QuizQuizIdIndexRoute
   QuizHistoryIndexRoute: typeof QuizHistoryIndexRoute
   AdminCourseCourseIdIndexRoute: typeof AdminCourseCourseIdIndexRoute
+=======
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 
 declare module '@tanstack/react-router' {
@@ -446,13 +539,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardDeckRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/chat-triz': {
-      id: '/chat-triz'
-      path: '/chat-triz'
-      fullPath: '/chat-triz'
-      preLoaderRoute: typeof ChatTrizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(app)': {
       id: '/(app)'
       path: '/'
@@ -472,13 +558,6 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/': {
-      id: '/quiz/'
-      path: '/quiz'
-      fullPath: '/quiz'
-      preLoaderRoute: typeof QuizIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password/': {
@@ -551,11 +630,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuizzesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/packages': {
+      id: '/admin/packages'
+      path: '/admin/packages'
+      fullPath: '/admin/packages'
+      preLoaderRoute: typeof AdminPackagesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/admin/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/courses': {
+      id: '/admin/courses'
+      path: '/admin/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminCoursesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/books': {
@@ -565,6 +658,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBooksRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/wallet': {
+      id: '/(app)/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof appWalletRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/profile': {
       id: '/(app)/profile'
       path: '/profile'
@@ -572,19 +672,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appProfileRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/quiz/history/': {
-      id: '/quiz/history/'
-      path: '/quiz/history'
-      fullPath: '/quiz/history'
-      preLoaderRoute: typeof QuizHistoryIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quiz/$quizId/': {
-      id: '/quiz/$quizId/'
-      path: '/quiz/$quizId'
-      fullPath: '/quiz/$quizId'
-      preLoaderRoute: typeof QuizQuizIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/(app)/chat-triz': {
+      id: '/(app)/chat-triz'
+      path: '/chat-triz'
+      fullPath: '/chat-triz'
+      preLoaderRoute: typeof appChatTrizRouteRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/books/$bookId/': {
       id: '/books/$bookId/'
@@ -593,6 +686,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksBookIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/quiz/': {
+      id: '/(app)/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof appQuizIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/admin/courses/create': {
+      id: '/admin/courses/create'
+      path: '/create'
+      fullPath: '/admin/courses/create'
+      preLoaderRoute: typeof AdminCoursesCreateRouteRouteImport
+      parentRoute: typeof AdminCoursesRouteRoute
+    }
+    '/(app)/quiz/history': {
+      id: '/(app)/quiz/history'
+      path: '/quiz/history'
+      fullPath: '/quiz/history'
+      preLoaderRoute: typeof appQuizHistoryRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/quiz/$quizId': {
+      id: '/(app)/quiz/$quizId'
+      path: '/quiz/$quizId'
+      fullPath: '/quiz/$quizId'
+      preLoaderRoute: typeof appQuizQuizIdRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/books/me': {
       id: '/(app)/books/me'
       path: '/books/me'
@@ -600,34 +721,65 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appBooksMeRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+<<<<<<< HEAD
     '/admin/course/$courseId/': {
       id: '/admin/course/$courseId/'
       path: '/admin/course/$courseId'
       fullPath: '/admin/course/$courseId'
       preLoaderRoute: typeof AdminCourseCourseIdIndexRouteImport
       parentRoute: typeof rootRouteImport
+=======
+    '/admin/courses/': {
+      id: '/admin/courses/'
+      path: '/'
+      fullPath: '/admin/courses/'
+      preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
+      parentRoute: typeof AdminCoursesRouteRoute
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
     }
   }
 }
 
 interface appRouteRouteChildren {
+  appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
+  appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
+  appQuizQuizIdRouteRoute: typeof appQuizQuizIdRouteRoute
+  appQuizHistoryRouteRoute: typeof appQuizHistoryRouteRoute
+  appQuizIndexRoute: typeof appQuizIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
+  appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,
+  appQuizQuizIdRouteRoute: appQuizQuizIdRouteRoute,
+  appQuizHistoryRouteRoute: appQuizHistoryRouteRoute,
+  appQuizIndexRoute: appQuizIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
   appRouteRouteChildren,
 )
 
+interface AdminCoursesRouteRouteChildren {
+  AdminCoursesIndexRouteRoute: typeof AdminCoursesIndexRouteRoute
+  AdminCoursesCreateRouteRoute: typeof AdminCoursesCreateRouteRoute
+}
+
+const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
+  AdminCoursesIndexRouteRoute: AdminCoursesIndexRouteRoute,
+  AdminCoursesCreateRouteRoute: AdminCoursesCreateRouteRoute,
+}
+
+const AdminCoursesRouteRouteWithChildren =
+  AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
-  ChatTrizRoute: ChatTrizRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
@@ -635,7 +787,9 @@ const rootRouteChildren: RootRouteChildren = {
   MemoryCardRoute: MemoryCardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
+  AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
+  AdminPackagesRouteRoute: AdminPackagesRouteRoute,
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   CourseDetailRoute: CourseDetailRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
@@ -646,12 +800,14 @@ const rootRouteChildren: RootRouteChildren = {
   BooksIndexRoute: BooksIndexRoute,
   CourseIndexRoute: CourseIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
-  QuizIndexRoute: QuizIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
+<<<<<<< HEAD
   QuizQuizIdIndexRoute: QuizQuizIdIndexRoute,
   QuizHistoryIndexRoute: QuizHistoryIndexRoute,
   AdminCourseCourseIdIndexRoute: AdminCourseCourseIdIndexRoute,
+=======
+>>>>>>> 5fe751dc7398c50867521c04541cd4e14f2c85dc
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

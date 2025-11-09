@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { User, LogOut, BookOpen } from 'lucide-react';
+import { User, LogOut, BookOpen, Wallet } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -143,7 +143,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                                 className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
                               >
                                 <BookOpen className="mr-2 h-4 w-4" />
-                                My Books
+                                {t('dropdown_menu.my_books')}
                               </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
@@ -245,7 +245,13 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       <DropdownMenuItem asChild>
                         <Link to="/books/me" className="cursor-pointer">
                           <BookOpen className="mr-2 h-4 w-4" />
-                          My Books
+                          {t('dropdown_menu.my_books')}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/wallet" className="cursor-pointer">
+                          <Wallet className="mr-2 h-4 w-4" />
+                          {t('dropdown_menu.wallet')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
