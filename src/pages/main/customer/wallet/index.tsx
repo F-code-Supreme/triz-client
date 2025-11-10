@@ -1,4 +1,12 @@
-import { useState } from 'react';
+import {
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnFiltersState,
+  type PaginationState,
+} from '@tanstack/react-table';
+import { useState, useMemo } from 'react';
 
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
@@ -7,8 +15,14 @@ import {
   TopupDialog,
   TransactionsTable,
 } from '@/features/payment/wallet/components';
+import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
+
+import type { Transaction } from '@/features/payment/transaction/types';
+import type { DataTimestamp } from '@/types';
+
+type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 // Transaction type filter options
 const transactionFilters = [
@@ -33,6 +47,11 @@ const transactionFilters = [
 
 const WalletPage = () => {
   const [topupOpen, setTopupOpen] = useState(false);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const { user } = useAuth();
 
   const { data: wallet, isLoading: walletLoading } = useGetWalletByUserQuery(
@@ -40,9 +59,32 @@ const WalletPage = () => {
   );
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useGetAllTransactionsByUserQuery(user?.id);
+    useGetAllTransactionsByUserQuery(pagination, user?.id);
 
-  const transactions = transactionsData?.content || [];
+  // Get transactions from current page response
+  const transactions = useMemo(
+    () => (transactionsData?.content || []) as TransactionWithTimestamp[],
+    [transactionsData],
+  );
+
+  const totalRowCount = transactionsData?.page?.totalElements ?? 0;
+
+  // Create table instance with manual pagination
+  const table = useReactTable({
+    data: transactions,
+    columns: transactionsColumns,
+    state: {
+      columnFilters,
+      pagination,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualPagination: true,
+    rowCount: totalRowCount,
+  });
 
   return (
     <DefaultLayout meta={{ title: 'Wallet' }}>
@@ -63,8 +105,10 @@ const WalletPage = () => {
         <div>
           <h2 className="text-2xl font-bold mb-4">Transaction History</h2>
           <TransactionsTable
-            transactions={transactions}
+            table={table}
             isLoading={transactionsLoading}
+            pagination={pagination}
+            totalRowCount={totalRowCount}
             filters={transactionFilters}
           />
         </div>

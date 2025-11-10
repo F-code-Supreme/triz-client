@@ -67,7 +67,7 @@ export const transactionsColumns = [
     header: 'Provider',
     cell: (info) => (
       <Badge variant="outline" className="capitalize">
-        {info.getValue().toLowerCase()}
+        {info.getValue()?.toLowerCase() || 'Unknown'}
       </Badge>
     ),
   }),

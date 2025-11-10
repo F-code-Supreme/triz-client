@@ -106,8 +106,15 @@ class MyAxios {
     );
   }
 
-  get<T = null>(url: string, data?: object): Promise<Response<T>> {
-    return this.axiosInstance.get(url, { params: data });
+  get<T = null>(
+    url: string,
+    data?: {
+      params?: object;
+      signal?: AbortSignal;
+    },
+  ): Promise<Response<T>> {
+    const { params, signal } = data || {};
+    return this.axiosInstance.get(url, { params, signal });
   }
 
   post<T = null>(

@@ -38,7 +38,7 @@ export const DataTablePagination = <TData,>({
       )}
       style={{ overflowClipMargin: 1 }}
     >
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between mr-4">
         <div className="flex w-[100px] items-center justify-center text-sm font-medium @2xl/content:hidden">
           Page {currentPage} of {totalPages}
         </div>
@@ -65,9 +65,6 @@ export const DataTablePagination = <TData,>({
       </div>
 
       <div className="flex items-center sm:space-x-6 lg:space-x-8">
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium @max-3xl/content:hidden">
-          Page {currentPage} of {totalPages}
-        </div>
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
