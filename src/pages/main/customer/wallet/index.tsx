@@ -1,10 +1,10 @@
 import {
   getCoreRowModel,
   getFilteredRowModel,
-  getSortedRowModel,
   useReactTable,
   type ColumnFiltersState,
   type PaginationState,
+  type SortingState,
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
 
@@ -18,11 +18,6 @@ import {
 import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
-
-import type { Transaction } from '@/features/payment/transaction/types';
-import type { DataTimestamp } from '@/types';
-
-type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 // Transaction type filter options
 const transactionFilters = [
@@ -52,6 +47,7 @@ const WalletPage = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+  const [sorting, setSorting] = useState<SortingState>([]);
   const { user } = useAuth();
 
   const { data: wallet, isLoading: walletLoading } = useGetWalletByUserQuery(
@@ -59,11 +55,11 @@ const WalletPage = () => {
   );
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useGetAllTransactionsByUserQuery(pagination, user?.id);
+    useGetAllTransactionsByUserQuery(pagination, sorting, user?.id);
 
   // Get transactions from current page response
   const transactions = useMemo(
-    () => (transactionsData?.content || []) as TransactionWithTimestamp[],
+    () => transactionsData?.content || [],
     [transactionsData],
   );
 
@@ -76,13 +72,15 @@ const WalletPage = () => {
     state: {
       columnFilters,
       pagination,
+      sorting,
     },
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
+    manualSorting: true,
     rowCount: totalRowCount,
   });
 
@@ -107,7 +105,6 @@ const WalletPage = () => {
           <TransactionsTable
             table={table}
             isLoading={transactionsLoading}
-            pagination={pagination}
             totalRowCount={totalRowCount}
             filters={transactionFilters}
           />

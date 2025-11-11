@@ -6,7 +6,7 @@ import { TransactionKeys } from './keys';
 
 import type { Transaction } from '../../types';
 import type { DataTimestamp, PaginatedResponse } from '@/types';
-import type { PaginationState } from '@tanstack/react-table';
+import type { PaginationState, SortingState } from '@tanstack/react-table';
 
 // AUTHENTICATED USER
 export const useGetTransactionByIdQuery = (transactionId?: string) => {
@@ -32,6 +32,7 @@ export const useGetTransactionByIdQuery = (transactionId?: string) => {
 // AUTHENTICATED USER & ADMIN
 export const useGetAllTransactionsByUserQuery = (
   pagination: PaginationState,
+  sorting: SortingState,
   userId?: string,
 ) => {
   const _request = useAxios();
@@ -40,6 +41,7 @@ export const useGetAllTransactionsByUserQuery = (
       TransactionKeys.GetAllTransactionsByUserQuery,
       userId,
       pagination,
+      sorting,
     ],
     queryFn: userId
       ? async ({ signal }) => {
@@ -50,6 +52,9 @@ export const useGetAllTransactionsByUserQuery = (
             params: {
               page: pagination.pageIndex,
               size: pagination.pageSize,
+              sort: sorting
+                .map(({ id, desc }) => `${id},${desc ? 'desc' : 'asc'}`)
+                .join('&'),
             },
           });
 
@@ -61,11 +66,14 @@ export const useGetAllTransactionsByUserQuery = (
 };
 
 // ADMIN
-export const useGetAllTransactionsQuery = (pagination: PaginationState) => {
+export const useGetAllTransactionsQuery = (
+  pagination: PaginationState,
+  sorting: SortingState,
+) => {
   const _request = useAxios();
 
   return useQuery({
-    queryKey: [TransactionKeys.GetAllTransactionsQuery, pagination],
+    queryKey: [TransactionKeys.GetAllTransactionsQuery, pagination, sorting],
     queryFn: async ({ signal }) => {
       const response = await _request.get<
         PaginatedResponse<Transaction & DataTimestamp>
@@ -73,6 +81,9 @@ export const useGetAllTransactionsQuery = (pagination: PaginationState) => {
         params: {
           page: pagination.pageIndex,
           size: pagination.pageSize,
+          sort: sorting
+            .map(({ id, desc }) => `${id},${desc ? 'desc' : 'asc'}`)
+            .join('&'),
         },
         signal,
       });

@@ -1,10 +1,10 @@
 import {
   getCoreRowModel,
   getFilteredRowModel,
-  getSortedRowModel,
   useReactTable,
   type ColumnFiltersState,
   type PaginationState,
+  type SortingState,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 
@@ -12,11 +12,6 @@ import { useGetAllTransactionsQuery } from '@/features/payment/transaction/servi
 import { TransactionsTable } from '@/features/payment/wallet/components';
 import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { AdminLayout } from '@/layouts/admin-layout';
-
-import type { Transaction } from '@/features/payment/transaction/types';
-import type { DataTimestamp } from '@/types';
-
-type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 // Transaction type filter options
 const transactionFilters = [
@@ -45,13 +40,14 @@ const AdminTransactionsPage = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useGetAllTransactionsQuery(pagination);
+    useGetAllTransactionsQuery(pagination, sorting);
 
   // Get transactions from current page response
   const transactions = useMemo(
-    () => (transactionsData?.content || []) as TransactionWithTimestamp[],
+    () => transactionsData?.content || [],
     [transactionsData],
   );
 
@@ -64,13 +60,15 @@ const AdminTransactionsPage = () => {
     state: {
       columnFilters,
       pagination,
+      sorting,
     },
     onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
+    manualSorting: true,
     rowCount: totalRowCount,
   });
 
@@ -88,7 +86,6 @@ const AdminTransactionsPage = () => {
           <TransactionsTable
             table={table}
             isLoading={transactionsLoading}
-            pagination={pagination}
             totalRowCount={totalRowCount}
             filters={transactionFilters}
           />

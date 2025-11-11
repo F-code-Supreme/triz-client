@@ -1,8 +1,4 @@
-import {
-  flexRender,
-  type Table,
-  type PaginationState,
-} from '@tanstack/react-table';
+import { flexRender, type Table } from '@tanstack/react-table';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import {
@@ -24,7 +20,6 @@ type TransactionWithTimestamp = Transaction & DataTimestamp;
 interface TransactionsTableProps {
   table: Table<TransactionWithTimestamp>;
   isLoading: boolean;
-  pagination: PaginationState;
   totalRowCount: number;
   filters?: Array<{
     columnId: string;
@@ -36,7 +31,6 @@ interface TransactionsTableProps {
 export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   table,
   isLoading,
-  pagination,
   filters = [],
 }) => (
   <div className="space-y-4">
@@ -69,15 +63,17 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             ))}
           </TableHeader>
           <TableBody>
-            {Array.from({ length: pagination.pageSize }).map((_, idx) => (
-              <TableRow key={idx}>
-                {transactionsColumns.map((_, cellIdx) => (
-                  <TableCell key={cellIdx}>
-                    <div className="h-8 bg-muted animate-pulse rounded w-full"></div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {Array.from({ length: table.getState().pagination.pageSize }).map(
+              (_, idx) => (
+                <TableRow key={idx}>
+                  {transactionsColumns.map((_, cellIdx) => (
+                    <TableCell key={cellIdx}>
+                      <div className="h-8 bg-muted animate-pulse rounded w-full"></div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ),
+            )}
           </TableBody>
         </UITable>
       </div>
