@@ -3,6 +3,13 @@ import type { JwtPayload } from 'jwt-decode';
 export enum Role {
   USER = 'ROLE_user',
   ADMIN = 'ROLE_admin',
+  EXPERT = 'ROLE_expert',
+}
+
+export enum RoleUser {
+  USER = 'user',
+  ADMIN = 'admin',
+  EXPERT = 'expert',
 }
 
 export enum TokenType {
@@ -13,12 +20,10 @@ export enum TokenType {
 export interface User {
   id: string;
   email: string;
-  roles: Role[];
-  name?: string;
+  roles: RoleUser;
+  fullName?: string;
   avatarUrl?: string;
   enabled?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface AppJwtPayload extends JwtPayload {
