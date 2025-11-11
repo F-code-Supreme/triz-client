@@ -5,7 +5,7 @@ import { useAxios } from '@/configs/axios';
 import { UserKeys } from '../queries/keys';
 
 import type { ICreateUserPayload, IEditUserPayload } from './types';
-import type { User } from '@/features/auth/types';
+import type { IUser } from '../../types';
 import type { DataTimestamp } from '@/types';
 
 // ADMIN
@@ -15,7 +15,7 @@ export const useCreateUserMutation = () => {
 
   return useMutation({
     mutationFn: async (payload: ICreateUserPayload) => {
-      const response = await _request.post<User & DataTimestamp>(
+      const response = await _request.post<IUser & DataTimestamp>(
         '/users',
         payload,
       );
@@ -35,7 +35,7 @@ export const useEditUserMutation = () => {
   return useMutation({
     mutationFn: async (payload: IEditUserPayload) => {
       const { id, ...updateData } = payload;
-      const response = await _request.put<User & DataTimestamp>(
+      const response = await _request.put<IUser & DataTimestamp>(
         `/users/${id}`,
         updateData,
       );

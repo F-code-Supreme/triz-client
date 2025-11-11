@@ -4,7 +4,7 @@ import { useAxios } from '@/configs/axios';
 
 import { UserKeys } from './keys';
 
-import type { User } from '@/features/auth/types';
+import type { IUser } from '../../types';
 import type { DataTimestamp, PaginatedResponse } from '@/types';
 import type { PaginationState, SortingState } from '@tanstack/react-table';
 
@@ -19,7 +19,7 @@ export const useGetUserByIdQuery = (
     queryKey: [UserKeys.GetUserByIdQuery, pagination, sorting, userId],
     queryFn: userId
       ? async ({ signal }) => {
-          const response = await _request.get<User & DataTimestamp>(
+          const response = await _request.get<IUser & DataTimestamp>(
             `/users/${userId}`,
             {
               params: {
@@ -53,7 +53,7 @@ export const useGetAllUsersQuery = (
     queryKey: [UserKeys.GetAllUsersQuery, pagination, sorting],
     queryFn: async ({ signal }) => {
       const response = await _request.get<
-        PaginatedResponse<User & DataTimestamp>
+        PaginatedResponse<IUser & DataTimestamp>
       >('/users', {
         params: {
           page: pagination.pageIndex,

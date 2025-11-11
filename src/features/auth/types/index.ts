@@ -6,12 +6,6 @@ export enum Role {
   EXPERT = 'ROLE_expert',
 }
 
-export enum RoleUser {
-  USER = 'user',
-  ADMIN = 'admin',
-  EXPERT = 'expert',
-}
-
 export enum TokenType {
   ACCESS = 'accessToken',
   REFRESH = 'refreshToken',
@@ -20,7 +14,7 @@ export enum TokenType {
 export interface User {
   id: string;
   email: string;
-  roles: RoleUser;
+  roles: Role[];
   fullName?: string;
   avatarUrl?: string;
   enabled?: boolean;

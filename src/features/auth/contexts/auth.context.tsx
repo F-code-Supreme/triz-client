@@ -11,14 +11,14 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from '../services/mutations';
-import { RoleUser, TokenType, Role } from '../types';
+import { TokenType } from '../types';
 
 import type {
   IGoogleLoginPayload,
   ILoginPayload,
   IRegisterPayload,
 } from '../services/mutations/types';
-import type { User, AppJwtPayload } from '../types';
+import type { User, AppJwtPayload, Role } from '../types';
 import type { PropsWithChildren } from 'react';
 
 export type AuthState = {
@@ -106,25 +106,11 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
     const payload = decodeToken<AppJwtPayload>(accessToken);
     if (payload) {
-      let roles: RoleUser;
-      switch (payload.authorities) {
-        case Role.ADMIN:
-          roles = RoleUser.ADMIN;
-          break;
-        case Role.USER:
-          roles = RoleUser.USER;
-          break;
-        case Role.EXPERT:
-          roles = RoleUser.EXPERT;
-          break;
-        default:
-          roles = RoleUser.USER;
-      }
       setIsAuthenticated(true);
       setUser({
         id: payload.userId,
         email: payload.sub || STRING_EMPTY,
-        roles,
+        roles: [payload.authorities],
       });
     } else {
       setIsAuthenticated(false);
