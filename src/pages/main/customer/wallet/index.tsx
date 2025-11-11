@@ -1,6 +1,5 @@
 import {
   getCoreRowModel,
-  getFilteredRowModel,
   useReactTable,
   type ColumnFiltersState,
   type PaginationState,
@@ -9,7 +8,8 @@ import {
 import { useState, useMemo } from 'react';
 
 import useAuth from '@/features/auth/hooks/use-auth';
-import { useGetAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
+import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
+import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
 import {
   WalletBalanceCard,
   TopupDialog,
@@ -18,27 +18,6 @@ import {
 import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
-
-// Transaction type filter options
-const transactionFilters = [
-  {
-    columnId: 'type',
-    title: 'Transaction Type',
-    options: [
-      { label: 'Top up', value: 'TOPUP' },
-      { label: 'Spend', value: 'SPEND' },
-    ],
-  },
-  {
-    columnId: 'status',
-    title: 'Status',
-    options: [
-      { label: 'Pending', value: 'PENDING' },
-      { label: 'Completed', value: 'COMPLETED' },
-      { label: 'Cancelled', value: 'CANCELLED' },
-    ],
-  },
-];
 
 const WalletPage = () => {
   const [topupOpen, setTopupOpen] = useState(false);
@@ -55,7 +34,12 @@ const WalletPage = () => {
   );
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useGetAllTransactionsByUserQuery(pagination, sorting, user?.id);
+    useSearchAllTransactionsByUserQuery(
+      pagination,
+      sorting,
+      user?.id,
+      columnFilters,
+    );
 
   // Get transactions from current page response
   const transactions = useMemo(
@@ -74,13 +58,13 @@ const WalletPage = () => {
       pagination,
       sorting,
     },
-    onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
     manualSorting: true,
+    manualFiltering: true,
     rowCount: totalRowCount,
   });
 

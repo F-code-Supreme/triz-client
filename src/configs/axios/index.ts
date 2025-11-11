@@ -120,9 +120,10 @@ class MyAxios {
   post<T = null>(
     url: string,
     data?: object,
-    parameters?: object,
+    params?: object,
+    signal?: AbortSignal,
   ): Promise<Response<T>> {
-    return this.axiosInstance.post(url, data, { params: parameters });
+    return this.axiosInstance.post(url, data, { params, signal });
   }
 
   put<T = null>(

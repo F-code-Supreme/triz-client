@@ -1,6 +1,5 @@
 import {
   getCoreRowModel,
-  getFilteredRowModel,
   useReactTable,
   type ColumnFiltersState,
   type PaginationState,
@@ -8,31 +7,11 @@ import {
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 
-import { useGetAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
+import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
+import { useSearchAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
 import { TransactionsTable } from '@/features/payment/wallet/components';
 import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { AdminLayout } from '@/layouts/admin-layout';
-
-// Transaction type filter options
-const transactionFilters = [
-  {
-    columnId: 'type',
-    title: 'Transaction Type',
-    options: [
-      { label: 'Top up', value: 'TOPUP' },
-      { label: 'Spend', value: 'SPEND' },
-    ],
-  },
-  {
-    columnId: 'status',
-    title: 'Status',
-    options: [
-      { label: 'Pending', value: 'PENDING' },
-      { label: 'Completed', value: 'COMPLETED' },
-      { label: 'Cancelled', value: 'CANCELLED' },
-    ],
-  },
-];
 
 const AdminTransactionsPage = () => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -41,9 +20,10 @@ const AdminTransactionsPage = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  console.log('Column Filters:', columnFilters);
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useGetAllTransactionsQuery(pagination, sorting);
+    useSearchAllTransactionsQuery(pagination, sorting, columnFilters);
 
   // Get transactions from current page response
   const transactions = useMemo(
@@ -66,9 +46,9 @@ const AdminTransactionsPage = () => {
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     manualPagination: true,
     manualSorting: true,
+    manualFiltering: true,
     rowCount: totalRowCount,
   });
 
