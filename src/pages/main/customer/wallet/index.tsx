@@ -27,19 +27,32 @@ const WalletPage = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [fromDate, setFromDate] = useState<Date | undefined>();
+  const [toDate, setToDate] = useState<Date | undefined>();
   const { user } = useAuth();
+
+  // Build filters with date range
+  const filters = useMemo(() => {
+    // Remove existing fromDate and toDate filters
+    const f = columnFilters.filter(
+      (filter) => filter.id !== 'fromDate' && filter.id !== 'toDate',
+    );
+    // Add updated date range filters
+    if (fromDate) {
+      f.push({ id: 'fromDate', value: fromDate });
+    }
+    if (toDate) {
+      f.push({ id: 'toDate', value: toDate });
+    }
+    return f;
+  }, [columnFilters, fromDate]);
 
   const { data: wallet, isLoading: walletLoading } = useGetWalletByUserQuery(
     user?.id,
   );
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useSearchAllTransactionsByUserQuery(
-      pagination,
-      sorting,
-      user?.id,
-      columnFilters,
-    );
+    useSearchAllTransactionsByUserQuery(pagination, sorting, user?.id, filters);
 
   // Get transactions from current page response
   const transactions = useMemo(
@@ -91,6 +104,10 @@ const WalletPage = () => {
             isLoading={transactionsLoading}
             totalRowCount={totalRowCount}
             filters={transactionFilters}
+            fromDate={fromDate}
+            toDate={toDate}
+            onFromDateChange={setFromDate}
+            onToDateChange={setToDate}
           />
         </div>
 

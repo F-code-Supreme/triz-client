@@ -1,6 +1,7 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+import { formatDateUTC } from '@/utils/date/date';
 
 import { TransactionKeys } from './keys';
 
@@ -11,6 +12,16 @@ import type {
   PaginationState,
   SortingState,
 } from '@tanstack/react-table';
+
+// Helper function to format date to ISO 8601 UTC format
+const formatDateForAPI = (dateValue: unknown): string | undefined => {
+  if (!dateValue) return undefined;
+  try {
+    return formatDateUTC(new Date(dateValue as Date));
+  } catch {
+    return undefined;
+  }
+};
 
 // AUTHENTICATED USER
 export const useGetTransactionByIdQuery = (transactionId?: string) => {
@@ -89,23 +100,31 @@ export const useSearchAllTransactionsByUserQuery = (
     ],
     queryFn: userId
       ? async ({ signal }) => {
+          const fromDateValue = filters?.find(
+            (filter) => filter.id === 'fromDate',
+          )?.value as Date | undefined;
+          const toDateValue = filters?.find((filter) => filter.id === 'toDate')
+            ?.value as Date | undefined;
+
+          const data = {
+            statuses: filters?.find((filter) => filter.id === 'status')?.value,
+            types: filters?.find((filter) => filter.id === 'type')?.value,
+            providers: filters?.find((filter) => filter.id === 'provider')
+              ?.value,
+          };
+
+          if (fromDateValue && toDateValue) {
+            Object.assign(data, {
+              fromDate: formatDateForAPI(fromDateValue),
+              toDate: formatDateForAPI(toDateValue),
+            });
+          }
+
           const response = await _request.post<
             PaginatedResponse<Transaction & DataTimestamp>
           >(
             `/users/${userId}/transactions/search`,
-            {
-              fromDate: filters
-                ?.find((filter) => filter.id === 'fromDate')
-                ?.value?.toString(),
-              toDate: filters
-                ?.find((filter) => filter.id === 'toDate')
-                ?.value?.toString(),
-              statuses: filters?.find((filter) => filter.id === 'status')
-                ?.value,
-              types: filters?.find((filter) => filter.id === 'type')?.value,
-              providers: filters?.find((filter) => filter.id === 'provider')
-                ?.value,
-            },
+            data,
             {
               page: pagination.pageIndex,
               size: pagination.pageSize,
@@ -171,21 +190,29 @@ export const useSearchAllTransactionsQuery = (
       filters,
     ],
     queryFn: async ({ signal }) => {
+      const fromDateValue = filters?.find((filter) => filter.id === 'fromDate')
+        ?.value as Date | undefined;
+      const toDateValue = filters?.find((filter) => filter.id === 'toDate')
+        ?.value as Date | undefined;
+
+      const data = {
+        statuses: filters?.find((filter) => filter.id === 'status')?.value,
+        types: filters?.find((filter) => filter.id === 'type')?.value,
+        providers: filters?.find((filter) => filter.id === 'provider')?.value,
+      };
+
+      if (fromDateValue && toDateValue) {
+        Object.assign(data, {
+          fromDate: formatDateForAPI(fromDateValue),
+          toDate: formatDateForAPI(toDateValue),
+        });
+      }
+
       const response = await _request.post<
         PaginatedResponse<Transaction & DataTimestamp>
       >(
         '/transactions/search',
-        {
-          fromDate: filters
-            ?.find((filter) => filter.id === 'fromDate')
-            ?.value?.toString(),
-          toDate: filters
-            ?.find((filter) => filter.id === 'toDate')
-            ?.value?.toString(),
-          statuses: filters?.find((filter) => filter.id === 'status')?.value,
-          types: filters?.find((filter) => filter.id === 'type')?.value,
-          providers: filters?.find((filter) => filter.id === 'provider')?.value,
-        },
+        data,
         {
           page: pagination.pageIndex,
           size: pagination.pageSize,

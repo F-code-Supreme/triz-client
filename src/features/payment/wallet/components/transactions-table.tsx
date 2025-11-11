@@ -1,6 +1,7 @@
 import { flexRender, type Table } from '@tanstack/react-table';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
+import { DateRangeFilter } from '@/components/data-table/date-range-filter';
 import {
   Table as UITable,
   TableBody,
@@ -26,12 +27,20 @@ interface TransactionsTableProps {
     title: string;
     options: Array<{ label: string; value: string }>;
   }>;
+  fromDate?: Date;
+  toDate?: Date;
+  onFromDateChange?: (date?: Date) => void;
+  onToDateChange?: (date?: Date) => void;
 }
 
 export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   table,
   isLoading,
   filters = [],
+  fromDate,
+  toDate,
+  onFromDateChange,
+  onToDateChange,
 }) => (
   <div className="space-y-4">
     <div className="flex flex-col sm:flex-row gap-2 items-center">
@@ -41,6 +50,14 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         searchKey="orderCode"
         filters={filters}
       />
+      {onFromDateChange && onToDateChange && (
+        <DateRangeFilter
+          fromDate={fromDate}
+          toDate={toDate}
+          onFromDateChange={onFromDateChange}
+          onToDateChange={onToDateChange}
+        />
+      )}
     </div>
 
     {isLoading ? (
