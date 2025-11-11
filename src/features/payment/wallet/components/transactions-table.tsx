@@ -43,7 +43,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   onToDateChange,
 }) => (
   <div className="space-y-4">
-    <div className="flex flex-col sm:flex-row gap-2 items-center">
+    <div className="flex flex-col gap-2">
       <DataTableToolbar
         table={table}
         searchPlaceholder="Search transactions..."
