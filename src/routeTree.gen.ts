@@ -18,6 +18,7 @@ import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
+import { Route as PackagesIndexRouteImport } from './routes/packages.index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
 import { Route as BooksIndexRouteImport } from './routes/books.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -86,6 +87,11 @@ const IndexRoute = IndexRouteImport.update({
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesIndexRoute = PackagesIndexRouteImport.update({
+  id: '/packages/',
+  path: '/packages/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/books/': typeof BooksIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/packages/': typeof PackagesIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/(app)/books/me': typeof appBooksMeRouteRoute
@@ -347,6 +356,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/forgot-password'
+    | '/packages'
     | '/register'
     | '/admin/courses/'
     | '/books/me'
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/forgot-password'
+    | '/packages'
     | '/register'
     | '/admin/courses'
     | '/books/me'
@@ -417,6 +428,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/books/'
     | '/forgot-password/'
+    | '/packages/'
     | '/register/'
     | '/admin/courses/'
     | '/(app)/books/me'
@@ -451,6 +463,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   BooksIndexRoute: typeof BooksIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
+  PackagesIndexRoute: typeof PackagesIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
@@ -520,6 +533,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages/': {
+      id: '/packages/'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof PackagesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password/': {
@@ -759,6 +779,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   BooksIndexRoute: BooksIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
+  PackagesIndexRoute: PackagesIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AdminUsersUserIdRoute: AdminUsersUserIdRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
