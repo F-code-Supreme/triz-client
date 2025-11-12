@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
 
 import type { Transaction } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
@@ -99,5 +100,15 @@ export const transactionsColumns = [
         {format(new Date(info.getValue()), 'MMM dd, yyyy HH:mm')}
       </span>
     ),
+  }),
+
+  columnHelper.display({
+    id: 'actions',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Actions" />
+    ),
+    cell: ({ row }) => <TransactionsDataTableRowActions row={row} />,
+    enableSorting: false,
+    enableHiding: false,
   }),
 ];

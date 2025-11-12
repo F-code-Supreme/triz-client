@@ -7,5 +7,5 @@ export enum RoleIUser {
 }
 
 export type IUser = Omit<User, 'roles'> & {
-  roles: RoleIUser[];
+  roles: RoleIUser;
 };

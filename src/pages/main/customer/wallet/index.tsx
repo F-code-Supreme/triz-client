@@ -45,6 +45,7 @@ const WalletPage = () => {
       f.push({ id: 'toDate', value: toDate });
     }
     return f;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [columnFilters, fromDate]);
 
   const { data: wallet, isLoading: walletLoading } = useGetWalletByUserQuery(

@@ -2,6 +2,7 @@ import { flexRender, type Table } from '@tanstack/react-table';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { DateRangeFilter } from '@/components/data-table/date-range-filter';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table as UITable,
   TableBody,
@@ -85,7 +86,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 <TableRow key={idx}>
                   {transactionsColumns.map((_, cellIdx) => (
                     <TableCell key={cellIdx}>
-                      <div className="h-8 bg-muted animate-pulse rounded w-full"></div>
+                      <Skeleton className="h-8 w-full" />
                     </TableCell>
                   ))}
                 </TableRow>

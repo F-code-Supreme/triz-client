@@ -49,8 +49,8 @@ export const adminSidebarData: AdminSidebarData = {
       title: 'Management',
       items: [
         {
-          title: 'Customers',
-          url: '/admin/customers',
+          title: 'Users',
+          url: '/admin/users',
           icon: Users,
         },
         {
