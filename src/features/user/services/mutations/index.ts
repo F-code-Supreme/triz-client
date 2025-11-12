@@ -35,7 +35,7 @@ export const useEditUserMutation = () => {
   return useMutation({
     mutationFn: async (payload: IEditUserPayload) => {
       const { id, ...updateData } = payload;
-      const response = await _request.put<IUser & DataTimestamp>(
+      const response = await _request.patch<IUser & DataTimestamp>(
         `/users/${id}`,
         updateData,
       );

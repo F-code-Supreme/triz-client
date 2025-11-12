@@ -5,9 +5,11 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
+import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { DataTablePagination } from '@/components/data-table';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -18,6 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { usersColumns } from '@/features/user/components/users-columns';
+import { UsersFormDialog } from '@/features/user/components/users-form-dialog';
 import { useGetAllUsersQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
@@ -27,6 +30,7 @@ const AdminUsersPage = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const { data: usersData, isLoading } = useGetAllUsersQuery(
     pagination,
@@ -54,11 +58,17 @@ const AdminUsersPage = () => {
   return (
     <AdminLayout meta={{ title: 'Users' }}>
       <div className="flex flex-col gap-8 p-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage system users and view their details
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+            <p className="text-muted-foreground mt-2">
+              Manage system users and view their details
+            </p>
+          </div>
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New User
+          </Button>
         </div>
 
         <div className="space-y-4">
@@ -145,6 +155,8 @@ const AdminUsersPage = () => {
           )}
         </div>
       </div>
+
+      <UsersFormDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
     </AdminLayout>
   );
 };
