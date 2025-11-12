@@ -35,7 +35,9 @@ import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
+import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
 import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
 import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
@@ -172,10 +174,20 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   path: '/books/$bookId/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/admin/users/',
+  path: '/admin/users/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const appQuizIndexRoute = appQuizIndexRouteImport.update({
   id: '/quiz/',
   path: '/quiz/',
   getParentRoute: () => appRouteRoute,
+} as any)
+const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
+  id: '/admin/users/$userId',
+  path: '/admin/users/$userId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminCoursesCreateRouteRoute = AdminCoursesCreateRouteRouteImport.update({
   id: '/create',
@@ -233,7 +245,9 @@ export interface FileRoutesByFullPath {
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/quiz': typeof appQuizIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -265,7 +279,9 @@ export interface FileRoutesByTo {
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/quiz': typeof appQuizIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
 }
 export interface FileRoutesById {
@@ -300,7 +316,9 @@ export interface FileRoutesById {
   '/(app)/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/(app)/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -335,7 +353,9 @@ export interface FileRouteTypes {
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
+    | '/admin/users/$userId'
     | '/quiz'
+    | '/admin/users'
     | '/books/$bookId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -367,7 +387,9 @@ export interface FileRouteTypes {
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
+    | '/admin/users/$userId'
     | '/quiz'
+    | '/admin/users'
     | '/books/$bookId'
   id:
     | '__root__'
@@ -401,7 +423,9 @@ export interface FileRouteTypes {
     | '/(app)/quiz/$quizId'
     | '/(app)/quiz/history'
     | '/admin/courses/create'
+    | '/admin/users/$userId'
     | '/(app)/quiz/'
+    | '/admin/users/'
     | '/books/$bookId/'
   fileRoutesById: FileRoutesById
 }
@@ -428,6 +452,8 @@ export interface RootRouteChildren {
   BooksIndexRoute: typeof BooksIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
+  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
 }
 
@@ -615,12 +641,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksBookIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(app)/quiz/': {
       id: '/(app)/quiz/'
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof appQuizIndexRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    '/admin/users/$userId': {
+      id: '/admin/users/$userId'
+      path: '/admin/users/$userId'
+      fullPath: '/admin/users/$userId'
+      preLoaderRoute: typeof AdminUsersUserIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/courses/create': {
       id: '/admin/courses/create'
@@ -720,6 +760,8 @@ const rootRouteChildren: RootRouteChildren = {
   BooksIndexRoute: BooksIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
+  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -4,14 +4,15 @@ import { useAxios } from '@/configs/axios';
 
 import { AuthKeys } from './keys';
 
-import type { IGetMeDataResponse } from './types';
+import type { User } from '../../types';
+import type { DataTimestamp } from '@/types';
 
 export const useGetMeQuery = () => {
   const _request = useAxios();
   return useQuery({
     queryKey: [AuthKeys.GetMeQuery],
     queryFn: async ({ signal }) => {
-      const response = await _request.get<IGetMeDataResponse>('/auth/me', {
+      const response = await _request.get<User & DataTimestamp>('/auth/me', {
         signal,
       });
 
