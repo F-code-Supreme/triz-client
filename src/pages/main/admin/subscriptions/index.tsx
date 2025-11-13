@@ -6,9 +6,18 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 import { DataTablePagination } from '@/components/data-table';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -18,9 +27,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { adminSubscriptionsColumns } from '@/features/subscription/components/admin-subscriptions-columns';
+import { createAdminSubscriptionsColumns } from '@/features/subscription/components/admin-subscriptions-columns';
+import { useEditAutoRenewalMutation } from '@/features/subscription/services/mutations';
 import { useGetSubscriptionsQuery } from '@/features/subscription/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
+
+import type { Subscription } from '@/features/subscription/types';
+import type { DataTimestamp } from '@/types';
 
 const AdminSubscriptionsPage = () => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -29,12 +42,20 @@ const AdminSubscriptionsPage = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [selectedSubscription, setSelectedSubscription] = useState<
+    (Subscription & DataTimestamp) | null
+  >(null);
+  const [isAutoRenewalDialogOpen, setIsAutoRenewalDialogOpen] = useState(false);
 
   // Fetch subscriptions with pagination and sorting
   const { data: subscriptionsData, isLoading } = useGetSubscriptionsQuery(
     pagination,
     sorting,
   );
+
+  // Mutations
+  const { mutate: editAutoRenewal, isPending: isEditingAutoRenewal } =
+    useEditAutoRenewalMutation();
 
   // Get subscriptions from response
   const subscriptions = useMemo(
@@ -45,10 +66,42 @@ const AdminSubscriptionsPage = () => {
   const pageInfo = useMemo(() => subscriptionsData?.page, [subscriptionsData]);
   const totalRowCount = pageInfo?.totalElements ?? 0;
 
+  // Handle auto-renewal toggle
+  const handleAutoRenewalToggle = useCallback(
+    (subscription: Subscription & DataTimestamp) => {
+      setSelectedSubscription(subscription);
+      setIsAutoRenewalDialogOpen(true);
+    },
+    [],
+  );
+
+  const confirmAutoRenewalToggle = useCallback(() => {
+    if (selectedSubscription) {
+      editAutoRenewal(
+        {
+          subscriptionId: selectedSubscription.id,
+          autoRenew: !selectedSubscription.autoRenew,
+        },
+        {
+          onSuccess: () => {
+            setIsAutoRenewalDialogOpen(false);
+            setSelectedSubscription(null);
+          },
+        },
+      );
+    }
+  }, [selectedSubscription, editAutoRenewal]);
+
+  // Create columns with auto-renewal callback
+  const columns = useMemo(
+    () => createAdminSubscriptionsColumns(handleAutoRenewalToggle),
+    [handleAutoRenewalToggle],
+  );
+
   // Create table instance with manual pagination
   const table = useReactTable({
     data: subscriptions,
-    columns: adminSubscriptionsColumns,
+    columns,
     state: {
       columnFilters,
       pagination,
@@ -97,15 +150,17 @@ const AdminSubscriptionsPage = () => {
                   ))}
                 </TableHeader>
                 <TableBody>
-                  {Array.from({ length: pagination.pageSize }).map((_, idx) => (
-                    <TableRow key={idx}>
-                      {adminSubscriptionsColumns.map((_, cellIdx) => (
-                        <TableCell key={cellIdx}>
-                          <Skeleton className="h-8 w-full" />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
+                  {Array.from({ length: pagination.pageSize }).map(
+                    (_: unknown, cellIdx: number) => (
+                      <TableRow key={cellIdx}>
+                        {columns.map((_: unknown, idx: number) => (
+                          <TableCell key={idx}>
+                            <Skeleton className="h-8 w-full" />
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ),
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -152,7 +207,7 @@ const AdminSubscriptionsPage = () => {
                   ) : (
                     <TableRow>
                       <TableCell
-                        colSpan={adminSubscriptionsColumns.length}
+                        colSpan={columns.length}
                         className="h-24 text-center"
                       >
                         No results.
@@ -167,6 +222,39 @@ const AdminSubscriptionsPage = () => {
           {/* Pagination Controls */}
           <DataTablePagination table={table} />
         </div>
+
+        {/* Auto Renewal Toggle Dialog */}
+        <Dialog
+          open={isAutoRenewalDialogOpen}
+          onOpenChange={setIsAutoRenewalDialogOpen}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Auto Renewal Change</DialogTitle>
+              <DialogDescription>
+                {`Are you sure you want to ${
+                  selectedSubscription?.autoRenew ? 'disable' : 'enable'
+                } auto-renewal for this subscription?`}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsAutoRenewalDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={confirmAutoRenewalToggle}
+                disabled={isEditingAutoRenewal}
+              >
+                {isEditingAutoRenewal ? 'Saving...' : 'Confirm'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );
