@@ -33,6 +33,7 @@ import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboar
 import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
+import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
@@ -165,6 +166,11 @@ const appWalletRouteRoute = appWalletRouteRouteImport.update({
   path: '/wallet',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appSubscriptionRouteRoute = appSubscriptionRouteRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appProfileRouteRoute = appProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -231,6 +237,7 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
@@ -267,6 +274,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
@@ -304,6 +312,7 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
+  '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/chat-triz'
     | '/profile'
+    | '/subscription'
     | '/wallet'
     | '/admin/books'
     | '/admin/courses'
@@ -378,6 +388,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/chat-triz'
     | '/profile'
+    | '/subscription'
     | '/wallet'
     | '/admin/books'
     | '/admin/dashboard'
@@ -414,6 +425,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/(app)/chat-triz'
     | '/(app)/profile'
+    | '/(app)/subscription'
     | '/(app)/wallet'
     | '/admin/books'
     | '/admin/courses'
@@ -640,6 +652,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appWalletRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/subscription': {
+      id: '/(app)/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof appSubscriptionRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/profile': {
       id: '/(app)/profile'
       path: '/profile'
@@ -723,6 +742,7 @@ declare module '@tanstack/react-router' {
 interface appRouteRouteChildren {
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
+  appSubscriptionRouteRoute: typeof appSubscriptionRouteRoute
   appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
   appQuizQuizIdRouteRoute: typeof appQuizQuizIdRouteRoute
@@ -733,6 +753,7 @@ interface appRouteRouteChildren {
 const appRouteRouteChildren: appRouteRouteChildren = {
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
+  appSubscriptionRouteRoute: appSubscriptionRouteRoute,
   appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,
   appQuizQuizIdRouteRoute: appQuizQuizIdRouteRoute,

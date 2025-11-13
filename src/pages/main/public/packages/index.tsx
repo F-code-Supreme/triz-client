@@ -1,12 +1,20 @@
+import { useNavigate } from '@tanstack/react-router';
 import { CheckCircle, X } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BackgroundBeams } from '@/components/ui/shadcn-io/background-beams';
 import { Skeleton } from '@/components/ui/skeleton';
+import { VND_TO_TOKEN_RATE } from '@/constants';
+import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetActivePackagesQuery } from '@/features/packages/services/queries';
+import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
+import { PurchaseInvoiceDialog } from '@/features/subscription/components';
+import { useGetSubscriptionsByUserQuery } from '@/features/subscription/services/queries';
+import { SubscriptionStatus } from '@/features/subscription/types';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { formatNumber } from '@/utils';
 
@@ -71,7 +79,53 @@ const PackageCardSkeleton = () => (
 );
 
 const PackagesPricingPage = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
   const { data: packages = [], isLoading } = useGetActivePackagesQuery();
+  const { data: wallet } = useGetWalletByUserQuery(user?.id);
+  const { data: subscriptionsData } = useGetSubscriptionsByUserQuery(
+    { pageIndex: 0, pageSize: 1 },
+    [
+      {
+        id: 'startDate',
+        desc: true,
+      },
+    ],
+    user?.id,
+  );
+
+  const [invoiceOpen, setInvoiceOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
+
+  // Convert wallet balance from VND to tokens
+  const walletBalanceInTokens = useMemo(() => {
+    if (!wallet) return 0;
+    return Math.floor(wallet.balance / VND_TO_TOKEN_RATE);
+  }, [wallet]);
+
+  // Check if user has an active subscription
+  const hasActiveSubscription = useMemo(() => {
+    if (!subscriptionsData?.content) return false;
+    return subscriptionsData.content.some(
+      (sub) => sub.status === SubscriptionStatus.ACTIVE,
+    );
+  }, [subscriptionsData]);
+
+  // Handle "Get Started" button click
+  const handleGetStarted = (pkg: Package) => {
+    if (!isAuthenticated) {
+      navigate({ to: '/login' });
+      return;
+    }
+
+    if (hasActiveSubscription) {
+      navigate({ to: '/subscription' });
+      return;
+    }
+
+    setSelectedPackage(pkg);
+    setInvoiceOpen(true);
+  };
 
   // Sort packages by price for better UX
   const sortedPackages = useMemo(() => {
@@ -111,6 +165,23 @@ const PackagesPricingPage = () => {
                 budget.
               </p>
             </div>
+
+            {/* Active Subscription Alert */}
+            {isAuthenticated && hasActiveSubscription && (
+              <Alert className="mb-8 bg-blue-50 border-blue-200 dark:bg-blue-950/20 dark:border-blue-800">
+                <CheckCircle className="h-4 w-4 text-blue-600 dark:text-blue-500" />
+                <AlertDescription className="text-blue-800 dark:text-blue-400">
+                  You already have an active subscription. Visit your{' '}
+                  <button
+                    onClick={() => navigate({ to: '/subscription' })}
+                    className="font-semibold underline hover:opacity-80"
+                  >
+                    subscription page
+                  </button>{' '}
+                  to manage it.
+                </AlertDescription>
+              </Alert>
+            )}
 
             {/* Loading State */}
             {isLoading ? (
@@ -177,8 +248,15 @@ const PackagesPricingPage = () => {
                             </span>{' '}
                             tokens/day
                           </div>
-                          <Button className="w-full" size="lg">
-                            Get Started
+                          <Button
+                            className="w-full"
+                            size="lg"
+                            onClick={() => handleGetStarted(pkg)}
+                            disabled={isAuthenticated && hasActiveSubscription}
+                          >
+                            {isAuthenticated && hasActiveSubscription
+                              ? 'View Subscription'
+                              : 'Get Started'}
                           </Button>
                         </CardHeader>
 
@@ -281,6 +359,14 @@ const PackagesPricingPage = () => {
             )}
           </div>
         </section>
+
+        {/* Purchase Invoice Dialog */}
+        <PurchaseInvoiceDialog
+          open={invoiceOpen}
+          onOpenChange={setInvoiceOpen}
+          package={selectedPackage}
+          walletBalance={walletBalanceInTokens}
+        />
       </div>
     </DefaultLayout>
   );

@@ -1,6 +1,8 @@
 import { CreditCard, Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { VND_TO_TOKEN_RATE } from '@/constants';
+import { formatNumber } from '@/utils';
 
 import type { Wallet } from '../types';
 
@@ -15,6 +17,11 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
   isLoading,
   onTopupClick,
 }) => {
+  // Convert wallet balance from VND to tokens
+  const balanceInTokens = wallet
+    ? Math.floor(wallet.balance / VND_TO_TOKEN_RATE)
+    : 0;
+
   return (
     <div className="w-full rounded-lg border border-border bg-card p-6 shadow-sm">
       <div className="flex items-center justify-between mb-4">
@@ -30,9 +37,9 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
         ) : (
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-bold">
-              {wallet?.balance.toLocaleString() || '0'}
+              {formatNumber(balanceInTokens)}
             </span>
-            <span className="text-sm text-muted-foreground">VND</span>
+            <span className="text-sm text-muted-foreground">tokens</span>
           </div>
         )}
 
