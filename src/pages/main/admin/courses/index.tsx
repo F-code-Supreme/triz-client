@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   Pagination,
@@ -12,38 +12,23 @@ import {
   PaginationEllipsis,
 } from '@/components/ui/pagination';
 import CourseItem from '@/features/courses/components/course-item';
+import { useGetCourseQuery } from '@/features/courses/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
-import type { Course } from '@/features/courses/types';
-
 const AdminManageCoursePage = () => {
-  // mock data
-  const mockCourses: Course[] = useMemo(
-    () =>
-      Array.from({ length: 23 }).map((_, i) => {
-        const id = i + 1;
-        return {
-          id,
-          title: `Course ${id} — Intro to Topic ${id}`,
-          description:
-            'This is a short description for the course. It explains the main goals and what students will learn.',
-          thumbnail: `https://picsum.photos/seed/course-${id}/600/400`,
-        };
-      }),
-    [],
-  );
-
-  // pagination state
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(8);
 
-  const total = mockCourses.length;
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const {
+    data,
+    isFetching: _isFetching,
+    isLoading: _isLoading,
+  } = useGetCourseQuery(page - 1, pageSize);
 
-  const pagedItems = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return mockCourses.slice(start, start + pageSize);
-  }, [page, pageSize, mockCourses]);
+  const pagedItems = data?.content ?? [];
+  const apiPage = data?.page;
+
+  const totalPages = apiPage ? Math.max(1, apiPage.totalPages) : 1;
 
   const renderTabContent = () => {
     return (
