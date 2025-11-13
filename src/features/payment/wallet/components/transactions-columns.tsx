@@ -75,7 +75,7 @@ export const transactionsColumns = [
     ),
     cell: (info) => (
       <Badge variant="outline" className="capitalize">
-        {info.getValue()?.toLowerCase() || 'Unknown'}
+        {info.getValue()?.toLowerCase() || 'TRIZ'}
       </Badge>
     ),
   }),
