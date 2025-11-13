@@ -62,6 +62,10 @@ const StepModules: React.FC<Props> = ({ modules, goNext, goBack }) => {
               </div>
               <Button variant="ghost" size="sm">
                 <Plus className="mr-2 h-4 w-4" />
+                Add Assignment
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Plus className="mr-2 h-4 w-4" />
                 Add Lesson
               </Button>
             </div>
