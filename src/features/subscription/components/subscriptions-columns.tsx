@@ -30,6 +30,7 @@ export const getSubscriptionStatusColor = (status: string): string => {
 
 export const subscriptionsColumns = [
   columnHelper.accessor('packageName', {
+    id: 'packagePlanId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Package" />
     ),

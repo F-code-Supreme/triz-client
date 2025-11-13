@@ -37,9 +37,11 @@ export const adminSubscriptionsColumns = [
       </span>
     ),
     size: 150,
+    enableSorting: false,
   }),
 
   columnHelper.accessor('packageName', {
+    id: 'packagePlanId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Package" />
     ),
