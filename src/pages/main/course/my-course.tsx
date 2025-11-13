@@ -7,17 +7,21 @@ import { mockCourses } from '@/features/course/data/mock-courses';
 import { CourseFilters } from '@/features/course/types';
 // import { De } from 'zod/v4/locales';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { Link } from '@tanstack/react-router';
 
-function AllCoursePage() {
+function MyCoursePage() {
   const [filters, setFilters] = useState<CourseFilters>({});
 
+  // Filter only enrolled courses
+  const enrolledCourses = mockCourses.filter(
+    (course) => course.isEnrolled === true,
+  );
+
   // Stats calculation
-  // const totalCourses = mockCourses.length;
-  // const completedCourses = mockCourses.filter(
+  // const totalCourses = enrolledCourses.length;
+  // const completedCourses = enrolledCourses.filter(
   //   (course) => course.status === 'COMPLETED',
   // ).length;
-  // const inProgressCourses = mockCourses.filter(
+  // const inProgressCourses = enrolledCourses.filter(
   //   (course) => course.status === 'IN_PROGRESS',
   // ).length;
 
@@ -31,24 +35,13 @@ function AllCoursePage() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <div className="flex flex-row justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                All Courses
-              </h1>
-              <p className="text-muted-foreground">
-                Explore and enroll in courses to start your learning journey
-              </p>
-            </div>
-
-            <div>
-              <Link
-                to="/course/my-course"
-                className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition"
-              >
-                My Courses
-              </Link>
-            </div>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              My Courses
+            </h1>
+            <p className="text-muted-foreground">
+              Continue your learning journey with your enrolled courses
+            </p>
           </div>
         </motion.div>
 
@@ -69,11 +62,11 @@ function AllCoursePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <CourseList courses={mockCourses} filters={filters} />
+          <CourseList courses={enrolledCourses} filters={filters} />
         </motion.div>
       </div>
     </DefaultLayout>
   );
 }
 
-export default AllCoursePage;
+export default MyCoursePage;

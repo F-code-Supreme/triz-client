@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Collapsible,
@@ -71,11 +70,6 @@ const CourseSidebar = ({
       <ScrollArea className="h-[calc(100vh-8rem)]">
         <div className="p-4 space-y-2">
           {weeks.map((week, weekIndex) => {
-            const weekProgress =
-              week.totalLessons > 0
-                ? (week.completedLessons / week.totalLessons) * 100
-                : 0;
-
             return (
               <Collapsible
                 key={week.id}
@@ -92,10 +86,10 @@ const CourseSidebar = ({
                     )}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
                         <div
                           className={cn(
-                            'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
+                            'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
                             week.isUnlocked
                               ? 'bg-primary text-primary-foreground'
                               : 'bg-muted text-muted-foreground',
@@ -107,15 +101,10 @@ const CourseSidebar = ({
                             <Lock className="w-4 h-4" />
                           )}
                         </div>
-                        <div>
+                        <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-foreground line-clamp-1">
                             {week.title}
                           </h3>
-                          {week.description && (
-                            <p className="text-sm text-muted-foreground line-clamp-1">
-                              {week.description}
-                            </p>
-                          )}
                         </div>
                       </div>
                       <div className="text-right">
@@ -124,15 +113,6 @@ const CourseSidebar = ({
                         </div>
                       </div>
                     </div>
-
-                    {week.totalLessons > 0 && (
-                      <div className="space-y-1">
-                        <Progress value={weekProgress} className="h-2" />
-                        <div className="text-xs text-muted-foreground">
-                          {Math.round(weekProgress)}% complete
-                        </div>
-                      </div>
-                    )}
                   </motion.div>
                 </CollapsibleTrigger>
 

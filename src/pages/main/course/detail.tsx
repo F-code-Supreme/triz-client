@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Star, Users, Award, BookOpen } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Link, useSearch } from '@tanstack/react-router';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,10 +20,17 @@ import {
 import { CourseLevel } from '@/features/course/types';
 
 function CourseDetail() {
-  // For this demo, we'll use the first course with detailed content
+  // Get query parameters
+  const searchParams = useSearch({ from: '/course/detail' });
+  const mode = (searchParams as any)?.mode || 'overview'; // 'overview' or 'learning'
+  // const courseId = (searchParams as any)?.courseId; // TODO: Use this to fetch specific course
+
+  // TODO: Fetch course by courseId, for now use mock
   const course = mockCourses[0];
   const [currentLessonId, setCurrentLessonId] = useState('lesson-2-5');
-  const [activeTab, setActiveTab] = useState('content');
+  const [activeTab, setActiveTab] = useState(
+    mode === 'learning' ? 'content' : 'overview',
+  );
 
   // Find current lesson
   const currentLesson = useMemo(() => {
@@ -70,17 +77,18 @@ function CourseDetail() {
     }
   };
 
-  if (activeTab === 'content') {
+  // Learning mode - Only accessible for enrolled courses
+  if (mode === 'learning' && course.isEnrolled && activeTab === 'content') {
     return (
       <div className="h-screen flex flex-col">
         {/* Header */}
         <div className="bg-card border-b px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link to="/course">
+              <Link to="/course/my-course">
                 <Button variant="ghost" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Courses
+                  Back to My Courses
                 </Button>
               </Link>
               <Separator orientation="vertical" className="h-6" />
@@ -146,7 +154,7 @@ function CourseDetail() {
           <Link to="/course">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Courses
+              Back to All Courses
             </Button>
           </Link>
         </div>
@@ -235,12 +243,24 @@ function CourseDetail() {
                   </div>
                 </div>
 
-                <Button
-                  className="w-full"
-                  onClick={() => setActiveTab('content')}
-                >
-                  Continue Learning
-                </Button>
+                {course.isEnrolled ? (
+                  <Button
+                    className="w-full"
+                    onClick={() => setActiveTab('content')}
+                  >
+                    Continue Learning
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full"
+                    onClick={() => {
+                      // TODO: Implement enroll logic
+                      alert(`Enrolling in: ${course.title}`);
+                    }}
+                  >
+                    Enroll Now
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -250,11 +270,15 @@ function CourseDetail() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
-          <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="progress">Progress</TabsTrigger>
-          <TabsTrigger value="discussion">Discussion</TabsTrigger>
-          <TabsTrigger value="notes">Notes</TabsTrigger>
+          {course.isEnrolled && (
+            <>
+              <TabsTrigger value="content">Content</TabsTrigger>
+              <TabsTrigger value="progress">Progress</TabsTrigger>
+              <TabsTrigger value="discussion">Discussion</TabsTrigger>
+              <TabsTrigger value="notes">Notes</TabsTrigger>
+            </>
+          )}
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">

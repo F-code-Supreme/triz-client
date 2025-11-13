@@ -182,37 +182,50 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
-          {/* Action Button */}
-          <Link
-            to="/course/detail"
-            className={cn(
-              buttonVariants({
-                variant:
-                  course.status === CourseStatus.COMPLETED
-                    ? 'outline'
-                    : 'default',
-                size: 'default',
-              }),
-              'w-full',
-            )}
-          >
-            {course.status === CourseStatus.COMPLETED ? (
-              <>
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Review Course
-              </>
-            ) : course.status === CourseStatus.IN_PROGRESS ? (
-              <>
-                <Play className="w-4 h-4 mr-2" />
-                Continue Learning
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 mr-2" />
-                Start Course
-              </>
-            )}
-          </Link>
+          {/* Action Buttons */}
+          {course.isEnrolled ? (
+            <Link
+              to="/course/detail"
+              search={{ mode: 'learning', courseId: course.id }}
+              className={cn(
+                buttonVariants({
+                  variant:
+                    course.status === CourseStatus.COMPLETED
+                      ? 'outline'
+                      : 'default',
+                  size: 'default',
+                }),
+                'w-full',
+              )}
+            >
+              {course.status === CourseStatus.COMPLETED ? (
+                <>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Review Course
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 mr-2" />
+                  Continue Learning
+                </>
+              )}
+            </Link>
+          ) : (
+            <Link
+              to="/course/detail"
+              search={{ mode: 'overview', courseId: course.id }}
+              className={cn(
+                buttonVariants({
+                  variant: 'default',
+                  size: 'default',
+                }),
+                'w-full',
+              )}
+            >
+              <Play className="w-4 h-4 mr-2" />
+              Start
+            </Link>
+          )}
         </CardFooter>
       </Card>
     </motion.div>
