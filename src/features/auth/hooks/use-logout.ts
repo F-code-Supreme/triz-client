@@ -10,9 +10,9 @@ const useLogout = () => {
   const { mutate: logoutMutate } = useLogoutMutation();
 
   const logout = useCallback(() => {
+    clientLogout();
     logoutMutate(undefined, {
       onSuccess: () => {
-        clientLogout();
         navigate({ to: '/' });
       },
     });
