@@ -136,6 +136,7 @@ interface Resources {
     "dropdown_menu.my_books": "My Books",
     "dropdown_menu.profile": "Profile",
     "dropdown_menu.sign_out": "Sign Out",
+    "dropdown_menu.subscriptions": "Subscriptions",
     "dropdown_menu.wallet": "Wallet",
     "forum": "Forum",
     "home": "Home",
