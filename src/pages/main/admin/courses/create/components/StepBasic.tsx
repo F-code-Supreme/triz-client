@@ -31,6 +31,7 @@ type Props = {
   goNext: () => void;
   goBack: () => void;
   step: number;
+  setCourseId?: (id: string) => void;
 };
 
 const StepBasic: React.FC<Props> = ({
@@ -43,6 +44,7 @@ const StepBasic: React.FC<Props> = ({
   goNext,
   goBack,
   step,
+  setCourseId,
 }) => {
   // use parent's `description` as the short description field
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
@@ -94,7 +96,15 @@ const StepBasic: React.FC<Props> = ({
     };
 
     createCourse.mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (res: unknown) => {
+        let id: string | undefined;
+        if (typeof res === 'object' && res !== null && 'id' in res) {
+          const maybeId = (res as Record<string, unknown>).id;
+          if (typeof maybeId === 'string') {
+            id = maybeId;
+          }
+        }
+        if (id && setCourseId) setCourseId(id);
         // Proceed to next step on success
         goNext();
       },

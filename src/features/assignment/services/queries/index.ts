@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
-import { ModuleKeys } from '@/features/modules/services/queries/keys';
+import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 
-import type { ModuleResponse } from '@/features/modules/services/queries/types';
+import type { AssignmentResponse } from '@/features/assignment/services/queries/types';
 
-export const useGetModuleQuery = (page: number, size: number) => {
+export const useGetAssignmentsQuery = (page?: number, size?: number) => {
   const _request = useAxios();
   return useQuery({
-    queryKey: [ModuleKeys.GetModuleQuery, page, size],
+    queryKey: [AssignmentKeys.GetAssignmentQuery, page, size],
     queryFn: async () => {
-      const response = await _request.get<ModuleResponse>('/modules', {
+      const response = await _request.get<AssignmentResponse>('/assignments', {
         params: {
           page,
           size,

@@ -5,7 +5,7 @@ import { ModuleKeys } from '@/features/modules/services/queries/keys';
 
 import type { ModuleResponse } from '@/features/modules/services/queries/types';
 
-export const useGetModuleQuery = (page: number, size: number) => {
+export const useGetModulesQuery = (page?: number, size?: number) => {
   const _request = useAxios();
   return useQuery({
     queryKey: [ModuleKeys.GetModuleQuery, page, size],

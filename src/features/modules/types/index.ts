@@ -1,4 +1,7 @@
-import type { PaginatedResponse } from '@/types';
+interface Order {
+  id: string;
+  type: 'lesson' | 'assignment';
+}
 
 interface Module {
   id: string;
@@ -11,6 +14,5 @@ interface Module {
   lessonCount: number;
   quizCount: number;
   assignmentCount: number;
+  orders: Order[];
 }
-
-export type ModuleResponse = PaginatedResponse<Module>;

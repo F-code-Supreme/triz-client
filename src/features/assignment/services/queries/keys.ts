@@ -1,3 +1,3 @@
-export enum ModuleKeys {
-  GetModuleQuery = 'modules/getModule',
+export enum AssignmentKeys {
+  GetAssignmentQuery = 'assignments/getAssignment',
 }

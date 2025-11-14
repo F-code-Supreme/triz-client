@@ -1,16 +1,17 @@
 import type { PaginatedResponse } from '@/types';
 
-interface Module {
+interface Assignment {
   id: string;
-  name: string;
+  title: string;
+  description: string;
   durationInMinutes: number;
-  level: 'EASY' | 'MEDIUM' | 'HARD';
+  maxAttempts: number;
+  status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   updatedAt: string;
-  courseId: string;
-  lessonCount: number;
-  quizCount: number;
-  assignmentCount: number;
+  moduleId: string;
+  moduleName: string;
+  userId: string;
 }
 
-export type ModuleResponse = PaginatedResponse<Module>;
+export type AssignmentResponse = PaginatedResponse<Assignment>;

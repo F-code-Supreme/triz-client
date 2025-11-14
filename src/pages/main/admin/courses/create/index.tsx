@@ -7,23 +7,10 @@ import StepBasic from './components/StepBasic';
 import StepModules from './components/StepModules';
 import StepPlaceholder from './components/StepPlaceholder';
 
-// Types
-type Lesson = {
-  id: string;
-  number: number;
-  title: string;
-  published: boolean;
-};
-
-type Module = {
-  id: string;
-  title: string;
-  lessons: Lesson[];
-};
-
 const CreateCoursePage = () => {
   // Step and form state
   const [step, setStep] = useState(1);
+  const [courseId, setCourseId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [thumbnailPreview] = useState<string | null>(null);
@@ -33,98 +20,9 @@ const CreateCoursePage = () => {
     thumbnail?: string;
   }>({});
 
-  // Modules and lessons state
-  const [modules, _setModules] = useState<Module[]>([
-    {
-      id: '1',
-      title: 'Module 1: Introduction to Social Media Marketing',
-      lessons: [
-        {
-          id: '1-1',
-          number: 1,
-          title: 'Overview of Social Media Platforms',
-          published: true,
-        },
-        {
-          id: '1-2',
-          number: 2,
-          title: 'Key Trends in Social Media',
-          published: false,
-        },
-      ],
-    },
-    {
-      id: '2',
-      title: 'Module 2: Facebook Marketing',
-      lessons: [
-        {
-          id: '2-1',
-          number: 1,
-          title: 'Setting Up a Facebook Business Page',
-          published: true,
-        },
-        {
-          id: '2-2',
-          number: 2,
-          title: 'Creating Engaging Facebook Content',
-          published: false,
-        },
-        {
-          id: '2-3',
-          number: 3,
-          title: 'Facebook Ad Types & Objectives',
-          published: false,
-        },
-      ],
-    },
-    {
-      id: '3',
-      title: 'Module 3: Instagram Marketing',
-      lessons: [
-        {
-          id: '3-1',
-          number: 1,
-          title: 'Optimizing Your Instagram Profile',
-          published: true,
-        },
-        {
-          id: '3-2',
-          number: 2,
-          title: 'Instagram Stories for Engagement',
-          published: false,
-        },
-        {
-          id: '3-3',
-          number: 3,
-          title: 'Instagram Stories & Reels for Business',
-          published: false,
-        },
-        {
-          id: '3-4',
-          number: 4,
-          title: 'Instagram Ads: Formats & Targeting',
-          published: false,
-        },
-      ],
-    },
-  ]);
-
-  // Thumbnail is now provided via StepBasic as a URL input; parent does not handle files.
-
-  // Basic validation for step 1
-  // const _validateStep1 = () => {
-  //   const newErrors: typeof errors = {};
-  //   if (!thumbnailFile) newErrors.thumbnail = 'Thumbnail is required';
-  //   if (!title.trim()) newErrors.title = 'Title is required';
-  //   if (!description.trim()) newErrors.description = 'Description is required';
-  //   setErrors(newErrors);
-  //   return Object.keys(newErrors).length === 0;
-  // };
-
   const goNext = () => {
     if (step === 1) {
-      // if (!_validateStep1()) return;
-      setStep(2); // advance to next step (placeholder)
+      setStep(2);
       return;
     }
     setStep((s) => s + 1);
@@ -184,12 +82,13 @@ const CreateCoursePage = () => {
             goNext={goNext}
             goBack={goBack}
             step={step}
+            setCourseId={setCourseId}
           />
         )}
 
         {/* Step 2: Modules */}
         {step === 2 && (
-          <StepModules modules={modules} goNext={goNext} goBack={goBack} />
+          <StepModules goNext={goNext} goBack={goBack} courseId={courseId} />
         )}
 
         {/* Steps after 2 (placeholder) */}
