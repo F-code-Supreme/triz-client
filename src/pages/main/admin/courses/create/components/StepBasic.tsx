@@ -1,6 +1,6 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +29,6 @@ type Props = {
   thumbnailPreview: string | null;
   errors: Errors;
   goNext: () => void;
-  goBack: () => void;
-  step: number;
   setCourseId?: (id: string) => void;
 };
 
@@ -42,9 +40,7 @@ const StepBasic: React.FC<Props> = ({
   thumbnailPreview,
   errors,
   goNext,
-  goBack,
-  step,
-  setCourseId,
+  // setCourseId,
 }) => {
   // use parent's `description` as the short description field
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
@@ -58,60 +54,60 @@ const StepBasic: React.FC<Props> = ({
   const [thumbnailUrl, setThumbnailUrl] = useState<string>(
     thumbnailPreview ?? '',
   );
-  const [localErrors, setLocalErrors] = useState<Errors>({});
+  const [localErrors, _setLocalErrors] = useState<Errors>({});
 
   const createCourse = useCreateCourseMutation();
 
-  const validate = () => {
-    const e: Errors = {};
-    if (!title.trim()) e.title = 'Title is required';
-    if (!description.trim()) e.description = 'Short description is required';
-    if (!thumbnailUrl.trim()) e.thumbnail = 'Thumbnail is required';
-    if (!(price > 0)) e.price = 'Price must be greater than 0';
-    setLocalErrors(e);
-    return Object.keys(e).length === 0;
-  };
+  // const validate = () => {
+  //   const e: Errors = {};
+  //   if (!title.trim()) e.title = 'Title is required';
+  //   if (!description.trim()) e.description = 'Short description is required';
+  //   if (!thumbnailUrl.trim()) e.thumbnail = 'Thumbnail is required';
+  //   if (!(price > 0)) e.price = 'Price must be greater than 0';
+  //   setLocalErrors(e);
+  //   return Object.keys(e).length === 0;
+  // };
 
   const handleCreate = () => {
-    if (!validate()) return;
+    // if (!validate()) return;
 
-    const payload = {
-      title: title.trim(),
-      description: description.trim(),
-      shortDescription: description.trim(),
-      durationInMinutes,
-      level,
-      price,
-      dealPrice,
-      // backend expects a URL; as a fallback use data URL preview
-      thumbnailUrl: thumbnailUrl ?? '',
-    };
+    // const payload = {
+    //   title: title.trim(),
+    //   description: description.trim(),
+    //   shortDescription: description.trim(),
+    //   durationInMinutes,
+    //   level,
+    //   price,
+    //   dealPrice,
+    //   // backend expects a URL; as a fallback use data URL preview
+    //   thumbnailUrl: thumbnailUrl ?? '',
+    // };
 
-    const getErrorMessage = (err: unknown) => {
-      if (typeof err === 'object' && err !== null) {
-        const e = err as Record<string, unknown>;
-        if (typeof e.message === 'string') return e.message;
-      }
-      return 'An error occurred while creating the course.';
-    };
+    // const getErrorMessage = (err: unknown) => {
+    //   if (typeof err === 'object' && err !== null) {
+    //     const e = err as Record<string, unknown>;
+    //     if (typeof e.message === 'string') return e.message;
+    //   }
+    //   return 'An error occurred while creating the course.';
+    // };
 
-    createCourse.mutate(payload, {
-      onSuccess: (res: unknown) => {
-        let id: string | undefined;
-        if (typeof res === 'object' && res !== null && 'id' in res) {
-          const maybeId = (res as Record<string, unknown>).id;
-          if (typeof maybeId === 'string') {
-            id = maybeId;
-          }
-        }
-        if (id && setCourseId) setCourseId(id);
-        // Proceed to next step on success
-        goNext();
-      },
-      onError: (error: unknown) => {
-        toast.error(getErrorMessage(error));
-      },
-    });
+    // createCourse.mutate(payload, {
+    //   onSuccess: (res: unknown) => {
+    //     let id: string | undefined;
+    //     if (typeof res === 'object' && res !== null && 'id' in res) {
+    //       const maybeId = (res as Record<string, unknown>).id;
+    //       if (typeof maybeId === 'string') {
+    //         id = maybeId;
+    //       }
+    //     }
+    //     if (id && setCourseId) setCourseId(id);
+    // Proceed to next step on success
+    goNext();
+    //   },
+    //   onError: (error: unknown) => {
+    //     toast.error(getErrorMessage(error));
+    //   },
+    // });
   };
 
   // react-query mutation result typing may vary across versions; access isLoading defensively
@@ -287,15 +283,6 @@ const StepBasic: React.FC<Props> = ({
       <div className="mt-6 flex items-center justify-between border-t pt-6">
         <div />
         <div className="flex items-center gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={goBack}
-            disabled={step === 1 || loading}
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
           <Button type="button" onClick={handleCreate} disabled={loading}>
             {loading ? 'Creating...' : 'Create & Next'}
             <ChevronRight className="ml-2 h-4 w-4" />

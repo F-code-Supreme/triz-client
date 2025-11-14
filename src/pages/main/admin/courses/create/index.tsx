@@ -80,8 +80,6 @@ const CreateCoursePage = () => {
             thumbnailPreview={thumbnailPreview}
             errors={errors}
             goNext={goNext}
-            goBack={goBack}
-            step={step}
             setCourseId={setCourseId}
           />
         )}
@@ -91,12 +89,13 @@ const CreateCoursePage = () => {
           <StepModules goNext={goNext} goBack={goBack} courseId={courseId} />
         )}
 
-        {/* Steps after 2 (placeholder) */}
-        {step > 2 && (
+        {/* Step 3: Summary & Publish */}
+        {step === 3 && (
           <StepPlaceholder
-            step={step}
-            goNext={() => setStep((s) => s + 1)}
             goBack={goBack}
+            courseId={courseId}
+            title={title}
+            description={description}
           />
         )}
       </div>

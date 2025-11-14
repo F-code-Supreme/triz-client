@@ -17,13 +17,12 @@ import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminManageCoursePage = () => {
   const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(8);
 
   const {
     data,
     isFetching: _isFetching,
     isLoading: _isLoading,
-  } = useGetCourseQuery(page - 1, pageSize);
+  } = useGetCourseQuery();
 
   const pagedItems = data?.content ?? [];
   const apiPage = data?.page;

@@ -3,7 +3,7 @@ interface Order {
   type: 'lesson' | 'assignment';
 }
 
-interface Module {
+export interface Module {
   id: string;
   name: string;
   durationInMinutes: number;

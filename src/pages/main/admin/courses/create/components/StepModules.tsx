@@ -1,17 +1,7 @@
-import {
-  Plus,
-  GripVertical,
-  Paperclip,
-  Eye,
-  Pencil,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useGetAssignmentsQuery } from '@/features/assignment/services/queries';
 import { useGetLessonsQuery } from '@/features/lesson/services/queries';
@@ -20,6 +10,10 @@ import {
   useUpdateModuleMutation,
 } from '@/features/modules/services/mutations';
 import { useGetModulesQuery } from '@/features/modules/services/queries';
+
+import { AddAssignmentModal } from './AddAssignmentModal';
+import { AddLessonModal } from './AddLessonModal';
+import { ModuleCard } from './ModuleCard';
 
 type Props = {
   goNext: () => void;
@@ -103,6 +97,14 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
   const [editingModuleId, setEditingModuleId] = React.useState<string | null>(
     null,
   );
+  const [selectedModuleId, setSelectedModuleId] = React.useState<string | null>(
+    null,
+  );
+  const [isAssignmentModalOpen, setIsAssignmentModalOpen] =
+    React.useState(false);
+  const [selectedModuleIdForLesson, setSelectedModuleIdForLesson] =
+    React.useState<string | null>(null);
+  const [isLessonModalOpen, setIsLessonModalOpen] = React.useState(false);
 
   const CreateModuleForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const createModule = useCreateModuleMutation(courseId ?? '');
@@ -283,175 +285,65 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
       )}
       <div className="p-6 space-y-6">
         {modules.map((module) => (
-          <div key={module.id} className="border rounded-lg bg-gray-50 p-4">
-            {editingModuleId === module.id ? (
-              <EditModuleForm moduleId={module.id} initialName={module.title} />
-            ) : null}
-            {/* Module header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <GripVertical className="h-5 w-5 text-gray-400" />
-                <h3 className="font-medium text-base">
-                  {module.title} ({module.lessons.length}{' '}
-                  {module.lessons.length === 1 ? 'lesson' : 'lessons'})
-                </h3>
-              </div>
-              <div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setEditingModuleId(module.id)}
-                >
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Edit
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Assignment
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Lesson
-                </Button>
-              </div>
-            </div>
-
-            {/* Lessons table */}
-            <div className="bg-white rounded-md border overflow-hidden mb-4">
-              {module.lessons.map((lesson) => (
-                <div
-                  key={lesson.id}
-                  className="flex items-center border-b last:border-b-0 hover:bg-gray-50"
-                >
-                  {/* Drag handle */}
-                  <div className="flex items-center justify-center w-[72px] h-14 border-r">
-                    <GripVertical className="h-4 w-4 text-gray-400" />
-                  </div>
-
-                  {/* Lesson number */}
-                  <div className="flex items-center w-[120px] h-14 px-4 border-r">
-                    <span className="text-blue-600 font-medium text-sm">
-                      Lesson {lesson.number}
-                    </span>
-                  </div>
-
-                  {/* Lesson title */}
-                  <div className="flex items-center flex-1 h-14 px-4 gap-2 border-r">
-                    <Paperclip className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm">{lesson.title}</span>
-                  </div>
-
-                  {/* Status badge */}
-                  <div className="flex items-center justify-center w-[157px] h-14 border-r">
-                    <Badge
-                      variant={lesson.published ? 'default' : 'secondary'}
-                      className={
-                        lesson.published
-                          ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-                      }
-                    >
-                      {lesson.published ? 'Published' : 'Unpublish'}
-                    </Badge>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex items-center h-14">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-14 w-14 rounded-none border-r hover:bg-gray-100"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-14 w-14 rounded-none border-r hover:bg-gray-100"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-14 w-14 rounded-none hover:bg-gray-100 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Assignments table */}
-            <div className="bg-white rounded-md border overflow-hidden">
-              {module.assignments.map((assignment) => (
-                <div
-                  key={assignment.id}
-                  className="flex items-center border-b last:border-b-0 hover:bg-gray-50"
-                >
-                  {/* Drag handle */}
-                  <div className="flex items-center justify-center w-[72px] h-14 border-r">
-                    <GripVertical className="h-4 w-4 text-gray-400" />
-                  </div>
-
-                  {/* Assignment number */}
-                  <div className="flex items-center w-[120px] h-14 px-4 border-r">
-                    <span className="text-blue-600 font-medium text-sm">
-                      Assignment {assignment.number}
-                    </span>
-                  </div>
-
-                  {/* Assignment title */}
-                  <div className="flex items-center flex-1 h-14 px-4 gap-2 border-r">
-                    <Paperclip className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm">{assignment.title}</span>
-                  </div>
-
-                  {/* Status badge */}
-                  <div className="flex items-center justify-center w-[157px] h-14 border-r">
-                    <Badge
-                      variant={assignment.published ? 'default' : 'secondary'}
-                      className={
-                        assignment.published
-                          ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-                      }
-                    >
-                      {assignment.published ? 'Published' : 'Unpublish'}
-                    </Badge>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex items-center h-14">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-14 w-14 rounded-none border-r hover:bg-gray-100"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-14 w-14 rounded-none border-r hover:bg-gray-100"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-14 w-14 rounded-none hover:bg-gray-100 hover:text-red-600"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ModuleCard
+            key={module.id}
+            module={module}
+            editingModuleId={editingModuleId}
+            EditModuleForm={EditModuleForm}
+            onEditModule={setEditingModuleId}
+            onAddAssignment={(moduleId) => {
+              setSelectedModuleId(moduleId);
+              setIsAssignmentModalOpen(true);
+            }}
+            onAddLesson={(moduleId) => {
+              setSelectedModuleIdForLesson(moduleId);
+              setIsLessonModalOpen(true);
+            }}
+            onEditLesson={(lessonId) => {
+              // TODO: Implement edit lesson functionality
+              toast.info(`Edit lesson ${lessonId}`);
+            }}
+            onViewLesson={(lessonId) => {
+              // TODO: Implement view lesson functionality
+              toast.info(`View lesson ${lessonId}`);
+            }}
+            onDeleteLesson={(lessonId) => {
+              // TODO: Implement delete lesson functionality
+              toast.info(`Delete lesson ${lessonId}`);
+            }}
+            onEditAssignment={(assignmentId) => {
+              // TODO: Implement edit assignment functionality
+              toast.info(`Edit assignment ${assignmentId}`);
+            }}
+            onViewAssignment={(assignmentId) => {
+              // TODO: Implement view assignment functionality
+              toast.info(`View assignment ${assignmentId}`);
+            }}
+            onDeleteAssignment={(assignmentId) => {
+              // TODO: Implement delete assignment functionality
+              toast.info(`Delete assignment ${assignmentId}`);
+            }}
+          />
         ))}
       </div>
+
+      {/* Add Assignment Modal */}
+      {selectedModuleId && (
+        <AddAssignmentModal
+          open={isAssignmentModalOpen}
+          onOpenChange={setIsAssignmentModalOpen}
+          moduleId={selectedModuleId}
+        />
+      )}
+
+      {/* Add Lesson Modal */}
+      {selectedModuleIdForLesson && (
+        <AddLessonModal
+          open={isLessonModalOpen}
+          onOpenChange={setIsLessonModalOpen}
+          moduleId={selectedModuleIdForLesson}
+        />
+      )}
 
       {/* Footer divider and actions */}
       <div className="border-t">

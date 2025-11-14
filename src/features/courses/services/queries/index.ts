@@ -5,17 +5,12 @@ import { CourseKeys } from '@/features/courses/services/queries/keys';
 
 import type { CourseResponse } from './types';
 
-export const useGetCourseQuery = (page: number, size: number) => {
+export const useGetCourseQuery = () => {
   const _request = useAxios();
   return useQuery({
-    queryKey: [CourseKeys.GetCourseQuery, page, size],
+    queryKey: [CourseKeys.GetCourseQuery],
     queryFn: async () => {
-      const response = await _request.get<CourseResponse>('/courses', {
-        params: {
-          page,
-          size,
-        },
-      });
+      const response = await _request.get<CourseResponse>('/courses');
 
       return response.data;
     },
