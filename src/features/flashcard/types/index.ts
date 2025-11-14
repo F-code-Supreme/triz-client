@@ -8,3 +8,19 @@ export interface Flashcard {
   updatedAt?: string;
   deckId: string;
 }
+
+export interface CreateFlashcardPayload {
+  flashcards: {
+    term: string;
+    definition: string;
+    termImgUrl?: string | null;
+    defImgUrl?: string | null;
+  }[];
+}
+
+export interface UpdateFlashcardPayload {
+  term: string;
+  definition: string;
+  termImgUrl?: string | null;
+  defImgUrl?: string | null;
+}
