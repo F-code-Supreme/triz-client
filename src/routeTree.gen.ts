@@ -41,8 +41,6 @@ import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.ind
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
-import { Route as AdminFlashcardsDeckRouteRouteImport } from './routes/admin/flashcards/deck/route'
-import { Route as AdminFlashcardsCardRouteRouteImport } from './routes/admin/flashcards/card/route'
 import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
 import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
 import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
@@ -209,18 +207,6 @@ const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   path: '/admin/users/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminFlashcardsDeckRouteRoute =
-  AdminFlashcardsDeckRouteRouteImport.update({
-    id: '/deck',
-    path: '/deck',
-    getParentRoute: () => AdminFlashcardsRouteRoute,
-  } as any)
-const AdminFlashcardsCardRouteRoute =
-  AdminFlashcardsCardRouteRouteImport.update({
-    id: '/card',
-    path: '/card',
-    getParentRoute: () => AdminFlashcardsRouteRoute,
-  } as any)
 const AdminCoursesCreateRouteRoute = AdminCoursesCreateRouteRouteImport.update({
   id: '/create',
   path: '/create',
@@ -262,7 +248,7 @@ export interface FileRoutesByFullPath {
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
-  '/admin/flashcards': typeof AdminFlashcardsRouteRouteWithChildren
+  '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
@@ -280,8 +266,6 @@ export interface FileRoutesByFullPath {
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
-  '/admin/flashcards/card': typeof AdminFlashcardsCardRouteRoute
-  '/admin/flashcards/deck': typeof AdminFlashcardsDeckRouteRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -301,7 +285,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
-  '/admin/flashcards': typeof AdminFlashcardsRouteRouteWithChildren
+  '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
@@ -319,8 +303,6 @@ export interface FileRoutesByTo {
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
-  '/admin/flashcards/card': typeof AdminFlashcardsCardRouteRoute
-  '/admin/flashcards/deck': typeof AdminFlashcardsDeckRouteRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -343,7 +325,7 @@ export interface FileRoutesById {
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
-  '/admin/flashcards': typeof AdminFlashcardsRouteRouteWithChildren
+  '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
@@ -361,8 +343,6 @@ export interface FileRoutesById {
   '/(app)/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/(app)/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
-  '/admin/flashcards/card': typeof AdminFlashcardsCardRouteRoute
-  '/admin/flashcards/deck': typeof AdminFlashcardsDeckRouteRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
@@ -403,8 +383,6 @@ export interface FileRouteTypes {
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
-    | '/admin/flashcards/card'
-    | '/admin/flashcards/deck'
     | '/admin/users/$userId'
     | '/quiz'
     | '/admin/users'
@@ -442,8 +420,6 @@ export interface FileRouteTypes {
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
-    | '/admin/flashcards/card'
-    | '/admin/flashcards/deck'
     | '/admin/users/$userId'
     | '/quiz'
     | '/admin/users'
@@ -483,8 +459,6 @@ export interface FileRouteTypes {
     | '/(app)/quiz/$quizId'
     | '/(app)/quiz/history'
     | '/admin/courses/create'
-    | '/admin/flashcards/card'
-    | '/admin/flashcards/deck'
     | '/admin/users/$userId'
     | '/(app)/quiz/'
     | '/admin/users/'
@@ -503,7 +477,7 @@ export interface RootRouteChildren {
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
   AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
-  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRouteWithChildren
+  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRoute
   AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
   AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
@@ -747,20 +721,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersUserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/flashcards/deck': {
-      id: '/admin/flashcards/deck'
-      path: '/deck'
-      fullPath: '/admin/flashcards/deck'
-      preLoaderRoute: typeof AdminFlashcardsDeckRouteRouteImport
-      parentRoute: typeof AdminFlashcardsRouteRoute
-    }
-    '/admin/flashcards/card': {
-      id: '/admin/flashcards/card'
-      path: '/card'
-      fullPath: '/admin/flashcards/card'
-      preLoaderRoute: typeof AdminFlashcardsCardRouteRouteImport
-      parentRoute: typeof AdminFlashcardsRouteRoute
-    }
     '/admin/courses/create': {
       id: '/admin/courses/create'
       path: '/create'
@@ -838,19 +798,6 @@ const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
 const AdminCoursesRouteRouteWithChildren =
   AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
 
-interface AdminFlashcardsRouteRouteChildren {
-  AdminFlashcardsCardRouteRoute: typeof AdminFlashcardsCardRouteRoute
-  AdminFlashcardsDeckRouteRoute: typeof AdminFlashcardsDeckRouteRoute
-}
-
-const AdminFlashcardsRouteRouteChildren: AdminFlashcardsRouteRouteChildren = {
-  AdminFlashcardsCardRouteRoute: AdminFlashcardsCardRouteRoute,
-  AdminFlashcardsDeckRouteRoute: AdminFlashcardsDeckRouteRoute,
-}
-
-const AdminFlashcardsRouteRouteWithChildren =
-  AdminFlashcardsRouteRoute._addFileChildren(AdminFlashcardsRouteRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
@@ -863,7 +810,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBooksRouteRoute: AdminBooksRouteRoute,
   AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
-  AdminFlashcardsRouteRoute: AdminFlashcardsRouteRouteWithChildren,
+  AdminFlashcardsRouteRoute: AdminFlashcardsRouteRoute,
   AdminPackagesRouteRoute: AdminPackagesRouteRoute,
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   AdminTransactionsRouteRoute: AdminTransactionsRouteRoute,
