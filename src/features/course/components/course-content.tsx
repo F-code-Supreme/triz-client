@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  ExternalLink,
-  FileText,
-  Video,
-  Volume2,
-} from 'lucide-react';
+import { Download, ExternalLink, FileText, Video, Volume2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 
@@ -29,14 +21,7 @@ interface CourseContentProps {
   className?: string;
 }
 
-const CourseContent = ({
-  lesson,
-  onPrevious,
-  onNext,
-  hasPrevious = false,
-  hasNext = false,
-  className,
-}: CourseContentProps) => {
+const CourseContent = ({ lesson, className }: CourseContentProps) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
 
   const getLessonTypeColor = (type: LessonType) => {
