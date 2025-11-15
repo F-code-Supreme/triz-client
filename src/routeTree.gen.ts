@@ -30,6 +30,7 @@ import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/trans
 import { Route as AdminSubscriptionsRouteRouteImport } from './routes/admin/subscriptions/route'
 import { Route as AdminQuizzesRouteRouteImport } from './routes/admin/quizzes/route'
 import { Route as AdminPackagesRouteRouteImport } from './routes/admin/packages/route'
+import { Route as AdminFlashcardsRouteRouteImport } from './routes/admin/flashcards/route'
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
@@ -152,6 +153,11 @@ const AdminPackagesRouteRoute = AdminPackagesRouteRouteImport.update({
   path: '/admin/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFlashcardsRouteRoute = AdminFlashcardsRouteRouteImport.update({
+  id: '/admin/flashcards',
+  path: '/admin/flashcards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
   id: '/admin/dashboard',
   path: '/admin/dashboard',
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/wallet': typeof appWalletRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
@@ -325,6 +333,7 @@ export interface FileRoutesById {
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
+  '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
@@ -365,6 +374,7 @@ export interface FileRouteTypes {
     | '/admin/books'
     | '/admin/courses'
     | '/admin/dashboard'
+    | '/admin/flashcards'
     | '/admin/packages'
     | '/admin/quizzes'
     | '/admin/subscriptions'
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/wallet'
     | '/admin/books'
     | '/admin/dashboard'
+    | '/admin/flashcards'
     | '/admin/packages'
     | '/admin/quizzes'
     | '/admin/subscriptions'
@@ -441,6 +452,7 @@ export interface FileRouteTypes {
     | '/admin/books'
     | '/admin/courses'
     | '/admin/dashboard'
+    | '/admin/flashcards'
     | '/admin/packages'
     | '/admin/quizzes'
     | '/admin/subscriptions'
@@ -477,6 +489,7 @@ export interface RootRouteChildren {
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
   AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRoute
   AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
   AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
@@ -642,6 +655,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/packages'
       fullPath: '/admin/packages'
       preLoaderRoute: typeof AdminPackagesRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/flashcards': {
+      id: '/admin/flashcards'
+      path: '/admin/flashcards'
+      fullPath: '/admin/flashcards'
+      preLoaderRoute: typeof AdminFlashcardsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/dashboard': {
@@ -810,6 +830,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminBooksRouteRoute: AdminBooksRouteRoute,
   AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
+  AdminFlashcardsRouteRoute: AdminFlashcardsRouteRoute,
   AdminPackagesRouteRoute: AdminPackagesRouteRoute,
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   AdminSubscriptionsRouteRoute: AdminSubscriptionsRouteRoute,

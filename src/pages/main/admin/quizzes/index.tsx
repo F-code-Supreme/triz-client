@@ -11,7 +11,6 @@ import { useMemo, useState } from 'react';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -126,99 +125,90 @@ const AdminQuizzesPage = () => {
           </p>
         </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-            <div>
-              <CardTitle>Quizzes List</CardTitle>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => setIsCreateOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                New Quiz
-              </Button>
-            </div>
-          </CardHeader>
+        <div className="flex justify-end">
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Quiz
+          </Button>
+        </div>
 
-          <CardContent className="space-y-4">
-            <DataTableToolbar
-              table={table}
-              searchPlaceholder="Search by title, description..."
-              searchKey="title"
-              filters={[
-                {
-                  columnId: 'questionType',
-                  title: 'Type',
-                  options: quizStatuses,
-                },
-              ]}
-            />
+        <DataTableToolbar
+          table={table}
+          searchPlaceholder="Search by title, description..."
+          searchKey="title"
+          filters={[
+            {
+              columnId: 'questionType',
+              title: 'Type',
+              options: quizStatuses,
+            },
+          ]}
+        />
 
-            {isLoading ? (
-              <div className="flex justify-center items-center h-64">
-                <p className="text-muted-foreground">Loading quizzes...</p>
-              </div>
-            ) : quizzes.length === 0 ? (
-              <div className="flex justify-center items-center h-64">
-                <p className="text-muted-foreground">
-                  No quizzes found. Create your first quiz!
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="border rounded-md overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                          {headerGroup.headers.map((header) => (
-                            <TableHead key={header.id}>
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                            </TableHead>
-                          ))}
-                        </TableRow>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-muted-foreground">Loading quizzes...</p>
+          </div>
+        ) : quizzes.length === 0 ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-muted-foreground">
+              No quizzes found. Create your first quiz!
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="border rounded-md overflow-hidden">
+              <Table>
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                        </TableHead>
                       ))}
-                    </TableHeader>
-                    <TableBody>
-                      {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                          <TableRow
-                            key={row.id}
-                            data-state={row.getIsSelected() && 'selected'}
-                          >
-                            {row.getVisibleCells().map((cell) => (
-                              <TableCell key={cell.id}>
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext(),
-                                )}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell
-                            colSpan={columns.length}
-                            className="h-24 text-center"
-                          >
-                            No results.
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && 'selected'}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
                           </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
-                <DataTablePagination table={table} />
-              </>
-            )}
-          </CardContent>
-        </Card>
+            <DataTablePagination table={table} />
+          </>
+        )}
       </div>
 
       <QuizFormDialog
