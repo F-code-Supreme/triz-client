@@ -30,6 +30,7 @@ export const getSubscriptionStatusColor = (status: string): string => {
 
 export const subscriptionsColumns = [
   columnHelper.accessor('packageName', {
+    id: 'packagePlanId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Package" />
     ),
@@ -55,15 +56,6 @@ export const subscriptionsColumns = [
       return format(new Date(date), 'MMM dd, yyyy');
     },
   }),
-
-  //   columnHelper.accessor('tokensPerDayRemaining', {
-  //     header: ({ column }) => (
-  //       <DataTableColumnHeader column={column} title="Daily Tokens" />
-  //     ),
-  //     cell: (info) => (
-  //       <span className="font-semibold">{formatNumber(info.getValue())}</span>
-  //     ),
-  //   }),
 
   columnHelper.accessor('status', {
     header: ({ column }) => (

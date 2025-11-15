@@ -11,7 +11,7 @@ const useLogout = () => {
 
   const logout = useCallback(() => {
     logoutMutate(undefined, {
-      onSuccess: () => {
+      onSettled: () => {
         clientLogout();
         navigate({ to: '/' });
       },

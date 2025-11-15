@@ -3,10 +3,11 @@ import {
   Users,
   BookOpen,
   Package,
-  CreditCard,
   GraduationCap,
   BookCheck,
   Receipt,
+  Layers2,
+  CalendarSync,
 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';
@@ -16,6 +17,7 @@ export interface NavLink {
   url: string;
   icon: LucideIcon;
   isActive?: boolean;
+  children?: NavLink[];
 }
 
 export interface NavGroup {
@@ -64,9 +66,18 @@ export const adminSidebarData: AdminSidebarData = {
           icon: Package,
         },
         {
+          title: 'FlashCards',
+          url: '/admin/flashcards',
+          icon: Layers2,
+          // children: [
+          //   { title: 'Deck', url: '/admin/flashcards/deck', icon: BookOpen },
+          //   { title: 'Card', url: '/admin/flashcards/card', icon: BookOpen },
+          // ],
+        },
+        {
           title: 'Subscriptions',
           url: '/admin/subscriptions',
-          icon: CreditCard,
+          icon: CalendarSync,
         },
         {
           title: 'Courses',

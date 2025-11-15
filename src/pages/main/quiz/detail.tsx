@@ -81,7 +81,7 @@ const QuizResults = ({
             {/* Score Display */}
             <div className="text-center p-6 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div className="text-4xl font-bold text-slate-800 dark:text-white mb-2">
-                {results.score}
+                {results.score.toFixed(2)}
               </div>
               <p className="text-muted-foreground">Điểm số của bạn</p>
             </div>

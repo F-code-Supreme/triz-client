@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BackgroundBeams } from '@/components/ui/shadcn-io/background-beams';
 import { Skeleton } from '@/components/ui/skeleton';
-import { VND_TO_TOKEN_RATE } from '@/constants';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetActivePackagesQuery } from '@/features/packages/services/queries';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
@@ -99,8 +98,7 @@ const PackagesPricingPage = () => {
 
   // Convert wallet balance from VND to tokens
   const walletBalanceInTokens = useMemo(() => {
-    if (!wallet) return 0;
-    return Math.floor(wallet.balance / VND_TO_TOKEN_RATE);
+    return wallet?.balance || 0;
   }, [wallet]);
 
   // Check if user has an active subscription
