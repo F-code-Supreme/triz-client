@@ -1,48 +1,86 @@
-import { useState } from 'react';
+import {
+  getCoreRowModel,
+  useReactTable,
+  type ColumnFiltersState,
+  type PaginationState,
+  type SortingState,
+} from '@tanstack/react-table';
+import { useState, useMemo } from 'react';
 
 import useAuth from '@/features/auth/hooks/use-auth';
-import { useGetAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
+import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
+import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
 import {
   WalletBalanceCard,
   TopupDialog,
   TransactionsTable,
 } from '@/features/payment/wallet/components';
+import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-// Transaction type filter options
-const transactionFilters = [
-  {
-    columnId: 'type',
-    title: 'Transaction Type',
-    options: [
-      { label: 'Top up', value: 'TOPUP' },
-      { label: 'Spend', value: 'SPEND' },
-    ],
-  },
-  {
-    columnId: 'status',
-    title: 'Status',
-    options: [
-      { label: 'Pending', value: 'PENDING' },
-      { label: 'Completed', value: 'COMPLETED' },
-      { label: 'Cancelled', value: 'CANCELLED' },
-    ],
-  },
-];
-
 const WalletPage = () => {
   const [topupOpen, setTopupOpen] = useState(false);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [fromDate, setFromDate] = useState<Date | undefined>();
+  const [toDate, setToDate] = useState<Date | undefined>();
   const { user } = useAuth();
+
+  // Build filters with date range
+  const filters = useMemo(() => {
+    // Remove existing fromDate and toDate filters
+    const f = columnFilters.filter(
+      (filter) => filter.id !== 'fromDate' && filter.id !== 'toDate',
+    );
+    // Add updated date range filters
+    if (fromDate) {
+      f.push({ id: 'fromDate', value: fromDate });
+    }
+    if (toDate) {
+      f.push({ id: 'toDate', value: toDate });
+    }
+    return f;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [columnFilters, fromDate]);
 
   const { data: wallet, isLoading: walletLoading } = useGetWalletByUserQuery(
     user?.id,
   );
 
   const { data: transactionsData, isLoading: transactionsLoading } =
-    useGetAllTransactionsByUserQuery(user?.id);
+    useSearchAllTransactionsByUserQuery(pagination, sorting, user?.id, filters);
 
-  const transactions = transactionsData?.content || [];
+  // Get transactions from current page response
+  const transactions = useMemo(
+    () => transactionsData?.content || [],
+    [transactionsData],
+  );
+
+  const totalRowCount = transactionsData?.page?.totalElements ?? 0;
+
+  // Create table instance with manual pagination
+  const table = useReactTable({
+    data: transactions,
+    columns: transactionsColumns,
+    state: {
+      columnFilters,
+      pagination,
+      sorting,
+    },
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    rowCount: totalRowCount,
+  });
 
   return (
     <DefaultLayout meta={{ title: 'Wallet' }}>
@@ -63,9 +101,14 @@ const WalletPage = () => {
         <div>
           <h2 className="text-2xl font-bold mb-4">Transaction History</h2>
           <TransactionsTable
-            transactions={transactions}
+            table={table}
             isLoading={transactionsLoading}
+            totalRowCount={totalRowCount}
             filters={transactionFilters}
+            fromDate={fromDate}
+            toDate={toDate}
+            onFromDateChange={setFromDate}
+            onToDateChange={setToDate}
           />
         </div>
 

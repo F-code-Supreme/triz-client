@@ -2,7 +2,7 @@ import { useParams } from '@tanstack/react-router';
 
 import FallbackLoading from '@/components/fallback-loading';
 import Flashcard from '@/features/flashcard/components/flashcard';
-import { useGetFlashcardsByDeckIdQuery } from '@/features/flashcard/services/queries';
+import { useGetFlashcardsByDeckIdQuery } from '@/features/flashcard/services/queries/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const FlashcardPage = () => {

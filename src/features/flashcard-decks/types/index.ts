@@ -8,4 +8,12 @@ export interface FlashcardDeck {
   createdAt?: string;
   updatedAt?: string;
 }
+
 export type FlashcardDeckResponse = PaginatedResponse<FlashcardDeck>;
+
+export interface CreateFlashcardDeckPayload {
+  title: string;
+  description: string;
+}
+
+export interface UpdateFlashcardDeckPayload extends FlashcardDeckResponse {}

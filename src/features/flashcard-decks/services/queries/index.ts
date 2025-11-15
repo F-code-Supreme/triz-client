@@ -15,3 +15,17 @@ export const useGetFlashcardDecksQuery = () => {
     },
   });
 };
+
+export const useGetFlashcardDeckByIdQuery = (deckId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [FlashcardDeckKeys.GetFlashcardDeckByIdQuery, deckId],
+    queryFn: async () => {
+      const response = await _request.get<{
+        data: FlashcardDeckResponse;
+      }>(`/decks/${deckId}`);
+      return response.data.data;
+    },
+    enabled: !!deckId,
+  });
+};

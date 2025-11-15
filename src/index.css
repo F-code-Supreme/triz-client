@@ -117,6 +117,7 @@
   }
   .theme {
     --animate-aurora: aurora 60s linear infinite;
+    --animate-spin: spin 2s linear infinite;
   }
 }
 

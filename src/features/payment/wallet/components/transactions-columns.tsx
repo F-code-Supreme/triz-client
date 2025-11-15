@@ -1,7 +1,9 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
 
+import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
 
 import type { Transaction } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
@@ -40,7 +42,9 @@ export const transactionsColumns = [
   }),
 
   columnHelper.accessor('type', {
-    header: 'Type',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" />
+    ),
     cell: (info) => {
       const type = info.getValue();
       const label = getTransactionTypeLabel(type);
@@ -50,7 +54,9 @@ export const transactionsColumns = [
   }),
 
   columnHelper.accessor('amount', {
-    header: 'Amount',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Amount" />
+    ),
     cell: (info) => {
       const amount = info.getValue();
       const type = info.row.original.type;
@@ -64,16 +70,20 @@ export const transactionsColumns = [
   }),
 
   columnHelper.accessor('provider', {
-    header: 'Provider',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Provider" />
+    ),
     cell: (info) => (
       <Badge variant="outline" className="capitalize">
-        {info.getValue().toLowerCase()}
+        {info.getValue()?.toLowerCase() || 'TRIZ'}
       </Badge>
     ),
   }),
 
   columnHelper.accessor('status', {
-    header: 'Status',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: (info) => {
       const status = info.getValue();
       const colors = getTransactionStatusColor(status);
@@ -82,11 +92,23 @@ export const transactionsColumns = [
   }),
 
   columnHelper.accessor('createdAt', {
-    header: 'Date',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date" />
+    ),
     cell: (info) => (
       <span className="text-sm">
         {format(new Date(info.getValue()), 'MMM dd, yyyy HH:mm')}
       </span>
     ),
+  }),
+
+  columnHelper.display({
+    id: 'actions',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Actions" />
+    ),
+    cell: ({ row }) => <TransactionsDataTableRowActions row={row} />,
+    enableSorting: false,
+    enableHiding: false,
   }),
 ];
