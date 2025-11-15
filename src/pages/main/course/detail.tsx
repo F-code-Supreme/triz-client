@@ -91,20 +91,22 @@ function CourseDetail() {
                   Back to My Courses
                 </Button>
               </Link>
-              <Separator orientation="vertical" className="h-6" />
-              <div>
-                <h1 className="text-lg font-semibold truncate max-w-md">
-                  {course.title}
-                </h1>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>by {course.instructor}</span>
-                  <span>•</span>
-                  <span>{course.progress}% complete</span>
-                </div>
+            </div>
+
+            <Separator orientation="vertical" className="h-6" />
+
+            <div className="flex flex-col justify-center items-center w-full">
+              <h1 className="text-lg font-semibold truncate max-w-md">
+                {course.title}
+              </h1>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>by {course.instructor}</span>
+                <span>•</span>
+                <span>{course.progress}% complete</span>
               </div>
             </div>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
+            {/* <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList>
                 <TabsTrigger value="content">Content</TabsTrigger>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -112,7 +114,7 @@ function CourseDetail() {
                 <TabsTrigger value="discussion">Discussion</TabsTrigger>
                 <TabsTrigger value="notes">Notes</TabsTrigger>
               </TabsList>
-            </Tabs>
+            </Tabs> */}
           </div>
         </div>
 

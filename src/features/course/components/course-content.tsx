@@ -342,7 +342,7 @@ const CourseContent = ({
         </div>
 
         {/* Navigation */}
-        <div className="p-6 border-t bg-card">
+        {/* <div className="p-6 border-t bg-card">
           <div className="flex items-center justify-between">
             <Button
               variant="outline"
@@ -362,7 +362,7 @@ const CourseContent = ({
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
