@@ -7,19 +7,21 @@ import { Input } from '@/components/ui/input';
 import { DataTableFacetedFilter } from './faceted-filter';
 import { DataTableViewOptions } from './view-options';
 
+export type FilterOption = {
+  columnId: string;
+  title: string;
+  options: {
+    label: string;
+    value: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+};
+
 type DataTableToolbarProps<TData> = {
   table: Table<TData>;
   searchPlaceholder?: string;
   searchKey?: string;
-  filters?: {
-    columnId: string;
-    title: string;
-    options: {
-      label: string;
-      value: string;
-      icon?: React.ComponentType<{ className?: string }>;
-    }[];
-  }[];
+  filters?: FilterOption[];
 };
 
 export const DataTableToolbar = <TData,>({

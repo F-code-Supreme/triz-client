@@ -19,7 +19,7 @@ export const AdminSidebar = () => {
 
   const userData = user
     ? {
-        name: user.name || user.email || 'User',
+        name: user.fullName || user.email || 'User',
         email: user.email || 'user@example.com',
         avatar: (user.email || 'U').charAt(0).toUpperCase(),
       }

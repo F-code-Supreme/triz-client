@@ -1,16 +1,55 @@
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 import { PackageKeys } from '@/features/packages/services/queries/keys';
 
-import type { PackageResponse } from '@/features/packages/types';
+import type { Package, PackageResponse } from '@/features/packages/types';
 
+// PUBLIC
+export const useGetActivePackagesQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [PackageKeys.GetActivePackagesQuery],
+    queryFn: async ({ signal }) => {
+      const response = await _request.get<Package[]>('/packages/public', {
+        signal,
+      });
+
+      return response.data;
+    },
+  });
+};
+
+export const useGetPackageByIdQuery = (packageId?: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [PackageKeys.GetPackageByIdQuery, packageId],
+    queryFn: packageId
+      ? async ({ signal }) => {
+          const response = await _request.get<Package>(
+            `/packages/public/${packageId}`,
+            {
+              signal,
+            },
+          );
+
+          return response.data;
+        }
+      : skipToken,
+    enabled: !!packageId,
+  });
+};
+
+// ADMIN
 export const useGetPackagesQuery = () => {
   const _request = useAxios();
   return useQuery({
     queryKey: [PackageKeys.GetPackagesQuery],
-    queryFn: async () => {
-      const response = await _request.get<PackageResponse>('/packages');
+    queryFn: async ({ signal }) => {
+      const response = await _request.get<PackageResponse>('/packages', {
+        signal,
+      });
+
       return response.data;
     },
   });
@@ -20,8 +59,14 @@ export const useGetDeletedPackagesQuery = () => {
   const _request = useAxios();
   return useQuery({
     queryKey: [PackageKeys.GetDeletedPackagesQuery],
-    queryFn: async () => {
-      const response = await _request.get<PackageResponse>('/packages/deleted');
+    queryFn: async ({ signal }) => {
+      const response = await _request.get<PackageResponse>(
+        '/packages/deleted',
+        {
+          signal,
+        },
+      );
+
       return response.data;
     },
   });
