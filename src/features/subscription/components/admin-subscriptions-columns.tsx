@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 
-import { SubscriptionsDataTableRowActions } from './subscriptions-data-table-row-actions';
+import { AdminSubscriptionsDataTableRowActions } from './admin-subscriptions-data-table-row-actions';
 
 import type { Subscription } from '../types';
 import type { DataTimestamp } from '@/types';
@@ -28,7 +28,18 @@ export const getSubscriptionStatusColor = (status: string): string => {
   }
 };
 
-export const subscriptionsColumns = [
+export const adminSubscriptionsColumns = [
+  columnHelper.accessor('userId', {
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="User ID" />
+    ),
+    cell: (info) => (
+      <span className="font-mono text-sm">
+        {info.getValue().slice(0, 8)}...
+      </span>
+    ),
+    size: 150,
+  }),
   columnHelper.accessor('packageName', {
     id: 'packagePlanId',
     header: ({ column }) => (
@@ -43,7 +54,7 @@ export const subscriptionsColumns = [
     ),
     cell: (info) => {
       const date = info.getValue();
-      return format(new Date(date), 'MMM dd, yyyy');
+      return <span>{format(new Date(date), 'MMM dd, yyyy')}</span>;
     },
   }),
 
@@ -53,8 +64,15 @@ export const subscriptionsColumns = [
     ),
     cell: (info) => {
       const date = info.getValue();
-      return format(new Date(date), 'MMM dd, yyyy');
+      return <span>{format(new Date(date), 'MMM dd, yyyy')}</span>;
     },
+  }),
+
+  columnHelper.accessor('tokensPerDayRemaining', {
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Tokens/Day" />
+    ),
+    cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
   }),
 
   columnHelper.accessor('status', {
@@ -84,21 +102,21 @@ export const subscriptionsColumns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Actions" />
     ),
-    cell: ({ row }) => <SubscriptionsDataTableRowActions row={row} />,
+    cell: ({ row }) => <AdminSubscriptionsDataTableRowActions row={row} />,
     enableSorting: false,
     enableHiding: false,
   }),
 ];
 
-export const createSubscriptionsColumns = (
+export const createAdminSubscriptionsColumns = (
   onAutoRenewalToggle?: (subscription: SubscriptionWithTimestamp) => void,
 ) => {
-  return subscriptionsColumns.map((column) => {
+  return adminSubscriptionsColumns.map((column) => {
     if (column.id === 'actions') {
       return {
         ...column,
         cell: ({ row }: { row: { original: SubscriptionWithTimestamp } }) => (
-          <SubscriptionsDataTableRowActions
+          <AdminSubscriptionsDataTableRowActions
             row={row}
             onAutoRenewalToggle={onAutoRenewalToggle}
           />

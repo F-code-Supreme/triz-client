@@ -3,11 +3,11 @@ import {
   Users,
   BookOpen,
   Package,
-  CreditCard,
   GraduationCap,
   BookCheck,
   Receipt,
   Layers2,
+  CalendarSync,
 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';
@@ -77,7 +77,7 @@ export const adminSidebarData: AdminSidebarData = {
         {
           title: 'Subscriptions',
           url: '/admin/subscriptions',
-          icon: CreditCard,
+          icon: CalendarSync,
         },
         {
           title: 'Courses',
