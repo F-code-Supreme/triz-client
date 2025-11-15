@@ -34,7 +34,7 @@ import {
 import { useEditUserAutoRenewalMutation } from '@/features/subscription/services/mutations';
 import { useGetSubscriptionsByUserQuery } from '@/features/subscription/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
-// import { formatNumber } from '@/utils';
+import { formatNumber } from '@/utils';
 
 import type { Subscription } from '@/features/subscription/types';
 
@@ -164,9 +164,9 @@ const SubscriptionPage = () => {
                     <p className="text-sm text-muted-foreground">
                       Daily Token Allowance
                     </p>
-                    {/* <p className="text-2xl font-bold mt-1">
+                    <p className="text-2xl font-bold mt-1">
                       {formatNumber(activeSubscription.tokensPerDayRemaining)}
-                    </p> */}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Duration</p>

@@ -57,15 +57,6 @@ export const subscriptionsColumns = [
     },
   }),
 
-  //   columnHelper.accessor('tokensPerDayRemaining', {
-  //     header: ({ column }) => (
-  //       <DataTableColumnHeader column={column} title="Daily Tokens" />
-  //     ),
-  //     cell: (info) => (
-  //       <span className="font-semibold">{formatNumber(info.getValue())}</span>
-  //     ),
-  //   }),
-
   columnHelper.accessor('status', {
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
