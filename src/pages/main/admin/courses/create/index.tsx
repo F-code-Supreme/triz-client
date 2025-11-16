@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import StepIndicator from '@/components/ui/step-indicator';
 import { AdminLayout } from '@/layouts/admin-layout';
@@ -19,6 +19,19 @@ const CreateCoursePage = () => {
     description?: string;
     thumbnail?: string;
   }>({});
+
+  // If there is a saved draft in localStorage, jump to step 2 and restore basic fields.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const draft = localStorage.getItem('createCourseDraft_v1');
+      if (draft) {
+        setStep(2);
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
 
   const goNext = () => {
     if (step === 1) {

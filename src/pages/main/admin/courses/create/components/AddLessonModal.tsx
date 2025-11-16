@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -13,27 +13,59 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  useCreateLessonMutation,
+  useUpdateLessonMutation,
+} from '@/features/lesson/services/mutations';
+import { useGetLessonById } from '@/features/lesson/services/queries';
 
-type LessonType = 'content' | 'video';
+import type { CreateLessonPayload } from '@/features/lesson/services/mutations/types';
+
+type LessonType = 'TEXT' | 'VIDEO';
 
 type AddLessonModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   moduleId: string;
+  lessonId?: string;
+  // optional callback when save/create completes
+  onSaved?: () => void;
 };
 
 export const AddLessonModal: React.FC<AddLessonModalProps> = ({
   open,
   onOpenChange,
-  moduleId: _moduleId,
+  moduleId,
+  lessonId,
+  onSaved,
 }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
-  const [lessonType, setLessonType] = React.useState<LessonType>('content');
+  const [lessonType, setLessonType] = React.useState<LessonType>('TEXT');
   const [content, setContent] = React.useState('');
   const [videoFile, setVideoFile] = React.useState<File | null>(null);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const createLessonMutation = useCreateLessonMutation(moduleId);
+  const updateLessonMutation = useUpdateLessonMutation(lessonId || '');
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  // fetch lesson via query hook when editing
+  const lessonQuery = useGetLessonById(lessonId);
+  const isFetching = lessonQuery.isFetching;
+  const isSubmitting =
+    createLessonMutation.isPending || updateLessonMutation.isPending;
+
+  // fetch existing lesson when editing
+  useEffect(() => {
+    if (!lessonQuery.data) return;
+    const data = lessonQuery.data;
+    setTitle(data.title ?? '');
+    setDescription(data.description ?? '');
+    setLessonType(
+      (data.type ?? 'TEXT').toUpperCase() === 'VIDEO' ? 'VIDEO' : 'TEXT',
+    );
+    setContent(data.content ?? '');
+    // do not set videoFile — user must re-upload if they want to replace
+  }, [lessonQuery.data]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -48,6 +80,60 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     }
   };
 
+  const submitUpdate = async () => {
+    if (lessonType === 'TEXT') {
+      const payload = {
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        type: 'TEXT',
+      };
+      await updateLessonMutation.mutateAsync(payload as CreateLessonPayload);
+      return;
+    }
+
+    // VIDEO update
+    if (videoFile) {
+      const formData = new FormData();
+      formData.append('title', title.trim());
+      formData.append('description', description.trim());
+      formData.append('type', 'VIDEO');
+      formData.append('video', videoFile);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateLessonMutation.mutateAsync(formData as any);
+    } else {
+      const payload = {
+        title: title.trim(),
+        description: description.trim(),
+        type: 'VIDEO',
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateLessonMutation.mutateAsync(payload as any);
+    }
+  };
+
+  const submitCreate = async () => {
+    if (lessonType === 'TEXT') {
+      const payload = {
+        title: title.trim(),
+        description: description.trim(),
+        content: content.trim(),
+        type: 'TEXT',
+      };
+      await createLessonMutation.mutateAsync(payload as CreateLessonPayload);
+      return;
+    }
+
+    // VIDEO create
+    const formData = new FormData();
+    formData.append('title', title.trim());
+    formData.append('description', description.trim());
+    formData.append('type', 'VIDEO');
+    if (videoFile) formData.append('video', videoFile);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await createLessonMutation.mutateAsync(formData as any);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -55,58 +141,42 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       toast.error('Lesson title is required');
       return;
     }
-
     if (!description.trim()) {
       toast.error('Lesson description is required');
       return;
     }
-
-    if (lessonType === 'content' && !content.trim()) {
+    if (lessonType === 'TEXT' && !content.trim()) {
       toast.error('Content is required');
       return;
     }
-
-    if (lessonType === 'video' && !videoFile) {
+    if (lessonType === 'VIDEO' && !videoFile && !lessonId) {
+      // when creating a new VIDEO lesson, file is required; when updating, skip if not changing
       toast.error('Please select a video file');
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      // TODO: Implement the actual API call to create lesson
-      // if (lessonType === 'content') {
-      //   await createLesson({
-      //     moduleId: _moduleId,
-      //     title: title.trim(),
-      //     description: description.trim(),
-      //     content: content.trim(),
-      //   });
-      // } else {
-      //   const formData = new FormData();
-      //   formData.append('moduleId', _moduleId);
-      //   formData.append('title', title.trim());
-      //   formData.append('description', description.trim());
-      //   formData.append('video', videoFile);
-      //   await uploadLessonVideo(formData);
-      // }
-
-      toast.success('Lesson created successfully');
+      if (lessonId) {
+        await submitUpdate();
+        toast.success('Lesson updated successfully');
+      } else {
+        await submitCreate();
+        toast.success('Lesson created successfully');
+      }
       handleClose();
+      onSaved?.();
     } catch (error) {
       let msg = 'Failed to create lesson';
       if (error instanceof Error) msg = error.message;
       else if (typeof error === 'string') msg = error;
       toast.error(msg);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
     setTitle('');
     setDescription('');
-    setLessonType('content');
+    setLessonType('TEXT');
     setContent('');
     setVideoFile(null);
     if (fileInputRef.current) {
@@ -120,10 +190,11 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Lesson</DialogTitle>
+            <DialogTitle>{lessonId ? 'Edit Lesson' : 'Add Lesson'}</DialogTitle>
             <DialogDescription>
-              Create a new lesson for this module. Fill in all the required
-              fields below.
+              {lessonId
+                ? 'Edit the lesson details. Upload a new video only if you want to replace it.'
+                : 'Create a new lesson for this module. Fill in all the required fields below.'}
             </DialogDescription>
           </DialogHeader>
 
@@ -138,6 +209,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter lesson title"
                 required
+                disabled={isFetching || isSubmitting}
               />
             </div>
 
@@ -152,6 +224,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 placeholder="Enter lesson description"
                 rows={3}
                 required
+                disabled={isFetching || isSubmitting}
               />
             </div>
 
@@ -164,12 +237,13 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                   <input
                     type="radio"
                     name="lessonType"
-                    value="content"
-                    checked={lessonType === 'content'}
+                    value="TEXT"
+                    checked={lessonType === 'TEXT'}
                     onChange={(e) =>
                       setLessonType(e.target.value as LessonType)
                     }
                     className="w-4 h-4 text-blue-600"
+                    disabled={isFetching || isSubmitting}
                   />
                   <span className="text-sm font-medium">Content</span>
                 </label>
@@ -177,19 +251,20 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                   <input
                     type="radio"
                     name="lessonType"
-                    value="video"
-                    checked={lessonType === 'video'}
+                    value="VIDEO"
+                    checked={lessonType === 'VIDEO'}
                     onChange={(e) =>
                       setLessonType(e.target.value as LessonType)
                     }
                     className="w-4 h-4 text-blue-600"
+                    disabled={isFetching || isSubmitting}
                   />
                   <span className="text-sm font-medium">Video</span>
                 </label>
               </div>
             </div>
 
-            {lessonType === 'content' ? (
+            {lessonType === 'TEXT' ? (
               <div className="grid gap-2">
                 <Label htmlFor="content">
                   Content <span className="text-red-500">*</span>
@@ -202,6 +277,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                   rows={8}
                   required
                   className="font-mono text-sm"
+                  disabled={isFetching || isSubmitting}
                 />
                 <p className="text-xs text-muted-foreground">
                   You can use markdown formatting in your content.
@@ -222,6 +298,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                       onChange={handleFileChange}
                       className="cursor-pointer"
                       required
+                      disabled={isFetching || isSubmitting}
                     />
                   </div>
                   {videoFile && (
@@ -242,6 +319,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                             fileInputRef.current.value = '';
                           }
                         }}
+                        disabled={isFetching || isSubmitting}
                       >
                         Remove
                       </Button>
@@ -260,12 +338,18 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
               type="button"
               variant="outline"
               onClick={handleClose}
-              disabled={isSubmitting}
+              disabled={isFetching || isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Lesson'}
+            <Button type="submit" disabled={isFetching || isSubmitting}>
+              {isSubmitting
+                ? lessonId
+                  ? 'Updating...'
+                  : 'Creating...'
+                : lessonId
+                  ? 'Update Lesson'
+                  : 'Create Lesson'}
             </Button>
           </DialogFooter>
         </form>

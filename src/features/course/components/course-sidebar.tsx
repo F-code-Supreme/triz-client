@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import {
   Check,
   Clock,
@@ -7,18 +8,18 @@ import {
   PenTool,
   Lock,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
-import type { CourseWeek } from '../types';
 import { LessonType } from '../types';
+
+import type { CourseWeek } from '../types';
 
 interface CourseSidebarProps {
   weeks: CourseWeek[];

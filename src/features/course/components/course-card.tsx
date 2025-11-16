@@ -1,16 +1,17 @@
 import { Link } from '@tanstack/react-router';
-import { Clock, Star, Users, Play, CheckCircle, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Clock, Star, Users, Play, CheckCircle, BookOpen } from 'lucide-react';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-import type { Course } from '../types';
 import { CourseStatus, CourseLevel } from '../types';
+
+import type { Course } from '../types';
 
 interface CourseCardProps {
   course: Course;

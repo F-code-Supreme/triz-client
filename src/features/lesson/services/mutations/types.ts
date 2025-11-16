@@ -1,4 +1,6 @@
 export interface CreateLessonPayload {
-  name: string;
-  materialUrl: string;
+  title: string;
+  description: string;
+  type: string;
+  content?: string;
 }

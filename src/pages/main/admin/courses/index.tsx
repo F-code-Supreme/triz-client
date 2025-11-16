@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   Pagination,
@@ -15,16 +15,28 @@ import CourseItem from '@/features/courses/components/course-item';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
+import type { PaginationState } from '@tanstack/react-table';
+
 const AdminManageCoursePage = () => {
-  const [page, setPage] = useState<number>(1);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.removeItem('createCourseDraft_v1');
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
 
-  const {
-    data,
-    isFetching: _isFetching,
-    isLoading: _isLoading,
-  } = useGetCourseQuery();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 4,
+  });
 
-  const pagedItems = data?.content ?? [];
+  const { data, isFetching, isLoading } = useGetCourseQuery(pagination);
+
+  const isBusy = isFetching || isLoading;
+
+  const coursesData = data?.content ?? [];
   const apiPage = data?.page;
 
   const totalPages = apiPage ? Math.max(1, apiPage.totalPages) : 1;
@@ -54,9 +66,24 @@ const AdminManageCoursePage = () => {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {pagedItems.map((course) => (
-            <CourseItem key={course.id} course={course} />
-          ))}
+          {isBusy
+            ? // simple skeleton placeholders
+              Array.from({ length: Math.max(pagination.pageSize ?? 4, 4) }).map(
+                (_, i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse p-4 border rounded-md bg-card "
+                    aria-hidden
+                  >
+                    <div className="h-56 bg-gray-200 rounded mb-2" />
+                    <div className="h-8 bg-gray-200 rounded w-3/4 mb-1" />
+                    <div className="h-8 bg-gray-200 rounded w-1/2" />
+                  </div>
+                ),
+              )
+            : coursesData.map((course) => (
+                <CourseItem key={course.id} course={course} />
+              ))}
         </div>
 
         {/* Pagination */}
@@ -67,9 +94,15 @@ const AdminManageCoursePage = () => {
                 <PaginationPrevious
                   size="sm"
                   href="#"
+                  aria-disabled={isBusy}
+                  className={isBusy ? 'opacity-50 ' : ''}
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
-                    setPage((p) => Math.max(1, p - 1));
+                    if (isBusy) return;
+                    setPagination((prev) => ({
+                      ...prev,
+                      pageIndex: Math.max(0, prev.pageIndex - 1),
+                    }));
                   }}
                 />
               </PaginationItem>
@@ -81,10 +114,16 @@ const AdminManageCoursePage = () => {
                     <PaginationLink
                       size="sm"
                       href="#"
-                      isActive={p === page}
+                      isActive={p === pagination.pageIndex + 1}
+                      aria-disabled={isBusy}
+                      className={isBusy ? 'opacity-50 pointer-events-none' : ''}
                       onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
-                        setPage(p);
+                        if (isBusy) return;
+                        setPagination((prev) => ({
+                          ...prev,
+                          pageIndex: p - 1,
+                        }));
                       }}
                     >
                       {p}
@@ -100,9 +139,15 @@ const AdminManageCoursePage = () => {
                 <PaginationNext
                   size="sm"
                   href="#"
+                  aria-disabled={isBusy}
+                  className={isBusy ? 'opacity-50 pointer-events-none' : ''}
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
-                    setPage((p) => Math.min(totalPages, p + 1));
+                    if (isBusy) return;
+                    setPagination((prev) => ({
+                      ...prev,
+                      pageIndex: Math.min(totalPages - 1, prev.pageIndex + 1),
+                    }));
                   }}
                 />
               </PaginationItem>

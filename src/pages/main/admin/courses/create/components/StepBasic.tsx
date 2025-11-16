@@ -1,6 +1,6 @@
 import { ChevronRight } from 'lucide-react';
-import React, { useState } from 'react';
-// import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -40,9 +40,8 @@ const StepBasic: React.FC<Props> = ({
   thumbnailPreview,
   errors,
   goNext,
-  // setCourseId,
+  setCourseId,
 }) => {
-  // use parent's `description` as the short description field
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
     'STARTER',
@@ -54,60 +53,92 @@ const StepBasic: React.FC<Props> = ({
   const [thumbnailUrl, setThumbnailUrl] = useState<string>(
     thumbnailPreview ?? '',
   );
-  const [localErrors, _setLocalErrors] = useState<Errors>({});
+  const [localErrors, setLocalErrors] = useState<Errors>({});
 
   const createCourse = useCreateCourseMutation();
 
-  // const validate = () => {
-  //   const e: Errors = {};
-  //   if (!title.trim()) e.title = 'Title is required';
-  //   if (!description.trim()) e.description = 'Short description is required';
-  //   if (!thumbnailUrl.trim()) e.thumbnail = 'Thumbnail is required';
-  //   if (!(price > 0)) e.price = 'Price must be greater than 0';
-  //   setLocalErrors(e);
-  //   return Object.keys(e).length === 0;
-  // };
+  // Restore draft on mount (populate local state and parent-managed fields)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem('createCourseDraft_v1');
+      if (!raw) return;
+      const saved = JSON.parse(raw) as Record<string, unknown>;
+      if (!saved) return;
+      if (typeof saved.title === 'string') setTitle(saved.title);
+      if (typeof saved.description === 'string')
+        setDescription(saved.description);
+      if (typeof saved.durationInMinutes === 'number')
+        setDurationInMinutes(saved.durationInMinutes);
+      if (['STARTER', 'INTERMEDIATE', 'ADVANCED'].includes(String(saved.level)))
+        setLevel(saved.level as 'STARTER' | 'INTERMEDIATE' | 'ADVANCED');
+      if (typeof saved.price === 'number') {
+        setPrice(saved.price);
+        setPriceDisplay(String(saved.price));
+      }
+      if (typeof saved.dealPrice === 'number') {
+        setDealPrice(saved.dealPrice);
+        setDealPriceDisplay(String(saved.dealPrice));
+      }
+      if (typeof saved.thumbnailUrl === 'string' && saved.thumbnailUrl)
+        setThumbnailUrl(saved.thumbnailUrl);
+    } catch {
+      // ignore parse errors
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const validate = () => {
+    const e: Errors = {};
+    if (!title.trim()) e.title = 'Title is required';
+    if (!description.trim()) e.description = 'Short description is required';
+    if (!thumbnailUrl.trim()) e.thumbnail = 'Thumbnail is required';
+    if (!(price > 0)) e.price = 'Price must be greater than 0';
+    setLocalErrors(e);
+    return Object.keys(e).length === 0;
+  };
 
   const handleCreate = () => {
-    // if (!validate()) return;
+    if (!validate()) return;
 
-    // const payload = {
-    //   title: title.trim(),
-    //   description: description.trim(),
-    //   shortDescription: description.trim(),
-    //   durationInMinutes,
-    //   level,
-    //   price,
-    //   dealPrice,
-    //   // backend expects a URL; as a fallback use data URL preview
-    //   thumbnailUrl: thumbnailUrl ?? '',
-    // };
+    const payload = {
+      title: title.trim(),
+      description: description.trim(),
+      shortDescription: description.trim(),
+      durationInMinutes,
+      level,
+      price,
+      dealPrice,
+      // backend expects a URL; as a fallback use data URL preview
+      thumbnailUrl: thumbnailUrl ?? '',
+    };
 
-    // const getErrorMessage = (err: unknown) => {
-    //   if (typeof err === 'object' && err !== null) {
-    //     const e = err as Record<string, unknown>;
-    //     if (typeof e.message === 'string') return e.message;
-    //   }
-    //   return 'An error occurred while creating the course.';
-    // };
+    const getErrorMessage = (err: unknown) => {
+      if (typeof err === 'object' && err !== null) {
+        const e = err as Record<string, unknown>;
+        if (typeof e.message === 'string') return e.message;
+      }
+      return 'An error occurred while creating the course.';
+    };
 
-    // createCourse.mutate(payload, {
-    //   onSuccess: (res: unknown) => {
-    //     let id: string | undefined;
-    //     if (typeof res === 'object' && res !== null && 'id' in res) {
-    //       const maybeId = (res as Record<string, unknown>).id;
-    //       if (typeof maybeId === 'string') {
-    //         id = maybeId;
-    //       }
-    //     }
-    //     if (id && setCourseId) setCourseId(id);
-    // Proceed to next step on success
-    goNext();
-    //   },
-    //   onError: (error: unknown) => {
-    //     toast.error(getErrorMessage(error));
-    //   },
-    // });
+    createCourse.mutate(payload, {
+      onSuccess: (res: unknown) => {
+        let id: string | undefined;
+        if (typeof res === 'object' && res !== null && 'id' in res) {
+          const maybeId = (res as Record<string, unknown>).id;
+          if (typeof maybeId === 'string') {
+            id = maybeId;
+          }
+        }
+        if (id && setCourseId) setCourseId(id);
+        localStorage.setItem('createCourseDraft_v1', JSON.stringify(payload));
+
+        goNext();
+      },
+      onError: (error: unknown) => {
+        toast.error(getErrorMessage(error));
+      },
+    });
   };
 
   // react-query mutation result typing may vary across versions; access isLoading defensively
@@ -134,13 +165,12 @@ const StepBasic: React.FC<Props> = ({
             disabled={loading}
           />
           {thumbnailUrl && (
-            <div className="mt-2 w-full h-28 overflow-hidden rounded-md border bg-white">
+            <div className="mt-2 w-full h-64 overflow-hidden rounded-md border bg-white">
               <img
                 src={thumbnailUrl}
                 alt="thumbnail preview"
                 className="object-cover w-full h-full"
                 onError={(e) => {
-                  // hide broken image by clearing src (keeps UI simple);
                   (e.target as HTMLImageElement).src = '';
                 }}
               />
@@ -163,7 +193,7 @@ const StepBasic: React.FC<Props> = ({
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border px-3 py-2 "
               placeholder="Enter course title"
               disabled={loading}
             />
@@ -182,7 +212,7 @@ const StepBasic: React.FC<Props> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="mt-1 block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 block w-full rounded-md border px-3 py-2"
               placeholder="Short description for listings"
               disabled={loading}
             />

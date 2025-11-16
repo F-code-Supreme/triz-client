@@ -4,13 +4,10 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
+import type { Assignment } from '@/features/assignment/services/queries/types';
+
 type AssignmentRowProps = {
-  assignment: {
-    id: string;
-    number: number;
-    title: string;
-    published: boolean;
-  };
+  assignment: Assignment;
   onEdit?: (assignmentId: string) => void;
   onView?: (assignmentId: string) => void;
   onDelete?: (assignmentId: string) => void;
@@ -32,7 +29,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
       {/* Assignment number */}
       <div className="flex items-center w-[120px] h-14 px-4 border-r">
         <span className="text-blue-600 font-medium text-sm">
-          Assignment {assignment.number}
+          Assignment {assignment.maxAttempts}
         </span>
       </div>
 
@@ -45,14 +42,14 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
       {/* Status badge */}
       <div className="flex items-center justify-center w-[157px] h-14 border-r">
         <Badge
-          variant={assignment.published ? 'default' : 'secondary'}
+          variant={assignment.status === 'ACTIVE' ? 'default' : 'secondary'}
           className={
-            assignment.published
+            assignment.status === 'ACTIVE'
               ? 'bg-green-100 text-green-700 hover:bg-green-100'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
           }
         >
-          {assignment.published ? 'Published' : 'Unpublish'}
+          {assignment.status === 'ACTIVE' ? 'Published' : 'Unpublish'}
         </Badge>
       </div>
 

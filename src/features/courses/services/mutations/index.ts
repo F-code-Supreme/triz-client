@@ -25,3 +25,21 @@ export const useCreateCourseMutation = () => {
     },
   });
 };
+
+export const useReorderModuleMutation = (courseId: string) => {
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (moduleIds: string[]) => {
+      const payload = moduleIds.map((id) => ({
+        id,
+        type: 'module',
+      }));
+
+      const response = await _request.patch<Response<Course>>(
+        `/courses/${courseId}/reorder`,
+        payload,
+      );
+      return response.data;
+    },
+  });
+};
