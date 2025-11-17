@@ -82,7 +82,22 @@ export const MinimalTiptapEditor = ({
   });
 
   if (!editor) {
-    return null;
+    return (
+      <MeasuredContainer
+        as="div"
+        name="editor"
+        className={cn(
+          'border-input min-data-[orientation=vertical]:h-72 flex h-auto w-full flex-col rounded-md border shadow-xs',
+          'focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]',
+          'bg-muted/50',
+          className,
+        )}
+      >
+        <div className="flex items-center justify-center h-64">
+          <p className="text-muted-foreground">Loading editor...</p>
+        </div>
+      </MeasuredContainer>
+    );
   }
 
   return (

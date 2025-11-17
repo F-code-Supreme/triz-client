@@ -229,3 +229,37 @@ export const filterFiles = <T extends FileInput>(
 
   return [validFiles, errors];
 };
+
+/**
+ * Check if the Tiptap editor content is empty
+ * Handles various content formats: string, JSON object, or other types
+ */
+export const isEditorEmpty = (content: unknown): boolean => {
+  if (!content) return true;
+
+  if (typeof content === 'string') {
+    return content.trim().length === 0;
+  }
+
+  if (typeof content === 'object') {
+    // Check if it's a JSON object with content property (Tiptap JSON format)
+    const obj = content as Record<string, unknown>;
+
+    if (obj.content && Array.isArray(obj.content)) {
+      // If content array is empty, it's empty
+      if (obj.content.length === 0) return true;
+
+      // Check if all content nodes are empty paragraphs
+      return obj.content.every((node: unknown) => {
+        if (typeof node !== 'object' || !node) return true;
+        const n = node as Record<string, unknown>;
+        return (
+          n.type === 'paragraph' &&
+          (!n.content || (Array.isArray(n.content) && n.content.length === 0))
+        );
+      });
+    }
+  }
+
+  return false;
+};
