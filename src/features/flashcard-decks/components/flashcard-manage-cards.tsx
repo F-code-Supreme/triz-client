@@ -92,6 +92,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       });
       toast.success('Card updated successfully');
       setIsEditOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to update card');
     }
@@ -105,6 +106,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       });
       toast.success('Card deleted successfully');
       setIsDeleteOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to delete card');
     }
@@ -406,6 +408,7 @@ export const FlashcardManageCardsDialog = ({
       });
       toast.success('Card created successfully');
       setIsCreateOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to create card');
     }

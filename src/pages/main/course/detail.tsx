@@ -256,6 +256,7 @@ const CourseDetail = () => {
                     className="w-full"
                     onClick={() => {
                       // TODO: Implement enroll logic
+                      // eslint-disable-next-line no-alert
                       alert(`Enrolling in: ${course.title}`);
                     }}
                   >
@@ -285,7 +286,7 @@ const CourseDetail = () => {
         <TabsContent value="overview" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>What you'll learn</CardTitle>
+              <CardTitle>What you&apos;ll learn</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">

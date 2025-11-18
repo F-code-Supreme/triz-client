@@ -177,10 +177,5 @@ export default {
       },
     },
   },
-  plugins: [
-    tailwindcssAnimate,
-    typography,
-    require('tailwindcss-animate'),
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [tailwindcssAnimate, typography],
 };
