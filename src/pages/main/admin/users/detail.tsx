@@ -9,6 +9,7 @@ import {
 import { ArrowLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -164,13 +165,21 @@ const AdminUserDetailPage = () => {
               <CardTitle>User Information</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i}>
-                    <Skeleton className="h-4 w-20 mb-2" />
-                    <Skeleton className="h-6 w-32" />
-                  </div>
-                ))}
+              <div className="flex items-start gap-8">
+                {/* Avatar Skeleton */}
+                <div className="flex flex-col items-center">
+                  <Skeleton className="h-24 w-24 rounded-full" />
+                </div>
+
+                {/* Details Skeleton */}
+                <div className="flex-1 grid grid-cols-1 gap-6 md:grid-cols-3">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i}>
+                      <Skeleton className="h-4 w-20 mb-2" />
+                      <Skeleton className="h-6 w-32" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -272,44 +281,65 @@ const AdminUserDetailPage = () => {
             <CardTitle>User Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-              <div>
-                <p className="text-sm text-muted-foreground">User ID</p>
-                <p className="text-base font-medium font-mono truncate">
-                  {userData.id}
-                </p>
+            <div className="flex items-start gap-8">
+              {/* Avatar Section */}
+              <div className="flex flex-col items-center">
+                <Avatar className="h-24 w-24">
+                  <AvatarImage
+                    src={userData.avatarUrl}
+                    alt={userData.fullName || userData.email}
+                  />
+                  <AvatarFallback className="text-lg font-semibold">
+                    {(userData.fullName || userData.email)
+                      .split(' ')
+                      .map((n) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="text-base font-medium break-all">
-                  {userData.email}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Full Name</p>
-                <p className="text-base font-medium">
-                  {userData.fullName || 'N/A'}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Status</p>
-                <Badge
-                  variant={userData.enabled ? 'default' : 'destructive'}
-                  className="mt-1"
-                >
-                  {userData.enabled ? 'Active' : 'Inactive'}
-                </Badge>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Roles</p>
-                <div className="flex gap-1 flex-wrap mt-1">
+
+              {/* User Details Grid */}
+              <div className="flex-1 grid grid-cols-1 gap-6 md:grid-cols-3">
+                <div>
+                  <p className="text-sm text-muted-foreground">User ID</p>
+                  <p className="text-base font-medium font-mono truncate">
+                    {userData.id}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="text-base font-medium break-all">
+                    {userData.email}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Full Name</p>
+                  <p className="text-base font-medium">
+                    {userData.fullName || 'N/A'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
                   <Badge
-                    key={userData.roles}
-                    variant="secondary"
-                    className={`capitalize ${roleColors[userData.roles]}`}
+                    variant={userData.enabled ? 'default' : 'destructive'}
+                    className="mt-1"
                   >
-                    {userData.roles}
+                    {userData.enabled ? 'Active' : 'Inactive'}
                   </Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Roles</p>
+                  <div className="flex gap-1 flex-wrap mt-1">
+                    <Badge
+                      key={userData.roles}
+                      variant="secondary"
+                      className={`capitalize ${roleColors[userData.roles]}`}
+                    >
+                      {userData.roles}
+                    </Badge>
+                  </div>
                 </div>
               </div>
             </div>
