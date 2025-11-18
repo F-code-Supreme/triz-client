@@ -61,23 +61,13 @@ export const adminSidebarData: AdminSidebarData = {
           icon: BookOpen,
         },
         {
-          title: 'Packages',
-          url: '/admin/packages',
-          icon: Package,
-        },
-        {
-          title: 'FlashCards',
+          title: 'Flashcards',
           url: '/admin/flashcards',
           icon: Layers2,
           // children: [
           //   { title: 'Deck', url: '/admin/flashcards/deck', icon: BookOpen },
           //   { title: 'Card', url: '/admin/flashcards/card', icon: BookOpen },
           // ],
-        },
-        {
-          title: 'Subscriptions',
-          url: '/admin/subscriptions',
-          icon: CalendarSync,
         },
         {
           title: 'Courses',
@@ -88,6 +78,21 @@ export const adminSidebarData: AdminSidebarData = {
           title: 'Quizzes',
           url: '/admin/quizzes',
           icon: BookCheck,
+        },
+      ],
+    },
+    {
+      title: 'Payment',
+      items: [
+        {
+          title: 'Packages',
+          url: '/admin/packages',
+          icon: Package,
+        },
+        {
+          title: 'Subscriptions',
+          url: '/admin/subscriptions',
+          icon: CalendarSync,
         },
         {
           title: 'Transactions',
