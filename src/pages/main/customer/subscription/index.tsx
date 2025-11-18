@@ -26,6 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import useAuth from '@/features/auth/hooks/use-auth';
 import {
@@ -149,12 +150,16 @@ const SubscriptionPage = () => {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  {[...Array(2)].map((_, i) => (
-                    <div key={i}>
-                      <Skeleton className="h-4 w-32 mb-1" />
-                      <Skeleton className="h-8 w-24" />
-                    </div>
-                  ))}
+                  <div>
+                    <Skeleton className="h-4 w-32 mb-2" />
+                    <Skeleton className="h-8 w-32 mb-2" />
+                    <Skeleton className="h-2 w-full" />
+                    <Skeleton className="h-3 w-24 mt-1" />
+                  </div>
+                  <div>
+                    <Skeleton className="h-4 w-20 mb-1" />
+                    <Skeleton className="h-6 w-24" />
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -209,8 +214,25 @@ const SubscriptionPage = () => {
                     <p className="text-sm text-muted-foreground">
                       Daily Token Allowance
                     </p>
-                    <p className="text-2xl font-bold mt-1">
-                      {formatNumber(activeSubscription.tokensPerDayRemaining)}
+                    <p className="text-2xl font-bold mt-2">
+                      {formatNumber(activeSubscription.tokensPerDayRemaining)} /{' '}
+                      {formatNumber(activeSubscription.packageChatTokenPerDay)}
+                    </p>
+                    <Progress
+                      value={
+                        (activeSubscription.tokensPerDayRemaining /
+                          activeSubscription.packageChatTokenPerDay) *
+                        100
+                      }
+                      className="mt-2"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {Math.round(
+                        (activeSubscription.tokensPerDayRemaining /
+                          activeSubscription.packageChatTokenPerDay) *
+                          100,
+                      )}
+                      % remaining
                     </p>
                   </div>
                   <div>
