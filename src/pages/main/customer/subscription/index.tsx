@@ -26,18 +26,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import useAuth from '@/features/auth/hooks/use-auth';
 import {
   createSubscriptionsColumns,
   SubscriptionsTable,
 } from '@/features/subscription/components';
 import { useEditUserAutoRenewalMutation } from '@/features/subscription/services/mutations';
-import { useGetSubscriptionsByUserQuery } from '@/features/subscription/services/queries';
+import {
+  useGetActiveSubscriptionByUserQuery,
+  useGetSubscriptionsByUserQuery,
+} from '@/features/subscription/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { formatNumber } from '@/utils';
 
 import type { Subscription } from '@/features/subscription/types';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const SubscriptionPage = () => {
   const { user } = useAuth();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -55,6 +60,8 @@ const SubscriptionPage = () => {
     sorting,
     user?.id,
   );
+  const { data: activeSubscription, isLoading: activeSubscriptionLoading } =
+    useGetActiveSubscriptionByUserQuery(user?.id);
   const { mutate: editAutoRenewal, isPending: isUpdating } =
     useEditUserAutoRenewalMutation();
 
@@ -66,11 +73,6 @@ const SubscriptionPage = () => {
 
   const pageInfo = useMemo(() => subscriptionsData?.page, [subscriptionsData]);
   const totalRowCount = pageInfo?.totalElements ?? 0;
-
-  // Find active subscription
-  const activeSubscription = useMemo(() => {
-    return subscriptions.find((sub) => sub.status === 'ACTIVE');
-  }, [subscriptions]);
 
   // Define callback for auto renewal toggle
   const handleAutoRenewalToggle = useCallback((subscription: Subscription) => {
@@ -133,7 +135,50 @@ const SubscriptionPage = () => {
         </div>
 
         {/* Active Subscription Card */}
-        {activeSubscription ? (
+        {activeSubscriptionLoading ? (
+          <Card className="border-2 border-primary">
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-8 w-48" />
+                  <Skeleton className="h-4 w-96" />
+                </div>
+                <Skeleton className="h-6 w-16" />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  {[...Array(2)].map((_, i) => (
+                    <div key={i}>
+                      <Skeleton className="h-4 w-32 mb-1" />
+                      <Skeleton className="h-8 w-24" />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-4">
+                  {[...Array(2)].map((_, i) => (
+                    <div key={i}>
+                      <Skeleton className="h-4 w-20 mb-1" />
+                      <Skeleton className="h-6 w-32" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t pt-6">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-24" />
+                    <Skeleton className="h-4 w-64" />
+                  </div>
+                  <Skeleton className="h-10 w-32" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : activeSubscription ? (
           <Card className="border-2 border-primary">
             <CardHeader>
               <div className="flex items-start justify-between">

@@ -18,12 +18,19 @@ import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transact
 import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { TransactionsTable } from '@/features/payment/wallet/components/transactions-table';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
+import { createSubscriptionsColumns } from '@/features/subscription/components';
+import { SubscriptionsTable } from '@/features/subscription/components/subscriptions-table';
+import {
+  useGetActiveSubscriptionByUserQuery,
+  useGetSubscriptionsByUserQuery,
+} from '@/features/subscription/services/queries';
 import { roleColors } from '@/features/user/components/users-columns';
 import { useGetUserByIdQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const pageTitle = 'User Details';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const AdminUserDetailPage = () => {
   const navigate = useNavigate();
   const { userId } = useParams({ from: '/admin/users/$userId' });
@@ -34,6 +41,14 @@ const AdminUserDetailPage = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [subscriptionPagination, setSubscriptionPagination] =
+    useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 10,
+    });
+  const [subscriptionSorting, setSubscriptionSorting] = useState<SortingState>(
+    [],
+  );
   const [fromDate, setFromDate] = useState<Date | undefined>();
   const [toDate, setToDate] = useState<Date | undefined>();
 
@@ -63,6 +78,25 @@ const AdminUserDetailPage = () => {
   const { data: transactionsData, isLoading: transactionsLoading } =
     useSearchAllTransactionsByUserQuery(pagination, sorting, userId, filters);
 
+  // Fetch subscriptions
+  const { data: subscriptionsData, isLoading: subscriptionsLoading } =
+    useGetSubscriptionsByUserQuery(
+      subscriptionPagination,
+      subscriptionSorting,
+      userId,
+    );
+
+  const { data: activeSubscription, isLoading: activeSubscriptionLoading } =
+    useGetActiveSubscriptionByUserQuery(userId);
+
+  const subscriptions = useMemo(
+    () => subscriptionsData?.content || [],
+    [subscriptionsData],
+  );
+
+  const subscriptionsTotalRowCount =
+    subscriptionsData?.page?.totalElements ?? 0;
+
   const transactions = useMemo(
     () => transactionsData?.content || [],
     [transactionsData],
@@ -86,6 +120,21 @@ const AdminUserDetailPage = () => {
     manualSorting: true,
     manualFiltering: true,
     rowCount: totalRowCount,
+  });
+
+  const subscriptionTable = useReactTable({
+    data: subscriptions,
+    columns: createSubscriptionsColumns(() => {}),
+    state: {
+      pagination: subscriptionPagination,
+      sorting: subscriptionSorting,
+    },
+    onPaginationChange: setSubscriptionPagination,
+    onSortingChange: setSubscriptionSorting,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    rowCount: subscriptionsTotalRowCount,
   });
 
   if (userLoading) {
@@ -142,6 +191,33 @@ const AdminUserDetailPage = () => {
                   <Skeleton className="h-10 w-64" />
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Active Subscription Card Skeleton */}
+          <Card className="border-2 border-primary">
+            <CardHeader>
+              <Skeleton className="h-8 w-48" />
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i}>
+                    <Skeleton className="h-4 w-24 mb-2" />
+                    <Skeleton className="h-6 w-32" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Subscription History Card Skeleton */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Subscription History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-96 w-full" />
             </CardContent>
           </Card>
 
@@ -266,6 +342,73 @@ const AdminUserDetailPage = () => {
             ) : (
               <p className="text-muted-foreground">No wallet data</p>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Active Subscription Card */}
+        {activeSubscriptionLoading ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Subscription</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Loading subscription data...
+              </p>
+            </CardContent>
+          </Card>
+        ) : activeSubscription ? (
+          <Card className="border-2 border-primary">
+            <CardHeader>
+              <CardTitle>{activeSubscription.packageName}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Start Date</p>
+                  <p className="text-base font-semibold">
+                    {new Date(
+                      activeSubscription.startDate,
+                    ).toLocaleDateString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">End Date</p>
+                  <p className="text-base font-semibold">
+                    {new Date(activeSubscription.endDate).toLocaleDateString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Auto Renewal</p>
+                  <Badge
+                    variant={
+                      activeSubscription.autoRenew ? 'default' : 'secondary'
+                    }
+                    className="mt-1"
+                  >
+                    {activeSubscription.autoRenew ? 'Enabled' : 'Disabled'}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <Badge className="mt-1 bg-green-600">Active</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+
+        {/* Subscription History Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Subscription History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubscriptionsTable
+              table={subscriptionTable}
+              isLoading={subscriptionsLoading}
+              totalRowCount={subscriptionsTotalRowCount}
+            />
           </CardContent>
         </Card>
 
