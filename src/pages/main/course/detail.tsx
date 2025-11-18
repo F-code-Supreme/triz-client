@@ -11,8 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
-import CourseSidebar from '@/features/course/components/course-sidebar';
-import CourseContent from '@/features/course/components/course-content';
+import CourseSidebar from '@/features/courses/components/course-sidebar';
+import CourseContent from '@/features/courses/components/course-content';
 import {
   mockCourses,
   mockCurrentLesson,

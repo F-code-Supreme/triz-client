@@ -17,8 +17,8 @@ import {
 } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
-import type { CourseWeek } from '../types';
-import { LessonType } from '../types';
+import type { CourseWeek } from '../../course/types';
+import { LessonType } from '../../course/types';
 
 interface CourseSidebarProps {
   weeks: CourseWeek[];

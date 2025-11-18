@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-import CourseList from '@/features/course/components/course-list';
-import CourseFiltersComponent from '@/features/course/components/course-filters';
+import CourseList from '@/features/courses/components/course-list';
+import CourseFiltersComponent from '@/features/courses/components/course-filters';
 import { mockCourses } from '@/features/course/data/mock-courses';
 import { CourseFilters } from '@/features/course/types';
 // import { De } from 'zod/v4/locales';

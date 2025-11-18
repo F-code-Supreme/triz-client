@@ -9,8 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
-import type { CourseLesson } from '../types';
-import { LessonType, ResourceType } from '../types';
+import type { CourseLesson } from '../../course/types';
+import { LessonType, ResourceType } from '../../course/types';
 
 interface CourseContentProps {
   lesson: CourseLesson;

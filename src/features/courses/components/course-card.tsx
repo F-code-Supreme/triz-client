@@ -9,8 +9,8 @@ import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-import type { Course } from '../types';
-import { CourseStatus, CourseLevel } from '../types';
+import type { Course } from '../../course/types';
+import { CourseStatus, CourseLevel } from '../../course/types';
 
 interface CourseCardProps {
   course: Course;
