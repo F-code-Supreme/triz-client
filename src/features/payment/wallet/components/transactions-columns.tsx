@@ -29,13 +29,13 @@ export const getTransactionTypeColor = (type: string): string => {
 export const getTransactionStatusColor = (status: string): string => {
   switch (status) {
     case 'COMPLETED':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 hover:bg-green-100/90';
     case 'PENDING':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100/90';
     case 'CANCELLED':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 hover:bg-red-100/90';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
   }
 };
 

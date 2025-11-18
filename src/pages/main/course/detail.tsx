@@ -1,25 +1,24 @@
-import { useState, useMemo } from 'react';
+import { Link, useSearch } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Star, Users, Award, BookOpen } from 'lucide-react';
-import { Link, useSearch } from '@tanstack/react-router';
+import { useState, useMemo } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-
-import CourseSidebar from '@/features/course/components/course-sidebar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CourseContent from '@/features/course/components/course-content';
+import CourseSidebar from '@/features/course/components/course-sidebar';
 import {
   mockCourses,
   mockCurrentLesson,
 } from '@/features/course/data/mock-courses';
 import { CourseLevel } from '@/features/course/types';
 
-function CourseDetail() {
+const CourseDetail = () => {
   // Get query parameters
   const searchParams = useSearch({ from: '/course/detail' });
   const mode = (searchParams as any)?.mode || 'overview'; // 'overview' or 'learning'
@@ -67,13 +66,13 @@ function CourseDetail() {
   const getLevelColor = (level: CourseLevel) => {
     switch (level) {
       case CourseLevel.BEGINNER:
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-100/90';
       case CourseLevel.INTERMEDIATE:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100/90';
       case CourseLevel.ADVANCED:
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-100/90';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100/90';
     }
   };
 
@@ -416,6 +415,6 @@ function CourseDetail() {
       </Tabs>
     </div>
   );
-}
+};
 
 export default CourseDetail;

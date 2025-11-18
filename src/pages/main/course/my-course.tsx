@@ -1,14 +1,15 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-import CourseList from '@/features/course/components/course-list';
 import CourseFiltersComponent from '@/features/course/components/course-filters';
+import CourseList from '@/features/course/components/course-list';
 import { mockCourses } from '@/features/course/data/mock-courses';
-import { CourseFilters } from '@/features/course/types';
-// import { De } from 'zod/v4/locales';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-function MyCoursePage() {
+import type { CourseFilters } from '@/features/course/types';
+// import { De } from 'zod/v4/locales';
+
+const MyCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
 
   // Filter only enrolled courses
@@ -67,6 +68,6 @@ function MyCoursePage() {
       </div>
     </DefaultLayout>
   );
-}
+};
 
 export default MyCoursePage;

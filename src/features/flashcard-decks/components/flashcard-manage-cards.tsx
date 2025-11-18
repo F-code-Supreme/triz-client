@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react';
 import {
   flexRender,
   getCoreRowModel,
@@ -9,41 +8,11 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table';
 import { Plus, MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 
-import { useGetFlashcardsByDeckIdQuery } from '@/features/flashcard/services/queries/queries';
-import {
-  useCreateFlashcardMutation,
-  useUpdateFlashcardMutation,
-  useDeleteFlashcardMutation,
-} from '@/features/flashcard/services/mutations';
-import type { Flashcard } from '@/features/flashcard/types';
-import { FlashcardCardForm } from './flashcard-card-form';
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DataTableToolbar, DataTablePagination } from '@/components/data-table';
+import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,9 +23,41 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { DataTableToolbar, DataTablePagination } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table/column-header';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  useCreateFlashcardMutation,
+  useUpdateFlashcardMutation,
+  useDeleteFlashcardMutation,
+} from '@/features/flashcard/services/mutations';
+import { useGetFlashcardsByDeckIdQuery } from '@/features/flashcard/services/queries/queries';
+
+import { FlashcardCardForm } from './flashcard-card-form';
+
+import type { Flashcard } from '@/features/flashcard/types';
 
 // Card row actions component
 interface CardRowActionsProps {

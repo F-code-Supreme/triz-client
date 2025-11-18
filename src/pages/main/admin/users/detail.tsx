@@ -355,16 +355,14 @@ const AdminUserDetailPage = () => {
             {walletLoading ? (
               <p className="text-muted-foreground">Loading wallet data...</p>
             ) : walletData ? (
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">Wallet ID</p>
-                  <p className="text-2xl font-bold font-mono">
-                    {walletData.id}
-                  </p>
+                  <p className="text-2xl font-mono">{walletData.id}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Balance</p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-2xl">
                     {walletData.balance.toLocaleString()} VND
                   </p>
                 </div>
@@ -421,7 +419,9 @@ const AdminUserDetailPage = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
-                  <Badge className="mt-1 bg-green-600">Active</Badge>
+                  <Badge className="mt-1 bg-green-600 hover:bg-green-600/90">
+                    Active
+                  </Badge>
                 </div>
               </div>
             </CardContent>

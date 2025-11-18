@@ -1,10 +1,6 @@
-import {
-  Course,
-  CourseLevel,
-  CourseStatus,
-  LessonType,
-  ResourceType,
-} from '../types';
+import { CourseLevel, CourseStatus, LessonType, ResourceType } from '../types';
+
+import type { Course } from '../types';
 
 export const mockCourses: Course[] = [
   {

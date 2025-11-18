@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-
-import CourseList from '@/features/course/components/course-list';
-import CourseFiltersComponent from '@/features/course/components/course-filters';
-import { mockCourses } from '@/features/course/data/mock-courses';
-import { CourseFilters } from '@/features/course/types';
-// import { De } from 'zod/v4/locales';
-import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
-function AllCoursePage() {
+import CourseFiltersComponent from '@/features/course/components/course-filters';
+import CourseList from '@/features/course/components/course-list';
+import { mockCourses } from '@/features/course/data/mock-courses';
+import { DefaultLayout } from '@/layouts/default-layout';
+
+import type { CourseFilters } from '@/features/course/types';
+// import { De } from 'zod/v4/locales';
+
+const AllCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
 
   // Stats calculation
@@ -74,6 +75,6 @@ function AllCoursePage() {
       </div>
     </DefaultLayout>
   );
-}
+};
 
 export default AllCoursePage;

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 
-import type { Course, CourseFilters } from '../types';
 import CourseCard from './course-card';
+
+import type { Course, CourseFilters } from '../types';
 
 interface CourseListProps {
   courses: Course[];

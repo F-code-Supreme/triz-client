@@ -203,7 +203,9 @@ const SubscriptionPage = () => {
                     )}
                   </CardDescription>
                 </div>
-                <Badge className="bg-green-600">Active</Badge>
+                <Badge className="bg-green-600 hover:bg-green-600/90">
+                  Active
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
