@@ -3,6 +3,12 @@ import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import { AdminSubscriptionsDataTableRowActions } from './admin-subscriptions-data-table-row-actions';
 
@@ -33,11 +39,23 @@ export const adminSubscriptionsColumns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User ID" />
     ),
-    cell: (info) => (
-      <span className="font-mono text-sm">
-        {info.getValue().slice(0, 8)}...
-      </span>
-    ),
+    cell: (info) => {
+      const id = info.getValue();
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-[100px] truncate font-mono text-sm cursor-help">
+                {id}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="font-mono text-xs">
+              {id}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
     size: 150,
   }),
   columnHelper.accessor('packageName', {
