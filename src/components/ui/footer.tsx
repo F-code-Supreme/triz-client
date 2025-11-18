@@ -73,7 +73,7 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6">
             {/* Logo and Company Name */}
             <div className="flex items-center gap-4">
-              <div className="w-11 h-11 bg-gray-300 rounded"></div>
+              <img src="/logo.svg" alt="TRIZ Logo" className="w-11 h-11" />
               <div>
                 <h3 className="text-white font-semibold text-base uppercase leading-tight text-center md:text-left">
                   Trung tâm Sáng tạo
