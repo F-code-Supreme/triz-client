@@ -1,5 +1,6 @@
-import React from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
+import { ChevronRight } from 'lucide-react';
+import React from 'react';
 
 import {
   SidebarGroup,
@@ -13,7 +14,6 @@ import {
 import { cn } from '@/lib/utils';
 
 import type { NavGroup as NavGroupType } from './data/admin-sidebar-data';
-import { ChevronRight } from 'lucide-react';
 
 export const NavGroup = ({ title, items }: NavGroupType) => {
   const location = useLocation();
@@ -21,12 +21,12 @@ export const NavGroup = ({ title, items }: NavGroupType) => {
   // Dropdown mở nếu đang ở trong sub route
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
 
-  const isSubRouteActive = (item: typeof items[number]) => {
+  const isSubRouteActive = (item: (typeof items)[number]) => {
     if (!item.children) return false;
     return item.children.some((sub) => location.pathname === sub.url);
   };
 
-  const handleToggle = (key: string, item: typeof items[number]) => {
+  const handleToggle = (key: string, item: (typeof items)[number]) => {
     // Nếu đang ở sub route thì không cho đóng dropdown
     if (isSubRouteActive(item)) return;
     setOpenDropdown((prev) => (prev === key ? null : key));

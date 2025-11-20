@@ -3,6 +3,12 @@ import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import { AdminSubscriptionsDataTableRowActions } from './admin-subscriptions-data-table-row-actions';
 
@@ -16,15 +22,15 @@ const columnHelper = createColumnHelper<SubscriptionWithTimestamp>();
 export const getSubscriptionStatusColor = (status: string): string => {
   switch (status) {
     case 'ACTIVE':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 hover:bg-green-100/90';
     case 'PENDING':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100/90';
     case 'EXPIRED':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
     case 'CANCELED':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 hover:bg-red-100/90';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
   }
 };
 
@@ -33,11 +39,23 @@ export const adminSubscriptionsColumns = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User ID" />
     ),
-    cell: (info) => (
-      <span className="font-mono text-sm">
-        {info.getValue().slice(0, 8)}...
-      </span>
-    ),
+    cell: (info) => {
+      const id = info.getValue();
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-[100px] truncate font-mono text-sm cursor-help">
+                {id}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="font-mono text-xs">
+              {id}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
     size: 150,
   }),
   columnHelper.accessor('packageName', {

@@ -77,6 +77,29 @@ export const useGetUserSubscriptionByIdQuery = (
   });
 };
 
+export const useGetActiveSubscriptionByUserQuery = (userId?: string) => {
+  const _request = useAxios();
+
+  return useQuery({
+    queryKey: [SubscriptionKeys.GetActiveSubscriptionByUserQuery, userId],
+    queryFn: userId
+      ? async ({ signal }) => {
+          const response = await _request.get<Subscription & DataTimestamp>(
+            `/users/${userId}/subscriptions/active`,
+            {
+              signal,
+            },
+          );
+
+          return response.data;
+        }
+      : skipToken,
+    enabled: !!userId,
+  });
+};
+
+// export const useGetPreviewSubscriptionByUserQuery = (userId?: string) => {};
+
 // ADMIN
 export const useGetSubscriptionsQuery = (
   pagination: PaginationState,
