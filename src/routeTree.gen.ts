@@ -37,6 +37,7 @@ import { Route as AdminFlashcardsRouteRouteImport } from './routes/admin/flashca
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
+import { Route as AdminArchiveRouteRouteImport } from './routes/admin/archive/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
@@ -192,6 +193,11 @@ const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
   path: '/admin/books',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminArchiveRouteRoute = AdminArchiveRouteRouteImport.update({
+  id: '/admin/archive',
+  path: '/admin/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const appWalletRouteRoute = appWalletRouteRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -276,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof appProfileRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
@@ -319,6 +326,7 @@ export interface FileRoutesByTo {
   '/profile': typeof appProfileRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/flashcards': typeof AdminFlashcardsRouteRoute
@@ -363,6 +371,7 @@ export interface FileRoutesById {
   '/(app)/profile': typeof appProfileRouteRoute
   '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
+  '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
@@ -408,6 +417,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/subscription'
     | '/wallet'
+    | '/admin/archive'
     | '/admin/books'
     | '/admin/courses'
     | '/admin/dashboard'
@@ -451,6 +461,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/subscription'
     | '/wallet'
+    | '/admin/archive'
     | '/admin/books'
     | '/admin/dashboard'
     | '/admin/flashcards'
@@ -494,6 +505,7 @@ export interface FileRouteTypes {
     | '/(app)/profile'
     | '/(app)/subscription'
     | '/(app)/wallet'
+    | '/admin/archive'
     | '/admin/books'
     | '/admin/courses'
     | '/admin/dashboard'
@@ -535,6 +547,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MemoryCardRoute: typeof MemoryCardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
+  AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
   AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
@@ -759,6 +772,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBooksRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/archive': {
+      id: '/admin/archive'
+      path: '/admin/archive'
+      fullPath: '/admin/archive'
+      preLoaderRoute: typeof AdminArchiveRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(app)/wallet': {
       id: '/(app)/wallet'
       path: '/wallet'
@@ -908,6 +928,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MemoryCardRoute: MemoryCardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
+  AdminArchiveRouteRoute: AdminArchiveRouteRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
   AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,

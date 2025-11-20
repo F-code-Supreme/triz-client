@@ -11,13 +11,6 @@ import { useMemo, useState } from 'react';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -30,15 +23,11 @@ import {
 import { booksColumns } from '@/features/book/components/books-columns';
 import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
 import { bookStatuses } from '@/features/book/data/data';
-import {
-  useGetAllBooksAdminQuery,
-  useGetAllDeletedBooksAdminQuery,
-} from '@/features/book/services/queries';
+import { useGetAllBooksAdminQuery } from '@/features/book/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminBooksManagementPage = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [showDeleted, setShowDeleted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<
     Array<{
@@ -57,15 +46,12 @@ const AdminBooksManagementPage = () => {
   >({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const { data: booksData, isLoading: isLoadingBooks } =
-    useGetAllBooksAdminQuery();
-  const { data: deletedBooksData, isLoading: isLoadingDeleted } =
-    useGetAllDeletedBooksAdminQuery();
+  const { data: booksData, isLoading } = useGetAllBooksAdminQuery();
 
   const books = useMemo(() => {
-    const currentData = showDeleted ? deletedBooksData : booksData;
+    const currentData = booksData;
     return currentData?.content || [];
-  }, [booksData, deletedBooksData, showDeleted]);
+  }, [booksData]);
 
   const table = useReactTable({
     data: books,
@@ -88,38 +74,23 @@ const AdminBooksManagementPage = () => {
     },
   });
 
-  const isLoading = showDeleted ? isLoadingDeleted : isLoadingBooks;
-
   return (
     <AdminLayout meta={{ title: 'Books Management' }}>
       <div className="flex flex-col gap-8 p-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Books</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage all books in the system. Create, edit, or delete books.
-          </p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Books</h1>
+            <p className="text-muted-foreground mt-2">
+              Manage all books in the system. Create, edit, or delete books.
+            </p>
+          </div>
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Book
+          </Button>
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between gap-4">
-            <Select
-              value={showDeleted ? 'deleted' : 'active'}
-              onValueChange={(v) => setShowDeleted(v === 'deleted')}
-            >
-              <SelectTrigger className="w-[150px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="active">Active Books</SelectItem>
-                <SelectItem value="deleted">Deleted Books</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button onClick={() => setIsCreateOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              New Book
-            </Button>
-          </div>
-
           <DataTableToolbar
             table={table}
             searchPlaceholder="Search by title, author..."
@@ -162,9 +133,7 @@ const AdminBooksManagementPage = () => {
           ) : books.length === 0 ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-muted-foreground">
-                {showDeleted
-                  ? 'No deleted books found'
-                  : 'No books found. Create your first book!'}
+                No books found. Create your first book!
               </p>
             </div>
           ) : (

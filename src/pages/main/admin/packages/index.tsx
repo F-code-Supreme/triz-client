@@ -1,8 +1,7 @@
-import { PlusIcon, Trash2 } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Pagination,
@@ -21,19 +20,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import DeleteConfirmDialog from '@/features/packages/components/delete-confirm-dialog';
-import DeletedPackagesDialog from '@/features/packages/components/deleted-packages-dialog';
 import PackageCard from '@/features/packages/components/package-card';
 import PackageDialog from '@/features/packages/components/package-dialog';
 import {
   useCreatePackageMutation,
   useDeletePackageMutation,
-  useRestorePackageMutation,
   useUpdatePackageMutation,
 } from '@/features/packages/services/mutations';
-import {
-  useGetDeletedPackagesQuery,
-  useGetPackagesQuery,
-} from '@/features/packages/services/queries';
+import { useGetPackagesQuery } from '@/features/packages/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 import type { CreatePackagePayload } from '@/features/packages/services/mutations/types';
@@ -42,28 +36,20 @@ import type { Package } from '@/features/packages/types';
 const AdminManagePackagePage = () => {
   // Fetch packages from API
   const { data, isLoading } = useGetPackagesQuery();
-  const { data: deletedPackagesData, isLoading: isLoadingDeleted } =
-    useGetDeletedPackagesQuery();
 
   // Mutations
   const createPackage = useCreatePackageMutation();
   const updatePackage = useUpdatePackageMutation();
   const deletePackage = useDeletePackageMutation();
-  const restorePackage = useRestorePackageMutation();
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletedDialogOpen, setDeletedDialogOpen] = useState(false);
   const [editingPackage, setEditingPackage] = useState<Package | null>(null);
   const [deletingPackage, setDeletingPackage] = useState<Package | null>(null);
 
   // Get data
   const packages = useMemo(() => data?.content || [], [data]);
-  const deletedPackages = useMemo(
-    () => deletedPackagesData?.content || [],
-    [deletedPackagesData],
-  );
   const pageInfo = useMemo(() => data?.page, [data]);
 
   // Filter packages by status (client-side filtering)
@@ -151,18 +137,6 @@ const AdminManagePackagePage = () => {
     }
   };
 
-  const handleRestore = (pkg: Package) => {
-    restorePackage.mutate(pkg.id, {
-      onSuccess: () => {
-        toast.success('Package restored successfully!');
-      },
-      onError: (error) => {
-        console.error('Restore error:', error);
-        toast.error('Failed to restore package. Please try again.');
-      },
-    });
-  };
-
   return (
     <AdminLayout meta={{ title: 'Admin Manage Package' }}>
       <div className="space-y-6 p-8">
@@ -178,19 +152,6 @@ const AdminManagePackagePage = () => {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setDeletedDialogOpen(true)}
-              className="gap-2"
-            >
-              <Trash2 className="h-4 w-4" />
-              Deleted Packages
-              {deletedPackages.length > 0 && (
-                <Badge variant="secondary" className="ml-1">
-                  {deletedPackages.length}
-                </Badge>
-              )}
-            </Button>
             <Button onClick={handleCreate}>
               <PlusIcon className="mr-2 h-4 w-4" />
               Create Package
@@ -318,15 +279,6 @@ const AdminManagePackagePage = () => {
           package={deletingPackage}
           onConfirm={handleDeleteConfirm}
           isDeleting={deletePackage.isPending}
-        />
-
-        {/* Deleted Packages Dialog */}
-        <DeletedPackagesDialog
-          open={deletedDialogOpen}
-          onOpenChange={setDeletedDialogOpen}
-          packages={deletedPackages}
-          onRestore={handleRestore}
-          isLoading={isLoadingDeleted}
         />
       </div>
     </AdminLayout>

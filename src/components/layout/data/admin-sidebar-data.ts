@@ -8,6 +8,7 @@ import {
   Receipt,
   Layers2,
   CalendarSync,
+  Archive,
 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';
@@ -98,6 +99,16 @@ export const adminSidebarData: AdminSidebarData = {
           title: 'Transactions',
           url: '/admin/transactions',
           icon: Receipt,
+        },
+      ],
+    },
+    {
+      title: 'Others',
+      items: [
+        {
+          title: 'Archive',
+          url: '/admin/archive',
+          icon: Archive,
         },
       ],
     },

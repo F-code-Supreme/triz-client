@@ -1,7 +1,8 @@
-import { Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
@@ -16,6 +17,7 @@ import { useGetCourseQuery } from '@/features/courses/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminManageCoursePage = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
 
   const {
@@ -43,13 +45,14 @@ const AdminManageCoursePage = () => {
             </p>
           </div>
           <div>
-            <Link
-              to="/admin/courses/create"
-              className="bg-blue-400 text-white px-4 py-2 rounded-md flex items-center"
+            <Button
+              onClick={() => {
+                navigate({ to: '/admin/courses/create' });
+              }}
             >
               <PlusIcon className="mr-2 h-4 w-4" />
               Create Course
-            </Link>
+            </Button>
           </div>
         </div>
 

@@ -118,14 +118,13 @@ const AdminQuizzesPage = () => {
   return (
     <AdminLayout meta={{ title: 'Manage Quizzes' }}>
       <div className="space-y-6 p-8">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
-          <p className="text-muted-foreground">
-            Manage all quizzes in the system. Create, edit, or delete quizzes.
-          </p>
-        </div>
-
-        <div className="flex justify-end">
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
+            <p className="text-muted-foreground">
+              Manage all quizzes in the system. Create, edit, or delete quizzes.
+            </p>
+          </div>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             New Quiz
