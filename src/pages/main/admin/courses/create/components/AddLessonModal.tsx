@@ -12,14 +12,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import { isEditorEmpty } from '@/components/ui/minimal-tiptap/utils';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  useCreateLessonMutation,
-  useUpdateLessonMutation,
-} from '@/features/lesson/services/mutations';
-import { useGetLessonById } from '@/features/lesson/services/queries';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
-import type { CreateLessonPayload } from '@/features/lesson/services/mutations/types';
+import type { Content } from '@tiptap/react';
 
 type LessonType = 'TEXT' | 'VIDEO';
 
@@ -41,8 +39,8 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
-  const [lessonType, setLessonType] = React.useState<LessonType>('TEXT');
-  const [content, setContent] = React.useState('');
+  const [lessonType, setLessonType] = React.useState<LessonType>('content');
+  const [content, setContent] = React.useState<Content>('');
   const [videoFile, setVideoFile] = React.useState<File | null>(null);
   const createLessonMutation = useCreateLessonMutation(moduleId);
   const updateLessonMutation = useUpdateLessonMutation(lessonId || '');
@@ -145,7 +143,8 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       toast.error('Lesson description is required');
       return;
     }
-    if (lessonType === 'TEXT' && !content.trim()) {
+
+    if (lessonType === 'content' && isEditorEmpty(content)) {
       toast.error('Content is required');
       return;
     }
@@ -269,19 +268,15 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 <Label htmlFor="content">
                   Content <span className="text-red-500">*</span>
                 </Label>
-                <Textarea
-                  id="content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Enter lesson content"
-                  rows={8}
-                  required
-                  className="font-mono text-sm"
-                  disabled={isFetching || isSubmitting}
-                />
-                <p className="text-xs text-muted-foreground">
-                  You can use markdown formatting in your content.
-                </p>
+                <TooltipProvider>
+                  <MinimalTiptapEditor
+                    value={content}
+                    onChange={setContent}
+                    output="json"
+                    placeholder="Start writing..."
+                    editorContentClassName="min-h-64 p-4"
+                  />
+                </TooltipProvider>
               </div>
             ) : (
               <div className="grid gap-2">

@@ -75,23 +75,24 @@ const AdminFlashCardsPage = () => {
   });
   return (
     <AdminLayout meta={{ title: 'FlashCards' }}>
-      <div className="space-y-6 p-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Flashcards</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage all flashcard decks in the system. Create, edit, or delete
-            decks.
-          </p>
-        </div>
-
-        <div className="space-y-4">
+      <div className="space-y-6 p-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Flashcards</h1>
+            <p className="text-muted-foreground mt-2">
+              Manage all flashcard decks in the system. Create, edit, or delete
+              decks.
+            </p>
+          </div>
           <div className="flex items-center justify-end gap-4">
             <Button onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
               New Deck
             </Button>
           </div>
+        </div>
 
+        <div className="space-y-4">
           <DataTableToolbar
             table={table}
             searchPlaceholder="Search by title, description..."

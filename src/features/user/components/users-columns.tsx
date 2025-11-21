@@ -9,9 +9,9 @@ import { UsersDataTableRowActions } from './users-data-table-row-actions';
 import type { IUser } from '../types';
 
 export const roleColors: Record<RoleIUser, string> = {
-  [RoleIUser.USER]: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
-  [RoleIUser.ADMIN]: 'bg-red-100 text-red-800 hover:bg-red-200',
-  [RoleIUser.EXPERT]: 'bg-purple-100 text-purple-800 hover:bg-purple-200',
+  [RoleIUser.USER]: 'bg-blue-100 text-blue-800 hover:bg-blue-100/90',
+  [RoleIUser.ADMIN]: 'bg-red-100 text-red-800 hover:bg-red-100/90',
+  [RoleIUser.EXPERT]: 'bg-purple-100 text-purple-800 hover:bg-purple-100/90',
 };
 
 export const usersColumns: ColumnDef<IUser>[] = [

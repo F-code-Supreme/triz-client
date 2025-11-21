@@ -1,7 +1,8 @@
-import { Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
@@ -18,19 +19,8 @@ import { AdminLayout } from '@/layouts/admin-layout';
 import type { PaginationState } from '@tanstack/react-table';
 
 const AdminManageCoursePage = () => {
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.removeItem('createCourseDraft_v1');
-    } catch {
-      // ignore storage errors
-    }
-  }, []);
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 4,
-  });
+  const navigate = useNavigate();
+  const [page, setPage] = useState<number>(1);
 
   const { data, isFetching, isLoading } = useGetCourseQuery(pagination);
 
@@ -43,7 +33,7 @@ const AdminManageCoursePage = () => {
 
   const renderTabContent = () => {
     return (
-      <div className="space-y-6 p-4">
+      <div className="space-y-6 p-8">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">
@@ -55,13 +45,14 @@ const AdminManageCoursePage = () => {
             </p>
           </div>
           <div>
-            <Link
-              to="/admin/courses/create"
-              className="bg-blue-400 text-white px-4 py-2 rounded-md flex items-center"
+            <Button
+              onClick={() => {
+                navigate({ to: '/admin/courses/create' });
+              }}
             >
               <PlusIcon className="mr-2 h-4 w-4" />
               Create Course
-            </Link>
+            </Button>
           </div>
         </div>
 

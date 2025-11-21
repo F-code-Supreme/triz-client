@@ -22,13 +22,13 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
   const getStatusColor = (status: CourseStatus) => {
     switch (status) {
       case CourseStatus.COMPLETED:
-        return 'bg-green-500';
+        return 'bg-green-500 hover:bg-green-500/90';
       case CourseStatus.IN_PROGRESS:
-        return 'bg-blue-500';
+        return 'bg-blue-500 hover:bg-blue-500/90';
       case CourseStatus.PAUSED:
-        return 'bg-yellow-500';
+        return 'bg-yellow-500 hover:bg-yellow-500/90';
       default:
-        return 'bg-gray-500';
+        return 'bg-gray-500 hover:bg-gray-500/90';
     }
   };
 
@@ -48,13 +48,13 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
   const getLevelColor = (level: CourseLevel) => {
     switch (level) {
       case CourseLevel.BEGINNER:
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-100/90';
       case CourseLevel.INTERMEDIATE:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100/90';
       case CourseLevel.ADVANCED:
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-100/90';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100/90';
     }
   };
 

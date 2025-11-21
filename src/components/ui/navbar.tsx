@@ -210,11 +210,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             {/* Logo Title */}
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">
-                    T
-                  </span>
-                </div>
+                <img src="/logo.svg" alt="TRIZ Logo" className="h-8 w-8" />
                 <span className="hidden font-bold text-lg sm:inline-block">
                   {t('logo_title')}
                 </span>

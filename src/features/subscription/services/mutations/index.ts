@@ -6,6 +6,7 @@ import useAuth from '@/features/auth/hooks/use-auth';
 import { SubscriptionKeys } from '../queries/keys';
 
 import type {
+  ICancelSubscriptionPayload,
   IEditAutoRenewalPayload,
   IPurchaseSubscriptionPayload,
   IPurchaseSubscriptionResponse,
@@ -71,9 +72,60 @@ export const useEditUserAutoRenewalMutation = () => {
           variables.userId,
         ],
       });
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetSubscriptionByIdQuery,
+          variables.subscriptionId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+      });
     },
   });
 };
+
+export const useCancelSubscriptionMutation = () => {
+  const _request = useAxios();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: ICancelSubscriptionPayload) => {
+      const { userId, subscriptionId } = payload;
+      const response = await _request.delete(
+        `/users/${userId}/subscriptions/${subscriptionId}/cancel`,
+      );
+
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetUserSubscriptionByIdQuery,
+          variables.userId,
+          variables.subscriptionId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetSubscriptionsByUserQuery,
+          variables.userId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetSubscriptionByIdQuery,
+          variables.subscriptionId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+      });
+    },
+  });
+};
+
+// export const useRefundSubscriptionMutation = () => {};
 
 // ADMIN
 export const useEditAutoRenewalMutation = () => {

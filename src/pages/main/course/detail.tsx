@@ -66,13 +66,13 @@ const CourseDetail = () => {
   const getLevelColor = (level: CourseLevel) => {
     switch (level) {
       case CourseLevel.BEGINNER:
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-100/90';
       case CourseLevel.INTERMEDIATE:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100/90';
       case CourseLevel.ADVANCED:
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-100/90';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100/90';
     }
   };
 
@@ -256,6 +256,7 @@ const CourseDetail = () => {
                     className="w-full"
                     onClick={() => {
                       // TODO: Implement enroll logic
+                      // eslint-disable-next-line no-alert
                       alert(`Enrolling in: ${course.title}`);
                     }}
                   >
@@ -285,7 +286,7 @@ const CourseDetail = () => {
         <TabsContent value="overview" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>What you'll learn</CardTitle>
+              <CardTitle>What you&apos;ll learn</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">

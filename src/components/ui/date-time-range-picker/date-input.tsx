@@ -10,6 +10,7 @@ interface DateInputProps {
   onChange: (date: Date) => void;
   disabled?: boolean;
   className?: string;
+  disableFuture?: boolean;
 }
 
 interface DateParts {
@@ -23,6 +24,7 @@ const DateInput: React.FC<DateInputProps> = ({
   onChange,
   disabled = false,
   className,
+  disableFuture = false,
 }) => {
   const [date, setDate] = React.useState<DateParts>(() => {
     const d = value ? new Date(value) : new Date();
@@ -57,11 +59,21 @@ const DateInput: React.FC<DateInputProps> = ({
 
     const newDate = { ...date, [field]: value };
     const d = new Date(newDate.year, newDate.month - 1, newDate.day);
-    return (
+
+    // Check if the date is valid
+    const isValidDate =
       d.getFullYear() === newDate.year &&
       d.getMonth() + 1 === newDate.month &&
-      d.getDate() === newDate.day
-    );
+      d.getDate() === newDate.day;
+
+    if (!isValidDate) return false;
+
+    // Check if future dates are disabled
+    if (disableFuture && d > new Date()) {
+      return false;
+    }
+
+    return true;
   };
 
   const handleInputChange =
@@ -96,6 +108,23 @@ const DateInput: React.FC<DateInputProps> = ({
       const isValid = validateDate(field, newValue);
 
       if (!isValid) {
+        // If disableFuture and date is in future, reset to today
+        if (disableFuture) {
+          const newDate = { ...date, [field]: newValue };
+          const d = new Date(newDate.year, newDate.month - 1, newDate.day);
+          if (d > new Date()) {
+            const today = new Date();
+            const todayParts: DateParts = {
+              day: today.getDate(),
+              month: today.getMonth() + 1,
+              year: today.getFullYear(),
+            };
+            setDate(todayParts);
+            initialDate.current = todayParts;
+            onChange(today);
+            return;
+          }
+        }
         setDate(initialDate.current);
       } else {
         initialDate.current = { ...date, [field]: newValue };
