@@ -223,22 +223,39 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
   const EditModuleForm: React.FC<{
     moduleId: string;
     initialName?: string;
-  }> = ({ moduleId, initialName }) => {
+    durationInMinutes: number;
+    level: 'EASY' | 'MEDIUM' | 'HARD';
+  }> = ({ moduleId, initialName, durationInMinutes, level }) => {
     const updateModule = useUpdateModuleMutation(moduleId);
     const [name, setName] = useState(initialName ?? '');
-    const [duration, setDuration] = useState<number>(60);
-    const [level, setLevel] = useState<'EASY' | 'MEDIUM' | 'HARD'>('EASY');
+    const [duration, setDuration] = useState<number>(durationInMinutes);
+    const [levelModule, setLevelModule] = useState<'EASY' | 'MEDIUM' | 'HARD'>(
+      level,
+    );
 
     const handleUpdate = () => {
       if (!name.trim()) {
         toast.error('Tên chương là bắt buộc');
         return;
       }
+      if (duration <= 0) {
+        toast.error('Thời lượng phải lớn hơn 0');
+        return;
+      }
+      if (!levelModule) {
+        toast.error('Độ khó là bắt buộc');
+        return;
+      }
       updateModule.mutate(
-        { id: moduleId, name: name.trim(), durationInMinutes: duration, level },
+        {
+          id: moduleId,
+          name: name.trim(),
+          durationInMinutes: duration,
+          level: levelModule,
+        },
         {
           onSuccess: () => {
-            toast.success('Module updated');
+            toast.success('Cập nhật chương thành công');
             setEditingModuleId(null);
           },
           onError: (err: unknown) => {
@@ -275,7 +292,7 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
 
           <Select
             onValueChange={(value) =>
-              setLevel(value as 'EASY' | 'MEDIUM' | 'HARD')
+              setLevelModule(value as 'EASY' | 'MEDIUM' | 'HARD')
             }
           >
             <SelectTrigger className="w-[180px]">

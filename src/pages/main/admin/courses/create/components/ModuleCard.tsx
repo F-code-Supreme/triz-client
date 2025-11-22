@@ -48,6 +48,8 @@ type ModuleCardProps = {
   EditModuleForm?: React.ComponentType<{
     moduleId: string;
     initialName?: string;
+    durationInMinutes: number;
+    level: 'EASY' | 'MEDIUM' | 'HARD';
   }>;
 };
 
@@ -152,117 +154,135 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
   };
   const lessonsPending = reorderLessonMutation.isPending;
 
+  const renderEditForm = () =>
+    editingModuleId === module.id && EditModuleForm ? (
+      <EditModuleForm
+        moduleId={module.id}
+        initialName={module.name}
+        durationInMinutes={module.durationInMinutes}
+        level={module.level}
+      />
+    ) : null;
+
+  const renderHeader = () => {
+    if (editingModuleId && editingModuleId === module.id) return null;
+    return (
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            className={
+              disabled
+                ? 'cursor-not-allowed opacity-60'
+                : 'cursor-grab active:cursor-grabbing touch-none'
+            }
+            // only attach drag attributes when not disabled
+            {...(disabled ? {} : attributes)}
+            {...(disabled ? {} : listeners)}
+            aria-disabled={disabled}
+            title={disabled ? 'Reordering disabled' : 'Drag to reorder'}
+            type="button"
+          >
+            {disabled ? (
+              <span className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <GripVertical className="h-5 w-5 text-gray-400" />
+            )}
+          </button>
+          <h3 className="font-medium text-base">
+            {module.name} ({module.lessonCount} bài học)
+          </h3>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onEditModule?.(module.id)}
+            disabled={disabled}
+          >
+            <Pencil className="mr-2 h-4 w-4" />
+            Chỉnh sửa
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onAddAssignment?.(module.id)}
+            disabled={disabled}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Thêm bài tập
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onAddLesson?.(module.id)}
+            disabled={disabled}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Thêm bài học
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderLessonsDnd = () => (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleLessonDragEnd}
+    >
+      <SortableContext
+        items={lessonsList.map((l) => String(l.id))}
+        strategy={verticalListSortingStrategy}
+      >
+        {/* Lessons table */}
+        {lessonsList && lessonsList.length > 0 && (
+          <div className="bg-white rounded-md border overflow-hidden mb-4">
+            {lessonsList.map((lesson) => (
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                // wrap the callback so we also pass the parent module id
+                onEdit={(lessonId) => onEditLesson?.(lessonId, module.id)}
+                onView={onViewLesson}
+                onDelete={onDeleteLesson}
+                disabled={disabled || lessonsPending}
+              />
+            ))}
+          </div>
+        )}
+      </SortableContext>
+    </DndContext>
+  );
+
+  const renderAssignments = () =>
+    assignmentsList && assignmentsList.length > 0 ? (
+      <div className="bg-white rounded-md border overflow-hidden">
+        {assignmentsList.map((assignment) => (
+          <AssignmentRow
+            key={assignment.id}
+            assignment={assignment}
+            onEdit={onEditAssignment}
+            onView={onViewAssignment}
+            onDelete={onDeleteAssignment}
+          />
+        ))}
+      </div>
+    ) : null;
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       className="border rounded-lg bg-gray-50 p-4"
     >
-      {editingModuleId === module.id && EditModuleForm ? (
-        <EditModuleForm moduleId={module.id} initialName={module.name} />
-      ) : null}
-
+      {renderEditForm()}
       {/* Module header */}
-      {!editingModuleId || editingModuleId !== module.id ? (
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              className={
-                disabled
-                  ? 'cursor-not-allowed opacity-60'
-                  : 'cursor-grab active:cursor-grabbing touch-none'
-              }
-              // only attach drag attributes when not disabled
-              {...(disabled ? {} : attributes)}
-              {...(disabled ? {} : listeners)}
-              aria-disabled={disabled}
-              title={disabled ? 'Reordering disabled' : 'Drag to reorder'}
-              type="button"
-            >
-              {disabled ? (
-                <span className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <GripVertical className="h-5 w-5 text-gray-400" />
-              )}
-            </button>
-            <h3 className="font-medium text-base">
-              {module.name} ({module.lessonCount} bài học)
-            </h3>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onEditModule?.(module.id)}
-              disabled={disabled}
-            >
-              <Pencil className="mr-2 h-4 w-4" />
-              Chỉnh sửa
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onAddAssignment?.(module.id)}
-              disabled={disabled}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Thêm bài tập
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onAddLesson?.(module.id)}
-              disabled={disabled}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Thêm bài học
-            </Button>
-          </div>
-        </div>
-      ) : null}
+      {renderHeader()}
       {/* Lessons dnd context */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleLessonDragEnd}
-      >
-        <SortableContext
-          items={lessonsList.map((l) => String(l.id))}
-          strategy={verticalListSortingStrategy}
-        >
-          {/* Lessons table */}
-          {lessonsList && lessonsList.length > 0 && (
-            <div className="bg-white rounded-md border overflow-hidden mb-4">
-              {lessonsList.map((lesson) => (
-                <LessonRow
-                  key={lesson.id}
-                  lesson={lesson}
-                  // wrap the callback so we also pass the parent module id
-                  onEdit={(lessonId) => onEditLesson?.(lessonId, module.id)}
-                  onView={onViewLesson}
-                  onDelete={onDeleteLesson}
-                  disabled={disabled || lessonsPending}
-                />
-              ))}
-            </div>
-          )}
-        </SortableContext>
-      </DndContext>
-
+      {renderLessonsDnd()}
       {/* Assignments table */}
-      {assignmentsList && assignmentsList.length > 0 && (
-        <div className="bg-white rounded-md border overflow-hidden">
-          {assignmentsList.map((assignment) => (
-            <AssignmentRow
-              key={assignment.id}
-              assignment={assignment}
-              onEdit={onEditAssignment}
-              onView={onViewAssignment}
-              onDelete={onDeleteAssignment}
-            />
-          ))}
-        </div>
-      )}
+      {renderAssignments()}
     </div>
   );
 };
