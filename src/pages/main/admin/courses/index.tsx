@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,7 +20,10 @@ import type { PaginationState } from '@tanstack/react-table';
 
 const AdminManageCoursePage = () => {
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(1);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 8,
+  });
 
   const { data, isFetching, isLoading } = useGetCourseQuery(pagination);
 

@@ -16,7 +16,13 @@ import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
 import { isEditorEmpty } from '@/components/ui/minimal-tiptap/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import {
+  useCreateLessonMutation,
+  useUpdateLessonMutation,
+} from '@/features/lesson/services/mutations';
+import { useGetLessonById } from '@/features/lesson/services/queries';
 
+import type { CreateLessonPayload } from '@/features/lesson/services/mutations/types';
 import type { Content } from '@tiptap/react';
 
 type LessonType = 'TEXT' | 'VIDEO';
@@ -39,7 +45,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
-  const [lessonType, setLessonType] = React.useState<LessonType>('content');
+  const [lessonType, setLessonType] = React.useState<LessonType>('TEXT');
   const [content, setContent] = React.useState<Content>('');
   const [videoFile, setVideoFile] = React.useState<File | null>(null);
   const createLessonMutation = useCreateLessonMutation(moduleId);
@@ -80,10 +86,12 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
   const submitUpdate = async () => {
     if (lessonType === 'TEXT') {
+      const contentValue =
+        typeof content === 'string' ? content : JSON.stringify(content ?? '');
       const payload = {
         title: title.trim(),
         description: description.trim(),
-        content: content.trim(),
+        content: contentValue.trim(),
         type: 'TEXT',
       };
       await updateLessonMutation.mutateAsync(payload as CreateLessonPayload);
@@ -112,10 +120,12 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
   const submitCreate = async () => {
     if (lessonType === 'TEXT') {
+      const contentValue =
+        typeof content === 'string' ? content : JSON.stringify(content ?? '');
       const payload = {
         title: title.trim(),
         description: description.trim(),
-        content: content.trim(),
+        content: contentValue.trim(),
         type: 'TEXT',
       };
       await createLessonMutation.mutateAsync(payload as CreateLessonPayload);
@@ -144,7 +154,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       return;
     }
 
-    if (lessonType === 'content' && isEditorEmpty(content)) {
+    if (lessonType === 'TEXT' && isEditorEmpty(content)) {
       toast.error('Content is required');
       return;
     }
