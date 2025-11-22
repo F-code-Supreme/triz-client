@@ -163,63 +163,63 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
       ) : null}
 
       {/* Module header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <button
-            className={
-              disabled
-                ? 'cursor-not-allowed opacity-60'
-                : 'cursor-grab active:cursor-grabbing touch-none'
-            }
-            // only attach drag attributes when not disabled
-            {...(disabled ? {} : attributes)}
-            {...(disabled ? {} : listeners)}
-            aria-disabled={disabled}
-            title={disabled ? 'Reordering disabled' : 'Drag to reorder'}
-            type="button"
-          >
-            {disabled ? (
-              <span className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <GripVertical className="h-5 w-5 text-gray-400" />
-            )}
-          </button>
-          <h3 className="font-medium text-base">
-            {module.name} ({module.lessonCount}{' '}
-            {module.lessonCount === 1 ? 'lesson' : 'lessons'})
-          </h3>
+      {!editingModuleId || editingModuleId !== module.id ? (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              className={
+                disabled
+                  ? 'cursor-not-allowed opacity-60'
+                  : 'cursor-grab active:cursor-grabbing touch-none'
+              }
+              // only attach drag attributes when not disabled
+              {...(disabled ? {} : attributes)}
+              {...(disabled ? {} : listeners)}
+              aria-disabled={disabled}
+              title={disabled ? 'Reordering disabled' : 'Drag to reorder'}
+              type="button"
+            >
+              {disabled ? (
+                <span className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <GripVertical className="h-5 w-5 text-gray-400" />
+              )}
+            </button>
+            <h3 className="font-medium text-base">
+              {module.name} ({module.lessonCount} bài học)
+            </h3>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEditModule?.(module.id)}
+              disabled={disabled}
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Chỉnh sửa
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onAddAssignment?.(module.id)}
+              disabled={disabled}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Thêm bài tập
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onAddLesson?.(module.id)}
+              disabled={disabled}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Thêm bài học
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onEditModule?.(module.id)}
-            disabled={disabled}
-          >
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onAddAssignment?.(module.id)}
-            disabled={disabled}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Assignment
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onAddLesson?.(module.id)}
-            disabled={disabled}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Lesson
-          </Button>
-        </div>
-      </div>
-
+      ) : null}
       {/* Lessons dnd context */}
       <DndContext
         sensors={sensors}

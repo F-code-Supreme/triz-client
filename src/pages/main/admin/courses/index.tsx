@@ -40,11 +40,11 @@ const AdminManageCoursePage = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">
-              Manage Courses
+              Quản lý khóa học
             </h1>
             <p className="text-muted-foreground">
-              Manage courses offered on the platform. You can add, edit, or
-              remove courses as needed.
+              Quản lý các khóa học được cung cấp trên nền tảng. Bạn có thể thêm,
+              chỉnh sửa hoặc xóa các khóa học khi cần thiết.
             </p>
           </div>
           <div>
@@ -54,7 +54,7 @@ const AdminManageCoursePage = () => {
               }}
             >
               <PlusIcon className="mr-2 h-4 w-4" />
-              Create Course
+              Tạo khóa học
             </Button>
           </div>
         </div>

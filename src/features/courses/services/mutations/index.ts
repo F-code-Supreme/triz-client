@@ -26,6 +26,24 @@ export const useCreateCourseMutation = () => {
   });
 };
 
+export const useDeleteCourseMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (courseId: string) => {
+      const response = await _request.delete<Response<null>>(
+        `/courses/${courseId}`,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseQuery],
+      });
+    },
+  });
+};
+
 export const useReorderModuleMutation = (courseId: string) => {
   const _request = useAxios();
   return useMutation({

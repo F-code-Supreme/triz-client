@@ -19,17 +19,11 @@ import { useGetModulesQuery } from '@/features/modules/services/queries';
 
 type Props = {
   goBack: () => void;
-  courseId?: string | null;
   title: string;
   description: string;
 };
 
-const StepSummary: React.FC<Props> = ({
-  goBack,
-  courseId,
-  title,
-  description,
-}) => {
+const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
   const { data: modulesData } = useGetModulesQuery();
   const { data: lessonsData } = useGetLessonsQuery();
   const { data: assignmentsData } = useGetAssignmentsQuery();
@@ -51,13 +45,6 @@ const StepSummary: React.FC<Props> = ({
   }, 0);
 
   const handlePublish = async () => {
-    if (!courseId) {
-      toast.error(
-        'Course ID is missing. Please go back and create the course.',
-      );
-      return;
-    }
-
     if (totalModules === 0) {
       toast.error('Please add at least one module before publishing.');
       return;

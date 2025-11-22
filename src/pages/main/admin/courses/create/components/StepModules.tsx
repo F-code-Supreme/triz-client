@@ -13,11 +13,19 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { useQueryClient } from '@tanstack/react-query';
-import { Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, ChevronRight } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useReorderModuleMutation } from '@/features/courses/services/mutations';
 import {
   useCreateModuleMutation,
@@ -35,12 +43,14 @@ import type { DragEndEvent } from '@dnd-kit/core';
 
 type Props = {
   goNext: () => void;
-  goBack: () => void;
-  courseId?: string | null;
 };
 
-const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
+const StepModules: React.FC<Props> = ({ goNext }) => {
   const queryClient = useQueryClient();
+  const courseFromLocalStorage = localStorage.getItem('createCourseDraft_v1');
+  const courseId = courseFromLocalStorage
+    ? JSON.parse(courseFromLocalStorage).id
+    : null;
   const modulesQuery = useGetModulesByCourseQuery(courseId ?? '');
   const modules = modulesQuery.data?.content ?? [];
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -130,7 +140,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
         return;
       }
       if (!name.trim()) {
-        toast.error('Module name is required');
+        toast.error('Tên chương là bắt buộc');
         return;
       }
       createModule.mutate(
@@ -162,7 +172,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
         <div className="flex gap-2 mb-2">
           <input
             className="border p-2 rounded flex-1"
-            placeholder="Module name"
+            placeholder="Nhập tên chương"
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isCreateDisabled}
@@ -174,28 +184,35 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
             onChange={(e) => setDuration(Number(e.target.value))}
             disabled={isCreateDisabled}
           />
-          <select
-            className="border p-2 rounded"
-            value={level}
-            onChange={(e) =>
-              setLevel(e.target.value as 'EASY' | 'MEDIUM' | 'HARD')
+
+          <Select
+            onValueChange={(value) =>
+              setLevel(value as 'EASY' | 'MEDIUM' | 'HARD')
             }
             disabled={isCreateDisabled}
+            value={level}
           >
-            <option value="EASY">Easy</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HARD">Hard</option>
-          </select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Chọn độ khó" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="EASY">Dễ</SelectItem>
+                <SelectItem value="MEDIUM">Trung Bình</SelectItem>
+                <SelectItem value="HARD">Khó</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <div className="flex gap-2">
             <Button onClick={handleCreate} disabled={isCreateDisabled}>
-              Create
+              Tạo
             </Button>
             <Button
               variant="destructive"
               onClick={onClose}
               disabled={isCreateDisabled}
             >
-              Cancel
+              Hủy
             </Button>
           </div>
         </div>
@@ -214,7 +231,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
 
     const handleUpdate = () => {
       if (!name.trim()) {
-        toast.error('Module name is required');
+        toast.error('Tên chương là bắt buộc');
         return;
       }
       updateModule.mutate(
@@ -255,24 +272,30 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
             value={duration}
             onChange={(e) => setDuration(Number(e.target.value))}
           />
-          <select
-            className="border p-2 rounded"
-            value={level}
-            onChange={(e) =>
-              setLevel(e.target.value as 'EASY' | 'MEDIUM' | 'HARD')
+
+          <Select
+            onValueChange={(value) =>
+              setLevel(value as 'EASY' | 'MEDIUM' | 'HARD')
             }
           >
-            <option value="EASY">Easy</option>
-            <option value="MEDIUM">Medium</option>
-            <option value="HARD">Hard</option>
-          </select>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Chọn độ khó" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="EASY">Dễ</SelectItem>
+                <SelectItem value="MEDIUM">Trung Bình</SelectItem>
+                <SelectItem value="HARD">Khó</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
           <div className="flex gap-2">
-            <Button onClick={handleUpdate}>Save</Button>
+            <Button onClick={handleUpdate}>Lưu</Button>
             <Button
               variant="destructive"
               onClick={() => setEditingModuleId(null)}
             >
-              Cancel
+              Hủy
             </Button>
           </div>
         </div>
@@ -318,7 +341,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
           items={modules.map((m) => m.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="p-6 space-y-6">
+          <div className={`${modules.length > 0 ? 'p-6 space-y-6' : ''}`}>
             {modules.map((module) => (
               <ModuleCard
                 key={module.id}
@@ -395,13 +418,9 @@ const StepModules: React.FC<Props> = ({ goNext, goBack, courseId }) => {
 
       {/* Footer divider and actions */}
       <div className="border-t">
-        <div className="flex items-center justify-between p-6">
-          <Button variant="outline" onClick={goBack} disabled={isPending}>
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
+        <div className="flex items-center justify-end p-6">
           <Button onClick={goNext} disabled={isPending}>
-            Next
+            Tiếp Theo
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

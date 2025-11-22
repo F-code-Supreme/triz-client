@@ -29,7 +29,6 @@ type Props = {
   thumbnailPreview: string | null;
   errors: Errors;
   goNext: () => void;
-  setCourseId?: (id: string) => void;
 };
 
 const StepBasic: React.FC<Props> = ({
@@ -40,7 +39,6 @@ const StepBasic: React.FC<Props> = ({
   thumbnailPreview,
   errors,
   goNext,
-  setCourseId,
 }) => {
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
@@ -90,10 +88,13 @@ const StepBasic: React.FC<Props> = ({
 
   const validate = () => {
     const e: Errors = {};
-    if (!title.trim()) e.title = 'Title is required';
-    if (!description.trim()) e.description = 'Short description is required';
-    if (!thumbnailUrl.trim()) e.thumbnail = 'Thumbnail is required';
-    if (!(price > 0)) e.price = 'Price must be greater than 0';
+    if (!title.trim()) e.title = 'Tiêu đề là bắt buộc';
+    if (!description.trim()) e.description = 'Mô tả ngắn là bắt buộc';
+    if (!thumbnailUrl.trim()) e.thumbnail = 'Ảnh đại diện là bắt buộc';
+    if (!(price > 0)) e.price = 'Giá phải lớn hơn 0';
+    if (dealPrice > 0 && dealPrice >= price) {
+      e.dealPrice = 'Giá khuyến mãi phải nhỏ hơn giá gốc';
+    }
     setLocalErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -130,8 +131,10 @@ const StepBasic: React.FC<Props> = ({
             id = maybeId;
           }
         }
-        if (id && setCourseId) setCourseId(id);
-        localStorage.setItem('createCourseDraft_v1', JSON.stringify(payload));
+        localStorage.setItem(
+          'createCourseDraft_v1',
+          JSON.stringify({ payload, id }),
+        );
 
         goNext();
       },
@@ -148,19 +151,20 @@ const StepBasic: React.FC<Props> = ({
 
   return (
     <div className="rounded-md border p-6">
-      <h2 className="text-lg font-semibold mb-4">Basic information</h2>
+      <h2 className="text-lg font-bold mb-4">Thông tin cơ bản khóa học</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Thumbnail */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Thumbnail URL
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Ảnh đại diện khóa học <span className="text-red-500">*</span>
           </label>
           <input
+            required
             type="text"
             value={thumbnailUrl}
             onChange={(e) => setThumbnailUrl(e.target.value)}
-            placeholder="https://example.com/image.jpg or data URL"
+            placeholder="https://example.com/image.jpg hoặc URL dữ liệu"
             className="mt-1 block w-full rounded-md border px-3 py-2"
             disabled={loading}
           />
@@ -186,15 +190,15 @@ const StepBasic: React.FC<Props> = ({
         {/* Title + Description + meta */}
         <div className="md:col-span-2 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Course Title
+            <label className="block text-sm font-semibold text-gray-700">
+              Tiêu đề khóa học <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 block w-full rounded-md border px-3 py-2 "
-              placeholder="Enter course title"
+              placeholder="Nhập tiêu đề khóa học"
               disabled={loading}
             />
             {(errors.title || localErrors.title) && (
@@ -205,15 +209,15 @@ const StepBasic: React.FC<Props> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Short Description
+            <label className="block text-sm font-semibold text-gray-700">
+              Mô tả ngắn <span className="text-red-500">*</span>
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
               className="mt-1 block w-full rounded-md border px-3 py-2"
-              placeholder="Short description for listings"
+              placeholder="Mô tả ngắn cho khóa học"
               disabled={loading}
             />
             {localErrors.description && (
@@ -225,8 +229,8 @@ const StepBasic: React.FC<Props> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Duration (minutes)
+              <label className="block text-sm font-semibold text-gray-700">
+                Thời lượng (phút)
               </label>
               <input
                 type="number"
@@ -239,8 +243,8 @@ const StepBasic: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Level
+              <label className="block text-sm font-semibold text-gray-700">
+                Mức độ
               </label>
               <Select
                 value={level}
@@ -252,9 +256,9 @@ const StepBasic: React.FC<Props> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="STARTER">Starter</SelectItem>
-                  <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-                  <SelectItem value="ADVANCED">Advanced</SelectItem>
+                  <SelectItem value="STARTER">Sơ cấp</SelectItem>
+                  <SelectItem value="INTERMEDIATE">Trung cấp</SelectItem>
+                  <SelectItem value="ADVANCED">Nâng cao</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -262,8 +266,8 @@ const StepBasic: React.FC<Props> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Price
+              <label className="block text-sm font-semibold text-gray-700">
+                Giá <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -283,8 +287,8 @@ const StepBasic: React.FC<Props> = ({
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Deal Price
+              <label className="block text-sm font-semibold text-gray-700">
+                Giá ưu đãi
               </label>
               <input
                 type="text"
@@ -314,7 +318,7 @@ const StepBasic: React.FC<Props> = ({
         <div />
         <div className="flex items-center gap-3">
           <Button type="button" onClick={handleCreate} disabled={loading}>
-            {loading ? 'Creating...' : 'Create & Next'}
+            {loading ? 'Tạo...' : 'Tạo & Tiếp tục'}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
