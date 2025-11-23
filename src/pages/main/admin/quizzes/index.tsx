@@ -117,19 +117,26 @@ const AdminQuizzesPage = () => {
 
   return (
     <AdminLayout meta={{ title: 'Manage Quizzes' }}>
-      <div className="space-y-6 p-8">
-        <div className="flex justify-between items-center">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
-            <p className="text-muted-foreground">
-              Manage all quizzes in the system. Create, edit, or delete quizzes.
-            </p>
-          </div>
-          <Button onClick={() => setIsCreateOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            New Quiz
-          </Button>
+      <div className="space-y-6 p-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
+          <p className="text-muted-foreground">
+            Manage all quizzes in the system.
+          </p>
         </div>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <div>
+              <CardTitle>Quizzes List</CardTitle>
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsCreateOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Quiz
+              </Button>
+            </div>
+          </CardHeader>
 
         <DataTableToolbar
           table={table}
