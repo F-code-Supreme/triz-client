@@ -11,13 +11,7 @@ import {
 } from '@/components/ui/select';
 
 import { CourseStatus, CourseLevel } from '../types';
-
-<<<<<<< HEAD:src/features/courses/components/course-filters.tsx
-import type { CourseFilters } from '@/features/courses/types';
-import { CourseStatus, CourseLevel } from '@/features/courses/types';
-=======
 import type { CourseFilters } from '../types';
->>>>>>> 784ebaa3390456145844ed682cea81b750ff0f66:src/features/course/components/course-filters.tsx
 
 interface CourseFiltersProps {
   filters: CourseFilters;

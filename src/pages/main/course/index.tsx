@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -8,19 +7,6 @@ import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
 import type { CourseFilters } from '@/features/courses/types';
-=======
-import { Link } from '@tanstack/react-router';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
->>>>>>> 784ebaa3390456145844ed682cea81b750ff0f66
-
-import CourseFiltersComponent from '@/features/course/components/course-filters';
-import CourseList from '@/features/course/components/course-list';
-import { mockCourses } from '@/features/course/data/mock-courses';
-import { DefaultLayout } from '@/layouts/default-layout';
-
-import type { CourseFilters } from '@/features/course/types';
-// import { De } from 'zod/v4/locales';
 
 const AllCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});

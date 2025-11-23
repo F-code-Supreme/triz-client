@@ -25,7 +25,7 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 
-function CourseDetail() {
+function CourseOverviewPage() {
   const search = useSearch({ from: `/course/$slug` });
   const { id } = search as { id: string };
   const navigate = useNavigate();
@@ -222,4 +222,4 @@ function CourseDetail() {
   );
 }
 
-export default CourseDetail;
+export default CourseOverviewPage;
