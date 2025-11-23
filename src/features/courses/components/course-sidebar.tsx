@@ -1,13 +1,13 @@
 import {
-  Check,
-  Clock,
   PlayCircle,
   FileText,
-  MessageCircle,
   PenTool,
-  Lock,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -15,216 +15,241 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-import type { CourseWeek } from '../../course/types';
-import { LessonType } from '../../course/types';
+import type { EnhancedModule } from '@/features/courses/types';
 
 interface CourseSidebarProps {
-  weeks: CourseWeek[];
-  currentLessonId?: string;
-  onLessonSelect: (lessonId: string) => void;
+  modules: EnhancedModule[];
+  currentItemId?: string;
+  currentModuleId?: string;
+  onItemSelect: (itemId: string, moduleId: string) => void;
   className?: string;
 }
 
 const CourseSidebar = ({
-  weeks,
-  currentLessonId,
-  onLessonSelect,
+  modules,
+  currentItemId,
+  currentModuleId,
+  onItemSelect,
   className,
 }: CourseSidebarProps) => {
-  const getLessonIcon = (type: LessonType) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const getItemIcon = (type: string) => {
     switch (type) {
-      case LessonType.VIDEO:
+      case 'lesson':
         return PlayCircle;
-      case LessonType.TEXT:
+      case 'quiz':
+        return PenTool;
+      case 'assignment':
         return FileText;
-      case LessonType.QUIZ:
-        return PenTool;
-      case LessonType.ASSIGNMENT:
-        return PenTool;
-      case LessonType.DISCUSSION:
-        return MessageCircle;
       default:
         return FileText;
     }
   };
 
-  const formatDuration = (minutes: number) => {
-    if (minutes < 60) return `${minutes}m`;
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m`
-      : `${hours}h`;
+  const getLevelColor = (level: string) => {
+    switch (level) {
+      case 'EASY':
+        return 'bg-green-500/10 text-green-600 border-green-500/20';
+      case 'MEDIUM':
+        return 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20';
+      case 'HARD':
+        return 'bg-red-500/10 text-red-600 border-red-500/20';
+      default:
+        return 'bg-gray-500/10 text-gray-600 border-gray-500/20';
+    }
   };
 
   return (
-    <div className={cn('w-full bg-card border-r', className)}>
-      <div className="p-6 border-b">
-        <h2 className="text-lg font-semibold text-foreground mb-4">
-          Course Content
-        </h2>
-      </div>
+    <motion.div
+      initial={false}
+      animate={{ width: isCollapsed ? '60px' : '320px' }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className={cn(
+        'relative bg-card border-r h-full flex-shrink-0',
+        className,
+      )}
+    >
+      {/* Toggle Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute -right-3 top-4 z-10 h-6 w-6 rounded-full border bg-background shadow-md hover:bg-accent"
+      >
+        {isCollapsed ? (
+          <ChevronRight className="h-3 w-3" />
+        ) : (
+          <ChevronLeft className="h-3 w-3" />
+        )}
+      </Button>
 
-      <ScrollArea className="h-[calc(100vh-8rem)]">
-        <div className="p-4 space-y-2">
-          {weeks.map((week, weekIndex) => {
-            return (
-              <Collapsible
-                key={week.id}
-                defaultOpen={weekIndex === 0 || week.completedLessons > 0}
-              >
-                <CollapsibleTrigger className="w-full">
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: weekIndex * 0.1 }}
-                    className={cn(
-                      'w-full p-4 rounded-lg border text-left hover:bg-accent transition-colors',
-                      !week.isUnlocked && 'opacity-60',
-                    )}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div
-                          className={cn(
-                            'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
-                            week.isUnlocked
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted text-muted-foreground',
-                          )}
-                        >
-                          {week.isUnlocked ? (
-                            week.order
-                          ) : (
-                            <Lock className="w-4 h-4" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-foreground line-clamp-1">
-                            {week.title}
-                          </h3>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm text-muted-foreground">
-                          {week.completedLessons}/{week.totalLessons}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </CollapsibleTrigger>
+      <AnimatePresence mode="wait">
+        {!isCollapsed ? (
+          <motion.div
+            key="expanded"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="w-full h-full"
+          >
+            {/* Header */}
+            <div className="p-4 border-b">
+              <h2 className="text-base font-semibold text-foreground">
+                Course Content
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {modules.length} modules
+              </p>
+            </div>
 
-                <CollapsibleContent>
-                  <div className="ml-4 mt-2 space-y-1">
-                    {week.lessons.map((lesson, lessonIndex) => {
-                      const Icon = getLessonIcon(lesson.type);
-                      const isCurrentLesson = lesson.id === currentLessonId;
-
-                      return (
-                        <motion.button
-                          key={lesson.id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
+            {/* Content */}
+            <ScrollArea className="h-[calc(100vh-9rem)]">
+              <div className="p-3 space-y-2">
+                {modules.map((module, moduleIndex) => {
+                  const isCurrentModule = module.id === currentModuleId;
+                  return (
+                    <Collapsible
+                      key={module.id}
+                      defaultOpen={moduleIndex === 0 || isCurrentModule}
+                    >
+                      <CollapsibleTrigger className="w-full group">
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
                           transition={{
-                            duration: 0.2,
-                            delay: weekIndex * 0.1 + lessonIndex * 0.05,
+                            duration: 0.3,
+                            delay: moduleIndex * 0.05,
                           }}
-                          onClick={() =>
-                            lesson.isUnlocked && onLessonSelect(lesson.id)
-                          }
-                          disabled={!lesson.isUnlocked}
                           className={cn(
-                            'w-full p-3 rounded-md text-left transition-all group',
-                            isCurrentLesson
-                              ? 'bg-primary text-primary-foreground shadow-sm'
-                              : 'hover:bg-accent',
-                            !lesson.isUnlocked &&
-                              'opacity-50 cursor-not-allowed',
+                            'w-full p-3 rounded-lg border text-left hover:bg-accent/50 transition-colors',
+                            isCurrentModule && 'border-primary/50 bg-primary/5',
                           )}
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                              {lesson.isCompleted ? (
-                                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                                  <Check className="w-3 h-3 text-white" />
-                                </div>
-                              ) : lesson.isUnlocked ? (
-                                <Icon
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <div
+                                className={cn(
+                                  'flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold',
+                                  isCurrentModule
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted text-muted-foreground',
+                                )}
+                              >
+                                {moduleIndex + 1}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-medium text-sm text-foreground line-clamp-1">
+                                  {module.name}
+                                </h3>
+                                <Badge
+                                  variant="outline"
                                   className={cn(
-                                    'w-5 h-5',
-                                    isCurrentLesson
-                                      ? 'text-primary-foreground'
-                                      : 'text-primary',
-                                  )}
-                                />
-                              ) : (
-                                <Lock className="w-5 h-5 text-muted-foreground" />
-                              )}
-                            </div>
-
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between">
-                                <h4
-                                  className={cn(
-                                    'font-medium text-sm line-clamp-1',
-                                    isCurrentLesson
-                                      ? 'text-primary-foreground'
-                                      : 'text-foreground',
+                                    'text-[10px] mt-1 h-4 px-1.5',
+                                    getLevelColor(module.level),
                                   )}
                                 >
-                                  {lesson.title}
-                                </h4>
-                                <div className="flex items-center gap-2 ml-2">
-                                  <div className="flex items-center gap-1">
-                                    <Clock
+                                  {module.level}
+                                </Badge>
+                              </div>
+                            </div>
+                            <ChevronDown className="w-3.5 h-3.5 text-muted-foreground transition-transform group-data-[state=open]:rotate-180 flex-shrink-0" />
+                          </div>
+                        </motion.div>
+                      </CollapsibleTrigger>
+
+                      <CollapsibleContent>
+                        <div className="ml-2 mt-1 space-y-1">
+                          {module.contents.map((item, itemIndex) => {
+                            const Icon = getItemIcon(item.type);
+                            const isCurrentItem = item.id === currentItemId;
+                            return (
+                              <motion.button
+                                key={item.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{
+                                  duration: 0.2,
+                                  delay: itemIndex * 0.03,
+                                }}
+                                onClick={() => onItemSelect(item.id, module.id)}
+                                className={cn(
+                                  'w-full p-2.5 rounded-md text-left transition-all',
+                                  isCurrentItem
+                                    ? 'bg-primary text-primary-foreground shadow-sm'
+                                    : 'hover:bg-accent',
+                                )}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <Icon
+                                    className={cn(
+                                      'w-4 h-4 flex-shrink-0',
+                                      isCurrentItem
+                                        ? 'text-primary-foreground'
+                                        : 'text-muted-foreground',
+                                    )}
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <h4
                                       className={cn(
-                                        'w-3 h-3',
-                                        isCurrentLesson
-                                          ? 'text-primary-foreground/70'
-                                          : 'text-muted-foreground',
-                                      )}
-                                    />
-                                    <span
-                                      className={cn(
-                                        'text-xs',
-                                        isCurrentLesson
-                                          ? 'text-primary-foreground/70'
-                                          : 'text-muted-foreground',
+                                        'font-medium text-xs line-clamp-2',
+                                        isCurrentItem
+                                          ? 'text-primary-foreground'
+                                          : 'text-foreground',
                                       )}
                                     >
-                                      {formatDuration(lesson.duration)}
-                                    </span>
+                                      {item.title}
+                                    </h4>
                                   </div>
                                 </div>
-                              </div>
-
-                              {lesson.description && (
-                                <p
-                                  className={cn(
-                                    'text-xs line-clamp-1 mt-1',
-                                    isCurrentLesson
-                                      ? 'text-primary-foreground/70'
-                                      : 'text-muted-foreground',
-                                  )}
-                                >
-                                  {lesson.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </motion.button>
-                      );
-                    })}
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="collapsed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="w-full h-full"
+          >
+            <div className="flex flex-col items-center pt-16 gap-4">
+              {modules.map((module, index) => {
+                const isCurrentModule = module.id === currentModuleId;
+                return (
+                  <div
+                    key={module.id}
+                    className={cn(
+                      'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors',
+                      isCurrentModule
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground hover:bg-accent',
+                    )}
+                    title={module.name}
+                  >
+                    {index + 1}
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
-            );
-          })}
-        </div>
-      </ScrollArea>
-    </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

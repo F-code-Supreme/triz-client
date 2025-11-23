@@ -21,3 +21,17 @@ export const useGetAssignmentsQuery = (page?: number, size?: number) => {
     },
   });
 };
+
+export const useGetAssignmentModuleQuery = (moduleId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AssignmentKeys.GetAssignmentQuery, moduleId],
+    queryFn: async () => {
+      const response = await _request.get<AssignmentResponse[]>(
+        `/modules/${moduleId}/assignments`,
+      );
+      return response.data;
+    },
+    enabled: !!moduleId,
+  });
+};

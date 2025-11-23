@@ -3,23 +3,14 @@ import { motion } from 'framer-motion';
 
 import CourseList from '@/features/courses/components/course-list';
 import CourseFiltersComponent from '@/features/courses/components/course-filters';
-import { mockCourses } from '@/features/course/data/mock-courses';
-import { CourseFilters } from '@/features/course/types';
-// import { De } from 'zod/v4/locales';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
+import { useGetCourseQuery } from '@/features/courses/services/queries';
+import type { CourseFilters } from '@/features/courses/types';
 
 function AllCoursePage() {
   const [filters, setFilters] = useState<CourseFilters>({});
-
-  // Stats calculation
-  // const totalCourses = mockCourses.length;
-  // const completedCourses = mockCourses.filter(
-  //   (course) => course.status === 'COMPLETED',
-  // ).length;
-  // const inProgressCourses = mockCourses.filter(
-  //   (course) => course.status === 'IN_PROGRESS',
-  // ).length;
+  const { data, isLoading, isError } = useGetCourseQuery();
 
   return (
     <DefaultLayout meta={{ title: 'My Courses' }}>
@@ -69,7 +60,13 @@ function AllCoursePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <CourseList courses={mockCourses} filters={filters} />
+          {isLoading ? (
+            <div>Loading courses...</div>
+          ) : isError ? (
+            <div>Failed to load courses.</div>
+          ) : (
+            <CourseList courses={data?.content || []} filters={filters} />
+          )}
         </motion.div>
       </div>
     </DefaultLayout>

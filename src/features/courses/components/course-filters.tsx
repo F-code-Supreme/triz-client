@@ -10,8 +10,8 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
-import type { CourseFilters } from '../../course/types';
-import { CourseStatus, CourseLevel } from '../../course/types';
+import type { CourseFilters } from '@/features/courses/types';
+import { CourseStatus, CourseLevel } from '@/features/courses/types';
 
 interface CourseFiltersProps {
   filters: CourseFilters;
@@ -91,14 +91,8 @@ const CourseFiltersComponent = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value={CourseStatus.NOT_STARTED}>
-                Not Started
-              </SelectItem>
-              <SelectItem value={CourseStatus.IN_PROGRESS}>
-                In Progress
-              </SelectItem>
-              <SelectItem value={CourseStatus.COMPLETED}>Completed</SelectItem>
-              <SelectItem value={CourseStatus.PAUSED}>Paused</SelectItem>
+              <SelectItem value="ACTIVE">Active</SelectItem>
+              <SelectItem value="INACTIVE">Inactive</SelectItem>
             </SelectContent>
           </Select>
 
@@ -129,11 +123,9 @@ const CourseFiltersComponent = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value={CourseLevel.BEGINNER}>Beginner</SelectItem>
-              <SelectItem value={CourseLevel.INTERMEDIATE}>
-                Intermediate
-              </SelectItem>
-              <SelectItem value={CourseLevel.ADVANCED}>Advanced</SelectItem>
+              <SelectItem value="BEGINNER">Beginner</SelectItem>
+              <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
+              <SelectItem value="ADVANCED">Advanced</SelectItem>
             </SelectContent>
           </Select>
 

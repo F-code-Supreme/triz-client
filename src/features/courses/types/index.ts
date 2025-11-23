@@ -1,3 +1,48 @@
+export enum LessonType {
+  VIDEO = 'VIDEO',
+  TEXT = 'TEXT',
+  QUIZ = 'QUIZ',
+  ASSIGNMENT = 'ASSIGNMENT',
+  DISCUSSION = 'DISCUSSION',
+}
+
+export interface CourseLesson {
+  id: string;
+  title: string;
+  type: LessonType;
+  duration: number;
+  isUnlocked: boolean;
+  isCompleted: boolean;
+  description?: string;
+  videoUrl?: string;
+  content?: string;
+  resources?: {
+    id: string;
+    title: string;
+    type: string;
+    url: string;
+    size?: number;
+  }[];
+}
+
+export interface CourseWeek {
+  id: string;
+  order: number;
+  title: string;
+  isUnlocked: boolean;
+  completedLessons: number;
+  totalLessons: number;
+  lessons: CourseLesson[];
+}
+// Filters for course listing
+export interface CourseFilters {
+  search?: string;
+  status?: string;
+  category?: string;
+  level?: string;
+  sortBy?: 'title' | 'progress' | 'lastAccessed' | 'enrolledAt';
+  sortOrder?: 'asc' | 'desc';
+}
 export interface Order {
   id: string;
   type: string;
@@ -41,7 +86,7 @@ interface CourseModule {
 }
 
 export interface CourseDetailResponse extends Course {
-  modules?: CourseModule[];
+  modules: CourseModule[];
   totalModules?: number;
   totalLessons?: number;
 }
@@ -74,4 +119,77 @@ export interface AssignmentResponse {
     moduleName: string;
     userId: string;
   }[];
+}
+
+export interface BaseContentItem {
+  id: string;
+  type: 'lesson' | 'assignment' | 'quiz';
+  order: number;
+  title: string;
+}
+
+export interface LessonContentItem extends BaseContentItem {
+  type: 'lesson';
+  lessonData: {
+    id: string;
+    name: string;
+    materialUrl: string;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+  };
+}
+
+export interface AssignmentContentItem extends BaseContentItem {
+  type: 'assignment';
+  assignmentData: {
+    id: string;
+    title: string;
+    description: string;
+    durationInMinutes: number;
+    maxAttempts: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+  };
+}
+
+export interface QuizContentItem extends BaseContentItem {
+  type: 'quiz';
+  quizData: {
+    id: string;
+    title: string;
+    description: string;
+    imageSource?: string;
+    durationInMinutes: number;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+  };
+}
+
+export type ModuleContentItem =
+  | LessonContentItem
+  | AssignmentContentItem
+  | QuizContentItem;
+
+export interface EnhancedModule {
+  id: string;
+  name: string;
+  durationInMinutes: number;
+  level: 'EASY' | 'MEDIUM' | 'HARD';
+  totalItems: number;
+  contents: ModuleContentItem[];
+  order: number;
+}
+
+export interface CourseContentState {
+  modules: EnhancedModule[];
+  currentItemId: string | null;
+  currentModuleId: string | null;
+  currentItem: ModuleContentItem | null;
 }

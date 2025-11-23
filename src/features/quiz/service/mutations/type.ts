@@ -185,7 +185,7 @@ export interface GetUserQuizAttemptsResponse {
 }
 
 export type GetAdminQuizzesResponse = {
-  content: Array<{
+  content: {
     id: string;
     title: string;
     description: string;
@@ -194,21 +194,21 @@ export type GetAdminQuizzesResponse = {
     createdAt: string;
     updatedAt: string;
     createdBy: string | null;
-    questions: Array<{
+    questions: {
       id: string;
       content: string;
       questionType: string;
       createdAt: string;
       updatedAt: string;
       quizId: string;
-      options: Array<{
+      options: {
         id: string;
         content: string;
         isCorrect: boolean;
         createdAt: string;
         updatedAt: string;
         questionId: string;
-      }>;
-    }>;
-  }>;
+      }[];
+    }[];
+  }[];
 };

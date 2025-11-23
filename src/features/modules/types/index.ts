@@ -16,3 +16,7 @@ export interface Module {
   assignmentCount: number;
   orders: Order[];
 }
+
+export interface ModuleResponseData {
+  content: Module[];
+}
