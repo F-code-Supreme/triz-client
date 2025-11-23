@@ -1,5 +1,6 @@
 import { Eye, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import {
   AlertDialog,
@@ -48,7 +49,11 @@ const CourseItem = ({ course }: { course: Course }) => {
   const handleDelete = () => {
     deleteCourse.mutate(course.id, {
       onSuccess: () => {
+        toast.success('Xóa khóa học thành công');
         setIsDeleteOpen(false);
+      },
+      onError: () => {
+        toast.error('Xóa khóa học thất bại. Vui lòng thử lại.');
       },
     });
   };
@@ -238,7 +243,7 @@ const CourseItem = ({ course }: { course: Course }) => {
               disabled={deleteCourse.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleteCourse.isPending ? 'Xóa...' : 'Xóa'}
+              Xóa
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -8,13 +8,15 @@ import type { Assignment } from '@/features/assignment/services/queries/types';
 
 type AssignmentRowProps = {
   assignment: Assignment;
-  onEdit?: (assignmentId: string) => void;
-  onView?: (assignmentId: string) => void;
+  moduleId: string;
+  onEdit?: (assignmentId: string, moduleId: string) => void;
+  onView?: (assignmentId: string, moduleId: string) => void;
   onDelete?: (assignmentId: string) => void;
 };
 
 export const AssignmentRow: React.FC<AssignmentRowProps> = ({
   assignment,
+  moduleId,
   onEdit,
   onView,
   onDelete,
@@ -27,9 +29,9 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
       </div>
 
       {/* Assignment number */}
-      <div className="flex items-center w-[120px] h-14 px-4 border-r">
+      <div className="flex items-center w-[200px] h-14 px-4 border-r">
         <span className="text-blue-600 font-medium text-sm">
-          Assignment {assignment.maxAttempts}
+          Tiêu đề: {assignment.title}
         </span>
       </div>
 
@@ -59,7 +61,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
           variant="ghost"
           size="icon"
           className="h-14 w-14 rounded-none border-r hover:bg-gray-100"
-          onClick={() => onEdit?.(assignment.id)}
+          onClick={() => onEdit?.(String(assignment.id), moduleId)}
         >
           <Pencil className="h-4 w-4" />
         </Button>
@@ -67,7 +69,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
           variant="ghost"
           size="icon"
           className="h-14 w-14 rounded-none border-r hover:bg-gray-100"
-          onClick={() => onView?.(assignment.id)}
+          onClick={() => onView?.(String(assignment.id), moduleId)}
         >
           <Eye className="h-4 w-4" />
         </Button>
@@ -75,7 +77,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
           variant="ghost"
           size="icon"
           className="h-14 w-14 rounded-none hover:bg-gray-100 hover:text-red-600"
-          onClick={() => onDelete?.(assignment.id)}
+          onClick={() => onDelete?.(String(assignment.id))}
         >
           <Trash2 className="h-4 w-4" />
         </Button>

@@ -10,7 +10,10 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { useCreateCourseMutation } from '@/features/courses/services/mutations';
+import {
+  useCreateCourseMutation,
+  useUpdateCourseMutation,
+} from '@/features/courses/services/mutations';
 
 type Errors = {
   title?: string;
@@ -29,6 +32,7 @@ type Props = {
   thumbnailPreview: string | null;
   errors: Errors;
   goNext: () => void;
+  setCourseId?: (id: string) => void;
 };
 
 const StepBasic: React.FC<Props> = ({
@@ -39,6 +43,7 @@ const StepBasic: React.FC<Props> = ({
   thumbnailPreview,
   errors,
   goNext,
+  setCourseId,
 }) => {
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
@@ -52,37 +57,63 @@ const StepBasic: React.FC<Props> = ({
     thumbnailPreview ?? '',
   );
   const [localErrors, setLocalErrors] = useState<Errors>({});
+  const [existingCourseId, setExistingCourseId] = useState<string | null>(null);
 
   const createCourse = useCreateCourseMutation();
+  const updateCourse = useUpdateCourseMutation(existingCourseId ?? '');
 
-  // Restore draft on mount (populate local state and parent-managed fields)
-  useEffect(() => {
+  const restoreDraft = () => {
     if (typeof window === 'undefined') return;
     try {
       const raw = localStorage.getItem('createCourseDraft_v1');
       if (!raw) return;
       const saved = JSON.parse(raw) as Record<string, unknown>;
       if (!saved) return;
-      if (typeof saved.title === 'string') setTitle(saved.title);
-      if (typeof saved.description === 'string')
-        setDescription(saved.description);
-      if (typeof saved.durationInMinutes === 'number')
-        setDurationInMinutes(saved.durationInMinutes);
-      if (['STARTER', 'INTERMEDIATE', 'ADVANCED'].includes(String(saved.level)))
-        setLevel(saved.level as 'STARTER' | 'INTERMEDIATE' | 'ADVANCED');
-      if (typeof saved.price === 'number') {
-        setPrice(saved.price);
-        setPriceDisplay(String(saved.price));
+
+      const id = typeof saved.id === 'string' && saved.id ? saved.id : null;
+      if (id) {
+        setExistingCourseId(id);
+        if (setCourseId) setCourseId(id);
       }
-      if (typeof saved.dealPrice === 'number') {
-        setDealPrice(saved.dealPrice);
-        setDealPriceDisplay(String(saved.dealPrice));
+
+      const payload = (saved.payload ?? saved) as Record<string, unknown>;
+
+      const setIfString = (key: string, setter: (v: string) => void) => {
+        const val = payload[key];
+        if (typeof val === 'string') setter(val);
+      };
+      const setIfNumber = (key: string, setter: (v: number) => void) => {
+        const val = payload[key];
+        if (typeof val === 'number') setter(val);
+      };
+
+      setIfString('title', setTitle);
+      setIfString('description', setDescription);
+      setIfNumber('durationInMinutes', setDurationInMinutes);
+
+      const levelVal = payload.level;
+      if (['STARTER', 'INTERMEDIATE', 'ADVANCED'].includes(String(levelVal)))
+        setLevel(levelVal as 'STARTER' | 'INTERMEDIATE' | 'ADVANCED');
+
+      if (typeof payload.price === 'number') {
+        setPrice(payload.price);
+        setPriceDisplay(String(payload.price));
       }
-      if (typeof saved.thumbnailUrl === 'string' && saved.thumbnailUrl)
-        setThumbnailUrl(saved.thumbnailUrl);
+
+      if (typeof payload.dealPrice === 'number') {
+        setDealPrice(payload.dealPrice);
+        setDealPriceDisplay(String(payload.dealPrice));
+      }
+
+      if (typeof payload.thumbnailUrl === 'string' && payload.thumbnailUrl)
+        setThumbnailUrl(payload.thumbnailUrl);
     } catch {
       // ignore parse errors
     }
+  };
+
+  useEffect(() => {
+    restoreDraft();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -110,7 +141,6 @@ const StepBasic: React.FC<Props> = ({
       level,
       price,
       dealPrice,
-      // backend expects a URL; as a fallback use data URL preview
       thumbnailUrl: thumbnailUrl ?? '',
     };
 
@@ -122,19 +152,36 @@ const StepBasic: React.FC<Props> = ({
       return 'An error occurred while creating the course.';
     };
 
-    createCourse.mutate(payload, {
+    const mutation = existingCourseId ? updateCourse : createCourse;
+    const successMessage = existingCourseId
+      ? 'Khóa học đã được cập nhật thành công!'
+      : 'Khóa học đã được tạo thành công, tiếp tục bước tiếp theo.';
+
+    mutation.mutate(payload, {
       onSuccess: (res: unknown) => {
-        let id: string | undefined;
-        if (typeof res === 'object' && res !== null && 'id' in res) {
-          const maybeId = (res as Record<string, unknown>).id;
-          if (typeof maybeId === 'string') {
-            id = maybeId;
+        let id: string | undefined = existingCourseId ?? undefined;
+
+        // If creating new course, extract ID from response
+        if (!existingCourseId && typeof res === 'object' && res !== null) {
+          if ('data' in res) {
+            const data = (res as Record<string, unknown>).data;
+            if (typeof data === 'object' && data !== null && 'id' in data) {
+              const maybeId = (data as Record<string, unknown>).id;
+              if (typeof maybeId === 'string') {
+                id = maybeId;
+                setExistingCourseId(id);
+              }
+            }
           }
         }
+
+        if (id && setCourseId) setCourseId(id);
+
         localStorage.setItem(
           'createCourseDraft_v1',
           JSON.stringify({ payload, id }),
         );
+        toast.success(successMessage);
 
         goNext();
       },
@@ -146,12 +193,20 @@ const StepBasic: React.FC<Props> = ({
 
   // react-query mutation result typing may vary across versions; access isLoading defensively
   const loading = Boolean(
-    (createCourse as unknown as { isLoading?: boolean }).isLoading,
+    (createCourse as unknown as { isLoading?: boolean }).isLoading ||
+      (updateCourse as unknown as { isLoading?: boolean }).isLoading,
   );
 
   return (
     <div className="rounded-md border p-6">
-      <h2 className="text-lg font-bold mb-4">Thông tin cơ bản khóa học</h2>
+      <h2 className="text-lg font-bold mb-4">
+        Thông tin cơ bản khóa học
+        {existingCourseId && (
+          <span className="ml-2 text-sm font-normal text-muted-foreground">
+            (Đang chỉnh sửa)
+          </span>
+        )}
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Thumbnail */}
@@ -318,7 +373,13 @@ const StepBasic: React.FC<Props> = ({
         <div />
         <div className="flex items-center gap-3">
           <Button type="button" onClick={handleCreate} disabled={loading}>
-            {loading ? 'Tạo...' : 'Tạo & Tiếp tục'}
+            {loading
+              ? existingCourseId
+                ? 'Đang cập nhật...'
+                : 'Tạo...'
+              : existingCourseId
+                ? 'Cập nhật & Tiếp tục'
+                : 'Tạo & Tiếp tục'}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

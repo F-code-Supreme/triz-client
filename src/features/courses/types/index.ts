@@ -29,6 +29,7 @@ export interface Course {
   thumbnail?: string | null;
   learnerCount?: number;
   totalModules?: number;
+  totalLessons?: number;
   status?: CourseStatus;
   orders?: Order[];
   createdAt?: string;

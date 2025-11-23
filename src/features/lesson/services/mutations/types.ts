@@ -1,6 +1,7 @@
 export interface CreateLessonPayload {
   title: string;
   description: string;
-  type: string;
   content?: string;
+  videoUrl?: string;
+  type: 'TEXT' | 'VIDEO';
 }

@@ -19,6 +19,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   useCreateLessonMutation,
   useUpdateLessonMutation,
+  useCreateVideoLessonMutation,
 } from '@/features/lesson/services/mutations';
 import { useGetLessonById } from '@/features/lesson/services/queries';
 
@@ -32,8 +33,8 @@ type AddLessonModalProps = {
   onOpenChange: (open: boolean) => void;
   moduleId: string;
   lessonId?: string;
-  // optional callback when save/create completes
   onSaved?: () => void;
+  viewMode?: boolean;
 };
 
 export const AddLessonModal: React.FC<AddLessonModalProps> = ({
@@ -42,39 +43,85 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
   moduleId,
   lessonId,
   onSaved,
+  viewMode = false,
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [lessonType, setLessonType] = React.useState<LessonType>('TEXT');
   const [content, setContent] = React.useState<Content>('');
   const [videoFile, setVideoFile] = React.useState<File | null>(null);
+  const [existingVideoUrl, setExistingVideoUrl] = React.useState<string>('');
   const createLessonMutation = useCreateLessonMutation(moduleId);
+  const createVideoLessonMutation = useCreateVideoLessonMutation(moduleId);
   const updateLessonMutation = useUpdateLessonMutation(lessonId || '');
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  // fetch lesson via query hook when editing
   const lessonQuery = useGetLessonById(lessonId);
   const isFetching = lessonQuery.isFetching;
   const isSubmitting =
-    createLessonMutation.isPending || updateLessonMutation.isPending;
+    createLessonMutation.isPending ||
+    createVideoLessonMutation.isPending ||
+    updateLessonMutation.isPending;
 
-  // fetch existing lesson when editing
-  useEffect(() => {
-    if (!lessonQuery.data) return;
-    const data = lessonQuery.data;
+  const isDisabled = isFetching || isSubmitting || viewMode;
+
+  const parseTextContent = (rawContent: unknown): Content => {
+    try {
+      const parsedContent =
+        typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;
+
+      if (!parsedContent || typeof parsedContent !== 'object') {
+        return '';
+      }
+
+      if (
+        parsedContent.type === 'doc' &&
+        Array.isArray(parsedContent.content)
+      ) {
+        return parsedContent;
+      }
+
+      return { type: 'doc', content: [parsedContent] };
+    } catch (error) {
+      console.error('Failed to parse lesson content:', error);
+      return {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', text: String(rawContent) }],
+          },
+        ],
+      };
+    }
+  };
+
+  const loadLessonData = (data: typeof lessonQuery.data) => {
+    if (!data) return;
+
     setTitle(data.title ?? '');
     setDescription(data.description ?? '');
-    setLessonType(
-      (data.type ?? 'TEXT').toUpperCase() === 'VIDEO' ? 'VIDEO' : 'TEXT',
-    );
-    setContent(data.content ?? '');
-    // do not set videoFile — user must re-upload if they want to replace
+
+    const type =
+      (data.type ?? 'TEXT').toUpperCase() === 'VIDEO' ? 'VIDEO' : 'TEXT';
+    setLessonType(type);
+
+    if (type === 'TEXT' && data.content) {
+      setContent(parseTextContent(data.content));
+    } else if (type === 'VIDEO') {
+      setExistingVideoUrl(data.videoUrl || data.content || '');
+    }
+  };
+
+  useEffect(() => {
+    loadLessonData(lessonQuery.data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonQuery.data]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type (video files only)
       const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
       if (!validVideoTypes.includes(file.type)) {
         toast.error('Please select a valid video file (MP4, WebM, or OGG)');
@@ -84,62 +131,98 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     }
   };
 
-  const submitUpdate = async () => {
-    if (lessonType === 'TEXT') {
-      const contentValue =
-        typeof content === 'string' ? content : JSON.stringify(content ?? '');
-      const payload = {
-        title: title.trim(),
-        description: description.trim(),
-        content: contentValue.trim(),
-        type: 'TEXT',
-      };
-      await updateLessonMutation.mutateAsync(payload as CreateLessonPayload);
+  const createTextLesson = async () => {
+    const contentValue =
+      typeof content === 'string' ? content : JSON.stringify(content ?? '');
+    const payload = {
+      title: title.trim(),
+      description: description.trim(),
+      content: contentValue.trim(),
+      type: 'TEXT',
+    };
+    await createLessonMutation.mutateAsync(payload as CreateLessonPayload);
+  };
+
+  const uploadVideoAndGetUrl = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const uploadResponse =
+      await createVideoLessonMutation.mutateAsync(formData);
+
+    if (!uploadResponse) {
+      console.error(
+        'Failed to extract video URL from response:',
+        uploadResponse,
+      );
+      toast.error('Failed to get video URL from upload');
+      throw new Error('Failed to get video URL');
+    }
+
+    return uploadResponse;
+  };
+
+  const createVideoLesson = async () => {
+    if (!videoFile) {
+      toast.error('Please select a video file');
       return;
     }
 
-    // VIDEO update
-    if (videoFile) {
-      const formData = new FormData();
-      formData.append('title', title.trim());
-      formData.append('description', description.trim());
-      formData.append('type', 'VIDEO');
-      formData.append('video', videoFile);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateLessonMutation.mutateAsync(formData as any);
-    } else {
-      const payload = {
-        title: title.trim(),
-        description: description.trim(),
-        type: 'VIDEO',
-      };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateLessonMutation.mutateAsync(payload as any);
-    }
+    const videoUrl = await uploadVideoAndGetUrl(videoFile);
+    const lessonPayload = {
+      title: title.trim(),
+      description: description.trim(),
+      videoUrl,
+      type: 'VIDEO' as const,
+    };
+    await createLessonMutation.mutateAsync(lessonPayload);
   };
 
   const submitCreate = async () => {
     if (lessonType === 'TEXT') {
-      const contentValue =
-        typeof content === 'string' ? content : JSON.stringify(content ?? '');
-      const payload = {
-        title: title.trim(),
-        description: description.trim(),
-        content: contentValue.trim(),
-        type: 'TEXT',
-      };
-      await createLessonMutation.mutateAsync(payload as CreateLessonPayload);
+      await createTextLesson();
       return;
     }
+    await createVideoLesson();
+  };
 
-    // VIDEO create
-    const formData = new FormData();
-    formData.append('title', title.trim());
-    formData.append('description', description.trim());
-    formData.append('type', 'VIDEO');
-    if (videoFile) formData.append('video', videoFile);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await createLessonMutation.mutateAsync(formData as any);
+  const updateTextLesson = async () => {
+    const contentValue =
+      typeof content === 'string' ? content : JSON.stringify(content ?? '');
+    const payload = {
+      title: title.trim(),
+      description: description.trim(),
+      content: contentValue.trim(),
+      type: 'TEXT',
+    };
+    await updateLessonMutation.mutateAsync(payload as CreateLessonPayload);
+  };
+
+  const updateVideoLesson = async () => {
+    const basePayload = {
+      title: title.trim(),
+      description: description.trim(),
+      type: 'VIDEO',
+    };
+
+    if (videoFile) {
+      const videoUrl = await uploadVideoAndGetUrl(videoFile);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateLessonMutation.mutateAsync({
+        ...basePayload,
+        videoUrl,
+      } as any);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await updateLessonMutation.mutateAsync(basePayload as any);
+    }
+  };
+
+  const submitUpdate = async () => {
+    if (lessonType === 'TEXT') {
+      await updateTextLesson();
+      return;
+    }
+    await updateVideoLesson();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -159,7 +242,6 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       return;
     }
     if (lessonType === 'VIDEO' && !videoFile && !lessonId) {
-      // when creating a new VIDEO lesson, file is required; when updating, skip if not changing
       toast.error('Please select a video file');
       return;
     }
@@ -167,10 +249,10 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     try {
       if (lessonId) {
         await submitUpdate();
-        toast.success('Lesson updated successfully');
+        toast.success('Cập nhật bài học thành công');
       } else {
         await submitCreate();
-        toast.success('Lesson created successfully');
+        toast.success('Tạo bài học thành công');
       }
       handleClose();
       onSaved?.();
@@ -188,6 +270,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     setLessonType('TEXT');
     setContent('');
     setVideoFile(null);
+    setExistingVideoUrl('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -199,47 +282,58 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>{lessonId ? 'Edit Lesson' : 'Add Lesson'}</DialogTitle>
+            <DialogTitle>
+              {viewMode
+                ? 'Xem bài học'
+                : lessonId
+                  ? 'Chỉnh sửa bài học'
+                  : 'Thêm bài học'}
+            </DialogTitle>
             <DialogDescription>
-              {lessonId
-                ? 'Edit the lesson details. Upload a new video only if you want to replace it.'
-                : 'Create a new lesson for this module. Fill in all the required fields below.'}
+              {viewMode
+                ? 'Xem chi tiết bài học.'
+                : lessonId
+                  ? 'Chỉnh sửa chi tiết bài học. Tải lên video mới chỉ khi bạn muốn thay thế.'
+                  : 'Tạo bài học mới cho chương này. Vui lòng điền tất cả các trường bắt buộc bên dưới.'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">
-                Title <span className="text-red-500">*</span>
+                Tiêu đề {!viewMode && <span className="text-red-500">*</span>}
               </Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter lesson title"
-                required
-                disabled={isFetching || isSubmitting}
+                placeholder="Nhập tiêu đề bài học"
+                required={!viewMode}
+                disabled={isDisabled}
+                readOnly={viewMode}
               />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="description">
-                Description <span className="text-red-500">*</span>
+                Mô tả {!viewMode && <span className="text-red-500">*</span>}
               </Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter lesson description"
+                placeholder="Nhập mô tả bài học"
                 rows={3}
-                required
-                disabled={isFetching || isSubmitting}
+                required={!viewMode}
+                disabled={isDisabled}
+                readOnly={viewMode}
               />
             </div>
 
             <div className="grid gap-2">
               <Label>
-                Lesson Type <span className="text-red-500">*</span>
+                Loại bài học{' '}
+                {!viewMode && <span className="text-red-500">*</span>}
               </Label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -252,9 +346,9 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                       setLessonType(e.target.value as LessonType)
                     }
                     className="w-4 h-4 text-blue-600"
-                    disabled={isFetching || isSubmitting}
+                    disabled={isDisabled || !!lessonId}
                   />
-                  <span className="text-sm font-medium">Content</span>
+                  <span className="text-sm font-medium">Nội dung</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -266,73 +360,110 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                       setLessonType(e.target.value as LessonType)
                     }
                     className="w-4 h-4 text-blue-600"
-                    disabled={isFetching || isSubmitting}
+                    disabled={isDisabled || !!lessonId}
                   />
                   <span className="text-sm font-medium">Video</span>
                 </label>
               </div>
+              {lessonId && !viewMode && (
+                <p className="text-xs text-muted-foreground">
+                  Loại bài học không thể thay đổi khi chỉnh sửa
+                </p>
+              )}
             </div>
 
             {lessonType === 'TEXT' ? (
               <div className="grid gap-2">
                 <Label htmlFor="content">
-                  Content <span className="text-red-500">*</span>
+                  Nội dung{' '}
+                  {!viewMode && <span className="text-red-500">*</span>}
                 </Label>
                 <TooltipProvider>
                   <MinimalTiptapEditor
+                    key={lessonId ? `editor-${lessonId}` : 'editor-new'}
                     value={content}
                     onChange={setContent}
                     output="json"
-                    placeholder="Start writing..."
+                    placeholder={viewMode ? '' : 'Bắt đầu viết...'}
                     editorContentClassName="min-h-64 p-4"
+                    editable={!viewMode}
                   />
                 </TooltipProvider>
               </div>
             ) : (
               <div className="grid gap-2">
                 <Label htmlFor="video">
-                  Video File <span className="text-red-500">*</span>
+                  Video{' '}
+                  {!lessonId && !viewMode && (
+                    <span className="text-red-500">*</span>
+                  )}
                 </Label>
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="video"
-                      ref={fileInputRef}
-                      type="file"
-                      accept="video/mp4,video/webm,video/ogg"
-                      onChange={handleFileChange}
-                      className="cursor-pointer"
-                      required
-                      disabled={isFetching || isSubmitting}
-                    />
-                  </div>
-                  {videoFile && (
-                    <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-md border">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{videoFile.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {(videoFile.size / (1024 * 1024)).toFixed(2)} MB
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setVideoFile(null);
-                          if (fileInputRef.current) {
-                            fileInputRef.current.value = '';
-                          }
-                        }}
-                        disabled={isFetching || isSubmitting}
+                  {existingVideoUrl && (
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                      <p className="text-sm font-medium text-blue-900 mb-2">
+                        {viewMode ? 'Video:' : 'Video hiện tại:'}
+                      </p>
+                      <video
+                        src={existingVideoUrl}
+                        controls
+                        className="w-full max-h-80 rounded"
                       >
-                        Remove
-                      </Button>
+                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                      </video>
+                      {!viewMode && (
+                        <p className="text-xs text-blue-700 mt-2">
+                          Tải lên video mới bên dưới để thay thế
+                        </p>
+                      )}
                     </div>
                   )}
-                  <p className="text-xs text-muted-foreground">
-                    Supported formats: MP4, WebM, OGG
-                  </p>
+
+                  {!viewMode && (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          id="video"
+                          ref={fileInputRef}
+                          type="file"
+                          accept="video/mp4,video/webm,video/ogg"
+                          onChange={handleFileChange}
+                          className="cursor-pointer"
+                          required={!lessonId && !existingVideoUrl}
+                          disabled={isDisabled}
+                        />
+                      </div>
+                      {videoFile && (
+                        <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-md border">
+                          <div className="flex-1">
+                            <p className="text-sm font-medium">
+                              {videoFile.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {(videoFile.size / (1024 * 1024)).toFixed(2)} MB
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setVideoFile(null);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.value = '';
+                              }
+                            }}
+                            disabled={isDisabled}
+                          >
+                            Xóa
+                          </Button>
+                        </div>
+                      )}
+                      <p className="text-xs text-muted-foreground">
+                        Định dạng hỗ trợ: MP4, WebM, OGG
+                      </p>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -345,17 +476,19 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
               onClick={handleClose}
               disabled={isFetching || isSubmitting}
             >
-              Cancel
+              {viewMode ? 'Đóng' : 'Hủy'}
             </Button>
-            <Button type="submit" disabled={isFetching || isSubmitting}>
-              {isSubmitting
-                ? lessonId
-                  ? 'Updating...'
-                  : 'Creating...'
-                : lessonId
-                  ? 'Update Lesson'
-                  : 'Create Lesson'}
-            </Button>
+            {!viewMode && (
+              <Button type="submit" disabled={isDisabled}>
+                {isSubmitting
+                  ? lessonId
+                    ? 'Đang cập nhật...'
+                    : 'Đang tạo...'
+                  : lessonId
+                    ? 'Cập nhật bài học'
+                    : 'Tạo bài học'}
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>

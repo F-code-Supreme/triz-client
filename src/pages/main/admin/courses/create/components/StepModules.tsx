@@ -13,10 +13,20 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { useQueryClient } from '@tanstack/react-query';
-import { Plus, ChevronRight } from 'lucide-react';
+import { Plus, ChevronRight, ChevronLeft } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -26,12 +36,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useDeleteAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useReorderModuleMutation } from '@/features/courses/services/mutations';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { useDeleteLessonMutation } from '@/features/lesson/services/mutations';
 import {
   useCreateModuleMutation,
   useUpdateModuleMutation,
 } from '@/features/modules/services/mutations';
-import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
 
 import { AddAssignmentModal } from './AddAssignmentModal';
@@ -43,28 +55,53 @@ import type { DragEndEvent } from '@dnd-kit/core';
 
 type Props = {
   goNext: () => void;
+  goBack: () => void;
 };
 
-const StepModules: React.FC<Props> = ({ goNext }) => {
+const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
   const queryClient = useQueryClient();
   const courseFromLocalStorage = localStorage.getItem('createCourseDraft_v1');
   const courseId = courseFromLocalStorage
     ? JSON.parse(courseFromLocalStorage).id
     : null;
-  const modulesQuery = useGetModulesByCourseQuery(courseId ?? '');
-  const modules = modulesQuery.data?.content ?? [];
+  const parseCourse = courseFromLocalStorage
+    ? JSON.parse(courseFromLocalStorage).payload
+    : null;
+
+  // const modulesQuery = useGetModulesByCourseQuery(courseId ?? '');
+  const { data: courseById } = useGetCourseByIdQuery(courseId ?? '');
+  const modules = courseById?.modules ?? [];
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
+  const [editingAssignmentId, setEditingAssignmentId] = useState<string | null>(
+    null,
+  );
   const [selectedModuleIdForLesson, setSelectedModuleIdForLesson] = useState<
     string | null
   >(null);
   // track lesson being edited (if any)
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
   const [isLessonModalOpen, setIsLessonModalOpen] = useState(false);
+  const [isViewMode, setIsViewMode] = useState(false);
+  const [isAssignmentViewMode, setIsAssignmentViewMode] = useState(false);
+  const [deletingLessonId, setDeletingLessonId] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingAssignmentId, setDeletingAssignmentId] = useState<
+    string | null
+  >(null);
+  const [deletingAssignmentModuleId, setDeletingAssignmentModuleId] = useState<
+    string | null
+  >(null);
+  const [isDeleteAssignmentDialogOpen, setIsDeleteAssignmentDialogOpen] =
+    useState(false);
 
   const reorderModuleMutation = useReorderModuleMutation(courseId ?? '');
+  const deleteLessonMutation = useDeleteLessonMutation(deletingLessonId ?? '');
+  const deleteAssignmentMutation = useDeleteAssignmentMutation(
+    deletingAssignmentModuleId ?? '',
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -114,7 +151,7 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
             toast.error(msg);
           },
           onSuccess: () => {
-            toast.success('Module order updated');
+            toast.success('Cập nhật thứ tự chương thành công');
           },
           onSettled: () => {
             queryClient.invalidateQueries({ queryKey });
@@ -124,7 +161,7 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
     }
   };
   // use isLoading for mutation and isFetching for query
-  const isPending = reorderModuleMutation.isPending || modulesQuery.isFetching;
+  const isPending = reorderModuleMutation.isPending;
 
   const CreateModuleForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     // keep local disable aware of global pending
@@ -147,7 +184,7 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
         { name: name.trim(), durationInMinutes: duration, level },
         {
           onSuccess: () => {
-            toast.success('Module created');
+            toast.success('Tạo chương thành công');
             onClose();
           },
           onError: (err: unknown) => {
@@ -294,6 +331,7 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
             onValueChange={(value) =>
               setLevelModule(value as 'EASY' | 'MEDIUM' | 'HARD')
             }
+            value={levelModule}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Chọn độ khó" />
@@ -319,6 +357,54 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
       </div>
     );
   };
+  const handleDeleteLesson = (lessonId: string) => {
+    setDeletingLessonId(lessonId);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteLesson = () => {
+    if (!deletingLessonId) return;
+
+    deleteLessonMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success('Xóa bài học thành công');
+        setIsDeleteDialogOpen(false);
+        setDeletingLessonId(null);
+      },
+      onError: (err: unknown) => {
+        let msg = 'Không thể xóa bài học';
+        if (err instanceof Error) msg = err.message;
+        else if (typeof err === 'string') msg = err;
+        toast.error(msg);
+      },
+    });
+  };
+
+  const handleDeleteAssignment = (assignmentId: string, moduleId: string) => {
+    setDeletingAssignmentId(assignmentId);
+    setDeletingAssignmentModuleId(moduleId);
+    setIsDeleteAssignmentDialogOpen(true);
+  };
+
+  const confirmDeleteAssignment = () => {
+    if (!deletingAssignmentId) return;
+
+    deleteAssignmentMutation.mutate(deletingAssignmentId, {
+      onSuccess: () => {
+        toast.success('Xóa bài tập thành công');
+        setIsDeleteAssignmentDialogOpen(false);
+        setDeletingAssignmentId(null);
+        setDeletingAssignmentModuleId(null);
+      },
+      onError: (err: unknown) => {
+        let msg = 'Không thể xóa bài tập';
+        if (err instanceof Error) msg = err.message;
+        else if (typeof err === 'string') msg = err;
+        toast.error(msg);
+      },
+    });
+  };
+
   return (
     <div className="rounded-md border">
       {/* Header */}
@@ -326,17 +412,19 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
         <div className="flex items-center gap-3">
           <div className="w-2 h-8 bg-blue-600 rounded" />
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            Quản lý Chương Học
+            Quản lý Chương Học : {parseCourse?.title}
             {isPending && (
               <span className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
             )}
+            <br />
           </h2>
         </div>
+
         <Button
           variant="outline"
           size="sm"
           onClick={() => setShowCreateForm((v) => !v)}
-          disabled={isPending}
+          disabled={isPending || courseId === null}
         >
           <Plus className="mr-2 h-4 w-4" />
           Tạo Chương Học
@@ -369,38 +457,41 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
                 disabled={isPending}
                 onAddAssignment={(moduleId) => {
                   setSelectedModuleId(moduleId);
+                  setEditingAssignmentId(null);
+                  setIsAssignmentViewMode(false);
                   setIsAssignmentModalOpen(true);
                 }}
                 onAddLesson={(moduleId) => {
                   setSelectedModuleIdForLesson(moduleId);
+                  setIsViewMode(false);
                   setIsLessonModalOpen(true);
                 }}
                 onEditLesson={(lessonId, moduleId) => {
-                  // open modal in edit mode with lesson id + module id
                   setSelectedModuleIdForLesson(moduleId);
                   setEditingLessonId(lessonId);
+                  setIsViewMode(false);
                   setIsLessonModalOpen(true);
                 }}
-                onViewLesson={(lessonId) => {
-                  // TODO: Implement view lesson functionality
-                  toast.info(`View lesson ${lessonId}`);
+                onViewLesson={(lessonId, moduleId) => {
+                  setSelectedModuleIdForLesson(moduleId);
+                  setEditingLessonId(lessonId);
+                  setIsViewMode(true);
+                  setIsLessonModalOpen(true);
                 }}
-                onDeleteLesson={(lessonId) => {
-                  // TODO: Implement delete lesson functionality
-                  toast.info(`Delete lesson ${lessonId}`);
+                onDeleteLesson={handleDeleteLesson}
+                onEditAssignment={(assignmentId, moduleId) => {
+                  setSelectedModuleId(moduleId);
+                  setEditingAssignmentId(assignmentId);
+                  setIsAssignmentViewMode(false);
+                  setIsAssignmentModalOpen(true);
                 }}
-                onEditAssignment={(assignmentId) => {
-                  // TODO: Implement edit assignment functionality
-                  toast.info(`Edit assignment ${assignmentId}`);
+                onViewAssignment={(assignmentId, moduleId) => {
+                  setSelectedModuleId(moduleId);
+                  setEditingAssignmentId(assignmentId);
+                  setIsAssignmentViewMode(true);
+                  setIsAssignmentModalOpen(true);
                 }}
-                onViewAssignment={(assignmentId) => {
-                  // TODO: Implement view assignment functionality
-                  toast.info(`View assignment ${assignmentId}`);
-                }}
-                onDeleteAssignment={(assignmentId) => {
-                  // TODO: Implement delete assignment functionality
-                  toast.info(`Delete assignment ${assignmentId}`);
-                }}
+                onDeleteAssignment={handleDeleteAssignment}
               />
             ))}
           </div>
@@ -411,8 +502,17 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
       {selectedModuleId && (
         <AddAssignmentModal
           open={isAssignmentModalOpen}
-          onOpenChange={setIsAssignmentModalOpen}
+          onOpenChange={(open) => {
+            setIsAssignmentModalOpen(open);
+            if (!open) {
+              setEditingAssignmentId(null);
+              setSelectedModuleId(null);
+              setIsAssignmentViewMode(false);
+            }
+          }}
           moduleId={selectedModuleId}
+          assignmentId={editingAssignmentId ?? undefined}
+          viewMode={isAssignmentViewMode}
         />
       )}
 
@@ -423,19 +523,93 @@ const StepModules: React.FC<Props> = ({ goNext }) => {
           onOpenChange={(open) => {
             setIsLessonModalOpen(open);
             if (!open) {
-              // reset editing state when closed
               setEditingLessonId(null);
               setSelectedModuleIdForLesson(null);
+              setIsViewMode(false);
             }
           }}
           moduleId={selectedModuleIdForLesson}
           lessonId={editingLessonId ?? undefined}
+          viewMode={isViewMode}
         />
       )}
 
+      {/* Delete Lesson Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa bài học</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa bài học này không? Hành động này không
+              thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setDeletingLessonId(null);
+              }}
+              disabled={deleteLessonMutation.isPending}
+            >
+              Hủy
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteLesson}
+              disabled={deleteLessonMutation.isPending}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteLessonMutation.isPending ? 'Đang xóa...' : 'Xóa'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Assignment Confirmation Dialog */}
+      <AlertDialog
+        open={isDeleteAssignmentDialogOpen}
+        onOpenChange={setIsDeleteAssignmentDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa bài tập</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa bài tập này không? Hành động này không
+              thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setIsDeleteAssignmentDialogOpen(false);
+                setDeletingAssignmentId(null);
+                setDeletingAssignmentModuleId(null);
+              }}
+              disabled={deleteAssignmentMutation.isPending}
+            >
+              Hủy
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteAssignment}
+              disabled={deleteAssignmentMutation.isPending}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteAssignmentMutation.isPending ? 'Đang xóa...' : 'Xóa'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Footer divider and actions */}
       <div className="border-t">
-        <div className="flex items-center justify-end p-6">
+        <div className="flex items-center justify-between p-6">
+          <Button variant="outline" onClick={goBack} disabled={isPending}>
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Quay Lại
+          </Button>
           <Button onClick={goNext} disabled={isPending}>
             Tiếp Theo
             <ChevronRight className="ml-2 h-4 w-4" />

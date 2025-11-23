@@ -32,12 +32,34 @@ export const useCreateLessonMutation = (moduleId: string) => {
     },
   });
 };
+
+export const useCreateVideoLessonMutation = (moduleId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      const response = await _request.post(`/files/upload`, formData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ModuleKeys.GetModulesById, moduleId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsByModuleQuery, moduleId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ModuleKeys.GetModulesByCourseQuery],
+      });
+    },
+  });
+};
 export const useUpdateLessonMutation = (lessonId: string) => {
   const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: CreateLessonPayload) => {
-      const response = await _request.post<Response<Lesson>>(
+      const response = await _request.put<Response<Lesson>>(
         `/lessons/${lessonId}`,
         payload,
       );
@@ -46,6 +68,12 @@ export const useUpdateLessonMutation = (lessonId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [ModuleKeys.GetModulesByCourseQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsById, lessonId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsByModuleQuery],
       });
     },
   });
@@ -77,6 +105,32 @@ export const useReorderLessonMutation = (moduleId: string) => {
       });
       queryClient.invalidateQueries({
         queryKey: [ModuleKeys.GetModulesByCourseQuery],
+      });
+    },
+  });
+};
+export const useDeleteLessonMutation = (lessonId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async () => {
+      if (!lessonId) {
+        throw new Error('Lesson ID is required');
+      }
+      const response = await _request.delete<Response<null>>(
+        `/lessons/${lessonId}`,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ModuleKeys.GetModulesByCourseQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsById, lessonId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsByModuleQuery],
       });
     },
   });

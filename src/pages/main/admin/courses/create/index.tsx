@@ -96,7 +96,7 @@ const CreateCoursePage = () => {
         )}
 
         {/* Step 2: Modules */}
-        {step === 2 && <StepModules goNext={goNext} />}
+        {step === 2 && <StepModules goNext={goNext} goBack={goBack} />}
 
         {/* Step 3: Summary & Publish */}
         {step === 3 && (

@@ -39,11 +39,11 @@ type ModuleCardProps = {
   onAddAssignment?: (moduleId: string) => void;
   onAddLesson?: (moduleId: string) => void;
   onEditLesson?: (lessonId: string, moduleId: string) => void;
-  onViewLesson?: (lessonId: string) => void;
+  onViewLesson?: (lessonId: string, moduleId: string) => void;
   onDeleteLesson?: (lessonId: string) => void;
-  onEditAssignment?: (assignmentId: string) => void;
-  onViewAssignment?: (assignmentId: string) => void;
-  onDeleteAssignment?: (assignmentId: string) => void;
+  onEditAssignment?: (assignmentId: string, moduleId: string) => void;
+  onViewAssignment?: (assignmentId: string, moduleId: string) => void;
+  onDeleteAssignment?: (assignmentId: string, moduleId: string) => void;
   editingModuleId?: string | null;
   EditModuleForm?: React.ComponentType<{
     moduleId: string;
@@ -147,7 +147,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           toast.error(msg);
         },
         onSuccess: () => {
-          toast.success('Lesson order updated');
+          toast.success('Cập nhật thứ tự bài học thành công');
         },
       },
     );
@@ -189,7 +189,8 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
             )}
           </button>
           <h3 className="font-medium text-base">
-            {module.name} ({module.lessonCount} bài học)
+            {module.name} ({module.lessonCount} bài học,{' '}
+            {module.assignmentCount} bài tập)
           </h3>
         </div>
         <div className="flex gap-2">
@@ -237,15 +238,14 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
       >
         {/* Lessons table */}
         {lessonsList && lessonsList.length > 0 && (
-          <div className="bg-white rounded-md border overflow-hidden mb-4">
+          <div className="bg-white rounded-md border overflow-hidden my-4">
             {lessonsList.map((lesson) => (
               <LessonRow
                 key={lesson.id}
                 lesson={lesson}
-                // wrap the callback so we also pass the parent module id
                 onEdit={(lessonId) => onEditLesson?.(lessonId, module.id)}
-                onView={onViewLesson}
-                onDelete={onDeleteLesson}
+                onView={(lessonId) => onViewLesson?.(lessonId, module.id)}
+                onDelete={(lessonId) => onDeleteLesson?.(lessonId)}
                 disabled={disabled || lessonsPending}
               />
             ))}
@@ -262,9 +262,12 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           <AssignmentRow
             key={assignment.id}
             assignment={assignment}
+            moduleId={module.id}
             onEdit={onEditAssignment}
             onView={onViewAssignment}
-            onDelete={onDeleteAssignment}
+            onDelete={(assignmentId) =>
+              onDeleteAssignment?.(assignmentId, module.id)
+            }
           />
         ))}
       </div>

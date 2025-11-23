@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAxios } from '@/configs/axios';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 
-import type { AssignmentResponse } from '@/features/assignment/services/queries/types';
+import type { Assignment, AssignmentResponse } from '@/features/assignment/services/queries/types';
 
 export const useGetAssignmentsQuery = (page?: number, size?: number) => {
   const _request = useAxios();
@@ -19,6 +19,19 @@ export const useGetAssignmentsQuery = (page?: number, size?: number) => {
 
       return response.data;
     },
+  });
+};
+export const useGetAssignmentByIdQuery = (assignmentId?: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AssignmentKeys.GetAssignmentById, assignmentId],
+    queryFn: async () => {
+      const response = await _request.get<Assignment>(
+        `/assignments/${assignmentId}`,
+      );
+      return response.data;
+    },
+    enabled: !!assignmentId,
   });
 };
 export const useGetAssignmentsByModuleQuery = (moduleId: string) => {
