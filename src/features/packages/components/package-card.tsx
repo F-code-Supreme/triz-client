@@ -33,8 +33,8 @@ const PackageCard: React.FC<PackageCardProps> = ({
               variant={pkg.status === 'ACTIVE' ? 'default' : 'secondary'}
               className={
                 pkg.status === 'ACTIVE'
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-gray-400 hover:bg-gray-500'
+                  ? 'bg-green-500 hover:bg-green-500/90'
+                  : 'bg-gray-400 hover:bg-gray-400/90'
               }
             >
               {pkg.status}

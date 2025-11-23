@@ -364,6 +364,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                     to: toDate,
                   }));
                 }}
+                disableFuture={disableFuture}
               />
               <ChevronDownIcon className="mx-2 h-4 w-4" />
               <DateInput
@@ -376,6 +377,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                     to: date,
                   }));
                 }}
+                disableFuture={disableFuture}
               />
             </div>
           </div>

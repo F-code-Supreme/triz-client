@@ -6,11 +6,12 @@ export interface Subscription {
   autoRenew: boolean;
   tokensPerDayRemaining: number;
   lastTokenRefreshDate: string;
-  lastRenewalAttemptDate: string;
+  lastRenewalAttemptDate: string | null;
   userId: string;
   userFullName: string;
   packageId: string;
   packageName: string;
+  packageChatTokenPerDay: number;
   walletTransId: string;
 }
 
