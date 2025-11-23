@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
-import type { Course, CourseFilters } from '../../course/types';
 import CourseCard from './course-card';
+import { Course, CourseFilters } from '../types';
 
 interface CourseListProps {
   courses: Course[];
@@ -11,11 +11,12 @@ interface CourseListProps {
 
 const CourseList = ({ courses, filters, className }: CourseListProps) => {
   // Filter courses based on filters
+
   const filteredCourses = courses.filter((course) => {
     if (filters?.search) {
       const searchTerm = filters.search.toLowerCase();
       const searchableText =
-        `${course.title} ${course.description} ${course.instructor} ${course.category}`.toLowerCase();
+        `${course.title ?? ''} ${course.description ?? ''}`.toLowerCase();
       if (!searchableText.includes(searchTerm)) {
         return false;
       }
@@ -25,9 +26,7 @@ const CourseList = ({ courses, filters, className }: CourseListProps) => {
       return false;
     }
 
-    if (filters?.category && course.category !== filters.category) {
-      return false;
-    }
+    // category does not exist on Course, so skip
 
     if (filters?.level && course.level !== filters.level) {
       return false;
@@ -38,31 +37,8 @@ const CourseList = ({ courses, filters, className }: CourseListProps) => {
 
   // Sort courses based on sort criteria
   const sortedCourses = [...filteredCourses].sort((a, b) => {
-    const { sortBy = 'title', sortOrder = 'asc' } = filters || {};
-
-    let comparison = 0;
-
-    switch (sortBy) {
-      case 'title':
-        comparison = a.title.localeCompare(b.title);
-        break;
-      case 'progress':
-        comparison = a.progress - b.progress;
-        break;
-      case 'lastAccessed':
-        comparison =
-          new Date(a.lastAccessedAt || 0).getTime() -
-          new Date(b.lastAccessedAt || 0).getTime();
-        break;
-      case 'enrolledAt':
-        comparison =
-          new Date(a.enrolledAt || 0).getTime() -
-          new Date(b.enrolledAt || 0).getTime();
-        break;
-      default:
-        comparison = 0;
-    }
-
+    const { sortOrder = 'asc' } = filters || {};
+    const comparison = (a.title ?? '').localeCompare(b.title ?? '');
     return sortOrder === 'desc' ? -comparison : comparison;
   });
 

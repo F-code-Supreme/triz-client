@@ -116,12 +116,12 @@ function CourseQuizPage() {
     return answers[questionId] && answers[questionId].length > 0;
   };
 
-  const isOptionCorrect = (questionId: string, optionId: string) => {
-    const question = quizData?.questions.find((q) => q.id === questionId);
-    return (
-      question?.options.find((opt) => opt.id === optionId)?.isCorrect || false
-    );
-  };
+  // const isOptionCorrect = (questionId: string, optionId: string) => {
+  //   const question = quizData?.questions.find((q) => q.id === questionId);
+  //   return (
+  //     question?.options.find((opt) => opt.id === optionId)?.isCorrect || false
+  //   );
+  // };
 
   if (isLoading) {
     return (

@@ -70,3 +70,9 @@
 // }
 
 // export default MyCoursePage;
+
+function MyCoursePage() {
+  return <div>my-course</div>;
+}
+
+export default MyCoursePage;
