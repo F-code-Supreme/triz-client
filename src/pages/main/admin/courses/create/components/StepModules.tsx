@@ -64,6 +64,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
   const courseId = courseFromLocalStorage
     ? JSON.parse(courseFromLocalStorage).id
     : null;
+  console.log('courseId', courseId);
   const parseCourse = courseFromLocalStorage
     ? JSON.parse(courseFromLocalStorage).payload
     : null;

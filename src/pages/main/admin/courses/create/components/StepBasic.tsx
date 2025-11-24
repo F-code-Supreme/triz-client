@@ -163,15 +163,9 @@ const StepBasic: React.FC<Props> = ({
 
         // If creating new course, extract ID from response
         if (!existingCourseId && typeof res === 'object' && res !== null) {
-          if ('data' in res) {
-            const data = (res as Record<string, unknown>).data;
-            if (typeof data === 'object' && data !== null && 'id' in data) {
-              const maybeId = (data as Record<string, unknown>).id;
-              if (typeof maybeId === 'string') {
-                id = maybeId;
-                setExistingCourseId(id);
-              }
-            }
+          const maybeId = res.id;
+          if (typeof maybeId === 'string') {
+            id = maybeId;
           }
         }
 
