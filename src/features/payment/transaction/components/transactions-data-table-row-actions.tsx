@@ -1,7 +1,16 @@
-import { MoreHorizontal, Eye } from 'lucide-react';
+import { MoreHorizontal, Eye, X } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +27,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import useAuth from '@/features/auth/hooks/use-auth';
+import { Role } from '@/features/auth/types';
+
+import {
+  useCancelTransactionByUserMutation,
+  useCancelTransactionMutation,
+} from '../services/mutations';
 
 import type { Transaction } from '../types';
 import type { DataTimestamp } from '@/types';
@@ -34,7 +50,53 @@ export const TransactionsDataTableRowActions = ({
   row,
 }: TransactionsDataTableRowActionsProps) => {
   const transaction = row.original;
+  const { user, hasRole } = useAuth();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+
+  const { mutate: cancelByUser, isPending: isCancelingByUser } =
+    useCancelTransactionByUserMutation();
+  const { mutate: cancelByAdmin, isPending: isCancelingByAdmin } =
+    useCancelTransactionMutation();
+
+  const isCanceling = isCancelingByUser || isCancelingByAdmin;
+  const canCancel = transaction.status === 'PENDING';
+
+  const handleCancel = () => {
+    if (!hasRole(Role.ADMIN)) {
+      if (!user) return;
+
+      cancelByUser(
+        { userId: user.id, transactionId: transaction.id },
+        {
+          onSuccess: () => {
+            setIsCancelDialogOpen(false);
+            toast.success('Transaction cancelled successfully');
+          },
+          onError: (error) => {
+            toast.error(
+              (error as Error).message || 'Failed to cancel transaction',
+            );
+          },
+        },
+      );
+    } else {
+      cancelByAdmin(
+        { transactionId: transaction.id },
+        {
+          onSuccess: () => {
+            setIsCancelDialogOpen(false);
+            toast.success('Transaction cancelled successfully');
+          },
+          onError: (error) => {
+            toast.error(
+              (error as Error).message || 'Failed to cancel transaction',
+            );
+          },
+        },
+      );
+    }
+  };
 
   return (
     <>
@@ -52,6 +114,15 @@ export const TransactionsDataTableRowActions = ({
             <Eye className="mr-2 h-4 w-4" />
             View Details
           </DropdownMenuItem>
+          {canCancel && (
+            <DropdownMenuItem
+              onClick={() => setIsCancelDialogOpen(true)}
+              className="text-red-600 dark:text-red-400"
+            >
+              <X className="mr-2 h-4 w-4" />
+              Cancel Transaction
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -106,6 +177,35 @@ export const TransactionsDataTableRowActions = ({
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* Cancel Confirmation Dialog */}
+      <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancel Transaction</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel this transaction? This action
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsCancelDialogOpen(false)}
+              disabled={isCanceling}
+            >
+              No, Keep It
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleCancel}
+              disabled={isCanceling}
+            >
+              {isCanceling ? 'Cancelling...' : 'Yes, Cancel Transaction'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

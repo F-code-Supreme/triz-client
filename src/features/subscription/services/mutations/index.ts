@@ -73,6 +73,7 @@ export const useEditUserAutoRenewalMutation = () => {
           SubscriptionKeys.GetSubscriptionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [
@@ -82,6 +83,7 @@ export const useEditUserAutoRenewalMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
     },
   });
@@ -103,6 +105,13 @@ export const useCancelSubscriptionMutation = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [
+          SubscriptionKeys.GetActiveSubscriptionByUserQuery,
+          variables.userId,
+        ],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
           SubscriptionKeys.GetUserSubscriptionByIdQuery,
           variables.userId,
           variables.subscriptionId,
@@ -113,6 +122,7 @@ export const useCancelSubscriptionMutation = () => {
           SubscriptionKeys.GetSubscriptionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [
@@ -122,6 +132,7 @@ export const useCancelSubscriptionMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
     },
   });
@@ -146,15 +157,18 @@ export const useRefundSubscriptionMutation = () => {
           SubscriptionKeys.GetSubscriptionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [
           TransactionKeys.GetAllTransactionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [
@@ -164,6 +178,7 @@ export const useRefundSubscriptionMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [TransactionKeys.GetAllTransactionsQuery],
+        exact: false,
       });
     },
   });
@@ -195,6 +210,7 @@ export const useEditAutoRenewalMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
     },
   });

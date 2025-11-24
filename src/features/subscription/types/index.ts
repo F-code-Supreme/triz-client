@@ -19,4 +19,5 @@ export enum SubscriptionStatus {
   PENDING = 'PENDING',
   EXPIRED = 'EXPIRED',
   CANCELED = 'CANCELED',
+  REFUNDED = 'REFUNDED',
 }

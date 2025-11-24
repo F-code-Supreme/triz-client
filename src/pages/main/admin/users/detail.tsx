@@ -8,11 +8,20 @@ import {
 } from '@tanstack/react-table';
 import { ArrowLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
@@ -21,6 +30,7 @@ import { TransactionsTable } from '@/features/payment/wallet/components/transact
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { createSubscriptionsColumns } from '@/features/subscription/components';
 import { SubscriptionsTable } from '@/features/subscription/components/subscriptions-table';
+import { useCancelSubscriptionMutation } from '@/features/subscription/services/mutations';
 import {
   useGetActiveSubscriptionByUserQuery,
   useGetSubscriptionsByUserQuery,
@@ -52,6 +62,7 @@ const AdminUserDetailPage = () => {
   );
   const [fromDate, setFromDate] = useState<Date | undefined>();
   const [toDate, setToDate] = useState<Date | undefined>();
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
   // Build filters with date range
   const filters = useMemo(() => {
@@ -90,6 +101,9 @@ const AdminUserDetailPage = () => {
   const { data: activeSubscription, isLoading: activeSubscriptionLoading } =
     useGetActiveSubscriptionByUserQuery(userId);
 
+  const { mutate: cancelSubscription, isPending: isCancelingSubscription } =
+    useCancelSubscriptionMutation();
+
   const subscriptions = useMemo(
     () => subscriptionsData?.content || [],
     [subscriptionsData],
@@ -104,6 +118,25 @@ const AdminUserDetailPage = () => {
   );
 
   const totalRowCount = transactionsData?.page?.totalElements ?? 0;
+
+  const handleCancelSubscription = () => {
+    if (!userId || !activeSubscription) return;
+
+    cancelSubscription(
+      { userId: userId, subscriptionId: activeSubscription.id },
+      {
+        onSuccess: () => {
+          setIsCancelDialogOpen(false);
+          toast.success('Subscription cancelled successfully');
+        },
+        onError: (error) => {
+          toast.error(
+            (error as Error).message || 'Failed to cancel subscription',
+          );
+        },
+      },
+    );
+  };
 
   const table = useReactTable({
     data: transactions,
@@ -388,7 +421,19 @@ const AdminUserDetailPage = () => {
         ) : activeSubscription ? (
           <Card className="border-2 border-primary">
             <CardHeader>
-              <CardTitle>{activeSubscription.packageName}</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>{activeSubscription.packageName}</CardTitle>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => setIsCancelDialogOpen(true)}
+                  disabled={isCancelingSubscription}
+                >
+                  {isCancelingSubscription
+                    ? 'Cancelling...'
+                    : 'Cancel Subscription'}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -460,6 +505,37 @@ const AdminUserDetailPage = () => {
             />
           </CardContent>
         </Card>
+
+        {/* Cancel Subscription Dialog */}
+        <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Cancel Subscription</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to cancel this subscription? This action
+                cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsCancelDialogOpen(false)}
+                disabled={isCancelingSubscription}
+              >
+                No, Keep It
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleCancelSubscription}
+                disabled={isCancelingSubscription}
+              >
+                {isCancelingSubscription
+                  ? 'Cancelling...'
+                  : 'Yes, Cancel Subscription'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );

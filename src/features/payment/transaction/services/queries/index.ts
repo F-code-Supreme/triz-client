@@ -94,6 +94,7 @@ export const useSearchAllTransactionsByUserQuery = (
   return useQuery({
     queryKey: [
       TransactionKeys.GetAllTransactionsByUserQuery,
+      userId,
       pagination,
       sorting,
       filters,

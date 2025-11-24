@@ -37,9 +37,11 @@ export const useCancelTransactionByUserMutation = () => {
           TransactionKeys.GetAllTransactionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [TransactionKeys.GetAllTransactionsQuery],
+        exact: false,
       });
     },
   });
@@ -68,6 +70,7 @@ export const useCancelTransactionMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [TransactionKeys.GetAllTransactionsQuery],
+        exact: false,
       });
     },
   });

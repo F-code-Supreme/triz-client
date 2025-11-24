@@ -5,8 +5,9 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, X } from 'lucide-react';
 import { useState, useMemo, useCallback } from 'react';
+import { toast } from 'sonner';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -33,7 +34,10 @@ import {
   createSubscriptionsColumns,
   SubscriptionsTable,
 } from '@/features/subscription/components';
-import { useEditUserAutoRenewalMutation } from '@/features/subscription/services/mutations';
+import {
+  useEditUserAutoRenewalMutation,
+  useCancelSubscriptionMutation,
+} from '@/features/subscription/services/mutations';
 import {
   useGetActiveSubscriptionByUserQuery,
   useGetSubscriptionsByUserQuery,
@@ -53,6 +57,7 @@ const SubscriptionPage = () => {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [showAutoRenewalDialog, setShowAutoRenewalDialog] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] =
     useState<Subscription | null>(null);
 
@@ -65,6 +70,8 @@ const SubscriptionPage = () => {
     useGetActiveSubscriptionByUserQuery(user?.id);
   const { mutate: editAutoRenewal, isPending: isUpdating } =
     useEditUserAutoRenewalMutation();
+  const { mutate: cancelSubscription, isPending: isCancelingSubscription } =
+    useCancelSubscriptionMutation();
 
   // Get subscriptions from response
   const subscriptions = useMemo(
@@ -105,6 +112,25 @@ const SubscriptionPage = () => {
     manualFiltering: true,
     rowCount: totalRowCount,
   });
+
+  const handleCancelSubscription = () => {
+    if (!user || !activeSubscription) return;
+
+    cancelSubscription(
+      { userId: user.id, subscriptionId: activeSubscription.id },
+      {
+        onSuccess: () => {
+          setIsCancelDialogOpen(false);
+          toast.success('Subscription cancelled successfully');
+        },
+        onError: (error) => {
+          toast.error(
+            (error as Error).message || 'Failed to cancel subscription',
+          );
+        },
+      },
+    );
+  };
 
   const confirmAutoRenewalChange = () => {
     if (!selectedSubscription) return;
@@ -290,28 +316,41 @@ const SubscriptionPage = () => {
                         : 'Your subscription will not renew automatically'}
                     </p>
                   </div>
-                  <Button
-                    variant={
-                      activeSubscription.autoRenew ? 'destructive' : 'default'
-                    }
-                    onClick={() => handleAutoRenewalToggle(activeSubscription)}
-                    disabled={isUpdating}
-                    className="gap-2"
-                  >
-                    {isUpdating ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                        Updating...
-                      </>
-                    ) : (
-                      <>
-                        <RefreshCw className="h-4 w-4" />
-                        {activeSubscription.autoRenew
-                          ? 'Disable Auto Renewal'
-                          : 'Enable Auto Renewal'}
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={
+                        activeSubscription.autoRenew ? 'destructive' : 'default'
+                      }
+                      onClick={() =>
+                        handleAutoRenewalToggle(activeSubscription)
+                      }
+                      disabled={isUpdating}
+                      className="gap-2"
+                    >
+                      {isUpdating ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          Updating...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw className="h-4 w-4" />
+                          {activeSubscription.autoRenew
+                            ? 'Disable Auto Renewal'
+                            : 'Enable Auto Renewal'}
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => setIsCancelDialogOpen(true)}
+                      disabled={isCancelingSubscription}
+                      title="Cancel subscription"
+                    >
+                      <X className="h-4 w-4" />
+                      Cancel Subscription
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -375,6 +414,37 @@ const SubscriptionPage = () => {
               }
             >
               {isUpdating ? 'Updating...' : 'Confirm'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Cancel Subscription Confirmation Dialog */}
+      <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancel Subscription?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel your subscription? Your access to
+              premium features will end immediately.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsCancelDialogOpen(false)}
+              disabled={isCancelingSubscription}
+            >
+              No, Keep It
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleCancelSubscription}
+              disabled={isCancelingSubscription}
+            >
+              {isCancelingSubscription
+                ? 'Cancelling...'
+                : 'Yes, Cancel Subscription'}
             </Button>
           </DialogFooter>
         </DialogContent>
