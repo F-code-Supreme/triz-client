@@ -4,16 +4,16 @@ import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+// } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,8 +25,6 @@ import {
 
 import type { Assignment } from '@/features/assignment/services/queries/types';
 
-import { useDeleteAssignmentMutation } from '@/features/assignment/services/mutations';
-
 interface AssignmentsDataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
@@ -35,24 +33,24 @@ export const AssignmentsDataTableRowActions = <TData,>({
   row,
 }: AssignmentsDataTableRowActionsProps<TData>) => {
   const assignment = row.original as Assignment;
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [_setIsDeleteDialogOpen] = useState(false);
 
   // Note: You'll need to pass moduleId somehow - could be from context or route params
-  const deleteAssignment = useDeleteAssignmentMutation(''); // TODO: Add moduleId
+  // const deleteAssignment = useDeleteAssignmentMutation(''); // TODO: Add moduleId
 
-  const handleDelete = () => {
-    deleteAssignment.mutate(assignment.id, {
-      onSuccess: () => {
-        toast.success('Xóa bài tập thành công');
-        setIsDeleteDialogOpen(false);
-      },
-      onError: (error) => {
-        toast.error(
-          error instanceof Error ? error.message : 'Không thể xóa bài tập',
-        );
-      },
-    });
-  };
+  // const handleDelete = () => {
+  //   deleteAssignment.mutate(assignment.id, {
+  //     onSuccess: () => {
+  //       toast.success('Xóa bài tập thành công');
+  //       setIsDeleteDialogOpen(false);
+  //     },
+  //     onError: (error) => {
+  //       toast.error(
+  //         error instanceof Error ? error.message : 'Không thể xóa bài tập',
+  //       );
+  //     },
+  //   });
+  // };
 
   const handleView = () => {
     // TODO: Implement view functionality
@@ -86,17 +84,17 @@ export const AssignmentsDataTableRowActions = <TData,>({
             Chỉnh sửa
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
+          {/* <DropdownMenuItem
             onClick={() => setIsDeleteDialogOpen(true)}
             className="text-red-600"
           >
             <Trash2 className="mr-2 h-4 w-4" />
             Xóa
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog
+      {/* <AlertDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
       >
@@ -121,7 +119,7 @@ export const AssignmentsDataTableRowActions = <TData,>({
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
     </>
   );
 };

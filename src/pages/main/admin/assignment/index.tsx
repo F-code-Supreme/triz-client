@@ -6,11 +6,9 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -25,7 +23,6 @@ import { useGetAssignmentsQuery } from '@/features/assignment/services/queries';
 import { booksColumns } from '@/features/book/components/books-columns';
 import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
 import { bookStatuses } from '@/features/book/data/data';
-import { useGetAllBooksAdminQuery } from '@/features/book/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminAssignmentsManagementPage = () => {
