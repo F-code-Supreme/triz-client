@@ -6,7 +6,6 @@ const LearnTRIZPage = () => {
   return (
     <DefaultLayout meta={{ title: '40 Nguyên Tắc Sáng Tạo' }} className="">
       <PrincipleSection />
-      {/* <div className="container mx-auto md:p-8 sm:p-4">123</div> */}
       <TRIZPrinciplesList />
     </DefaultLayout>
   );
