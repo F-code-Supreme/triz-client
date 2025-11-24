@@ -8,7 +8,7 @@ export const TRIZPrinciplesList = () => {
           {principlesData.map((principle) => (
             <div
               key={principle.number}
-              className="relative bg-white rounded-lg shadow-sm border border-slate-100 overflow-hidden"
+              className="relative bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
               {/* The Green Vertical Bar on the Left */}
               <div className="absolute left-0 top-0 bottom-0 w-2 bg-blue-600" />
