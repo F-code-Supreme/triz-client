@@ -22,9 +22,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDeleteAssignmentMutation } from '@/features/assignment/services/mutations';
 
 import type { Assignment } from '@/features/assignment/services/queries/types';
+
+import { useDeleteAssignmentMutation } from '@/features/assignment/services/mutations';
 
 interface AssignmentsDataTableRowActionsProps<TData> {
   row: Row<TData>;

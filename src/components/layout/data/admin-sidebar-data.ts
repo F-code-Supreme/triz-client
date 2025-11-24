@@ -80,6 +80,11 @@ export const adminSidebarData: AdminSidebarData = {
           url: '/admin/quizzes',
           icon: BookCheck,
         },
+        {
+          title: 'Assignments',
+          url: '/admin/assignment',
+          icon: BookCheck,
+        },
       ],
     },
     {
