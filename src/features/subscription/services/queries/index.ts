@@ -98,8 +98,6 @@ export const useGetActiveSubscriptionByUserQuery = (userId?: string) => {
   });
 };
 
-// export const useGetPreviewSubscriptionByUserQuery = (userId?: string) => {};
-
 // ADMIN
 export const useGetSubscriptionsQuery = (
   pagination: PaginationState,

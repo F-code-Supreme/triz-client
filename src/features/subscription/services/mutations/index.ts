@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { TransactionKeys } from '@/features/payment/transaction/services/queries/keys';
 
 import { SubscriptionKeys } from '../queries/keys';
 
@@ -10,6 +11,7 @@ import type {
   IEditAutoRenewalPayload,
   IPurchaseSubscriptionPayload,
   IPurchaseSubscriptionResponse,
+  IRefundSubscriptionPayload,
 } from './types';
 import type { Subscription } from '../../types';
 import type { DataTimestamp } from '@/types';
@@ -92,7 +94,7 @@ export const useCancelSubscriptionMutation = () => {
   return useMutation({
     mutationFn: async (payload: ICancelSubscriptionPayload) => {
       const { userId, subscriptionId } = payload;
-      const response = await _request.delete(
+      const response = await _request.delete<Subscription & DataTimestamp>(
         `/users/${userId}/subscriptions/${subscriptionId}/cancel`,
       );
 
@@ -125,7 +127,47 @@ export const useCancelSubscriptionMutation = () => {
   });
 };
 
-// export const useRefundSubscriptionMutation = () => {};
+export const useRefundSubscriptionMutation = () => {
+  const _request = useAxios();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: IRefundSubscriptionPayload) => {
+      const { userId, transactionId } = payload;
+      const response = await _request.post<Subscription & DataTimestamp>(
+        `/users/${userId}/transactions/${transactionId}/refund`,
+      );
+
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetSubscriptionsByUserQuery,
+          variables.userId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          TransactionKeys.GetAllTransactionsByUserQuery,
+          variables.userId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          TransactionKeys.GetTransactionByIdQuery,
+          variables.transactionId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [TransactionKeys.GetAllTransactionsQuery],
+      });
+    },
+  });
+};
 
 // ADMIN
 export const useEditAutoRenewalMutation = () => {

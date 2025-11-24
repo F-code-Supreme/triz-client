@@ -144,6 +144,34 @@ export const useSearchAllTransactionsByUserQuery = (
   });
 };
 
+export const useGetPreviewRefundTransactionQuery = (
+  subscriptionId: string,
+  userId?: string,
+) => {
+  const _request = useAxios();
+
+  return useQuery({
+    queryKey: [
+      TransactionKeys.GetPreviewRefundTransactionQuery,
+      userId,
+      subscriptionId,
+    ],
+    queryFn: userId
+      ? async ({ signal }) => {
+          const response = await _request.get<Transaction & DataTimestamp>(
+            `/users/${userId}/subscriptions/${subscriptionId}/refund`,
+            {
+              signal,
+            },
+          );
+
+          return response.data;
+        }
+      : skipToken,
+    enabled: !!userId,
+  });
+};
+
 // ADMIN
 export const useGetAllTransactionsQuery = (
   pagination: PaginationState,

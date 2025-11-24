@@ -31,5 +31,5 @@ export interface ICancelSubscriptionPayload {
 
 export interface IRefundSubscriptionPayload {
   userId: string;
-  subscriptionId: string;
+  transactionId: string;
 }
