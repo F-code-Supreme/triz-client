@@ -146,7 +146,7 @@ export const useSearchAllTransactionsByUserQuery = (
 };
 
 export const useGetPreviewRefundTransactionQuery = (
-  subscriptionId: string,
+  subscriptionId?: string,
   userId?: string,
 ) => {
   const _request = useAxios();
@@ -157,19 +157,20 @@ export const useGetPreviewRefundTransactionQuery = (
       userId,
       subscriptionId,
     ],
-    queryFn: userId
-      ? async ({ signal }) => {
-          const response = await _request.get<Transaction & DataTimestamp>(
-            `/users/${userId}/subscriptions/${subscriptionId}/refund`,
-            {
-              signal,
-            },
-          );
+    queryFn:
+      userId && subscriptionId
+        ? async ({ signal }) => {
+            const response = await _request.get<Transaction & DataTimestamp>(
+              `/users/${userId}/subscriptions/${subscriptionId}/refund`,
+              {
+                signal,
+              },
+            );
 
-          return response.data;
-        }
-      : skipToken,
-    enabled: !!userId,
+            return response.data;
+          }
+        : skipToken,
+    enabled: !!userId && !!subscriptionId,
   });
 };
 

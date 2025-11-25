@@ -40,6 +40,7 @@ import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
 import { Route as AdminArchiveRouteRouteImport } from './routes/admin/archive/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
+import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
@@ -208,6 +209,11 @@ const appSubscriptionRouteRoute = appSubscriptionRouteRouteImport.update({
   path: '/subscription',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appRefundRouteRoute = appRefundRouteRouteImport.update({
+  id: '/refund',
+  path: '/refund',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appProfileRouteRoute = appProfileRouteRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -280,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
@@ -324,6 +331,7 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
+  '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
@@ -369,6 +377,7 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
+  '/(app)/refund': typeof appRefundRouteRoute
   '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
@@ -415,6 +424,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/chat-triz'
     | '/profile'
+    | '/refund'
     | '/subscription'
     | '/wallet'
     | '/admin/archive'
@@ -459,6 +469,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/chat-triz'
     | '/profile'
+    | '/refund'
     | '/subscription'
     | '/wallet'
     | '/admin/archive'
@@ -503,6 +514,7 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/(app)/chat-triz'
     | '/(app)/profile'
+    | '/(app)/refund'
     | '/(app)/subscription'
     | '/(app)/wallet'
     | '/admin/archive'
@@ -793,6 +805,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appSubscriptionRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/refund': {
+      id: '/(app)/refund'
+      path: '/refund'
+      fullPath: '/refund'
+      preLoaderRoute: typeof appRefundRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/profile': {
       id: '/(app)/profile'
       path: '/profile'
@@ -883,6 +902,7 @@ declare module '@tanstack/react-router' {
 interface appRouteRouteChildren {
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
+  appRefundRouteRoute: typeof appRefundRouteRoute
   appSubscriptionRouteRoute: typeof appSubscriptionRouteRoute
   appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
@@ -894,6 +914,7 @@ interface appRouteRouteChildren {
 const appRouteRouteChildren: appRouteRouteChildren = {
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
+  appRefundRouteRoute: appRefundRouteRoute,
   appSubscriptionRouteRoute: appSubscriptionRouteRoute,
   appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,

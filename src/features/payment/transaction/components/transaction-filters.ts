@@ -7,6 +7,7 @@ const transactionFilters: FilterOption[] = [
     options: [
       { label: 'Top up', value: 'TOPUP' },
       { label: 'Spend', value: 'SPEND' },
+      { label: 'Refund', value: 'REFUND' },
     ],
   },
   {
@@ -24,7 +25,6 @@ const transactionFilters: FilterOption[] = [
     options: [
       { label: 'Stripe', value: 'STRIPE' },
       { label: 'PayOS', value: 'PAYOS' },
-      { label: 'PayPal', value: 'PAYPAL' },
     ],
   },
 ];
