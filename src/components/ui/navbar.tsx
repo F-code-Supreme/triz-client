@@ -278,7 +278,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                 <div className="hidden sm:flex items-center space-x-4">
                   {/* Token Count Display */}
                   <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
-                    <Zap className="h-4 w-4 text-yellow-600" />
+                    <Zap className="h-4 w-4 text-secondary" />
                     <span className="text-sm font-medium">
                       {tokenBalance.toLocaleString()}
                     </span>
