@@ -16,9 +16,9 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout = ({ children, meta }: AdminLayoutProps) => {
-  const { hasRole } = useAuth();
+  const { hasRole, isAuthenticated } = useAuth();
 
-  if (!hasRole(Role.ADMIN)) {
+  if (!isAuthenticated || !hasRole(Role.ADMIN)) {
     return (
       <Navigate
         to="/unauthorized"
