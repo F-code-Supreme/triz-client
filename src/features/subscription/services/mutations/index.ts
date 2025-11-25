@@ -63,6 +63,12 @@ export const useEditUserAutoRenewalMutation = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [
+          SubscriptionKeys.GetActiveSubscriptionByUserQuery,
+          variables.userId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
           SubscriptionKeys.GetUserSubscriptionByIdQuery,
           variables.userId,
           variables.subscriptionId,

@@ -5,7 +5,7 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
-import { AlertCircle, RefreshCw, X } from 'lucide-react';
+import { AlertCircle, X } from 'lucide-react';
 import { useState, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
 
@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Switch } from '@/components/ui/switch';
 import useAuth from '@/features/auth/hooks/use-auth';
 import {
   createSubscriptionsColumns,
@@ -308,49 +309,32 @@ const SubscriptionPage = () => {
               {/* Auto Renewal Section */}
               <div className="border-t pt-6">
                 <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="font-semibold">Auto Renewal</p>
-                    <p className="text-sm text-muted-foreground">
-                      {activeSubscription.autoRenew
-                        ? 'Your subscription will automatically renew'
-                        : 'Your subscription will not renew automatically'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant={
-                        activeSubscription.autoRenew ? 'destructive' : 'default'
-                      }
-                      onClick={() =>
+                  <div className="flex items-center gap-4">
+                    <div className="space-y-1">
+                      <p className="font-semibold">Auto Renewal</p>
+                      <p className="text-sm text-muted-foreground">
+                        {activeSubscription.autoRenew
+                          ? 'Your subscription will automatically renew'
+                          : 'Your subscription will not renew automatically'}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={activeSubscription.autoRenew}
+                      onCheckedChange={() =>
                         handleAutoRenewalToggle(activeSubscription)
                       }
                       disabled={isUpdating}
-                      className="gap-2"
-                    >
-                      {isUpdating ? (
-                        <>
-                          <RefreshCw className="h-4 w-4 animate-spin" />
-                          Updating...
-                        </>
-                      ) : (
-                        <>
-                          <RefreshCw className="h-4 w-4" />
-                          {activeSubscription.autoRenew
-                            ? 'Disable Auto Renewal'
-                            : 'Enable Auto Renewal'}
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={() => setIsCancelDialogOpen(true)}
-                      disabled={isCancelingSubscription}
-                      title="Cancel subscription"
-                    >
-                      <X className="h-4 w-4" />
-                      Cancel Subscription
-                    </Button>
+                    />
                   </div>
+                  <Button
+                    variant="destructive"
+                    onClick={() => setIsCancelDialogOpen(true)}
+                    disabled={isCancelingSubscription}
+                    title="Cancel subscription"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel Subscription
+                  </Button>
                 </div>
               </div>
             </CardContent>
