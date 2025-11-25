@@ -77,9 +77,9 @@ const CourseFiltersComponent = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="BEGINNER">Beginner</SelectItem>
+              <SelectItem value="STARTER">Starter</SelectItem>
               <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-              <SelectItem value="ADVANCED">Advanced</SelectItem>
+              <SelectItem value="EXPERT">Expert</SelectItem>
             </SelectContent>
           </Select>
 

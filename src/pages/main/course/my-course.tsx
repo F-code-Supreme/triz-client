@@ -33,7 +33,7 @@ function MyCoursePage() {
       thumbnailUrl: courseDetail?.thumbnailUrl ?? '',
       durationInMinutes: courseDetail?.durationInMinutes ?? 0,
       level: courseDetail?.level ?? '',
-      modules: courseDetail?.orders ?? [],
+      // modules: courseDetail?.orders ?? [],
       learnerCount: courseDetail?.learnerCount ?? 0,
       price: courseDetail?.price ?? 0,
       dealPrice: courseDetail?.dealPrice ?? 0,

@@ -43,7 +43,7 @@ export interface CourseFilters {
   sortBy?: 'title' | 'progress' | 'lastAccessed' | 'enrolledAt';
   sortOrder?: 'asc' | 'desc';
 }
-// import type { Module } from '@/features/modules/types';
+import type { Module } from '@/features/modules/types';
 
 export interface Order {
   id: string;
@@ -79,22 +79,22 @@ export interface Course {
   orders?: Order[];
   createdAt?: string;
   updatedAt?: string;
-  // modules?: Module[];
+  modules?: Module[];
 }
 
-interface CourseModule {
-  id: string;
-  name: string;
-  durationInMinutes: number;
-  level: string;
-  lessonCount: number;
-}
+// interface CourseModule {
+//   id: string;
+//   name: string;
+//   durationInMinutes: number;
+//   level: string;
+//   lessonCount: number;
+// }
 
-export interface CourseDetailResponse extends Course {
-  modules: CourseModule[];
-  totalModules?: number;
-  totalLessons?: number;
-}
+// export interface CourseDetailResponse extends Course {
+//   modules: Module[];
+//   totalModules?: number;
+//   totalLessons?: number;
+// }
 
 export interface ModuleResponse {
   id: string;
@@ -199,16 +199,16 @@ export interface CourseContentState {
   currentItem: ModuleContentItem | null;
 }
 
-interface CourseModule {
-  id: string;
-  name: string;
-  durationInMinutes: number;
-  level: string;
-  lessonCount: number;
-}
+// interface CourseModule {
+//   id: string;
+//   name: string;
+//   durationInMinutes: number;
+//   level: string;
+//   lessonCount: number;
+// }
 
 export interface CourseDetailResponse extends Course {
-  modules: CourseModule[];
+  modules: Module[];
   totalModules?: number;
   totalLessons?: number;
 }
