@@ -8,11 +8,6 @@ import {
   CircleDollarSign,
 } from 'lucide-react';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -24,6 +19,12 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
 
 function CourseOverviewPage() {
   const search = useSearch({ from: `/course/$slug` });
@@ -31,6 +32,7 @@ function CourseOverviewPage() {
   const navigate = useNavigate();
 
   const { data: course, isLoading, isError } = useGetCourseByIdQuery(id);
+  const enrollMutation = useEnrollCourseMutation();
 
   const getLevelColor = (level?: string) => {
     switch (level) {
@@ -50,6 +52,7 @@ function CourseOverviewPage() {
 
   const handleEnroll = async () => {
     try {
+      await enrollMutation.mutateAsync(course.id);
       navigate({
         to: '/course/learn/$slug',
         params: { slug: course.slug as string },
@@ -130,7 +133,7 @@ function CourseOverviewPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <BookOpen />
-                    <span>{course.modules.length} modules</span>
+                    <span>{course.totalModules} modules</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users />
@@ -192,14 +195,14 @@ function CourseOverviewPage() {
           </CardContent>
         </Card>
 
-        {course.modules && course.modules.length > 0 && (
+        {course.orders && course.orders.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle>Course Curriculum</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {course.modules.map((module) => (
+                {/* {course.orders.map((module) => (
                   <div key={module.id} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">{module.name}</h4>
@@ -212,7 +215,7 @@ function CourseOverviewPage() {
                       {module.durationInMinutes % 60}m
                     </div>
                   </div>
-                ))}
+                ))} */}
               </div>
             </CardContent>
           </Card>

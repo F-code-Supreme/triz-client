@@ -23,7 +23,6 @@ export const useCourseContent = ({
   quizzesData,
   currentModuleId,
 }: UseCourseContentProps) => {
-  // Merge and transform all content for the current module
   const enhancedModules: EnhancedModule[] = useMemo(() => {
     if (!modules || !Array.isArray(modules)) return [];
 
@@ -31,15 +30,14 @@ export const useCourseContent = ({
       const isCurrentModule = module.id === currentModuleId;
       const contents: ModuleContentItem[] = [];
 
-      // Only process contents for the current module to optimize performance
+      // Process lessons
       if (isCurrentModule) {
-        // Process lessons
         if (lessonsData && Array.isArray(lessonsData)) {
           lessonsData.forEach((lesson: any) => {
             const lessonItem: LessonContentItem = {
               id: lesson.id,
               type: 'lesson',
-              order: 0, // Will be set based on module.orders
+              order: 0,
               title: lesson.name,
               lessonData: lesson,
             };
@@ -103,12 +101,10 @@ export const useCourseContent = ({
     });
   }, [modules, lessonsData, assignmentsData, quizzesData, currentModuleId]);
 
-  // Get current module
   const currentModule = useMemo(() => {
     return enhancedModules.find((m) => m.id === currentModuleId);
   }, [enhancedModules, currentModuleId]);
 
-  // Get all content items across all modules (for navigation)
   const allContentItems = useMemo(() => {
     return enhancedModules.flatMap((module) => module.contents);
   }, [enhancedModules]);

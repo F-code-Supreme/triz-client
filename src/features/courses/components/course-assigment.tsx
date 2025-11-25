@@ -1,0 +1,455 @@
+import { useState } from 'react';
+import {
+  Clock,
+  CheckCircle2,
+  FileText,
+  AlertCircle,
+  History,
+} from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  useGetAssignmentModuleQuery,
+  useSubmitAssignmentMutation,
+  useGetAssignmentSubmissionHistoryQuery,
+} from '@/features/assignment/services/queries';
+import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
+import useAuth from '@/features/auth/hooks/use-auth';
+import { formatDistanceToNow } from 'date-fns';
+
+interface CourseAssignmentProps {
+  moduleId: string;
+  assignmentId: string;
+  assignmentTitle: string;
+  assignmentDescription: string;
+  durationInMinutes: number;
+  maxAttempts: number;
+}
+
+function CourseAssignment({
+  moduleId,
+  assignmentId,
+  assignmentTitle,
+  assignmentDescription,
+  durationInMinutes,
+  maxAttempts,
+}: CourseAssignmentProps) {
+  const [answer, setAnswer] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [showHistory, setShowHistory] = useState(false);
+
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const { isLoading } = useGetAssignmentModuleQuery(moduleId);
+  const { mutate: submitAssignment, isPending: isSubmitting } =
+    useSubmitAssignmentMutation();
+  const { data: submissionHistory, isLoading: isLoadingHistory } =
+    useGetAssignmentSubmissionHistoryQuery(user?.id, assignmentId);
+
+  const formatDuration = (minutes: number) => {
+    if (!minutes) return '';
+    if (minutes < 60) return `${minutes} min`;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return remainingMinutes > 0
+      ? `${hours}h ${remainingMinutes}m`
+      : `${hours}h`;
+  };
+
+  const handleSubmit = () => {
+    if (!answer.trim() || !user) return;
+
+    submitAssignment(
+      {
+        title: assignmentTitle,
+        submissionContent: answer,
+        assignmentId,
+        userId: user.id,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Assignment submitted successfully!');
+          setIsSubmitted(true);
+          setAttemptCount((prev) => prev + 1);
+          // Invalidate history query to refresh submission history
+          queryClient.invalidateQueries({
+            queryKey: [
+              AssignmentKeys.GetAssignmentSubmissionHistoryQuery,
+              user.id,
+              assignmentId,
+            ],
+          });
+        },
+        onError: (error: any) => {
+          toast.error(
+            error.response?.data?.message ||
+              'Failed to submit assignment. Please try again.',
+          );
+        },
+      },
+    );
+  };
+
+  const handleReset = () => {
+    setAnswer('');
+    setIsSubmitted(false);
+  };
+
+  const canSubmit = attemptCount < maxAttempts && !isSubmitted;
+  const remainingAttempts = maxAttempts - attemptCount;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading assignment...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div className="space-y-2 flex-1">
+              <div className="flex justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-orange-600" />
+                  </div>
+                  {assignmentTitle}
+                </CardTitle>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowHistory(true)}
+                >
+                  <History className="w-4 h-4 mr-1" />
+                  History
+                </Button>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{formatDuration(durationInMinutes)}</span>
+                </div>
+                <span>•</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="flex items-center gap-1 cursor-help">
+                        <AlertCircle className="w-4 h-4" />
+                        {remainingAttempts} attempt
+                        {remainingAttempts !== 1 && 's'} left
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        You have {remainingAttempts} out of {maxAttempts}{' '}
+                        attempts remaining
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+            {isSubmitted && (
+              <Badge className="bg-green-100 text-green-800 border-green-200">
+                <CheckCircle2 className="w-3 h-3 mr-1" />
+                Submitted
+              </Badge>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="prose prose-slate max-w-none">
+            <ReactMarkdown>{assignmentDescription}</ReactMarkdown>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Assignment Instructions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Instructions</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
+              <AlertCircle className="w-4 h-4" />
+              Before you start
+            </h4>
+            <ul className="text-sm text-blue-800 space-y-1 ml-5 list-disc">
+              <li>Read the assignment description carefully</li>
+              <li>
+                You have {maxAttempts} attempt{maxAttempts !== 1 && 's'} to
+                complete this assignment
+              </li>
+              <li>Make sure to save your work before submitting</li>
+              <li>You can use the tooltip hints for guidance</li>
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Answer Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center justify-between">
+            <span>Your Answer</span>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <AlertCircle className="w-4 h-4 mr-1" />
+                    Need Help?
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="left" className="max-w-sm">
+                  <p className="font-medium mb-2">Tips for your answer:</p>
+                  <ul className="text-xs space-y-1 list-disc ml-4">
+                    <li>Be specific and detailed in your response</li>
+                    <li>Support your answer with examples</li>
+                    <li>Review your work before submitting</li>
+                    <li>Check grammar and spelling</li>
+                  </ul>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Textarea
+                      placeholder="Type your answer here..."
+                      value={answer}
+                      onChange={(e) => setAnswer(e.target.value)}
+                      disabled={!canSubmit}
+                      className="min-h-[300px] resize-none"
+                    />
+                  </div>
+                </TooltipTrigger>
+                {!answer && (
+                  <TooltipContent side="bottom">
+                    <p>Click here to start typing your answer</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>{answer.length} characters</span>
+              {!canSubmit && attemptCount >= maxAttempts && (
+                <span className="text-red-600">Maximum attempts reached</span>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!canSubmit || !answer.trim() || isSubmitting}
+                    className="flex-1"
+                  >
+                    {isSubmitting
+                      ? 'Submitting...'
+                      : isSubmitted
+                        ? 'Submitted'
+                        : 'Submit Assignment'}
+                  </Button>
+                </TooltipTrigger>
+                {!answer.trim() && (
+                  <TooltipContent>
+                    <p>Please write your answer before submitting</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+
+            {isSubmitted && attemptCount < maxAttempts && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button onClick={handleReset} variant="outline">
+                      Try Again
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Submit another attempt ({remainingAttempts - 1} left)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Submission History Dialog */}
+      <Dialog open={showHistory} onOpenChange={setShowHistory}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <History className="w-5 h-5" />
+              Submission History
+            </DialogTitle>
+            <DialogDescription>
+              View all your previous assignment submissions and their status.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            {isLoadingHistory ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading history...</p>
+                </div>
+              </div>
+            ) : submissionHistory?.content &&
+              submissionHistory.content.length > 0 ? (
+              submissionHistory.content.map((submission) => (
+                <Card key={submission.id}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <CardTitle className="text-base">
+                          Attempt #{submission.attemptNumber}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          Submitted{' '}
+                          {formatDistanceToNow(new Date(submission.createdAt), {
+                            addSuffix: true,
+                          })}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <Badge
+                          variant={
+                            {
+                              APPROVED: 'default',
+                              REJECTED: 'destructive',
+                              PENDING: 'secondary',
+                              AI_PENDING: 'secondary',
+                            }[submission.status] as any
+                          }
+                        >
+                          {submission.status}
+                        </Badge>
+                        {submission.gradedAt && (
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Graded{' '}
+                            {formatDistanceToNow(
+                              new Date(submission.gradedAt),
+                              {
+                                addSuffix: true,
+                              },
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Your Answer:</h4>
+                      <div className="prose prose-sm max-w-none bg-muted p-4 rounded-lg">
+                        <ReactMarkdown>
+                          {submission.submissionContent}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                    {submission.expertComment && (
+                      <div>
+                        <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4" />
+                          Expert Feedback:
+                        </h4>
+                        <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                          <p className="text-sm text-blue-900">
+                            {submission.expertComment}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2 border-t">
+                      {submission.isAiPassed !== null && (
+                        <div className="flex items-center gap-1">
+                          <span>AI Review:</span>
+                          <Badge
+                            variant={
+                              submission.isAiPassed ? 'default' : 'secondary'
+                            }
+                            className="text-xs"
+                          >
+                            {submission.isAiPassed ? 'Passed' : 'Not Passed'}
+                          </Badge>
+                        </div>
+                      )}
+                      {submission.isExpertPassed !== null && (
+                        <div className="flex items-center gap-1">
+                          <span>Expert Review:</span>
+                          <Badge
+                            variant={
+                              submission.isExpertPassed
+                                ? 'default'
+                                : 'secondary'
+                            }
+                            className="text-xs"
+                          >
+                            {submission.isExpertPassed
+                              ? 'Passed'
+                              : 'Not Passed'}
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <History className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <p className="text-muted-foreground">
+                  No submission history yet. Submit your first assignment to see
+                  it here.
+                </p>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+export default CourseAssignment;

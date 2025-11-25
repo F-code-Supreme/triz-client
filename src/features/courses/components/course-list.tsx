@@ -7,11 +7,15 @@ interface CourseListProps {
   courses: Course[];
   filters?: CourseFilters;
   className?: string;
+  enrolledCourseIds?: string[];
 }
 
-const CourseList = ({ courses, filters, className }: CourseListProps) => {
-  // Filter courses based on filters
-
+const CourseList = ({
+  courses,
+  filters,
+  className,
+  enrolledCourseIds = [],
+}: CourseListProps) => {
   const filteredCourses = courses.filter((course) => {
     if (filters?.search) {
       const searchTerm = filters.search.toLowerCase();
@@ -25,8 +29,6 @@ const CourseList = ({ courses, filters, className }: CourseListProps) => {
     if (filters?.status && course.status !== filters.status) {
       return false;
     }
-
-    // category does not exist on Course, so skip
 
     if (filters?.level && course.level !== filters.level) {
       return false;
@@ -88,7 +90,10 @@ const CourseList = ({ courses, filters, className }: CourseListProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <CourseCard course={course} />
+            <CourseCard
+              course={course}
+              isEnrolled={enrolledCourseIds.includes(course.id)}
+            />
           </motion.div>
         ))}
       </motion.div>

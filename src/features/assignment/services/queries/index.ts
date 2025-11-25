@@ -1,9 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 
-import type { AssignmentResponse } from '@/features/assignment/services/queries/types';
+import type {
+  AssignmentResponse,
+  AssignmentSubmission,
+  AssignmentSubmissionHistoryResponse,
+  SubmitAssignmentPayload,
+} from '@/features/assignment/services/queries/types';
 
 export const useGetAssignmentsQuery = (page?: number, size?: number) => {
   const _request = useAxios();
@@ -27,11 +32,45 @@ export const useGetAssignmentModuleQuery = (moduleId: string) => {
   return useQuery({
     queryKey: [AssignmentKeys.GetAssignmentQuery, moduleId],
     queryFn: async () => {
-      const response = await _request.get<AssignmentResponse[]>(
+      const response = await _request.get<AssignmentResponse>(
         `/modules/${moduleId}/assignments`,
       );
       return response.data;
     },
     enabled: !!moduleId,
+  });
+};
+
+export const useGetAssignmentSubmissionHistoryQuery = (
+  userId?: string,
+  assignmentId?: string,
+) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [
+      AssignmentKeys.GetAssignmentSubmissionHistoryQuery,
+      userId,
+      assignmentId,
+    ],
+    queryFn: async () => {
+      const response = await _request.get<AssignmentSubmissionHistoryResponse>(
+        `/asm-submissions/users/${userId}/assignments/${assignmentId}`,
+      );
+      return response.data;
+    },
+    enabled: !!userId && !!assignmentId,
+  });
+};
+
+export const useSubmitAssignmentMutation = () => {
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: SubmitAssignmentPayload) => {
+      const response = await _request.post<AssignmentSubmission>(
+        '/asm-submissions/submit',
+        payload,
+      );
+      return response.data;
+    },
   });
 };

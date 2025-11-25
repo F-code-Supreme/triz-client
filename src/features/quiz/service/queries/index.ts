@@ -10,6 +10,7 @@ export const useGetQuizzByModulesQuery = (moduleId: string) => {
       const response = await _request.get<getQuizzByModulesResponse>(
         `/modules/${moduleId}/quizzes`,
       );
+      console.log('response for quiz', response.data);
       return response.data;
     },
     enabled: !!moduleId,

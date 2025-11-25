@@ -310,6 +310,7 @@ export function QuizEditDialog({
                     <FormControl>
                       <Input
                         type="number"
+                        min={1}
                         placeholder="Enter duration in minutes (optional)..."
                         {...field}
                         onChange={(e) =>

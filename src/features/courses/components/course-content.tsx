@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { Link } from '@tanstack/react-router';
 
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { ModuleContentItem } from '../types';
+import CourseAssignment from './course-assigment';
 
 interface CourseContentProps {
   item: ModuleContentItem | null;
@@ -125,7 +126,6 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
 
       case 'quiz':
         const quizData = item.quizData;
-        console.log('quizData in content', quizData.moduleId);
         return (
           <Card>
             <CardHeader>
@@ -170,7 +170,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                 to="/course/quiz/$slug"
                 params={{ slug: quizData.title as string }}
                 search={{ id: quizData.moduleId }}
-                mask={{ to: `/course/quiz/${quizData.title}` as string }}
+                mask={{ to: `/course/${quizData.title}/quizzes` as string }}
                 className={cn(
                   buttonVariants({
                     variant: 'default',
@@ -188,46 +188,14 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'assignment':
         const assignmentData = item.assignmentData;
         return (
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-4 h-4 text-orange-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
-                  </div>
-                  Assignment: {assignmentData.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="prose prose-slate max-w-none">
-                  <ReactMarkdown>{assignmentData.description}</ReactMarkdown>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>
-                      {formatDuration(assignmentData.durationInMinutes)}
-                    </span>
-                  </div>
-                  <span>•</span>
-                  <span>Max attempts: {assignmentData.maxAttempts}</span>
-                </div>
-                <Button className="w-full">Start Assignment</Button>
-              </CardContent>
-            </Card>
-          </div>
+          <CourseAssignment
+            moduleId={assignmentData.moduleId}
+            assignmentId={assignmentData.id}
+            assignmentTitle={assignmentData.title}
+            assignmentDescription={assignmentData.description}
+            durationInMinutes={assignmentData.durationInMinutes}
+            maxAttempts={assignmentData.maxAttempts}
+          />
         );
 
       default:
@@ -243,7 +211,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
     <div className={cn('flex-1 overflow-hidden', className)}>
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b bg-card">
+        <div className="p-4 border-b bg-card">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -253,19 +221,13 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
               <Badge className={cn('text-xs', getItemTypeColor(item.type))}>
                 {item.type.toUpperCase()}
               </Badge>
-              {/* {item.duration && item.duration > 0 && (
-                <div className="text-sm text-muted-foreground flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {formatDuration(item.duration)}
-                </div>
-              )} */}
             </div>
             <h1 className="text-2xl font-bold text-foreground">{item.title}</h1>
           </motion.div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-auto">
           <div className="p-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}

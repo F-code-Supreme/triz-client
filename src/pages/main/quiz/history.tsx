@@ -272,7 +272,7 @@ const HistoryPage = () => {
                           <div
                             className={`text-2xl font-bold ${getScoreColor(attempt.score || 0, passed)}`}
                           >
-                            {attempt.score || 0}%
+                            {attempt.score.toFixed(2) || 0}%
                           </div>
                         </div>
 
@@ -323,7 +323,9 @@ const HistoryPage = () => {
                                           <div
                                             className={`text-2xl font-bold ${getScoreColor(selectedAttempt.score || 0, (selectedAttempt.score || 0) >= 70)}`}
                                           >
-                                            {selectedAttempt.score || 0}%
+                                            {selectedAttempt.score.toFixed(2) ||
+                                              0}
+                                            %
                                           </div>
                                           <div className="text-xs text-slate-500">
                                             Điểm số
@@ -388,14 +390,14 @@ const HistoryPage = () => {
                                                       Câu hỏi {index + 1}
                                                     </p>
                                                     <p className="text-sm text-slate-500 mb-2">
-                                                      ID câu hỏi:{' '}
-                                                      {answer.questionId}
+                                                      Câu hỏi:{' '}
+                                                      {answer.questionContent}
                                                     </p>
                                                     <p className="text-sm text-slate-600">
                                                       <span className="font-medium">
                                                         Câu trả lời đã chọn:
                                                       </span>{' '}
-                                                      {answer.optionId}
+                                                      {answer.optionContent}
                                                     </p>
                                                   </div>
                                                 </div>

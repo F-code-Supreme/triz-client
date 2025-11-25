@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { CourseStatus, CourseLevel } from '../types';
+import { CourseLevel } from '../types';
 import type { CourseFilters } from '../types';
 
 interface CourseFiltersProps {
@@ -28,24 +28,10 @@ const CourseFiltersComponent = ({
     onFiltersChange({ ...filters, search: value });
   };
 
-  const handleStatusChange = (value: string) => {
-    onFiltersChange({
-      ...filters,
-      status: value === 'all' ? undefined : (value as CourseStatus),
-    });
-  };
-
   const handleLevelChange = (value: string) => {
     onFiltersChange({
       ...filters,
       level: value === 'all' ? undefined : (value as CourseLevel),
-    });
-  };
-
-  const handleCategoryChange = (value: string) => {
-    onFiltersChange({
-      ...filters,
-      category: value === 'all' ? undefined : value,
     });
   };
 
@@ -81,38 +67,6 @@ const CourseFiltersComponent = ({
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2">
-          {/* Status Filter */}
-          <Select
-            value={filters.status || 'all'}
-            onValueChange={handleStatusChange}
-          >
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="ACTIVE">Active</SelectItem>
-              <SelectItem value="INACTIVE">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Category Filter */}
-          <Select
-            value={filters.category || 'all'}
-            onValueChange={handleCategoryChange}
-          >
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="Engineering">Engineering</SelectItem>
-              <SelectItem value="Business">Business</SelectItem>
-              <SelectItem value="Design">Design</SelectItem>
-              <SelectItem value="Technology">Technology</SelectItem>
-            </SelectContent>
-          </Select>
-
           {/* Level Filter */}
           <Select
             value={filters.level || 'all'}
@@ -140,12 +94,6 @@ const CourseFiltersComponent = ({
             <SelectContent>
               <SelectItem value="title-asc">Title A-Z</SelectItem>
               <SelectItem value="title-desc">Title Z-A</SelectItem>
-              <SelectItem value="progress-desc">Progress High-Low</SelectItem>
-              <SelectItem value="progress-asc">Progress Low-High</SelectItem>
-              <SelectItem value="lastAccessed-desc">
-                Recently Accessed
-              </SelectItem>
-              <SelectItem value="enrolledAt-desc">Recently Enrolled</SelectItem>
             </SelectContent>
           </Select>
 

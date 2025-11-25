@@ -157,10 +157,10 @@ export interface GetQuizByIdResponse {
 
 export interface SubmitQuizAttemptPayload {
   attemptId: string;
-  answers: Array<{
+  answers: {
     questionId: string;
     selectedOptionIds: string[];
-  }>;
+  }[];
 }
 
 export interface QuizAttemptAnswer {
@@ -168,6 +168,8 @@ export interface QuizAttemptAnswer {
   optionId: string;
   quizAttemptId: string;
   questionId: string;
+  questionContent: string;
+  optionContent: string;
 }
 
 export interface QuizAttempt {

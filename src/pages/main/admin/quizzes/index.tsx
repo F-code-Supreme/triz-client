@@ -67,7 +67,6 @@ const AdminQuizzesPage = () => {
   }, [data]);
 
   const handleDeleteQuiz = async (quiz: any) => {
-    // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
         await deleteQuizMutation.mutateAsync(quiz.id);
@@ -117,104 +116,99 @@ const AdminQuizzesPage = () => {
 
   return (
     <AdminLayout meta={{ title: 'Manage Quizzes' }}>
-      <div className="space-y-6 p-4">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
-          <p className="text-muted-foreground">
-            Manage all quizzes in the system.
-          </p>
-        </div>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-            <div>
-              <CardTitle>Quizzes List</CardTitle>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => setIsCreateOpen(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                New Quiz
-              </Button>
-            </div>
-          </CardHeader>
-
-        <DataTableToolbar
-          table={table}
-          searchPlaceholder="Search by title, description..."
-          searchKey="title"
-          filters={[
-            {
-              columnId: 'questionType',
-              title: 'Type',
-              options: quizStatuses,
-            },
-          ]}
-        />
-
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <p className="text-muted-foreground">Loading quizzes...</p>
-          </div>
-        ) : quizzes.length === 0 ? (
-          <div className="flex justify-center items-center h-64">
-            <p className="text-muted-foreground">
-              No quizzes found. Create your first quiz!
+      <div className="flex flex-col gap-8 p-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
+            <p className="text-muted-foreground mt-2">
+              Manage all quizzes in the system.
             </p>
           </div>
-        ) : (
-          <>
-            <div className="border rounded-md overflow-hidden">
-              <Table>
-                <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && 'selected'}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
+          <Button onClick={() => setIsCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Quiz
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          <DataTableToolbar
+            table={table}
+            searchPlaceholder="Search by title, description..."
+            searchKey="title"
+            filters={[
+              {
+                columnId: 'questionType',
+                title: 'Type',
+                options: quizStatuses,
+              },
+            ]}
+          />
+
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-muted-foreground">Loading quizzes...</p>
+            </div>
+          ) : quizzes.length === 0 ? (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-muted-foreground">
+                No quizzes found. Create your first quiz!
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="border rounded-md overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                          </TableHead>
                         ))}
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
-                        No results.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map((row) => (
+                        <TableRow
+                          key={row.id}
+                          data-state={row.getIsSelected() && 'selected'}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell
+                          colSpan={columns.length}
+                          className="h-24 text-center"
+                        >
+                          No results.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
 
-            <DataTablePagination table={table} />
-          </>
-        )}
+              <DataTablePagination table={table} />
+            </>
+          )}
+        </div>
       </div>
 
       <QuizFormDialog

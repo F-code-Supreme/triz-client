@@ -10,3 +10,17 @@ export interface CreateCoursePayload {
   dealPrice: number;
   thumbnailUrl: string;
 }
+
+export interface Enrollment {
+  id: string;
+  userId: string;
+  userName: string | null;
+  courseId: string;
+  courseTitle: string;
+  status: string;
+  lessonsTotal: number;
+  lessonsCompleted: number;
+  percentCompleted: number;
+  enrolledAt: string;
+  updatedAt: string;
+}

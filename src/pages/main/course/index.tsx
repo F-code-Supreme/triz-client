@@ -5,12 +5,20 @@ import CourseList from '@/features/courses/components/course-list';
 import CourseFiltersComponent from '@/features/courses/components/course-filters';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
-import { useGetCourseQuery } from '@/features/courses/services/queries';
+import {
+  useGetCourseQuery,
+  useGetMyEnrollmentsQuery,
+} from '@/features/courses/services/queries';
 import type { CourseFilters } from '@/features/courses/types';
 
 const AllCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
   const { data, isLoading, isError } = useGetCourseQuery();
+  const { data: enrollmentsData } = useGetMyEnrollmentsQuery();
+
+  const enrolledCourseIds = (enrollmentsData?.content || []).map(
+    (enrollment) => enrollment.courseId,
+  );
 
   return (
     <DefaultLayout meta={{ title: 'My Courses' }}>
@@ -65,7 +73,11 @@ const AllCoursePage = () => {
           ) : isError ? (
             <div>Failed to load courses.</div>
           ) : (
-            <CourseList courses={data?.content || []} filters={filters} />
+            <CourseList
+              courses={data?.content || []}
+              filters={filters}
+              enrolledCourseIds={enrolledCourseIds}
+            />
           )}
         </motion.div>
       </div>

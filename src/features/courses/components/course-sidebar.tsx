@@ -7,7 +7,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -26,6 +26,7 @@ interface CourseSidebarProps {
   currentItemId?: string;
   currentModuleId?: string;
   onItemSelect: (itemId: string, moduleId: string) => void;
+  onModuleSelect?: (moduleId: string) => void;
   className?: string;
 }
 
@@ -34,9 +35,17 @@ const CourseSidebar = ({
   currentItemId,
   currentModuleId,
   onItemSelect,
+  onModuleSelect,
   className,
 }: CourseSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [openModules, setOpenModules] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (currentModuleId) {
+      setOpenModules(new Set([currentModuleId]));
+    }
+  }, [currentModuleId]);
 
   const getItemIcon = (type: string) => {
     switch (type) {
@@ -108,15 +117,26 @@ const CourseSidebar = ({
               </p>
             </div>
 
-            {/* Content */}
             <ScrollArea className="h-[calc(100vh-9rem)]">
               <div className="p-3 space-y-2">
                 {modules.map((module, moduleIndex) => {
                   const isCurrentModule = module.id === currentModuleId;
+                  const isOpen = openModules.has(module.id);
                   return (
                     <Collapsible
                       key={module.id}
-                      defaultOpen={moduleIndex === 0 || isCurrentModule}
+                      open={isOpen}
+                      onOpenChange={(open) => {
+                        setOpenModules((prev) => {
+                          const newSet = new Set(prev);
+                          if (open) {
+                            newSet.add(module.id);
+                          } else {
+                            newSet.delete(module.id);
+                          }
+                          return newSet;
+                        });
+                      }}
                     >
                       <CollapsibleTrigger className="w-full group">
                         <motion.div
@@ -126,6 +146,7 @@ const CourseSidebar = ({
                             duration: 0.3,
                             delay: moduleIndex * 0.05,
                           }}
+                          onClick={() => onModuleSelect?.(module.id)}
                           className={cn(
                             'w-full p-3 rounded-lg border text-left hover:bg-accent/50 transition-colors',
                             isCurrentModule && 'border-primary/50 bg-primary/5',
@@ -231,10 +252,11 @@ const CourseSidebar = ({
               {modules.map((module, index) => {
                 const isCurrentModule = module.id === currentModuleId;
                 return (
-                  <div
+                  <button
                     key={module.id}
+                    onClick={() => onModuleSelect?.(module.id)}
                     className={cn(
-                      'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors',
+                      'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer',
                       isCurrentModule
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted text-muted-foreground hover:bg-accent',
@@ -242,7 +264,7 @@ const CourseSidebar = ({
                     title={module.name}
                   >
                     {index + 1}
-                  </div>
+                  </button>
                 );
               })}
             </div>

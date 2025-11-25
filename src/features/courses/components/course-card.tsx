@@ -1,43 +1,27 @@
-import { Link } from '@tanstack/react-router';
-import { Clock, Users, Play } from 'lucide-react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { Clock, Users, Play, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { Badge } from '@/components/ui/badge';
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 import type { Course } from '@/features/courses/types';
-import { CourseStatus, CourseLevel } from '@/features/courses/types';
+import { CourseLevel } from '@/features/courses/types';
 
 interface CourseCardProps {
   course: Course;
   className?: string;
+  isEnrolled?: boolean;
 }
 
-const CourseCard = ({ course, className }: CourseCardProps) => {
-  // Only ACTIVE/INACTIVE supported by CourseStatus, so use those
-  const getStatusColor = (status?: CourseStatus) => {
-    switch (status) {
-      case 'ACTIVE':
-        return 'bg-blue-500';
-      case 'INACTIVE':
-        return 'bg-gray-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const getStatusText = (status?: CourseStatus) => {
-    switch (status) {
-      case 'ACTIVE':
-        return 'Active';
-      case 'INACTIVE':
-        return 'Inactive';
-      default:
-        return 'Unknown';
-    }
-  };
+const CourseCard = ({
+  course,
+  className,
+  isEnrolled = false,
+}: CourseCardProps) => {
+  const navigate = useNavigate();
 
   const getLevelColor = (level?: CourseLevel) => {
     switch (level) {
@@ -75,17 +59,6 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
             alt={course.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {/* Status Badge */}
-          <div className="absolute top-3 right-3">
-            <Badge
-              className={cn(
-                'text-white font-medium',
-                getStatusColor(course.status),
-              )}
-            >
-              {getStatusText(course.status)}
-            </Badge>
-          </div>
         </div>
 
         <CardContent className="flex-1 p-4 space-y-3 flex flex-col justify-between">
@@ -93,9 +66,6 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
           <div className="flex items-center justify-between">
             <Badge className={cn('text-xs', getLevelColor(course.level))}>
               {course.level || 'Unknown'}
-            </Badge>
-            <Badge variant="outline" className="text-xs">
-              {course.status || 'Unknown'}
             </Badge>
           </div>
 
@@ -127,22 +97,39 @@ const CourseCard = ({ course, className }: CourseCardProps) => {
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
-          <Link
-            to="/course/$slug"
-            params={{ slug: course.slug as string }}
-            search={{ id: course.id }}
-            mask={{ to: `/course/${course.slug}/overview` as string }}
-            className={cn(
-              buttonVariants({
-                variant: 'default',
-                size: 'default',
-              }),
-              'w-full',
-            )}
-          >
-            <Play className="w-4 h-4 mr-2" />
-            View Details
-          </Link>
+          {isEnrolled ? (
+            <Button
+              onClick={() => {
+                navigate({
+                  to: '/course/learn/$slug',
+                  params: { slug: course.slug as string },
+                  search: { id: course.id },
+                  mask: { to: `/course/${course.slug}` },
+                });
+              }}
+              className="w-full"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Continue Learning
+            </Button>
+          ) : (
+            <Link
+              to="/course/$slug"
+              params={{ slug: course.slug as string }}
+              search={{ id: course.id }}
+              mask={{ to: `/course/${course.slug}/overview` as string }}
+              className={cn(
+                buttonVariants({
+                  variant: 'default',
+                  size: 'default',
+                }),
+                'w-full',
+              )}
+            >
+              <Play className="w-4 h-4 mr-2" />
+              View Details
+            </Link>
+          )}
         </CardFooter>
       </Card>
     </motion.div>

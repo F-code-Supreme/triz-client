@@ -16,13 +16,12 @@ import type {
 } from './type';
 
 // users
-
 export const useGetQuizzesMutation = () => {
   const _request = useAxios();
   return useQuery({
     queryKey: ['getQuizzes'],
     queryFn: async () => {
-      const res = await _request.get<GetQuizzesResponse>('/quizzes');
+      const res = await _request.get<GetQuizzesResponse>('');
       return res.data;
     },
   });
@@ -115,8 +114,6 @@ export const useGetUserQuizAttemptsQuery = (userId: string) => {
     enabled: !!userId,
   });
 };
-
-// admin
 
 export const useGetAdminQuizzesQuery = () => {
   const _request = useAxios();
