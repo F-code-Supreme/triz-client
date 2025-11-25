@@ -1,6 +1,6 @@
 import { QuizQuestion } from '../mutations/type';
 
-export interface Quiz {
+export interface getQuizzByModulesResponse {
   id: string;
   title: string;
   description: string;
@@ -14,4 +14,4 @@ export interface Quiz {
   questions: QuizQuestion[];
 }
 
-export type getQuizzByModulesResponse = Quiz[];
+// export type getQuizzByModulesResponse = Quiz[];
