@@ -206,31 +206,12 @@ const AdminUserDetailPage = () => {
 
                 {/* Details Skeleton */}
                 <div className="flex-1 grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {[...Array(5)].map((_, i) => (
+                  {[...Array(6)].map((_, i) => (
                     <div key={i}>
                       <Skeleton className="h-4 w-20 mb-2" />
                       <Skeleton className="h-6 w-32" />
                     </div>
                   ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Wallet Card Skeleton */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Wallet Information</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <Skeleton className="h-4 w-20 mb-2" />
-                  <Skeleton className="h-8 w-48" />
-                </div>
-                <div>
-                  <Skeleton className="h-4 w-20 mb-2" />
-                  <Skeleton className="h-10 w-64" />
                 </div>
               </div>
             </CardContent>
@@ -374,48 +355,38 @@ const AdminUserDetailPage = () => {
                     </Badge>
                   </div>
                 </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    Wallet Balance
+                  </p>
+                  <p className="text-base font-medium">
+                    {walletLoading
+                      ? 'Loading...'
+                      : walletData
+                        ? `${walletData.balance.toLocaleString()} VND`
+                        : 'N/A'}
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Wallet Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Wallet Information</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {walletLoading ? (
-              <p className="text-muted-foreground">Loading wallet data...</p>
-            ) : walletData ? (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">Wallet ID</p>
-                  <p className="text-2xl font-mono">{walletData.id}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Balance</p>
-                  <p className="text-2xl">
-                    {walletData.balance.toLocaleString()} VND
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <p className="text-muted-foreground">No wallet data</p>
-            )}
-          </CardContent>
-        </Card>
-
         {/* Active Subscription Card */}
         {activeSubscriptionLoading ? (
-          <Card>
+          <Card className="border-2 border-primary">
             <CardHeader>
-              <CardTitle>Active Subscription</CardTitle>
+              <Skeleton className="h-8 w-48" />
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
-                Loading subscription data...
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i}>
+                    <Skeleton className="h-4 w-24 mb-2" />
+                    <Skeleton className="h-6 w-32" />
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         ) : activeSubscription ? (
@@ -471,7 +442,16 @@ const AdminUserDetailPage = () => {
               </div>
             </CardContent>
           </Card>
-        ) : null}
+        ) : (
+          <Card className="border-2 border-muted">
+            <CardHeader>
+              <CardTitle>Active Subscription</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">No active subscription</p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Subscription History Card */}
         <Card>
