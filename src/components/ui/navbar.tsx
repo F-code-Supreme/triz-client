@@ -311,11 +311,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                 </div>
               )}
 
-              <ThemeSwitcher
-                defaultValue="system"
-                value={theme}
-                onChange={setTheme}
-              />
+              <ThemeSwitcher value={theme} onChange={setTheme} />
               <LocaleSwitcher />
             </div>
           </div>
