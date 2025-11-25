@@ -10,6 +10,7 @@ interface Principle {
   title: string;
   image?: string; // Optional image URL
   content: PrincipleBlock[];
+  description?: string; // Optional description
 }
 
 // Detailed Data based on your screenshot
@@ -42,6 +43,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Chia đối tượng thành các phần độc lập hoặc dễ tháo lắp để cải thiện hiệu suất hoặc tính linh hoạt.',
   },
   {
     number: 2,
@@ -84,6 +87,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Làm cho mỗi phần của đối tượng thực hiện một chức năng hữu ích khác nhau để tăng hiệu quả và đa năng.',
   },
   {
     number: 4,
@@ -105,6 +110,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Chuyển hình dạng của đối tượng từ đối xứng sang không đối xứng hoặc tăng mức độ không đối xứng để cải thiện hiệu suất hoặc tính năng.',
   },
   {
     number: 5,
@@ -126,8 +133,9 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Kết hợp các đối tượng đồng nhất hoặc các đối tượng dùng cho các hoạt động kế cận về mặt không gian và thời gian để tăng hiệu quả và tiện lợi.',
   },
-  // ... Bạn có thể thêm tiếp các nguyên tắc 6-40 theo cấu trúc này
   {
     number: 6,
     title: 'Nguyên tắc vạn năng (Universality)',
@@ -141,6 +149,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Đối tượng thực hiện nhiều chức năng khác nhau, do đó không cần các đối tượng khác.',
   },
   {
     number: 7,
@@ -155,6 +165,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Đặt đối tượng này bên trong đối tượng khác để tiết kiệm không gian hoặc tạo ra các chức năng mới.',
   },
   {
     number: 8,
@@ -177,6 +189,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Để bù đắp trọng lượng của một vật thể, hãy kết hợp nó với các vật thể khác có khả năng nâng hoặc để nó tương tác với môi trường để tạo lực nâng.',
   },
   {
     number: 9,
@@ -191,6 +205,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Gây tác động ngược chiều trước khi thực hiện tác động chính để tăng độ bền hoặc hiệu suất.',
   },
   {
     number: 10,
@@ -209,6 +225,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thực hiện thay đổi cần thiết đối với một vật thể trước khi cần thiết hoặc sắp xếp các vật thể sao cho chúng có thể hoạt động từ vị trí thuận tiện nhất để tiết kiệm thời gian và công sức.',
   },
   {
     number: 11,
@@ -224,6 +242,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Chuẩn bị trước các phương tiện khẩn cấp để bù đắp cho độ tin cậy tương đối thấp của đối tượng.',
   },
   {
     number: 12,
@@ -239,6 +259,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Trong trường lực thế (ví dụ trọng trường), hạn chế thay đổi vị trí (ví dụ: thay đổi điều kiện làm việc để loại bỏ nhu cầu nâng hoặc hạ đối tượng).',
   },
   {
     number: 13,
@@ -268,6 +290,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Đảo ngược hành động được sử dụng để giải quyết vấn đề (ví dụ: thay vì làm lạnh, hãy làm nóng nó).',
   },
   {
     number: 14,
@@ -294,6 +318,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay vì sử dụng các bộ phận, bề mặt thẳng, hãy sử dụng các dạng cong; chuyển từ bề mặt phẳng sang bề mặt cầu; từ khối lập phương sang cấu trúc hình cầu.',
   },
   {
     number: 15,
@@ -320,6 +346,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Cho phép (hoặc thiết kế) các đặc tính của đối tượng, môi trường bên ngoài hoặc quy trình thay đổi để tối ưu hóa điều kiện hoạt động.',
   },
   {
     number: 16,
@@ -334,6 +362,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Nếu khó đạt được 100% hiệu quả mong muốn bằng một phương pháp nhất định, thì bằng cách sử dụng "ít hơn một chút" hoặc "nhiều hơn một chút" cùng phương pháp đó, vấn đề có thể được giải quyết dễ dàng hơn đáng kể.',
   },
   {
     number: 17,
@@ -366,6 +396,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Di chuyển một đối tượng trong không gian hai hoặc ba chiều để tận dụng tối đa không gian và cải thiện hiệu suất.',
   },
   {
     number: 18,
@@ -395,6 +427,8 @@ export const principlesData: Principle[] = [
         examples: ['Trộn hợp kim trong lò cảm ứng.'],
       },
     ],
+    description:
+      'Làm cho đối tượng dao động hoặc rung động để cải thiện hiệu suất hoặc chức năng.',
   },
   {
     number: 19,
@@ -422,6 +456,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay vì hành động liên tục, hãy sử dụng các hành động theo chu kỳ hoặc xung để cải thiện hiệu suất hoặc tiết kiệm năng lượng.',
   },
   {
     number: 20,
@@ -442,6 +478,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Tiến hành công việc liên tục; làm cho tất cả các bộ phận của đối tượng hoạt động hết công suất, mọi lúc.',
   },
   {
     number: 21,
@@ -456,6 +494,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thực hiện một quá trình hoặc các giai đoạn nhất định (ví dụ: các hoạt động có hại, nguy hiểm hoặc dễ gây hư hỏng) với tốc độ cao.',
   },
   {
     number: 22,
@@ -483,6 +523,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Sử dụng các tác nhân gây hại (đặc biệt là tác động xấu của môi trường) để đạt được hiệu quả tích cực.',
   },
   {
     number: 23,
@@ -507,6 +549,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Đưa vào sự phản hồi (tham chiếu ngược, kiểm tra chéo) để cải thiện một quy trình hoặc hành động.',
   },
   {
     number: 24,
@@ -524,6 +568,8 @@ export const principlesData: Principle[] = [
         examples: ['Miếng lót nồi để bê đĩa nóng ra bàn ăn.'],
       },
     ],
+    description:
+      'Sử dụng một đối tượng trung gian hoặc một quy trình trung gian.',
   },
   {
     number: 25,
@@ -547,6 +593,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Làm cho một đối tượng tự phục vụ nó bằng cách thực hiện các chức năng phụ trợ hữu ích.',
   },
   {
     number: 26,
@@ -575,6 +623,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay vì sử dụng đối tượng không có sẵn, đắt tiền hoặc dễ vỡ, hãy sử dụng các bản sao đơn giản và rẻ tiền.',
   },
   {
     number: 27,
@@ -589,6 +639,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay thế một đối tượng đắt tiền bằng nhiều đối tượng rẻ tiền, chấp nhận giảm bớt một số phẩm chất nhất định (ví dụ như tuổi thọ).',
   },
   {
     number: 28,
@@ -621,6 +673,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay thế phương tiện cơ học bằng phương tiện cảm giác (quang học, âm thanh, vị giác hoặc khứu giác).',
   },
   {
     number: 29,
@@ -635,6 +689,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Sử dụng các bộ phận khí và lỏng của đối tượng thay vì các bộ phận rắn (ví dụ: bơm hơi, chứa đầy chất lỏng, đệm khí, thủy tĩnh, phản lực nước).',
   },
   {
     number: 30,
@@ -654,6 +710,7 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description: 'Sử dụng vỏ dẻo và màng mỏng thay vì kết cấu ba chiều.',
   },
   {
     number: 31,
@@ -672,6 +729,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Làm cho đối tượng trở nên xốp hoặc thêm các yếu tố xốp (miếng chèn, lớp phủ...).',
   },
   {
     number: 32,
@@ -691,6 +750,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay đổi màu sắc của đối tượng hoặc môi trường bên ngoài của nó.',
   },
   {
     number: 33,
@@ -705,6 +766,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Làm cho các đối tượng tương tác với một đối tượng nhất định được làm bằng cùng một vật liệu (hoặc vật liệu có tính chất giống hệt).',
   },
   {
     number: 34,
@@ -727,6 +790,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Làm cho các phần của đối tượng đã hoàn thành chức năng của chúng biến mất (tan, bay hơi...) hoặc thay đổi chúng trực tiếp trong quá trình vận hành.',
   },
   {
     number: 35,
@@ -762,6 +827,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Thay đổi trạng thái vật lý của đối tượng (ví dụ: sang khí, lỏng, hoặc rắn).',
   },
   {
     number: 36,
@@ -776,6 +843,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Sử dụng các hiện tượng xảy ra trong quá trình chuyển pha (ví dụ: thay đổi thể tích, mất hoặc hấp thụ nhiệt...).',
   },
   {
     number: 37,
@@ -795,6 +864,7 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description: 'Sử dụng sự giãn nở (hoặc co lại) do nhiệt của vật liệu.',
   },
   {
     number: 38,
@@ -831,6 +901,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Sử dụng các chất oxy hóa mạnh để tăng cường các phản ứng hóa học.',
   },
   {
     number: 39,
@@ -850,6 +922,8 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Sử dụng môi trường trơ để ngăn chặn các phản ứng không mong muốn.',
   },
   {
     number: 40,
@@ -864,5 +938,7 @@ export const principlesData: Principle[] = [
         ],
       },
     ],
+    description:
+      'Chuyển từ vật liệu đồng nhất sang vật liệu composite (nhiều thành phần).',
   },
 ];

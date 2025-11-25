@@ -5,7 +5,6 @@ const MatrixTriz = () => {
   return (
     <DefaultLayout meta={{ title: 'TRIZ Matrix' }} className="">
       <MatrixSection />
-      {/* <TrizMatrix data={fullMatrixData} /> */}
     </DefaultLayout>
   );
 };
