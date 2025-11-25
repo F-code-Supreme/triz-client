@@ -43,6 +43,8 @@ export interface CourseFilters {
   sortBy?: 'title' | 'progress' | 'lastAccessed' | 'enrolledAt';
   sortOrder?: 'asc' | 'desc';
 }
+// import type { Module } from '@/features/modules/types';
+
 export interface Order {
   id: string;
   type: string;
@@ -64,17 +66,20 @@ export interface Course {
   shortDescription?: string | null;
   durationInMinutes?: number;
   level?: CourseLevel;
-  price?: number;
-  dealPrice?: number | null;
+  price: number;
+  dealPrice: number;
   slug?: string;
-  thumbnailUrl?: string | null;
+  thumbnailUrl: string;
   // keep old field for backward-compatibility
   thumbnail?: string | null;
   learnerCount?: number;
+  totalModules?: number;
+  totalLessons?: number;
   status?: CourseStatus;
   orders?: Order[];
   createdAt?: string;
   updatedAt?: string;
+  // modules?: Module[];
 }
 
 interface CourseModule {
@@ -176,6 +181,123 @@ export type ModuleContentItem =
   | LessonContentItem
   | AssignmentContentItem
   | QuizContentItem;
+
+export interface EnhancedModule {
+  id: string;
+  name: string;
+  durationInMinutes: number;
+  level: 'EASY' | 'MEDIUM' | 'HARD';
+  totalItems: number;
+  contents: ModuleContentItem[];
+  order: number;
+}
+
+export interface CourseContentState {
+  modules: EnhancedModule[];
+  currentItemId: string | null;
+  currentModuleId: string | null;
+  currentItem: ModuleContentItem | null;
+}
+
+interface CourseModule {
+  id: string;
+  name: string;
+  durationInMinutes: number;
+  level: string;
+  lessonCount: number;
+}
+
+export interface CourseDetailResponse extends Course {
+  modules: CourseModule[];
+  totalModules?: number;
+  totalLessons?: number;
+}
+
+export interface ModuleResponse {
+  id: string;
+  name: string;
+  durationInMinutes: number;
+  level: string;
+  createdAt: string;
+  updatedAt: string;
+  courseId: string;
+  lessonCount: number;
+  quizCount: number;
+  assignmentCount: number;
+  orders: Order[];
+}
+
+export interface AssignmentResponse {
+  content: {
+    id: string;
+    title: string;
+    description: string;
+    durationInMinutes: number;
+    maxAttempts: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+    userId: string;
+  }[];
+}
+
+export interface BaseContentItem {
+  id: string;
+  type: 'lesson' | 'assignment' | 'quiz';
+  order: number;
+  title: string;
+}
+
+export interface LessonContentItem extends BaseContentItem {
+  type: 'lesson';
+  lessonData: {
+    id: string;
+    name: string;
+    materialUrl: string;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+  };
+}
+
+export interface AssignmentContentItem extends BaseContentItem {
+  type: 'assignment';
+  assignmentData: {
+    id: string;
+    title: string;
+    description: string;
+    durationInMinutes: number;
+    maxAttempts: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+  };
+}
+
+export interface QuizContentItem extends BaseContentItem {
+  type: 'quiz';
+  quizData: {
+    id: string;
+    title: string;
+    description: string;
+    imageSource?: string;
+    durationInMinutes: number;
+    createdAt: string;
+    updatedAt: string;
+    moduleId: string;
+    moduleName: string;
+  };
+}
+
+// export type ModuleContentItem =
+//   | LessonContentItem
+//   | AssignmentContentItem
+//   | QuizContentItem;
 
 export interface EnhancedModule {
   id: string;

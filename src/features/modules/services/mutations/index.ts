@@ -23,7 +23,7 @@ export const useCreateModuleMutation = (courseId: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [ModuleKeys.GetModuleQuery],
+        queryKey: [ModuleKeys.GetModulesByCourseQuery, courseId],
       });
     },
   });
@@ -42,7 +42,7 @@ export const useUpdateModuleMutation = (id: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [ModuleKeys.GetModuleQuery],
+        queryKey: [ModuleKeys.GetModulesByCourseQuery],
       });
     },
   });

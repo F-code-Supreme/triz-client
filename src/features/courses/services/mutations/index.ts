@@ -47,3 +47,73 @@ export const useEnrollCourseMutation = () => {
     },
   });
 };
+
+export const useUpdateCourseMutation = (courseId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: Partial<CreateCoursePayload>) => {
+      const response = await _request.put<Response<Course>>(
+        `/courses/${courseId}`,
+        payload,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseById, courseId],
+      });
+    },
+  });
+};
+
+export const useDeleteCourseMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (courseId: string) => {
+      const response = await _request.delete<Response<null>>(
+        `/courses/${courseId}`,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseQuery],
+      });
+    },
+  });
+};
+
+export const useReorderModuleMutation = (courseId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (moduleIds: string[]) => {
+      const payload = moduleIds.map((id) => ({
+        id,
+        type: 'module',
+      }));
+
+      const response = await _request.patch<Course>(
+        `/courses/${courseId}/reorder`,
+        payload,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseById, courseId],
+      });
+      // queryClient.invalidateQueries({
+      //   queryKey: [ModuleKeys.GetModulesByCourseQuery, courseId],
+      // });
+    },
+  });
+};

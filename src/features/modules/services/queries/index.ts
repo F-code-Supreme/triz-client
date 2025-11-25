@@ -4,6 +4,7 @@ import { useAxios } from '@/configs/axios';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
 import type { ModuleResponse } from '@/features/modules/services/queries/types';
 import { ModuleResponseData } from '../../types';
+import type { Module } from '@/features/modules/types';
 
 export const useGetModulesQuery = (page?: number, size?: number) => {
   const _request = useAxios();
@@ -32,5 +33,32 @@ export const useGetModuleByCourseQuery = (courseId: string) => {
       );
       return response.data.content;
     },
+  });
+};
+export const useGetModulesByCourseQuery = (courseId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [ModuleKeys.GetModulesByCourseQuery, courseId],
+    queryFn: async () => {
+      const response = await _request.get<ModuleResponse>(
+        `/courses/${courseId}/modules`,
+      );
+
+      return response.data;
+    },
+    enabled: !!courseId,
+  });
+};
+
+export const useGetModulesById = (moduleId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [ModuleKeys.GetModulesById, moduleId],
+    queryFn: async () => {
+      const response = await _request.get<Module>(`modules/${moduleId}`);
+
+      return response.data;
+    },
+    enabled: !!moduleId,
   });
 };

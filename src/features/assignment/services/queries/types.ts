@@ -1,6 +1,6 @@
 import type { PaginatedResponse } from '@/types';
 
-interface Assignment {
+export interface Assignment {
   id: string;
   title: string;
   description: string;
