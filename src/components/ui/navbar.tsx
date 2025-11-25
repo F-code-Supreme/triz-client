@@ -1,5 +1,12 @@
 import { Link } from '@tanstack/react-router';
-import { User, LogOut, BookOpen, Wallet, CalendarSync } from 'lucide-react';
+import {
+  User,
+  LogOut,
+  BookOpen,
+  Wallet,
+  CalendarSync,
+  Zap,
+} from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +34,8 @@ import {
 } from '@/components/ui/popover';
 import useAuth from '@/features/auth/hooks/use-auth';
 import useLogout from '@/features/auth/hooks/use-logout';
+import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
+import { useGetActiveSubscriptionByUserQuery } from '@/features/subscription/services/queries';
 import { useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
 
@@ -56,8 +65,18 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
   ({ className, navigationLinks, ...props }, ref) => {
     const { theme, setTheme } = useTheme();
     const { t } = useTranslation('header');
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const logout = useLogout();
+
+    // Fetch active subscription and wallet
+    const { data: activeSubscription } = useGetActiveSubscriptionByUserQuery(
+      user?.id,
+    );
+    const { data: wallet } = useGetWalletByUserQuery(user?.id);
+
+    // Get token count from active subscription or wallet balance
+    const tokenBalance =
+      activeSubscription?.tokensPerDayRemaining ?? wallet?.balance ?? 0;
 
     // Default navigation links if none provided
     const defaultNavigationLinks: Navbar03NavItem[] = [
@@ -126,7 +145,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           </Link>
                         </NavigationMenuItem>
                       ))}
-                      <div className="w-full border-t pt-2 mt-2">
+                      <div className="w-full border-t">
                         {isAuthenticated ? (
                           <>
                             <NavigationMenuItem className="w-full">
@@ -156,7 +175,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                                 {t('dropdown_menu.wallet')}
                               </Link>
                             </NavigationMenuItem>
-                            <NavigationMenuItem className="w-full">
+                            <NavigationMenuItem className="w-full border-b mb-2">
                               <Link
                                 to="/subscription"
                                 className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
@@ -164,6 +183,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                                 <CalendarSync className="mr-2 h-4 w-4" />
                                 {t('dropdown_menu.subscriptions')}
                               </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full mb-2">
+                              <ThemeSwitcher
+                                value={theme}
+                                onChange={setTheme}
+                              />
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full border-b pb-2">
+                              <LocaleSwitcher />
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
                               <button
@@ -177,7 +205,16 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           </>
                         ) : (
                           <>
+                            <NavigationMenuItem className="w-full mb-2">
+                              <ThemeSwitcher
+                                value={theme}
+                                onChange={setTheme}
+                              />
+                            </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
+                              <LocaleSwitcher />
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full border-t mt-2">
                               <Link
                                 search={{
                                   redirect: window.location.pathname,
@@ -238,7 +275,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             {/* Auth Buttons & Locale Switcher */}
             <div className="flex items-center space-x-4">
               {isAuthenticated ? (
-                <div className="hidden sm:flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-4">
+                  {/* Token Count Display */}
+                  <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
+                    <Zap className="h-4 w-4 text-yellow-600" />
+                    <span className="text-sm font-medium">
+                      {tokenBalance.toLocaleString()}
+                    </span>
+                  </div>
+                  {/* User Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -276,6 +321,13 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild className="mb-2">
+                        <ThemeSwitcher value={theme} onChange={setTheme} />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <LocaleSwitcher />
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={logout}
                         className="cursor-pointer"
@@ -308,11 +360,10 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       {t('sign_up')}
                     </Link>
                   </Button>
+                  <ThemeSwitcher value={theme} onChange={setTheme} />
+                  <LocaleSwitcher />
                 </div>
               )}
-
-              <ThemeSwitcher value={theme} onChange={setTheme} />
-              <LocaleSwitcher />
             </div>
           </div>
         </div>
