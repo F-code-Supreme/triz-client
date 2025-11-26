@@ -1,0 +1,550 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Dashboard API Response Schema",
+  "description": "Expected JSON structure for the dashboard API endpoint",
+  "type": "object",
+  "required": [
+    "revenue",
+    "users",
+    "feedback",
+    "reports",
+    "games",
+    "chat",
+    "forum"
+  ],
+  "properties": {
+    "revenue": {
+      "type": "object",
+      "required": [
+        "total",
+        "growth",
+        "byPeriod",
+        "byPackage",
+        "topSpenders",
+        "transactions"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total revenue in dollars",
+          "example": 284750
+        },
+        "growth": {
+          "type": "number",
+          "description": "Growth percentage compared to previous period",
+          "example": 12.5
+        },
+        "byPeriod": {
+          "type": "array",
+          "description": "Revenue data by time period (weekly/quarterly/yearly)",
+          "items": {
+            "type": "object",
+            "required": ["period", "revenue", "packages"],
+            "properties": {
+              "period": {
+                "type": "string",
+                "description": "Period label (e.g., 'Week 1', 'Q1 2025', 'Jan 2025')",
+                "example": "Week 1"
+              },
+              "revenue": {
+                "type": "number",
+                "description": "Revenue for this period in dollars",
+                "example": 18500
+              },
+              "packages": {
+                "type": "number",
+                "description": "Number of packages sold in this period",
+                "example": 42
+              }
+            }
+          }
+        },
+        "byPackage": {
+          "type": "array",
+          "description": "Revenue breakdown by package type",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "purchases", "revenue", "successRate"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "pkg-1"
+              },
+              "name": {
+                "type": "string",
+                "example": "Basic Package"
+              },
+              "purchases": {
+                "type": "number",
+                "description": "Total number of purchases",
+                "example": 324
+              },
+              "revenue": {
+                "type": "number",
+                "description": "Total revenue from this package",
+                "example": 48600
+              },
+              "successRate": {
+                "type": "number",
+                "description": "Transaction success rate percentage",
+                "example": 94.5
+              }
+            }
+          }
+        },
+        "topSpenders": {
+          "type": "array",
+          "description": "Top users by total spending",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "email", "totalSpent", "purchases"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "user-1"
+              },
+              "name": {
+                "type": "string",
+                "example": "John Anderson"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "john.anderson@company.com"
+              },
+              "totalSpent": {
+                "type": "number",
+                "description": "Total amount spent in dollars",
+                "example": 4850
+              },
+              "purchases": {
+                "type": "number",
+                "description": "Number of purchases made",
+                "example": 8
+              }
+            }
+          }
+        },
+        "transactions": {
+          "type": "object",
+          "required": [
+            "total",
+            "success",
+            "failed",
+            "successRate",
+            "failureRate"
+          ],
+          "properties": {
+            "total": {
+              "type": "number",
+              "description": "Total number of transactions",
+              "example": 1268
+            },
+            "success": {
+              "type": "number",
+              "description": "Number of successful transactions",
+              "example": 1215
+            },
+            "failed": {
+              "type": "number",
+              "description": "Number of failed transactions",
+              "example": 53
+            },
+            "successRate": {
+              "type": "number",
+              "description": "Success rate percentage",
+              "example": 95.8
+            },
+            "failureRate": {
+              "type": "number",
+              "description": "Failure rate percentage",
+              "example": 4.2
+            }
+          }
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "required": ["total", "new", "active", "growth"],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total registered users",
+          "example": 8542
+        },
+        "new": {
+          "type": "number",
+          "description": "New users in current period",
+          "example": 342
+        },
+        "active": {
+          "type": "number",
+          "description": "Active users in current period",
+          "example": 6784
+        },
+        "growth": {
+          "type": "number",
+          "description": "User growth percentage",
+          "example": 8.3
+        }
+      }
+    },
+    "feedback": {
+      "type": "object",
+      "required": [
+        "total",
+        "averageRating",
+        "distribution",
+        "sentimentBreakdown"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total feedback submissions",
+          "example": 2847
+        },
+        "averageRating": {
+          "type": "number",
+          "description": "Average rating (1-5)",
+          "minimum": 1,
+          "maximum": 5,
+          "example": 4.3
+        },
+        "distribution": {
+          "type": "array",
+          "description": "Feedback count by star rating",
+          "items": {
+            "type": "object",
+            "required": ["rating", "count", "percentage"],
+            "properties": {
+              "rating": {
+                "type": "number",
+                "description": "Star rating (1-5)",
+                "minimum": 1,
+                "maximum": 5,
+                "example": 5
+              },
+              "count": {
+                "type": "number",
+                "description": "Number of feedback with this rating",
+                "example": 1523
+              },
+              "percentage": {
+                "type": "number",
+                "description": "Percentage of total feedback",
+                "example": 53.5
+              }
+            }
+          }
+        },
+        "sentimentBreakdown": {
+          "type": "object",
+          "required": ["good", "medium", "bad"],
+          "description": "Feedback categorized by sentiment",
+          "properties": {
+            "good": {
+              "type": "number",
+              "description": "Count of 4-5 star ratings",
+              "example": 2347
+            },
+            "medium": {
+              "type": "number",
+              "description": "Count of 3 star ratings",
+              "example": 312
+            },
+            "bad": {
+              "type": "number",
+              "description": "Count of 1-2 star ratings",
+              "example": 188
+            }
+          }
+        }
+      }
+    },
+    "reports": {
+      "type": "object",
+      "required": ["total", "byType"],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total reports submitted",
+          "example": 456
+        },
+        "byType": {
+          "type": "array",
+          "description": "Reports grouped by issue type",
+          "items": {
+            "type": "object",
+            "required": ["type", "count", "percentage"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Issue type category",
+                "example": "Technical Issue"
+              },
+              "count": {
+                "type": "number",
+                "description": "Number of reports of this type",
+                "example": 142
+              },
+              "percentage": {
+                "type": "number",
+                "description": "Percentage of total reports",
+                "example": 31.1
+              }
+            }
+          }
+        }
+      }
+    },
+    "games": {
+      "type": "object",
+      "required": ["totalPlays", "gameStats", "topPlayers", "mostPlayed"],
+      "properties": {
+        "totalPlays": {
+          "type": "number",
+          "description": "Total game plays across all games",
+          "example": 45678
+        },
+        "gameStats": {
+          "type": "array",
+          "description": "Statistics for each game",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "plays",
+              "averageScore",
+              "completionRate"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "game-1"
+              },
+              "name": {
+                "type": "string",
+                "example": "TRIZ Pattern Master"
+              },
+              "plays": {
+                "type": "number",
+                "description": "Total number of plays",
+                "example": 12543
+              },
+              "averageScore": {
+                "type": "number",
+                "description": "Average player score",
+                "example": 7850
+              },
+              "completionRate": {
+                "type": "number",
+                "description": "Percentage of players who complete the game",
+                "example": 78.5
+              }
+            }
+          }
+        },
+        "topPlayers": {
+          "type": "array",
+          "description": "Leaderboard of top players",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "avatar", "score", "gamesPlayed"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "player-1"
+              },
+              "name": {
+                "type": "string",
+                "example": "Alex Champion"
+              },
+              "avatar": {
+                "type": "string",
+                "description": "Emoji or avatar identifier",
+                "example": "👑"
+              },
+              "score": {
+                "type": "number",
+                "description": "Total cumulative score",
+                "example": 125400
+              },
+              "gamesPlayed": {
+                "type": "number",
+                "description": "Number of games played",
+                "example": 247
+              }
+            }
+          }
+        },
+        "mostPlayed": {
+          "type": "object",
+          "description": "The most popular game",
+          "required": ["id", "name", "plays", "averageScore", "completionRate"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "game-1"
+            },
+            "name": {
+              "type": "string",
+              "example": "TRIZ Pattern Master"
+            },
+            "plays": {
+              "type": "number",
+              "example": 12543
+            },
+            "averageScore": {
+              "type": "number",
+              "example": 7850
+            },
+            "completionRate": {
+              "type": "number",
+              "example": 78.5
+            }
+          }
+        }
+      }
+    },
+    "chat": {
+      "type": "object",
+      "required": [
+        "totalMessages",
+        "botMessages",
+        "userMessages",
+        "averageResponseTime",
+        "satisfactionRating",
+        "satisfactionBreakdown"
+      ],
+      "properties": {
+        "totalMessages": {
+          "type": "number",
+          "description": "Total messages in chat system",
+          "example": 34567
+        },
+        "botMessages": {
+          "type": "number",
+          "description": "Messages sent by bot",
+          "example": 17890
+        },
+        "userMessages": {
+          "type": "number",
+          "description": "Messages sent by users",
+          "example": 16677
+        },
+        "averageResponseTime": {
+          "type": "number",
+          "description": "Average bot response time in seconds",
+          "example": 2.3
+        },
+        "satisfactionRating": {
+          "type": "number",
+          "description": "Average satisfaction rating (1-5)",
+          "minimum": 1,
+          "maximum": 5,
+          "example": 4.2
+        },
+        "satisfactionBreakdown": {
+          "type": "object",
+          "required": ["satisfied", "neutral", "unsatisfied"],
+          "properties": {
+            "satisfied": {
+              "type": "number",
+              "description": "Number of satisfied users",
+              "example": 2845
+            },
+            "neutral": {
+              "type": "number",
+              "description": "Number of neutral users",
+              "example": 678
+            },
+            "unsatisfied": {
+              "type": "number",
+              "description": "Number of unsatisfied users",
+              "example": 234
+            }
+          }
+        }
+      }
+    },
+    "forum": {
+      "type": "object",
+      "required": [
+        "totalPosts",
+        "totalComments",
+        "totalVotes",
+        "activeUsers",
+        "topPosts"
+      ],
+      "properties": {
+        "totalPosts": {
+          "type": "number",
+          "description": "Total forum posts",
+          "example": 1876
+        },
+        "totalComments": {
+          "type": "number",
+          "description": "Total comments across all posts",
+          "example": 8943
+        },
+        "totalVotes": {
+          "type": "number",
+          "description": "Total votes (upvotes) given",
+          "example": 15678
+        },
+        "activeUsers": {
+          "type": "number",
+          "description": "Number of active forum participants",
+          "example": 1247
+        },
+        "topPosts": {
+          "type": "array",
+          "description": "Most popular forum posts",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "author",
+              "votes",
+              "comments",
+              "createdAt"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "post-1"
+              },
+              "title": {
+                "type": "string",
+                "example": "Advanced TRIZ Techniques for Product Innovation"
+              },
+              "author": {
+                "type": "string",
+                "example": "Dr. Innovation"
+              },
+              "votes": {
+                "type": "number",
+                "description": "Number of upvotes",
+                "example": 342
+              },
+              "comments": {
+                "type": "number",
+                "description": "Number of comments",
+                "example": 87
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date",
+                "description": "Post creation date (YYYY-MM-DD)",
+                "example": "2025-11-20"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
