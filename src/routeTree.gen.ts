@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as MemoryCardRouteImport } from './routes/memory-card'
+import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
@@ -61,6 +62,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const MemoryCardRoute = MemoryCardRouteImport.update({
   id: '/memory-card',
   path: '/memory-card',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MatrixTrizRoute = MatrixTrizRouteImport.update({
+  id: '/matrix-triz',
+  path: '/matrix-triz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -276,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
@@ -320,6 +327,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
@@ -365,6 +373,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
@@ -411,6 +420,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn-triz'
     | '/login'
+    | '/matrix-triz'
     | '/memory-card'
     | '/unauthorized'
     | '/chat-triz'
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn-triz'
     | '/login'
+    | '/matrix-triz'
     | '/memory-card'
     | '/unauthorized'
     | '/chat-triz'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn-triz'
     | '/login'
+    | '/matrix-triz'
     | '/memory-card'
     | '/unauthorized'
     | '/(app)/chat-triz'
@@ -545,6 +557,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
+  MatrixTrizRoute: typeof MatrixTrizRoute
   MemoryCardRoute: typeof MemoryCardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
@@ -588,6 +601,13 @@ declare module '@tanstack/react-router' {
       path: '/memory-card'
       fullPath: '/memory-card'
       preLoaderRoute: typeof MemoryCardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/matrix-triz': {
+      id: '/matrix-triz'
+      path: '/matrix-triz'
+      fullPath: '/matrix-triz'
+      preLoaderRoute: typeof MatrixTrizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -926,6 +946,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
+  MatrixTrizRoute: MatrixTrizRoute,
   MemoryCardRoute: MemoryCardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
