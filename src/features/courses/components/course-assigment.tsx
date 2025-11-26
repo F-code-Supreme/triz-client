@@ -12,7 +12,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import type { Content } from '@tiptap/react';
 import {
   Tooltip,
   TooltipContent,
@@ -53,7 +54,7 @@ function CourseAssignment({
   durationInMinutes,
   maxAttempts,
 }: CourseAssignmentProps) {
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState<Content>('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
@@ -77,12 +78,14 @@ function CourseAssignment({
   };
 
   const handleSubmit = () => {
-    if (!answer.trim() || !user) return;
+    const submissionText =
+      typeof answer === 'string' ? answer : JSON.stringify(answer);
+    if (!submissionText.trim() || !user) return;
 
     submitAssignment(
       {
         title: assignmentTitle,
-        submissionContent: answer,
+        submissionContent: submissionText,
         assignmentId,
         userId: user.id,
       },
@@ -191,7 +194,6 @@ function CourseAssignment({
         </CardContent>
       </Card>
 
-      {/* Assignment Instructions */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Instructions</CardTitle>
@@ -215,47 +217,27 @@ function CourseAssignment({
         </CardContent>
       </Card>
 
-      {/* Answer Section */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center justify-between">
             <span>Your Answer</span>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    Need Help?
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="left" className="max-w-sm">
-                  <p className="font-medium mb-2">Tips for your answer:</p>
-                  <ul className="text-xs space-y-1 list-disc ml-4">
-                    <li>Be specific and detailed in your response</li>
-                    <li>Support your answer with examples</li>
-                    <li>Review your work before submitting</li>
-                    <li>Check grammar and spelling</li>
-                  </ul>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger asChild>
-                  <div>
-                    <Textarea
-                      placeholder="Type your answer here..."
-                      value={answer}
-                      onChange={(e) => setAnswer(e.target.value)}
-                      disabled={!canSubmit}
-                      className="min-h-[300px] resize-none"
-                    />
-                  </div>
-                </TooltipTrigger>
+                {/* <TooltipTrigger asChild> */}
+                <div>
+                  <MinimalTiptapEditor
+                    value={answer}
+                    onChange={setAnswer}
+                    output="json"
+                    placeholder="Type your answer here..."
+                    editorContentClassName="min-h-[200px] p-4"
+                    editable={canSubmit}
+                  />
+                </div>
                 {!answer && (
                   <TooltipContent side="bottom">
                     <p>Click here to start typing your answer</p>
@@ -264,21 +246,31 @@ function CourseAssignment({
               </Tooltip>
             </TooltipProvider>
             <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>{answer.length} characters</span>
+              <span>
+                {typeof answer === 'string'
+                  ? answer.length
+                  : JSON.stringify(answer).length}{' '}
+                characters
+              </span>
               {!canSubmit && attemptCount >= maxAttempts && (
                 <span className="text-red-600">Maximum attempts reached</span>
               )}
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex items-center gap-3">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     onClick={handleSubmit}
-                    disabled={!canSubmit || !answer.trim() || isSubmitting}
+                    disabled={
+                      !canSubmit ||
+                      !(typeof answer === 'string'
+                        ? answer.trim()
+                        : JSON.stringify(answer).trim()) ||
+                      isSubmitting
+                    }
                     className="flex-1"
                   >
                     {isSubmitting
@@ -288,7 +280,9 @@ function CourseAssignment({
                         : 'Submit Assignment'}
                   </Button>
                 </TooltipTrigger>
-                {!answer.trim() && (
+                {!(typeof answer === 'string'
+                  ? answer.trim()
+                  : JSON.stringify(answer).trim()) && (
                   <TooltipContent>
                     <p>Please write your answer before submitting</p>
                   </TooltipContent>
@@ -314,7 +308,6 @@ function CourseAssignment({
         </CardContent>
       </Card>
 
-      {/* Submission History Dialog */}
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>

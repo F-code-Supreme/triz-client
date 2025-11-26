@@ -20,6 +20,8 @@ import {
   PaginationLink,
   PaginationEllipsis,
 } from '@/components/ui/pagination';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import { Tooltip, TooltipProvider } from '@/components/ui/tooltip';
 
 const AllCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
@@ -36,6 +38,19 @@ const AllCoursePage = () => {
 
   return (
     <DefaultLayout meta={{ title: 'My Courses' }}>
+      <TooltipProvider>
+        <Tooltip>
+          <MinimalTiptapEditor
+            // value={answer}
+            // onChange={setAnswer}
+            output="json"
+            placeholder="Type your answer here..."
+            editorContentClassName="min-h-[200px] p-4"
+            // editable={canSubmit}
+          />
+        </Tooltip>
+      </TooltipProvider>
+
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <motion.div

@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
+import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
 
 function CourseOverviewPage() {
   const search = useSearch({ from: `/course/$slug` });
@@ -32,6 +33,9 @@ function CourseOverviewPage() {
   const navigate = useNavigate();
 
   const { data: course, isLoading, isError } = useGetCourseByIdQuery(id);
+  const { data: modules, isLoading: isLoadingModules } =
+    useGetModuleByCourseQuery(id);
+
   const enrollMutation = useEnrollCourseMutation();
 
   const getLevelColor = (level?: string) => {
@@ -195,28 +199,32 @@ function CourseOverviewPage() {
           </CardContent>
         </Card>
 
-        {course.orders && course.orders.length > 0 && (
+        {modules && modules.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle>Course Curriculum</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {/* {course.orders.map((module) => (
-                  <div key={module.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{module.name}</h4>
-                      <span className="text-sm text-muted-foreground">
-                        {module.lessonCount} lessons
-                      </span>
+              {isLoadingModules ? (
+                <div>Loading modules...</div>
+              ) : (
+                <div className="space-y-4">
+                  {modules.map((module) => (
+                    <div key={module.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">{module.name}</h4>
+                        <span className="text-sm text-muted-foreground">
+                          {module.lessonCount} lessons
+                        </span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Duration: {Math.floor(module.durationInMinutes / 60)}h{' '}
+                        {module.durationInMinutes % 60}m
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      Duration: {Math.floor(module.durationInMinutes / 60)}h{' '}
-                      {module.durationInMinutes % 60}m
-                    </div>
-                  </div>
-                ))} */}
-              </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
