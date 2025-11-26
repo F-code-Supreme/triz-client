@@ -1,5 +1,6 @@
 import { DashboardSection, ChartCard } from './dashboard-section';
 import { StatCard } from './stat-card';
+import { PeriodFilter } from './period-filter';
 import { AreaChart, BarChart, PieChart } from '@/components/ui/chart';
 import {
   Table,
@@ -10,13 +11,15 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import type { DashboardData } from '../types';
+import { useState, useMemo } from 'react';
 
 interface RevenueSectionProps {
   data: DashboardData['revenue'];
 }
 
 export const RevenueSection = ({ data }: RevenueSectionProps) => {
-  // Format currency
+  const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -25,12 +28,21 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
     }).format(value);
   };
 
+  const filteredData = useMemo(() => {
+    if (period === 'day') {
+      return data.byPeriod.slice(-30);
+    } else if (period === 'month') {
+      return data.byPeriod.slice(-17);
+    } else {
+      return data.byPeriod.slice(-4);
+    }
+  }, [data.byPeriod, period]);
+
   return (
     <DashboardSection
       title="Revenue & Course Packages"
       description="Track revenue trends, package performance, and transaction success rates"
     >
-      {/* Stats Overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Revenue"
@@ -54,22 +66,24 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
         />
       </div>
 
-      {/* Charts Grid */}
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Revenue Trend - Area Chart */}
         <ChartCard
           title="Revenue Trend"
-          description="Weekly revenue over the last 12 weeks"
+          description={`Revenue over the last ${period === 'day' ? '30 days' : period === 'month' ? '12 months' : '4 quarters'}`}
         >
-          <AreaChart
-            data={data.byPeriod}
-            xKey="period"
-            areas={[{ dataKey: 'revenue', name: 'Revenue', fill: '#8884d8' }]}
-            height={300}
-          />
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <PeriodFilter value={period} onChange={setPeriod} />
+            </div>
+            <AreaChart
+              data={filteredData}
+              xKey="period"
+              areas={[{ dataKey: 'revenue', name: 'Revenue', fill: '#8884d8' }]}
+              height={300}
+            />
+          </div>
         </ChartCard>
 
-        {/* Revenue by Package - Bar Chart */}
         <ChartCard
           title="Revenue by Package"
           description="Total revenue generated per package type"
@@ -82,7 +96,6 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
           />
         </ChartCard>
 
-        {/* Purchases per Package - Pie Chart */}
         <ChartCard
           title="Purchases Distribution"
           description="Number of purchases by package type"
@@ -96,7 +109,6 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
           />
         </ChartCard>
 
-        {/* Success Rate by Package - Bar Chart */}
         <ChartCard
           title="Success Rate by Package"
           description="Transaction success rate per package"
@@ -116,7 +128,6 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
         </ChartCard>
       </div>
 
-      {/* Top Spenders Table */}
       <ChartCard
         title="Top Users by Spending"
         description="Users with the highest total spending"

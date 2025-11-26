@@ -1,49 +1,45 @@
+import { useState } from 'react';
 import { AdminLayout } from '@/layouts/admin-layout';
 import {
   RevenueSection,
-  UserSection,
-  FeedbackReportSection,
-  GameSection,
   ChatForumSection,
   mockDashboardData,
+  GameSection,
 } from '@/features/dashboard';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 const AdminDashboardPage = () => {
-  // Using mock data - replace with API call in production
   const dashboardData = mockDashboardData;
+  const [activeTab, setActiveTab] = useState('revenue');
 
   return (
     <AdminLayout meta={{ title: 'Admin Dashboard' }}>
       <div className="space-y-8 p-6">
-        {/* Page Header */}
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome to the admin panel. Monitor all key metrics and analytics
-            across your platform.
-          </p>
+          <p className="text-muted-foreground">Welcome to the admin panel.</p>
         </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <div className="flex justify-end">
+            <TabsList>
+              <TabsTrigger value="revenue">Revenue</TabsTrigger>
+              <TabsTrigger value="chat">Chat</TabsTrigger>
+              <TabsTrigger value="games">Games</TabsTrigger>
+            </TabsList>
+          </div>
 
-        {/* Revenue & Course Packages Section */}
-        <RevenueSection data={dashboardData.revenue} />
+          <TabsContent value="revenue" className="mt-6">
+            <RevenueSection data={dashboardData.revenue} />
+          </TabsContent>
 
-        {/* User Analytics Section */}
-        <UserSection data={dashboardData.users} />
+          <TabsContent value="chat" className="mt-6">
+            <ChatForumSection chat={dashboardData.chat} />
+          </TabsContent>
 
-        {/* Feedback & Reports Section */}
-        <FeedbackReportSection
-          feedback={dashboardData.feedback}
-          reports={dashboardData.reports}
-        />
-
-        {/* Game Analytics Section */}
-        <GameSection data={dashboardData.games} />
-
-        {/* Chat & Forum Analytics Section */}
-        <ChatForumSection
-          chat={dashboardData.chat}
-          forum={dashboardData.forum}
-        />
+          <TabsContent value="games" className="mt-6">
+            <GameSection data={dashboardData.games} />
+          </TabsContent>
+        </Tabs>
       </div>
     </AdminLayout>
   );

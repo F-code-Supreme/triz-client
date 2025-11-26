@@ -68,6 +68,13 @@ export interface GameStats {
   completionRate: number;
 }
 
+export interface GamePeriodData {
+  period: string;
+  plays: number;
+  averageScore: number;
+  completionRate: number;
+}
+
 export interface TopPlayer {
   id: string;
   name: string;
@@ -89,23 +96,6 @@ export interface ChatStats {
   };
 }
 
-export interface ForumPost {
-  id: string;
-  title: string;
-  author: string;
-  votes: number;
-  comments: number;
-  createdAt: string;
-}
-
-export interface ForumStats {
-  totalPosts: number;
-  totalComments: number;
-  totalVotes: number;
-  activeUsers: number;
-  topPosts: ForumPost[];
-}
-
 export interface DashboardData {
   revenue: {
     total: number;
@@ -123,10 +113,10 @@ export interface DashboardData {
   };
   games: {
     totalPlays: number;
+    byPeriod: GamePeriodData[];
     gameStats: GameStats[];
     topPlayers: TopPlayer[];
     mostPlayed: GameStats;
   };
   chat: ChatStats;
-  forum: ForumStats;
 }

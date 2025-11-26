@@ -1,5 +1,6 @@
 import { DashboardSection, ChartCard } from './dashboard-section';
 import { StatCard } from './stat-card';
+import { PeriodFilter } from './period-filter';
 import { BarChart, LineChart } from '@/components/ui/chart';
 import {
   Table,
@@ -11,12 +12,28 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import type { DashboardData } from '../types';
+import { useState } from 'react';
 
 interface GameSectionProps {
   data: DashboardData['games'];
 }
 
 export const GameSection = ({ data }: GameSectionProps) => {
+  const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
+
+  const getFilteredData = () => {
+    const allData = data.byPeriod;
+    if (period === 'day') {
+      return allData.slice(0, 30);
+    } else if (period === 'month') {
+      return allData.slice(30, 42);
+    } else {
+      return allData.slice(42);
+    }
+  };
+
+  const filteredData = getFilteredData();
+
   const avgCompletionRate =
     data.gameStats.reduce((sum, game) => sum + game.completionRate, 0) /
     data.gameStats.length;
@@ -30,7 +47,6 @@ export const GameSection = ({ data }: GameSectionProps) => {
       title="Game Analytics"
       description="Track game engagement, player performance, and popular games"
     >
-      {/* Stats Overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Game Plays"
@@ -54,73 +70,50 @@ export const GameSection = ({ data }: GameSectionProps) => {
         />
       </div>
 
-      {/* Charts Grid */}
       <div className="grid gap-4 md:grid-cols-2">
-        {/* Game Plays - Bar Chart */}
         <ChartCard
-          title="Game Plays per Game"
-          description="Total number of plays for each game"
+          title="Game Plays Over Time"
+          description={`Total plays in the last ${period === 'day' ? '30 days' : period === 'month' ? '12 months' : '4 quarters'}`}
         >
-          <BarChart
-            data={data.gameStats}
-            xKey="name"
-            bars={[{ dataKey: 'plays', name: 'Plays', fill: '#8884d8' }]}
-            height={300}
-          />
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <PeriodFilter value={period} onChange={setPeriod} />
+            </div>
+            <LineChart
+              data={filteredData}
+              xKey="period"
+              lines={[
+                {
+                  dataKey: 'plays',
+                  name: 'Plays',
+                  stroke: '#8884d8',
+                },
+              ]}
+              height={300}
+            />
+          </div>
         </ChartCard>
 
-        {/* Completion Rate - Line Chart */}
         <ChartCard
-          title="Completion Rate by Game"
-          description="Percentage of players who complete each game"
+          title="Average Score Trend"
+          description={`Average scores in the last ${period === 'day' ? '30 days' : period === 'month' ? '12 months' : '4 quarters'}`}
         >
-          <LineChart
-            data={data.gameStats}
-            xKey="name"
-            lines={[
-              {
-                dataKey: 'completionRate',
-                name: 'Completion Rate (%)',
-                stroke: '#82ca9d',
-              },
-            ]}
-            height={300}
-          />
-        </ChartCard>
-
-        {/* Average Score - Bar Chart */}
-        <ChartCard
-          title="Average Score by Game"
-          description="Average player performance across games"
-        >
-          <BarChart
-            data={data.gameStats}
-            xKey="name"
-            bars={[
-              { dataKey: 'averageScore', name: 'Avg Score', fill: '#ffc658' },
-            ]}
-            height={300}
-          />
-        </ChartCard>
-
-        {/* Game Stats Comparison - Line Chart */}
-        <ChartCard
-          title="Game Performance Overview"
-          description="Compare plays and scores across games"
-        >
-          <LineChart
-            data={data.gameStats}
-            xKey="name"
-            lines={[
-              { dataKey: 'plays', name: 'Plays', stroke: '#8884d8' },
-              { dataKey: 'averageScore', name: 'Avg Score', stroke: '#ffc658' },
-            ]}
-            height={300}
-          />
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <PeriodFilter value={period} onChange={setPeriod} />
+            </div>
+            <BarChart
+              data={filteredData}
+              xKey="period"
+              bars={[
+                { dataKey: 'averageScore', name: 'Avg Score', fill: '#ffc658' },
+              ]}
+              height={300}
+            />
+          </div>
         </ChartCard>
       </div>
 
-      {/* Top Players Table */}
       <ChartCard
         title="Top Players Leaderboard"
         description="Highest scoring players across all games"
