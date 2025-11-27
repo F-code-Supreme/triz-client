@@ -1,30 +1,48 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-import CourseFiltersComponent from '@/features/course/components/course-filters';
-import CourseList from '@/features/course/components/course-list';
-import { mockCourses } from '@/features/course/data/mock-courses';
+import CourseFiltersComponent from '@/features/courses/components/course-filters';
+import CourseList from '@/features/courses/components/course-list';
+import {
+  useGetMyEnrollmentsQuery,
+  useGetCourseQuery,
+} from '@/features/courses/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-import type { CourseFilters } from '@/features/course/types';
-// import { De } from 'zod/v4/locales';
+import type { CourseFilters } from '@/features/courses/types';
 
 const MyCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
+  const {
+    data: enrollmentsData,
+    isLoading,
+    isError,
+  } = useGetMyEnrollmentsQuery();
+  const { data: coursesData } = useGetCourseQuery();
 
-  // Filter only enrolled courses
-  const enrolledCourses = mockCourses.filter(
-    (course) => course.isEnrolled === true,
-  );
-
-  // Stats calculation
-  // const totalCourses = enrolledCourses.length;
-  // const completedCourses = enrolledCourses.filter(
-  //   (course) => course.status === 'COMPLETED',
-  // ).length;
-  // const inProgressCourses = enrolledCourses.filter(
-  //   (course) => course.status === 'IN_PROGRESS',
-  // ).length;
+  const enrolledCourses = (enrollmentsData?.content || []).map((enrollment) => {
+    const courseDetail = (coursesData?.content || []).find(
+      (course) => course.id === enrollment.courseId,
+    );
+    return {
+      id: enrollment.courseId,
+      title: enrollment.courseTitle,
+      status: enrollment.status,
+      enrolledAt: enrollment.enrolledAt,
+      description: courseDetail?.description ?? '',
+      shortDescription: courseDetail?.shortDescription ?? '',
+      thumbnail: courseDetail?.thumbnail ?? '',
+      thumbnailUrl: courseDetail?.thumbnailUrl ?? '',
+      durationInMinutes: courseDetail?.durationInMinutes ?? 0,
+      level: courseDetail?.level ?? '',
+      // modules: courseDetail?.orders ?? [],
+      learnerCount: courseDetail?.learnerCount ?? 0,
+      price: courseDetail?.price ?? 0,
+      dealPrice: courseDetail?.dealPrice ?? 0,
+      slug: courseDetail?.slug ?? '',
+      updatedAt: courseDetail?.updatedAt ?? '',
+    };
+  });
 
   return (
     <DefaultLayout meta={{ title: 'My Courses' }}>
@@ -63,7 +81,17 @@ const MyCoursePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <CourseList courses={enrolledCourses} filters={filters} />
+          {isLoading ? (
+            <div>Loading courses...</div>
+          ) : isError ? (
+            <div>Failed to load courses.</div>
+          ) : (
+            <CourseList
+              courses={enrolledCourses}
+              filters={filters}
+              enrolledCourseIds={enrolledCourses.map((c) => c.id)}
+            />
+          )}
         </motion.div>
       </div>
     </DefaultLayout>

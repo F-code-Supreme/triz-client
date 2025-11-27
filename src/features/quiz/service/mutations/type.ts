@@ -157,10 +157,10 @@ export interface GetQuizByIdResponse {
 
 export interface SubmitQuizAttemptPayload {
   attemptId: string;
-  answers: Array<{
+  answers: {
     questionId: string;
     selectedOptionIds: string[];
-  }>;
+  }[];
 }
 
 export interface QuizAttemptAnswer {
@@ -168,6 +168,8 @@ export interface QuizAttemptAnswer {
   optionId: string;
   quizAttemptId: string;
   questionId: string;
+  questionContent: string;
+  optionContent: string;
 }
 
 export interface QuizAttempt {
@@ -185,7 +187,7 @@ export interface GetUserQuizAttemptsResponse {
 }
 
 export type GetAdminQuizzesResponse = {
-  content: Array<{
+  content: {
     id: string;
     title: string;
     description: string;
@@ -194,21 +196,25 @@ export type GetAdminQuizzesResponse = {
     createdAt: string;
     updatedAt: string;
     createdBy: string | null;
-    questions: Array<{
+    questions: {
       id: string;
       content: string;
       questionType: string;
       createdAt: string;
       updatedAt: string;
       quizId: string;
-      options: Array<{
+      options: {
         id: string;
         content: string;
         isCorrect: boolean;
         createdAt: string;
         updatedAt: string;
         questionId: string;
-      }>;
-    }>;
-  }>;
+      }[];
+    }[];
+  }[];
 };
+
+export interface RemainingTimeResponse {
+  remainingTimeInSeconds: number;
+}

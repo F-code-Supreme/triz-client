@@ -27,6 +27,7 @@ import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
+import { Route as CourseSlugRouteImport } from './routes/course.$slug'
 import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/transactions/route'
 import { Route as AdminSubscriptionsRouteRouteImport } from './routes/admin/subscriptions/route'
 import { Route as AdminQuizzesRouteRouteImport } from './routes/admin/quizzes/route'
@@ -46,15 +47,15 @@ import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.ind
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appCourseIndexRouteImport } from './routes/(app)/course/index'
+import { Route as CourseQuizSlugRouteImport } from './routes/course.quiz.$slug'
+import { Route as CourseLearnSlugRouteImport } from './routes/course.learn.$slug'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
 import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
 import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
-import { Route as appCourseDetailRouteRouteImport } from './routes/(app)/course/detail/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
-import { Route as AdminCourseCourseIdIndexRouteImport } from './routes/admin/course/$courseId/index'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
@@ -144,6 +145,11 @@ const ForgotPasswordNewPasswordRoute =
 const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
   id: '/flashcard/$deckId',
   path: '/flashcard/$deckId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CourseSlugRoute = CourseSlugRouteImport.update({
+  id: '/course/$slug',
+  path: '/course/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTransactionsRouteRoute = AdminTransactionsRouteRouteImport.update({
@@ -241,6 +247,16 @@ const appCourseIndexRoute = appCourseIndexRouteImport.update({
   path: '/course/',
   getParentRoute: () => appRouteRoute,
 } as any)
+const CourseQuizSlugRoute = CourseQuizSlugRouteImport.update({
+  id: '/course/quiz/$slug',
+  path: '/course/quiz/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CourseLearnSlugRoute = CourseLearnSlugRouteImport.update({
+  id: '/course/learn/$slug',
+  path: '/course/learn/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/admin/users/$userId',
   path: '/admin/users/$userId',
@@ -266,11 +282,6 @@ const appCourseMyCourseRouteRoute = appCourseMyCourseRouteRouteImport.update({
   path: '/course/my-course',
   getParentRoute: () => appRouteRoute,
 } as any)
-const appCourseDetailRouteRoute = appCourseDetailRouteRouteImport.update({
-  id: '/course/detail',
-  path: '/course/detail',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
   id: '/books/me',
   path: '/books/me',
@@ -281,12 +292,6 @@ const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   path: '/',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
-const AdminCourseCourseIdIndexRoute =
-  AdminCourseCourseIdIndexRouteImport.update({
-    id: '/admin/course/$courseId/',
-    path: '/admin/course/$courseId/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof appRouteRouteWithChildren
@@ -312,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
+  '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -323,17 +329,17 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
-  '/course/detail': typeof appCourseDetailRouteRoute
   '/course/my-course': typeof appCourseMyCourseRouteRoute
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/course/learn/$slug': typeof CourseLearnSlugRoute
+  '/course/quiz/$slug': typeof CourseQuizSlugRoute
   '/course': typeof appCourseIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
-  '/admin/course/$courseId': typeof AdminCourseCourseIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
@@ -358,6 +364,7 @@ export interface FileRoutesByTo {
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
+  '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -369,17 +376,17 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
-  '/course/detail': typeof appCourseDetailRouteRoute
   '/course/my-course': typeof appCourseMyCourseRouteRoute
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/course/learn/$slug': typeof CourseLearnSlugRoute
+  '/course/quiz/$slug': typeof CourseQuizSlugRoute
   '/course': typeof appCourseIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
-  '/admin/course/$courseId': typeof AdminCourseCourseIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -407,6 +414,7 @@ export interface FileRoutesById {
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
+  '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
@@ -418,17 +426,17 @@ export interface FileRoutesById {
   '/register/': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/(app)/books/me': typeof appBooksMeRouteRoute
-  '/(app)/course/detail': typeof appCourseDetailRouteRoute
   '/(app)/course/my-course': typeof appCourseMyCourseRouteRoute
   '/(app)/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/(app)/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/course/learn/$slug': typeof CourseLearnSlugRoute
+  '/course/quiz/$slug': typeof CourseQuizSlugRoute
   '/(app)/course/': typeof appCourseIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
-  '/admin/course/$courseId/': typeof AdminCourseCourseIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -456,6 +464,7 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/subscriptions'
     | '/admin/transactions'
+    | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -467,17 +476,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/courses/'
     | '/books/me'
-    | '/course/detail'
     | '/course/my-course'
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
     | '/admin/users/$userId'
+    | '/course/learn/$slug'
+    | '/course/quiz/$slug'
     | '/course'
     | '/quiz'
     | '/admin/users'
     | '/books/$bookId'
-    | '/admin/course/$courseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -502,6 +511,7 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/subscriptions'
     | '/admin/transactions'
+    | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -513,17 +523,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/admin/courses'
     | '/books/me'
-    | '/course/detail'
     | '/course/my-course'
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
     | '/admin/users/$userId'
+    | '/course/learn/$slug'
+    | '/course/quiz/$slug'
     | '/course'
     | '/quiz'
     | '/admin/users'
     | '/books/$bookId'
-    | '/admin/course/$courseId'
   id:
     | '__root__'
     | '/'
@@ -550,6 +560,7 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/subscriptions'
     | '/admin/transactions'
+    | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
@@ -561,17 +572,17 @@ export interface FileRouteTypes {
     | '/register/'
     | '/admin/courses/'
     | '/(app)/books/me'
-    | '/(app)/course/detail'
     | '/(app)/course/my-course'
     | '/(app)/quiz/$quizId'
     | '/(app)/quiz/history'
     | '/admin/courses/create'
     | '/admin/users/$userId'
+    | '/course/learn/$slug'
+    | '/course/quiz/$slug'
     | '/(app)/course/'
     | '/(app)/quiz/'
     | '/admin/users/'
     | '/books/$bookId/'
-    | '/admin/course/$courseId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -594,6 +605,7 @@ export interface RootRouteChildren {
   AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
   AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
+  CourseSlugRoute: typeof CourseSlugRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
@@ -604,9 +616,10 @@ export interface RootRouteChildren {
   PackagesIndexRoute: typeof PackagesIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
   AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+  CourseLearnSlugRoute: typeof CourseLearnSlugRoute
+  CourseQuizSlugRoute: typeof CourseQuizSlugRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
-  AdminCourseCourseIdIndexRoute: typeof AdminCourseCourseIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -735,6 +748,13 @@ declare module '@tanstack/react-router' {
       path: '/flashcard/$deckId'
       fullPath: '/flashcard/$deckId'
       preLoaderRoute: typeof FlashcardDeckIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/course/$slug': {
+      id: '/course/$slug'
+      path: '/course/$slug'
+      fullPath: '/course/$slug'
+      preLoaderRoute: typeof CourseSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/transactions': {
@@ -870,6 +890,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appCourseIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/course/quiz/$slug': {
+      id: '/course/quiz/$slug'
+      path: '/course/quiz/$slug'
+      fullPath: '/course/quiz/$slug'
+      preLoaderRoute: typeof CourseQuizSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/course/learn/$slug': {
+      id: '/course/learn/$slug'
+      path: '/course/learn/$slug'
+      fullPath: '/course/learn/$slug'
+      preLoaderRoute: typeof CourseLearnSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
       path: '/admin/users/$userId'
@@ -905,13 +939,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appCourseMyCourseRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/course/detail': {
-      id: '/(app)/course/detail'
-      path: '/course/detail'
-      fullPath: '/course/detail'
-      preLoaderRoute: typeof appCourseDetailRouteRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/(app)/books/me': {
       id: '/(app)/books/me'
       path: '/books/me'
@@ -926,13 +953,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
-    '/admin/course/$courseId/': {
-      id: '/admin/course/$courseId/'
-      path: '/admin/course/$courseId'
-      fullPath: '/admin/course/$courseId'
-      preLoaderRoute: typeof AdminCourseCourseIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -943,7 +963,6 @@ interface appRouteRouteChildren {
   appSubscriptionRouteRoute: typeof appSubscriptionRouteRoute
   appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
-  appCourseDetailRouteRoute: typeof appCourseDetailRouteRoute
   appCourseMyCourseRouteRoute: typeof appCourseMyCourseRouteRoute
   appQuizQuizIdRouteRoute: typeof appQuizQuizIdRouteRoute
   appQuizHistoryRouteRoute: typeof appQuizHistoryRouteRoute
@@ -958,7 +977,6 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appSubscriptionRouteRoute: appSubscriptionRouteRoute,
   appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,
-  appCourseDetailRouteRoute: appCourseDetailRouteRoute,
   appCourseMyCourseRouteRoute: appCourseMyCourseRouteRoute,
   appQuizQuizIdRouteRoute: appQuizQuizIdRouteRoute,
   appQuizHistoryRouteRoute: appQuizHistoryRouteRoute,
@@ -1003,6 +1021,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   AdminSubscriptionsRouteRoute: AdminSubscriptionsRouteRoute,
   AdminTransactionsRouteRoute: AdminTransactionsRouteRoute,
+  CourseSlugRoute: CourseSlugRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
@@ -1013,9 +1032,10 @@ const rootRouteChildren: RootRouteChildren = {
   PackagesIndexRoute: PackagesIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
   AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+  CourseLearnSlugRoute: CourseLearnSlugRoute,
+  CourseQuizSlugRoute: CourseQuizSlugRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
-  AdminCourseCourseIdIndexRoute: AdminCourseCourseIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -22,6 +22,20 @@ export const useGetLessonsQuery = (page?: number, size?: number) => {
     },
   });
 };
+
+export const useGetLessonByModuleQuery = (moduleId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [LessonKeys.GetLessonQuery, moduleId],
+    queryFn: async () => {
+      const response = await _request.get<LessonResponse[]>(
+        `/modules/${moduleId}/lessons`,
+      );
+      return response.data;
+    },
+    enabled: !!moduleId,
+  });
+};
 export const useGetLessonsByModuleQuery = (moduleId: string) => {
   const _request = useAxios();
   return useQuery({
