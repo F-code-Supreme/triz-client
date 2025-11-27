@@ -55,7 +55,6 @@ function CourseAssignment({
   maxAttempts,
 }: CourseAssignmentProps) {
   const [answer, setAnswer] = useState<Content>('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [attemptCount, setAttemptCount] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -92,7 +91,6 @@ function CourseAssignment({
       {
         onSuccess: () => {
           toast.success('Assignment submitted successfully!');
-          setIsSubmitted(true);
           setAttemptCount((prev) => prev + 1);
           // Invalidate history query to refresh submission history
           queryClient.invalidateQueries({
@@ -113,12 +111,7 @@ function CourseAssignment({
     );
   };
 
-  const handleReset = () => {
-    setAnswer('');
-    setIsSubmitted(false);
-  };
-
-  const canSubmit = attemptCount < maxAttempts && !isSubmitted;
+  const canSubmit = attemptCount < maxAttempts;
   const remainingAttempts = maxAttempts - attemptCount;
 
   if (isLoading) {
@@ -179,12 +172,6 @@ function CourseAssignment({
                 </TooltipProvider>
               </div>
             </div>
-            {isSubmitted && (
-              <Badge className="bg-green-100 text-green-800 border-green-200">
-                <CheckCircle2 className="w-3 h-3 mr-1" />
-                Submitted
-              </Badge>
-            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -227,7 +214,6 @@ function CourseAssignment({
           <div className="space-y-2">
             <TooltipProvider>
               <Tooltip>
-                {/* <TooltipTrigger asChild> */}
                 <div>
                   <MinimalTiptapEditor
                     value={answer}
@@ -273,11 +259,7 @@ function CourseAssignment({
                     }
                     className="flex-1"
                   >
-                    {isSubmitting
-                      ? 'Submitting...'
-                      : isSubmitted
-                        ? 'Submitted'
-                        : 'Submit Assignment'}
+                    {isSubmitting ? 'Submitting...' : 'Submit Assignment'}
                   </Button>
                 </TooltipTrigger>
                 {!(typeof answer === 'string'
@@ -289,21 +271,6 @@ function CourseAssignment({
                 )}
               </Tooltip>
             </TooltipProvider>
-
-            {isSubmitted && attemptCount < maxAttempts && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button onClick={handleReset} variant="outline">
-                      Try Again
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Submit another attempt ({remainingAttempts - 1} left)</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
           </div>
         </CardContent>
       </Card>
