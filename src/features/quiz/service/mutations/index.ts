@@ -13,6 +13,7 @@ import type {
   UpdateQuizPayload,
   UpdateQuizResponse,
   GetAdminQuizzesResponse,
+  RemainingTimeResponse,
 } from './type';
 
 // users
@@ -92,7 +93,7 @@ export const useGetQuizAttemptRemainingTimeQuery = (attemptId: string) => {
   return useQuery({
     queryKey: ['quizAttemptRemainingTime', attemptId],
     queryFn: async () => {
-      const res = await _request.get(
+      const res = await _request.get<RemainingTimeResponse>(
         `/quiz-attempts/${attemptId}/remaining-time`,
       );
       return res.data;

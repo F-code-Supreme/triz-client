@@ -27,8 +27,13 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
-import { useGetQuizzByModulesQuery } from '@/features/quiz/service/queries';
 import {
+  useGetQuizAttemptInProgressQuery,
+  useGetQuizzByModulesQuery,
+} from '@/features/quiz/service/queries';
+import {
+  useAutoSaveQuizAnswerMutation,
+  useGetQuizAttemptRemainingTimeQuery,
   useStartQuizAttemptMutation,
   useSubmitQuizAttemptMutation,
 } from '@/features/quiz/service/mutations';
@@ -41,10 +46,6 @@ function CourseQuizPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const { data: quizData, isLoading } = useGetQuizzByModulesQuery(moduleId);
-  const startQuizAttemptMutation = useStartQuizAttemptMutation();
-  const submitQuizAttemptMutation = useSubmitQuizAttemptMutation();
-
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -54,12 +55,58 @@ function CourseQuizPage() {
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizResults, setQuizResults] = useState<any>(null);
+  const [hasInProgressAttempt, setHasInProgressAttempt] = useState(false);
+
+  const { data: quizData, isLoading } = useGetQuizzByModulesQuery(moduleId);
+  const startQuizAttemptMutation = useStartQuizAttemptMutation();
+  const submitQuizAttemptMutation = useSubmitQuizAttemptMutation();
+  const autoSaveQuizAnswerMutation = useAutoSaveQuizAnswerMutation();
+  const { data: inProgressAttempt } = useGetQuizAttemptInProgressQuery();
+  const { data: timeRemainingData } = useGetQuizAttemptRemainingTimeQuery(
+    attemptId || '',
+  );
 
   useEffect(() => {
     if (quizData?.durationInMinutes) {
       setTimeRemaining(quizData.durationInMinutes * 60);
     }
   }, [quizData]);
+
+  // Check for in-progress attempt
+  useEffect(() => {
+    if (inProgressAttempt && quizData) {
+      if (
+        inProgressAttempt.status === 'IN_PROGRESS' &&
+        inProgressAttempt.quizId === quizData.id
+      ) {
+        setHasInProgressAttempt(true);
+        setAttemptId(inProgressAttempt.id);
+
+        // Restore previous answers
+        const restoredAnswers: Record<string, string[]> = {};
+        inProgressAttempt.answers?.forEach((answer) => {
+          if (!restoredAnswers[answer.questionId]) {
+            restoredAnswers[answer.questionId] = [];
+          }
+          restoredAnswers[answer.questionId].push(answer.optionId);
+        });
+        setAnswers(restoredAnswers);
+      }
+    }
+  }, [inProgressAttempt, quizData]);
+
+  // Update time remaining from server when continuing
+  useEffect(() => {
+    if (
+      timeRemainingData?.remainingTimeInSeconds &&
+      hasInProgressAttempt &&
+      attemptId
+    ) {
+      setTimeRemaining(timeRemainingData.remainingTimeInSeconds);
+      setQuizStarted(true);
+      setConfirmOpen(false);
+    }
+  }, [timeRemainingData, hasInProgressAttempt, attemptId]);
 
   useEffect(() => {
     if (timeRemaining > 0 && !isSubmitted) {
@@ -92,18 +139,26 @@ function CourseQuizPage() {
     setIsStarting(true);
 
     try {
-      const attemptResponse = await startQuizAttemptMutation.mutateAsync({
-        quizId: quizData.id,
-        userId: user.id,
-      });
+      // If there's an in-progress attempt, just continue with it
+      if (hasInProgressAttempt && attemptId) {
+        toast.success('Tiếp tục làm bài quiz!');
+        setConfirmOpen(false);
+        setQuizStarted(true);
+      } else {
+        // Start a new quiz attempt
+        const attemptResponse = await startQuizAttemptMutation.mutateAsync({
+          quizId: quizData.id,
+          userId: user.id,
+        });
 
-      toast.success('Bài quiz đã được bắt đầu!');
+        toast.success('Bài quiz đã được bắt đầu!');
 
-      setConfirmOpen(false);
-      setQuizStarted(true);
+        setConfirmOpen(false);
+        setQuizStarted(true);
 
-      const newAttemptId = (attemptResponse as any)?.id;
-      setAttemptId(newAttemptId);
+        const newAttemptId = (attemptResponse as any)?.id;
+        setAttemptId(newAttemptId);
+      }
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message ||
@@ -120,15 +175,35 @@ function CourseQuizPage() {
     isMultiple: boolean,
   ) => {
     setAnswers((prev) => {
+      let newAnswers: Record<string, string[]>;
       if (isMultiple) {
         const currentAnswers = prev[questionId] || [];
-        const newAnswers = currentAnswers.includes(optionId)
+        const updatedAnswers = currentAnswers.includes(optionId)
           ? currentAnswers.filter((id) => id !== optionId)
           : [...currentAnswers, optionId];
-        return { ...prev, [questionId]: newAnswers };
+        newAnswers = { ...prev, [questionId]: updatedAnswers };
       } else {
-        return { ...prev, [questionId]: [optionId] };
+        newAnswers = { ...prev, [questionId]: [optionId] };
       }
+
+      // Auto-save the answer
+      if (attemptId) {
+        autoSaveQuizAnswerMutation.mutate(
+          {
+            attemptId,
+            questionId,
+            selectedOptionIds: newAnswers[questionId],
+          },
+          {
+            onError: (error: any) => {
+              console.error('Error auto-saving answer:', error);
+              toast.error('Không thể lưu câu trả lời. Vui lòng thử lại.');
+            },
+          },
+        );
+      }
+
+      return newAnswers;
     });
   };
 
@@ -224,10 +299,17 @@ function CourseQuizPage() {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                Bắt đầu Quiz: {quizData?.title}
+                {hasInProgressAttempt ? 'Tiếp tục Quiz' : 'Bắt đầu Quiz'}:{' '}
+                {quizData?.title}
               </AlertDialogTitle>
               <AlertDialogDescription>
                 <div className="space-y-3 pt-4">
+                  {hasInProgressAttempt && (
+                    <div className="flex items-center gap-2 text-orange-600 font-semibold">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>Bạn có bài làm đang dở dang</span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     <span>Thời gian: {quizData?.durationInMinutes} phút</span>
@@ -239,7 +321,9 @@ function CourseQuizPage() {
                     </span>
                   </div>
                   <p className="text-sm pt-2">
-                    Bạn đã sẵn sàng bắt đầu làm quiz chưa?
+                    {hasInProgressAttempt
+                      ? 'Bạn có muốn tiếp tục làm bài quiz không?'
+                      : 'Bạn đã sẵn sàng bắt đầu làm quiz chưa?'}
                   </p>
                 </div>
               </AlertDialogDescription>
@@ -258,8 +342,10 @@ function CourseQuizPage() {
                 {isStarting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Đang bắt đầu...
+                    {hasInProgressAttempt ? 'Đang tải...' : 'Đang bắt đầu...'}
                   </>
+                ) : hasInProgressAttempt ? (
+                  'Tiếp tục làm bài'
                 ) : (
                   'Bắt đầu'
                 )}

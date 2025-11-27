@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { ModuleContentItem } from '../types';
 import CourseAssignment from './course-assigment';
+import video from '../../../assets/images/clip5.1.mp4';
 
 interface CourseContentProps {
   item: ModuleContentItem | null;
@@ -18,6 +19,7 @@ interface CourseContentProps {
 
 const CourseContent = ({ item, className }: CourseContentProps) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  console.log('CourseContent item:', item);
 
   if (!item) {
     return (
@@ -60,6 +62,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
     switch (item.type) {
       case 'lesson':
         const lessonData = item.lessonData;
+        console.log('lessonData.materialUrl:', lessonData);
         const isVideo =
           lessonData.materialUrl?.includes('video') ||
           lessonData.materialUrl?.includes('.mp4') ||
@@ -69,7 +72,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
         return (
           <div className="space-y-6">
             {/* Video Player */}
-            {isVideo && (
+            {/* {isVideo && (
               <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
                 {isVideoLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -88,7 +91,27 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                   Your browser does not support the video tag.
                 </video>
               </div>
-            )}
+            )} */}
+
+            {/* test */}
+            <div className="relative rounded-lg overflow-hidden">
+              {isVideoLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                  <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-muted-foreground">Loading video...</p>
+                  </div>
+                </div>
+              )}
+              <video
+                className="w-3/4 h-full mx-auto rounded-lg"
+                controls
+                onLoadedData={() => setIsVideoLoading(false)}
+              >
+                <source src={video} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
 
             {/* PDF Viewer */}
             {isPDF && (
@@ -101,8 +124,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
               </div>
             )}
 
-            {/* Text Content */}
-            {!isVideo && !isPDF && (
+            {/* {!isVideo && !isPDF && (
               <Card>
                 <CardContent className="p-6">
                   <div className="prose prose-slate max-w-none">
@@ -120,7 +142,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                   </div>
                 </CardContent>
               </Card>
-            )}
+            )} */}
           </div>
         );
 

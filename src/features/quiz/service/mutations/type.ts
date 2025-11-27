@@ -214,3 +214,7 @@ export type GetAdminQuizzesResponse = {
     }[];
   }[];
 };
+
+export interface RemainingTimeResponse {
+  remainingTimeInSeconds: number;
+}
