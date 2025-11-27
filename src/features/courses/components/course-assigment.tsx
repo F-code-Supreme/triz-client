@@ -218,7 +218,7 @@ function CourseAssignment({
                   <MinimalTiptapEditor
                     value={answer}
                     onChange={setAnswer}
-                    output="json"
+                    output="html"
                     placeholder="Type your answer here..."
                     editorContentClassName="min-h-[200px] p-4"
                     editable={canSubmit}
