@@ -20,7 +20,7 @@ import { CourseLevel } from '@/features/course/types';
 
 const CourseDetail = () => {
   // Get query parameters
-  const searchParams = useSearch({ from: '/course/detail' });
+  const searchParams = useSearch({ from: '/(app)/course/detail' });
   const mode = (searchParams as any)?.mode || 'overview'; // 'overview' or 'learning'
   // const courseId = (searchParams as any)?.courseId; // TODO: Use this to fetch specific course
 

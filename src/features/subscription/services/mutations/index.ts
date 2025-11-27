@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { TransactionKeys } from '@/features/payment/transaction/services/queries/keys';
 
 import { SubscriptionKeys } from '../queries/keys';
 
@@ -10,6 +11,7 @@ import type {
   IEditAutoRenewalPayload,
   IPurchaseSubscriptionPayload,
   IPurchaseSubscriptionResponse,
+  IRefundSubscriptionPayload,
 } from './types';
 import type { Subscription } from '../../types';
 import type { DataTimestamp } from '@/types';
@@ -61,6 +63,12 @@ export const useEditUserAutoRenewalMutation = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [
+          SubscriptionKeys.GetActiveSubscriptionByUserQuery,
+          variables.userId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
           SubscriptionKeys.GetUserSubscriptionByIdQuery,
           variables.userId,
           variables.subscriptionId,
@@ -71,6 +79,7 @@ export const useEditUserAutoRenewalMutation = () => {
           SubscriptionKeys.GetSubscriptionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [
@@ -80,6 +89,7 @@ export const useEditUserAutoRenewalMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
     },
   });
@@ -92,13 +102,20 @@ export const useCancelSubscriptionMutation = () => {
   return useMutation({
     mutationFn: async (payload: ICancelSubscriptionPayload) => {
       const { userId, subscriptionId } = payload;
-      const response = await _request.delete(
+      const response = await _request.delete<Subscription & DataTimestamp>(
         `/users/${userId}/subscriptions/${subscriptionId}/cancel`,
       );
 
       return response.data;
     },
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetActiveSubscriptionByUserQuery,
+          variables.userId,
+        ],
+        exact: false,
+      });
       queryClient.invalidateQueries({
         queryKey: [
           SubscriptionKeys.GetUserSubscriptionByIdQuery,
@@ -111,6 +128,7 @@ export const useCancelSubscriptionMutation = () => {
           SubscriptionKeys.GetSubscriptionsByUserQuery,
           variables.userId,
         ],
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: [
@@ -120,12 +138,57 @@ export const useCancelSubscriptionMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
     },
   });
 };
 
-// export const useRefundSubscriptionMutation = () => {};
+export const useRefundSubscriptionMutation = () => {
+  const _request = useAxios();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: IRefundSubscriptionPayload) => {
+      const { userId, transactionId } = payload;
+      const response = await _request.post<Subscription & DataTimestamp>(
+        `/users/${userId}/transactions/${transactionId}/refund`,
+      );
+
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          SubscriptionKeys.GetSubscriptionsByUserQuery,
+          variables.userId,
+        ],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          TransactionKeys.GetAllTransactionsByUserQuery,
+          variables.userId,
+        ],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          TransactionKeys.GetTransactionByIdQuery,
+          variables.transactionId,
+        ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [TransactionKeys.GetAllTransactionsQuery],
+        exact: false,
+      });
+    },
+  });
+};
 
 // ADMIN
 export const useEditAutoRenewalMutation = () => {
@@ -153,6 +216,7 @@ export const useEditAutoRenewalMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsQuery],
+        exact: false,
       });
     },
   });

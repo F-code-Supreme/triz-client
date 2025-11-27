@@ -11,19 +11,36 @@ import {
 } from '@/components/ui/tooltip';
 import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
 
-import type { Transaction } from '@/features/payment/transaction/types';
+import type {
+  Transaction,
+  TransactionType,
+} from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
 
 type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 const columnHelper = createColumnHelper<TransactionWithTimestamp>();
 
-export const getTransactionTypeLabel = (type: string): string => {
-  return type === 'TOPUP' ? 'Top Up' : 'Spend';
+export const getTransactionTypeLabel = (type: TransactionType): string => {
+  switch (type) {
+    case 'TOPUP':
+      return 'Top Up';
+    case 'REFUND':
+      return 'Refund';
+    default:
+      return 'Spend';
+  }
 };
 
-export const getTransactionTypeColor = (type: string): string => {
-  return type === 'TOPUP' ? 'text-green-600' : 'text-red-600';
+export const getTransactionTypeColor = (type: TransactionType): string => {
+  switch (type) {
+    case 'TOPUP':
+      return 'text-green-600';
+    case 'REFUND':
+      return 'text-blue-600';
+    default:
+      return 'text-red-600';
+  }
 };
 
 export const getTransactionStatusColor = (status: string): string => {
@@ -93,8 +110,14 @@ export const transactionsColumns = [
       const amount = info.getValue();
       const type = info.row.original.type;
       return (
-        <span className={type === 'TOPUP' ? 'text-green-600' : 'text-red-600'}>
-          {type === 'TOPUP' ? '+' : '-'}
+        <span
+          className={
+            type === 'TOPUP' || type === 'REFUND'
+              ? 'text-green-600'
+              : 'text-red-600'
+          }
+        >
+          {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
           {amount.toLocaleString()} VND
         </span>
       );

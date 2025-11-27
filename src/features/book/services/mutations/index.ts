@@ -7,7 +7,6 @@ import useAuth from '@/features/auth/hooks/use-auth';
 import { BookKeys } from '../queries/keys';
 
 import type {
-  IUploadFilePayload,
   IUpdateBookPayload,
   ITrackProgressPayload,
   ITrackProgressDataResponse,
@@ -15,6 +14,7 @@ import type {
   IRestoreBookPayload,
 } from './types';
 import type { AdminBook } from '../../types';
+import type { IUploadFilePayload } from '@/features/media/services/mutations/types';
 import type { DataTimestamp } from '@/types';
 
 // AUTHENTICATED USER

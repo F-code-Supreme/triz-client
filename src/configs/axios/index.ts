@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 import { axiosBaseOptions } from '@/configs/axios/axios-setup';
-import { TokenType } from '@/features/auth/types';
+import { setupTokenRefreshInterceptor } from '@/configs/axios/token-refresh-interceptor';
+import { TokenManager } from '@/utils/token/token-manager';
 
 import i18n from '../i18next';
 
@@ -33,20 +34,17 @@ class MyAxios {
     this.axiosInstance = axios.create(options);
     this.auth = auth;
     this.initInterceptors();
+    // Setup token refresh interceptor for authenticated requests
+    if (auth) {
+      setupTokenRefreshInterceptor(this.axiosInstance);
+    }
   }
 
   private initInterceptors() {
     this.axiosInstance.interceptors.request.use(
       (config) => {
         if (this.auth) {
-          const persistItem = localStorage.getItem('persist');
-          const persist = persistItem
-            ? (JSON.parse(persistItem) as boolean)
-            : false;
-          const item = persist
-            ? localStorage.getItem(TokenType.ACCESS)
-            : sessionStorage.getItem(TokenType.ACCESS);
-          const token = item ? (JSON.parse(item) as string) : null;
+          const token = TokenManager.getAccessToken();
           if (token) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

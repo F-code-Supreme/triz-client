@@ -203,7 +203,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="priceInTokens">
-                Price (Tokens) <span className="text-red-500">*</span>
+                Price (Trizilium) <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="priceInTokens"
@@ -268,7 +268,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="chatTokenPerDay">
-                Chat Tokens Per Day <span className="text-red-500">*</span>
+                Daily Trizilium <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="chatTokenPerDay"

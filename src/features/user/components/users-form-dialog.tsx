@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import AvatarUpload from '@/components/file-upload/avatar-upload';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -27,12 +28,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+import { useUploadFileMutation } from '@/features/media/services/mutations';
 
 import {
   useCreateUserMutation,
   useEditUserMutation,
 } from '../services/mutations';
 import { RoleIUser, type IUser } from '../types';
+
+import type { FileWithPreview } from '@/hooks/use-file-upload';
 
 const userFormSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -41,6 +45,7 @@ const userFormSchema = z.object({
     .min(8, 'Password must be at least 8 characters')
     .or(z.literal('')),
   fullName: z.string().optional().default(''),
+  avatarUrl: z.string().optional().default(''),
   roles: z.nativeEnum(RoleIUser),
   enabled: z.boolean().default(true),
 });
@@ -60,9 +65,15 @@ export const UsersFormDialog = ({
 }: UsersFormDialogProps) => {
   const createMutation = useCreateUserMutation();
   const editMutation = useEditUserMutation();
-  const isLoading = createMutation.isPending || editMutation.isPending;
+  const uploadFileMutation = useUploadFileMutation();
+  const isLoading =
+    createMutation.isPending ||
+    editMutation.isPending ||
+    uploadFileMutation.isPending;
 
   const [passwordRequired, setPasswordRequired] = useState(!initialData);
+  const [avatarFile, setAvatarFile] = useState<FileWithPreview | null>(null);
+  const [avatarRemoved, setAvatarRemoved] = useState(false);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
@@ -70,6 +81,7 @@ export const UsersFormDialog = ({
       email: '',
       password: '',
       fullName: '',
+      avatarUrl: '',
       roles: RoleIUser.USER,
       enabled: true,
     },
@@ -81,27 +93,53 @@ export const UsersFormDialog = ({
         email: initialData.email,
         password: '',
         fullName: initialData.fullName || '',
+        avatarUrl: initialData.avatarUrl || '',
         roles: initialData.roles,
         enabled: initialData.enabled,
       });
       setPasswordRequired(false);
+      setAvatarFile(null);
+      setAvatarRemoved(false);
     } else {
       form.reset({
         email: '',
         password: '',
         fullName: '',
+        avatarUrl: '',
         roles: RoleIUser.USER,
         enabled: true,
       });
       setPasswordRequired(true);
+      setAvatarFile(null);
+      setAvatarRemoved(false);
     }
   }, [initialData, open, form]);
 
+  const handleRemoveAvatar = () => {
+    setAvatarFile(null);
+    setAvatarRemoved(true);
+    form.setValue('avatarUrl', '');
+  };
+
   const onSubmit = async (values: UserFormValues) => {
     try {
+      let avatarUrl = values.avatarUrl;
+
+      // Upload avatar if a new file was selected
+      if (avatarFile && avatarFile.file instanceof File) {
+        const uploadedUrl = await uploadFileMutation.mutateAsync({
+          file: avatarFile.file,
+        });
+        avatarUrl = uploadedUrl.data;
+      } else if (avatarRemoved) {
+        // Clear avatar if it was explicitly removed
+        avatarUrl = '';
+      }
+
       if (initialData) {
         const updateData = {
           fullName: values.fullName,
+          avatarUrl,
           roles: values.roles,
           enabled: values.enabled,
           ...(values.password.length > 0 && { password: values.password }),
@@ -115,6 +153,7 @@ export const UsersFormDialog = ({
           email: values.email,
           password: values.password,
           fullName: values.fullName,
+          avatarUrl,
           roles: values.roles,
           enabled: values.enabled,
         });
@@ -139,6 +178,27 @@ export const UsersFormDialog = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 py-6"
           >
+            <FormField
+              control={form.control}
+              name="avatarUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Avatar</FormLabel>
+                  <FormControl>
+                    <AvatarUpload
+                      defaultAvatar={field.value}
+                      onFileChange={(file) => {
+                        setAvatarFile(file);
+                      }}
+                      onRemove={handleRemoveAvatar}
+                      maxSize={2 * 1024 * 1024}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="email"

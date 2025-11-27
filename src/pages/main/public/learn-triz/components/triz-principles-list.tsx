@@ -1,4 +1,4 @@
-import { principlesData } from '@/pages/main/learn-triz/components/principles-data';
+import { principlesData } from './principles-data';
 
 export const TRIZPrinciplesList = () => {
   return (

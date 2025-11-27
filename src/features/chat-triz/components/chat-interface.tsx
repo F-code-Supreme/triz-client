@@ -5,6 +5,7 @@ import {
   CopyIcon,
   CheckIcon,
   Menu,
+  Zap,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,9 +35,11 @@ import {
 } from '@/components/ui/shadcn-io/ai/prompt-input';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
 import { STRING_EMPTY } from '@/constants';
+import useAuth from '@/features/auth/hooks/use-auth';
 import { useChatMutation } from '@/features/chat-triz/services/mutations';
 import { useGetConversationQuery } from '@/features/conversation/services/queries';
 import { useConversationsQueryStore } from '@/features/conversation/store/use-conversations-query-store';
+import { useGetActiveSubscriptionByUserQuery } from '@/features/subscription/services/queries';
 
 type ChatMessage = {
   id: string;
@@ -63,6 +66,8 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
   const { activeConversationId, setActiveConversationId } =
     useConversationsQueryStore();
 
+  const { user } = useAuth();
+
   const { isRecording, startRecording } = useAudioRecorderStore();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -71,6 +76,11 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
 
   // Fetch messages for active conversation
   const { data: messagesData } = useGetConversationQuery(activeConversationId);
+
+  // Fetch active subscription for token display
+  const { data: activeSubscription } = useGetActiveSubscriptionByUserQuery(
+    user?.id,
+  );
 
   // Chat mutation
   const { mutateAsync: chatMutation, isPending: isTyping } = useChatMutation();
@@ -190,15 +200,26 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
             <span className="font-medium text-sm">ChatTriz</span>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleReset}
-          className="h-8 px-2"
-        >
-          <RotateCcwIcon className="size-4" />
-          <span className="ml-1 hidden sm:inline">Reset</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Subscription Token Display */}
+          {activeSubscription && (
+            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md bg-accent/50">
+              <Zap className="h-4 w-4 text-secondary" />
+              <span className="text-sm font-medium">
+                {activeSubscription.tokensPerDayRemaining.toLocaleString()}
+              </span>
+            </div>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleReset}
+            className="h-8 px-2"
+          >
+            <RotateCcwIcon className="size-4" />
+            <span className="ml-1 hidden sm:inline">Reset</span>
+          </Button>
+        </div>
       </div>
       {/* Conversation Area */}
       <Conversation className="flex-1">

@@ -16,33 +16,40 @@ interface ToolbarButtonProps extends React.ComponentProps<typeof Toggle> {
   tooltipOptions?: TooltipContentProps;
 }
 
-export const ToolbarButton = ({
-  isActive,
-  children,
-  tooltip,
-  className,
-  tooltipOptions,
-  ...props
-}: ToolbarButtonProps) => {
-  const toggleButton = (
-    <Toggle className={cn({ 'bg-accent': isActive }, className)} {...props}>
-      {children}
-    </Toggle>
-  );
+export const ToolbarButton = React.forwardRef<
+  HTMLButtonElement,
+  ToolbarButtonProps
+>(
+  (
+    { isActive, children, tooltip, className, tooltipOptions, ...props },
+    ref,
+  ) => {
+    const buttonElement = (
+      <Toggle
+        ref={ref}
+        className={cn({ 'bg-accent': isActive }, className)}
+        {...props}
+      >
+        {children}
+      </Toggle>
+    );
 
-  if (!tooltip) {
-    return toggleButton;
-  }
+    if (!tooltip) {
+      return buttonElement;
+    }
 
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>{toggleButton}</TooltipTrigger>
-      <TooltipContent {...tooltipOptions}>
-        <div className="flex flex-col items-center text-center">{tooltip}</div>
-      </TooltipContent>
-    </Tooltip>
-  );
-};
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{buttonElement}</TooltipTrigger>
+        <TooltipContent {...tooltipOptions}>
+          <div className="flex flex-col items-center text-center">
+            {tooltip}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    );
+  },
+);
 
 ToolbarButton.displayName = 'ToolbarButton';
 
