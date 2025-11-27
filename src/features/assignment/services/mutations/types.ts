@@ -4,3 +4,8 @@ export interface CreateAssignmentPayload {
   durationInMinutes: number;
   maxAttempts?: number;
 }
+
+export interface ExpertReviewPayload {
+  passed: boolean;
+  comment?: string;
+}

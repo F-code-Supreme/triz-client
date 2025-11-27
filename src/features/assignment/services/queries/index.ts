@@ -6,8 +6,11 @@ import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import type {
   Assignment,
   AssignmentResponse,
+  AssignmentSubmissionExpertReview,
+  AssignmentSubmissionExpertReviewResponse,
 } from '@/features/assignment/services/queries/types';
 
+//amdin
 export const useGetAssignmentsQuery = (page?: number, size?: number) => {
   const _request = useAxios();
   return useQuery({
@@ -24,6 +27,7 @@ export const useGetAssignmentsQuery = (page?: number, size?: number) => {
     },
   });
 };
+
 export const useGetAssignmentByIdQuery = (assignmentId?: string) => {
   const _request = useAxios();
   return useQuery({
@@ -37,6 +41,7 @@ export const useGetAssignmentByIdQuery = (assignmentId?: string) => {
     enabled: !!assignmentId,
   });
 };
+
 export const useGetAssignmentsByModuleQuery = (moduleId: string) => {
   const _request = useAxios();
   return useQuery({
@@ -49,5 +54,41 @@ export const useGetAssignmentsByModuleQuery = (moduleId: string) => {
       return response.data;
     },
     enabled: !!moduleId,
+  });
+};
+
+// expert
+export const useGetAssignmentsQueryExpert = (page?: number, size?: number) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AssignmentKeys.GetAssignmentQuery, page, size],
+    queryFn: async () => {
+      const response =
+        await _request.get<AssignmentSubmissionExpertReviewResponse>(
+          '/asm-submissions',
+          {
+            params: {
+              page,
+              size,
+            },
+          },
+        );
+
+      return response.data;
+    },
+  });
+};
+
+export const useGetAssignmentByIdQueryExpert = (assignmentId?: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AssignmentKeys.GetAssignmentById, assignmentId],
+    queryFn: async () => {
+      const response = await _request.get<AssignmentSubmissionExpertReview>(
+        `/asm-submissions/${assignmentId}`,
+      );
+      return response.data;
+    },
+    enabled: !!assignmentId,
   });
 };

@@ -21,10 +21,7 @@ import { CourseLevel } from '@/features/course/types';
 const CourseDetail = () => {
   // Get query parameters
   const searchParams = useSearch({ from: '/course/detail' });
-  const mode = (searchParams as any)?.mode || 'overview'; // 'overview' or 'learning'
-  // const courseId = (searchParams as any)?.courseId; // TODO: Use this to fetch specific course
-
-  // TODO: Fetch course by courseId, for now use mock
+  const mode = (searchParams as any)?.mode || 'overview';
   const course = mockCourses[0];
   const [currentLessonId, setCurrentLessonId] = useState('lesson-2-5');
   const [activeTab, setActiveTab] = useState(

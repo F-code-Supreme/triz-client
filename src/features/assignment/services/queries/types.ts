@@ -14,4 +14,40 @@ export interface Assignment {
   userId: string;
 }
 
+export interface AssignmentSubmission {
+  id: string;
+  title: string;
+  submissionContent: string;
+  attemptNumber: number;
+  isAiPassed: boolean;
+  isExpertPassed: boolean;
+  expertComment: string | null;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  gradedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  assignmentId: string;
+  userId: string;
+}
+
+export interface AssignmentSubmissionExpertReview {
+  id: string;
+  title: string;
+  submissionContent: string;
+  attemptNumber: number;
+  isAiPassed: boolean | null;
+  isExpertPassed: boolean | null;
+  expertComment: string | null;
+  status: 'AI_PENDING' | 'PENDING' | 'APPROVED' | 'REJECTED';
+  gradedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  assignmentId: string;
+  userId: string;
+}
+
 export type AssignmentResponse = PaginatedResponse<Assignment>;
+export type AssignmentSubmissionHistoryResponse =
+  PaginatedResponse<AssignmentSubmission>;
+export type AssignmentSubmissionExpertReviewResponse =
+  PaginatedResponse<AssignmentSubmissionExpertReview>;
