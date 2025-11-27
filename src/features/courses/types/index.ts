@@ -1,3 +1,5 @@
+import type { Module } from '@/features/modules/types';
+
 export interface Order {
   id: string;
   type: string;
@@ -19,15 +21,18 @@ export interface Course {
   shortDescription?: string | null;
   durationInMinutes?: number;
   level?: CourseLevel;
-  price?: number;
-  dealPrice?: number | null;
+  price: number;
+  dealPrice: number;
   slug?: string;
-  thumbnailUrl?: string | null;
+  thumbnailUrl: string;
   // keep old field for backward-compatibility
   thumbnail?: string | null;
   learnerCount?: number;
+  totalModules?: number;
+  totalLessons?: number;
   status?: CourseStatus;
   orders?: Order[];
   createdAt?: string;
   updatedAt?: string;
+  modules?: Module[];
 }

@@ -52,7 +52,7 @@ class MyAxios {
           }
         }
         config.headers['Accept-Language'] = i18n.language || 'vi';
-        console.log(`Request config:`, config);
+        // console.log(`Request config:`, config);
         return config;
       },
       (error) => {
@@ -64,7 +64,7 @@ class MyAxios {
     this.axiosInstance.interceptors.response.use(
       (response) => {
         const { data } = response;
-        console.log('data', data);
+        // console.log('data', data);
         if (data.code !== 200 && data.code !== 201) {
           throw new Error(data.message);
         }

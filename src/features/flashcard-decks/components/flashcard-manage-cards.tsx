@@ -384,7 +384,7 @@ export const FlashcardManageCardsDialog = ({
   const { data: cards = [], isLoading } = useGetFlashcardsByDeckIdQuery(deckId);
   const createMutation = useCreateFlashcardMutation();
 
-  console.log('Cards:', cards);
+  // console.log('Cards:', cards);
 
   const handleCreate = async (values: {
     term: string;

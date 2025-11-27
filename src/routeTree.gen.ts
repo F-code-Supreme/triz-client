@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as MemoryCardRouteImport } from './routes/memory-card'
+import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
@@ -37,6 +38,7 @@ import { Route as AdminFlashcardsRouteRouteImport } from './routes/admin/flashca
 import { Route as AdminDashboardRouteRouteImport } from './routes/admin/dashboard/route'
 import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/route'
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
+import { Route as AdminAssignmentRouteRouteImport } from './routes/admin/assignment/route'
 import { Route as AdminArchiveRouteRouteImport } from './routes/admin/archive/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
@@ -62,6 +64,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const MemoryCardRoute = MemoryCardRouteImport.update({
   id: '/memory-card',
   path: '/memory-card',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MatrixTrizRoute = MatrixTrizRouteImport.update({
+  id: '/matrix-triz',
+  path: '/matrix-triz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -194,6 +201,11 @@ const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
   path: '/admin/books',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAssignmentRouteRoute = AdminAssignmentRouteRouteImport.update({
+  id: '/admin/assignment',
+  path: '/admin/assignment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminArchiveRouteRoute = AdminArchiveRouteRouteImport.update({
   id: '/admin/archive',
   path: '/admin/archive',
@@ -282,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
@@ -290,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
+  '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
@@ -327,6 +341,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
@@ -335,6 +350,7 @@ export interface FileRoutesByTo {
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
+  '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/flashcards': typeof AdminFlashcardsRouteRoute
@@ -373,6 +389,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
+  '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
@@ -381,6 +398,7 @@ export interface FileRoutesById {
   '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
+  '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
   '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
@@ -420,6 +438,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn-triz'
     | '/login'
+    | '/matrix-triz'
     | '/memory-card'
     | '/unauthorized'
     | '/chat-triz'
@@ -428,6 +447,7 @@ export interface FileRouteTypes {
     | '/subscription'
     | '/wallet'
     | '/admin/archive'
+    | '/admin/assignment'
     | '/admin/books'
     | '/admin/courses'
     | '/admin/dashboard'
@@ -465,6 +485,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn-triz'
     | '/login'
+    | '/matrix-triz'
     | '/memory-card'
     | '/unauthorized'
     | '/chat-triz'
@@ -473,6 +494,7 @@ export interface FileRouteTypes {
     | '/subscription'
     | '/wallet'
     | '/admin/archive'
+    | '/admin/assignment'
     | '/admin/books'
     | '/admin/dashboard'
     | '/admin/flashcards'
@@ -510,6 +532,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn-triz'
     | '/login'
+    | '/matrix-triz'
     | '/memory-card'
     | '/unauthorized'
     | '/(app)/chat-triz'
@@ -518,6 +541,7 @@ export interface FileRouteTypes {
     | '/(app)/subscription'
     | '/(app)/wallet'
     | '/admin/archive'
+    | '/admin/assignment'
     | '/admin/books'
     | '/admin/courses'
     | '/admin/dashboard'
@@ -557,9 +581,11 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
+  MatrixTrizRoute: typeof MatrixTrizRoute
   MemoryCardRoute: typeof MemoryCardRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
+  AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
   AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
   AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
@@ -600,6 +626,13 @@ declare module '@tanstack/react-router' {
       path: '/memory-card'
       fullPath: '/memory-card'
       preLoaderRoute: typeof MemoryCardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/matrix-triz': {
+      id: '/matrix-triz'
+      path: '/matrix-triz'
+      fullPath: '/matrix-triz'
+      preLoaderRoute: typeof MatrixTrizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -784,6 +817,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBooksRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/assignment': {
+      id: '/admin/assignment'
+      path: '/admin/assignment'
+      fullPath: '/admin/assignment'
+      preLoaderRoute: typeof AdminAssignmentRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/archive': {
       id: '/admin/archive'
       path: '/admin/archive'
@@ -947,9 +987,11 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
+  MatrixTrizRoute: MatrixTrizRoute,
   MemoryCardRoute: MemoryCardRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
+  AdminAssignmentRouteRoute: AdminAssignmentRouteRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
   AdminCoursesRouteRoute: AdminCoursesRouteRouteWithChildren,
   AdminDashboardRouteRoute: AdminDashboardRouteRoute,
