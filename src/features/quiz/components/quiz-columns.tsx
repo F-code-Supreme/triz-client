@@ -80,9 +80,9 @@ export const createQuizColumns = ({
       return (
         <div className="max-w-[200px]">
           <div className="font-medium">{title}</div>
-          <div className="text-sm text-muted-foreground line-clamp-2">
+          {/* <div className="text-sm text-muted-foreground line-clamp-2">
             {row.original.description}
-          </div>
+          </div> */}
         </div>
       );
     },

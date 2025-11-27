@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useAxios } from '@/configs/axios';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
 
+import type { ModuleResponseData, Module } from '../../types';
 import type { ModuleResponse } from '@/features/modules/services/queries/types';
-import type { Module } from '@/features/modules/types';
 
 export const useGetModulesQuery = (page?: number, size?: number) => {
   const _request = useAxios();
@@ -19,6 +19,19 @@ export const useGetModulesQuery = (page?: number, size?: number) => {
       });
 
       return response.data;
+    },
+  });
+};
+
+export const useGetModuleByCourseQuery = (courseId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [ModuleKeys.GetModuleQuery, courseId],
+    queryFn: async () => {
+      const response = await _request.get<ModuleResponseData>(
+        `/courses/${courseId}/modules`,
+      );
+      return response.data.content;
     },
   });
 };

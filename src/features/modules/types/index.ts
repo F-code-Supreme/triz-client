@@ -1,6 +1,6 @@
 interface Order {
   id: string;
-  type: 'lesson' | 'assignment';
+  type: 'lesson' | 'assignment' | 'quiz';
 }
 
 export interface Module {
@@ -15,4 +15,8 @@ export interface Module {
   quizCount: number;
   assignmentCount: number;
   orders: Order[];
+}
+
+export interface ModuleResponseData {
+  content: Module[];
 }

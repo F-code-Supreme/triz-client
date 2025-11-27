@@ -84,21 +84,27 @@ export const useGetActiveSubscriptionByUserQuery = (userId?: string) => {
     queryKey: [SubscriptionKeys.GetActiveSubscriptionByUserQuery, userId],
     queryFn: userId
       ? async ({ signal }) => {
-          const response = await _request.get<Subscription & DataTimestamp>(
-            `/users/${userId}/subscriptions/active`,
-            {
-              signal,
-            },
-          );
+          try {
+            const response = await _request.get<Subscription & DataTimestamp>(
+              `/users/${userId}/subscriptions/active`,
+              {
+                signal,
+              },
+            );
 
-          return response.data;
+            return response.data;
+          } catch (error: unknown) {
+            const axiosError = error as { response?: { status?: number } };
+            if (axiosError.response?.status === 404) {
+              return null;
+            }
+            throw error;
+          }
         }
       : skipToken,
     enabled: !!userId,
   });
 };
-
-// export const useGetPreviewSubscriptionByUserQuery = (userId?: string) => {};
 
 // ADMIN
 export const useGetSubscriptionsQuery = (

@@ -28,7 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatNumber } from '@/utils';
+import { formatTrizilium, formatDailyTrizilium } from '@/utils';
 
 import { usePurchasePackageMutation } from '../services/mutations';
 
@@ -137,7 +137,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                   </TableCell>
                   <TableCell className="text-right py-3">
                     <p className="font-semibold">
-                      {formatNumber(priceInTokens)} tokens
+                      {formatTrizilium(priceInTokens)}
                     </p>
                   </TableCell>
                 </TableRow>
@@ -148,7 +148,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
             <div className="bg-muted p-4 flex justify-between items-center border-t">
               <p className="font-semibold text-lg">Total</p>
               <p className="text-2xl font-bold">
-                {formatNumber(priceInTokens)} tokens
+                {formatTrizilium(priceInTokens)}
               </p>
             </div>
           </div>
@@ -178,7 +178,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                       : 'text-red-600 dark:text-red-500'
                   }`}
                 >
-                  {formatNumber(walletBalance)} tokens
+                  {formatTrizilium(walletBalance)}
                 </p>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
@@ -191,7 +191,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                   <span className="flex items-center gap-1 text-red-600 dark:text-red-500">
                     <AlertCircle className="h-4 w-4" />
                     Insufficient balance. You need{' '}
-                    {formatNumber(priceInTokens - walletBalance)} more tokens
+                    {formatTrizilium(priceInTokens - walletBalance)} more
                   </span>
                 )}
               </p>
@@ -232,10 +232,12 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                     This purchase grants me {pkg.durationInDays} days of access
                   </li>
                   <li>
-                    I will receive {formatNumber(pkg.chatTokenPerDay)} tokens
-                    daily
+                    I will receive{' '}
+                    {formatDailyTrizilium(pkg.chatTokenPerDay, {
+                      shortForm: true,
+                    })}
                   </li>
-                  <li>Tokens are non-refundable once consumed</li>
+                  <li>Trizilium are non-refundable once consumed</li>
                   <li>The subscription cannot be transferred</li>
                 </ul>
               </label>

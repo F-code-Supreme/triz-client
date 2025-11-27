@@ -12,12 +12,12 @@ export interface Subscription {
   packageId: string;
   packageName: string;
   packageChatTokenPerDay: number;
-  walletTransId: string;
 }
 
 export enum SubscriptionStatus {
   ACTIVE = 'ACTIVE',
   PENDING = 'PENDING',
   EXPIRED = 'EXPIRED',
-  CANCELED = 'CANCELED',
+  CANCELED = 'CANCELLED',
+  REFUNDED = 'REFUNDED',
 }

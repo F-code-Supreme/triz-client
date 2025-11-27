@@ -1,9 +1,18 @@
 import { format } from 'date-fns';
-import { Eye, MoreHorizontal, RefreshCw } from 'lucide-react';
+import { Eye, MoreHorizontal, RefreshCw, X } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +29,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
+
+import { useCancelSubscriptionMutation } from '../services/mutations';
 
 import type { Subscription } from '../types';
 import type { DataTimestamp } from '@/types';
@@ -39,9 +50,28 @@ export const AdminSubscriptionsDataTableRowActions = ({
 }: AdminSubscriptionsDataTableRowActionsProps) => {
   const subscription = row.original;
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const { mutate: cancelSubscription, isPending: isCancelingSubscription } =
+    useCancelSubscriptionMutation();
 
-  const isExpiredOrCanceled =
-    subscription.status === 'EXPIRED' || subscription.status === 'CANCELED';
+  const isActive = subscription.status === 'ACTIVE';
+
+  const handleCancel = () => {
+    cancelSubscription(
+      { userId: subscription.userId, subscriptionId: subscription.id },
+      {
+        onSuccess: () => {
+          setIsCancelDialogOpen(false);
+          toast.success('Subscription cancelled successfully');
+        },
+        onError: (error) => {
+          toast.error(
+            (error as Error).message || 'Failed to cancel subscription',
+          );
+        },
+      },
+    );
+  };
 
   return (
     <>
@@ -59,7 +89,7 @@ export const AdminSubscriptionsDataTableRowActions = ({
             <Eye className="mr-2 h-4 w-4" />
             View Details
           </DropdownMenuItem>
-          {!isExpiredOrCanceled && onAutoRenewalToggle && (
+          {isActive && onAutoRenewalToggle && (
             <DropdownMenuItem
               onClick={() => {
                 onAutoRenewalToggle(subscription);
@@ -67,6 +97,15 @@ export const AdminSubscriptionsDataTableRowActions = ({
             >
               <RefreshCw className="mr-2 h-4 w-4" />
               {subscription.autoRenew ? 'Disable' : 'Enable'} Auto Renewal
+            </DropdownMenuItem>
+          )}
+          {isActive && (
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={() => setIsCancelDialogOpen(true)}
+            >
+              <X className="mr-2 h-4 w-4" />
+              Cancel Subscription
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -127,6 +166,36 @@ export const AdminSubscriptionsDataTableRowActions = ({
           </div>
         </SheetContent>
       </Sheet>
+
+      <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancel Subscription?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel this subscription? The user will
+              lose access to premium features immediately.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsCancelDialogOpen(false)}
+              disabled={isCancelingSubscription}
+            >
+              No, Keep It
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleCancel}
+              disabled={isCancelingSubscription}
+            >
+              {isCancelingSubscription
+                ? 'Cancelling...'
+                : 'Yes, Cancel Subscription'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
