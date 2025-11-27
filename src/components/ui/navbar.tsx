@@ -35,7 +35,6 @@ import {
 import useAuth from '@/features/auth/hooks/use-auth';
 import useLogout from '@/features/auth/hooks/use-logout';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
-import { useGetActiveSubscriptionByUserQuery } from '@/features/subscription/services/queries';
 import { useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
 
@@ -69,14 +68,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     const logout = useLogout();
 
     // Fetch active subscription and wallet
-    const { data: activeSubscription } = useGetActiveSubscriptionByUserQuery(
-      user?.id,
-    );
     const { data: wallet } = useGetWalletByUserQuery(user?.id);
-
-    // Get token count from active subscription or wallet balance
-    const tokenBalance =
-      activeSubscription?.tokensPerDayRemaining ?? wallet?.balance ?? 0;
 
     // Default navigation links if none provided
     const defaultNavigationLinks: Navbar03NavItem[] = [
@@ -280,7 +272,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                   <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
                     <Zap className="h-4 w-4 text-secondary" />
                     <span className="text-sm font-medium">
-                      {tokenBalance.toLocaleString()}
+                      {(wallet?.balance ?? 0).toLocaleString()}
                     </span>
                   </div>
                   {/* User Dropdown Menu */}
