@@ -1,15 +1,17 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import CourseList from '@/features/courses/components/course-list';
+
 import CourseFiltersComponent from '@/features/courses/components/course-filters';
-import { DefaultLayout } from '@/layouts/default-layout';
-import { CourseFilters } from '@/features/courses/types';
+import CourseList from '@/features/courses/components/course-list';
 import {
   useGetMyEnrollmentsQuery,
   useGetCourseQuery,
 } from '@/features/courses/services/queries';
+import { DefaultLayout } from '@/layouts/default-layout';
 
-function MyCoursePage() {
+import type { CourseFilters } from '@/features/courses/types';
+
+const MyCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
   const {
     data: enrollmentsData,
@@ -94,6 +96,6 @@ function MyCoursePage() {
       </div>
     </DefaultLayout>
   );
-}
+};
 
 export default MyCoursePage;

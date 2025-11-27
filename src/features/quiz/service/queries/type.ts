@@ -1,4 +1,4 @@
-import { QuizQuestion } from '../mutations/type';
+import type { QuizQuestion } from '../mutations/type';
 
 export interface getQuizzByModulesResponse {
   id: string;

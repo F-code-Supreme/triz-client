@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -8,14 +8,9 @@ import {
   AlertCircle,
   Loader2,
 } from 'lucide-react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,21 +21,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { cn } from '@/lib/utils';
-import {
-  useGetQuizAttemptInProgressQuery,
-  useGetQuizzByModulesQuery,
-} from '@/features/quiz/service/queries';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import useAuth from '@/features/auth/hooks/use-auth';
 import {
   useAutoSaveQuizAnswerMutation,
   useGetQuizAttemptRemainingTimeQuery,
   useStartQuizAttemptMutation,
   useSubmitQuizAttemptMutation,
 } from '@/features/quiz/service/mutations';
-import { useSearch } from '@tanstack/react-router';
-import useAuth from '@/features/auth/hooks/use-auth';
+import {
+  useGetQuizAttemptInProgressQuery,
+  useGetQuizzByModulesQuery,
+} from '@/features/quiz/service/queries';
+import { cn } from '@/lib/utils';
 
-function CourseQuizPage() {
+// eslint-disable-next-line sonarjs/cognitive-complexity
+const CourseQuizPage = () => {
   const search = useSearch({ from: `/course/quiz/$slug` });
   const { id: moduleId } = search as { id: string };
   const navigate = useNavigate();
@@ -618,6 +618,7 @@ function CourseQuizPage() {
                   ) : (
                     <div className="space-y-2">
                       {question.options.map((option) => (
+                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
                         <div
                           key={option.id}
                           className={cn(
@@ -667,6 +668,6 @@ function CourseQuizPage() {
       </div>
     </div>
   );
-}
+};
 
 export default CourseQuizPage;

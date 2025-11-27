@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
-import { Plus, Trash2, Upload } from 'lucide-react';
-import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import { Plus, Trash2, Upload } from 'lucide-react';
+import { useState } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import * as XLSX from 'xlsx';
+import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { FileUpload, FileUploadTrigger } from '@/components/ui/file-upload';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { FileUpload, FileUploadTrigger } from '@/components/ui/file-upload';
 import {
   Form,
   FormControl,
@@ -24,7 +25,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -32,9 +32,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
 
 const questionSchema = z.object({
   content: z.string().min(1, 'Question content is required'),
@@ -67,11 +67,11 @@ interface QuizCreateDialogProps {
   onSuccess?: () => void;
 }
 
-export function QuizCreateDialog({
+export const QuizCreateDialog = ({
   open,
   onOpenChange,
   onSuccess,
-}: QuizCreateDialogProps) {
+}: QuizCreateDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const createQuizMutation = useCreateQuizMutation();
@@ -103,6 +103,7 @@ export function QuizCreateDialog({
     name: 'questions',
   });
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   const parseExcelToQuestions = (jsonData: string[][]) => {
     try {
       if (jsonData.length === 0) return;
@@ -603,4 +604,4 @@ export function QuizCreateDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};

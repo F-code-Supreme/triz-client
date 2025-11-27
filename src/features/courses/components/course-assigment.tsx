@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { formatDistanceToNow } from 'date-fns';
 import {
   Clock,
   CheckCircle2,
@@ -6,21 +7,13 @@ import {
   AlertCircle,
   History,
 } from 'lucide-react';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
-import { useQueryClient } from '@tanstack/react-query';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
-import type { Content } from '@tiptap/react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -28,6 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
   useGetAssignmentModuleQuery,
   useSubmitAssignmentMutation,
@@ -35,7 +35,8 @@ import {
 } from '@/features/assignment/services/queries';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import useAuth from '@/features/auth/hooks/use-auth';
-import { formatDistanceToNow } from 'date-fns';
+
+import type { Content } from '@tiptap/react';
 
 interface CourseAssignmentProps {
   moduleId: string;
@@ -46,14 +47,14 @@ interface CourseAssignmentProps {
   maxAttempts: number;
 }
 
-function CourseAssignment({
+const CourseAssignment = ({
   moduleId,
   assignmentId,
   assignmentTitle,
   assignmentDescription,
   durationInMinutes,
   maxAttempts,
-}: CourseAssignmentProps) {
+}: CourseAssignmentProps) => {
   const [answer, setAnswer] = useState<Content>('');
   const [attemptCount, setAttemptCount] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
@@ -410,6 +411,6 @@ function CourseAssignment({
       </Dialog>
     </div>
   );
-}
+};
 
 export default CourseAssignment;

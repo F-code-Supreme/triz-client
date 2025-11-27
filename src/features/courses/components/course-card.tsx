@@ -1,14 +1,13 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { Clock, Users, Play, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Clock, Users, Play, BookOpen } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-import type { Course } from '@/features/courses/types';
-import { CourseLevel } from '@/features/courses/types';
+import type { CourseLevel, Course } from '@/features/courses/types';
 
 interface CourseCardProps {
   course: Course;

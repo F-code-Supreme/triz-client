@@ -1,3 +1,4 @@
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -7,7 +8,7 @@ import {
   BookOpen,
   CircleDollarSign,
 } from 'lucide-react';
-import { Link, useNavigate, useSearch } from '@tanstack/react-router';
+
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -19,15 +20,14 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
 
-function CourseOverviewPage() {
+const CourseOverviewPage = () => {
   const search = useSearch({ from: `/course/$slug` });
   const { id } = search as { id: string };
   const navigate = useNavigate();
@@ -63,7 +63,9 @@ function CourseOverviewPage() {
         search: { id: course.id },
         mask: { to: `/course/${course.slug}` },
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      // eslint-disable-next-line no-alert
       alert('Đăng ký thất bại!');
     }
   };
@@ -187,7 +189,7 @@ function CourseOverviewPage() {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>What you'll learn</CardTitle>
+            <CardTitle>What you&apos;ll learn</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
@@ -231,6 +233,6 @@ function CourseOverviewPage() {
       </div>
     </div>
   );
-}
+};
 
 export default CourseOverviewPage;

@@ -67,6 +67,7 @@ const AdminQuizzesPage = () => {
   }, [data]);
 
   const handleDeleteQuiz = async (quiz: any) => {
+    // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure you want to delete this quiz?')) {
       try {
         await deleteQuizMutation.mutateAsync(quiz.id);

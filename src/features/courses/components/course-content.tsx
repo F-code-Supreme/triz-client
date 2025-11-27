@@ -1,16 +1,18 @@
-import { useState } from 'react';
-import { Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
-import ReactMarkdown from 'react-markdown';
 import { Link } from '@tanstack/react-router';
+import { motion } from 'framer-motion';
+import { Clock } from 'lucide-react';
+import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
-import { buttonVariants } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import type { ModuleContentItem } from '../types';
+
 import CourseAssignment from './course-assigment';
 import video from '../../../assets/images/clip5.1.mp4';
+
+import type { ModuleContentItem } from '../types';
 
 interface CourseContentProps {
   item: ModuleContentItem | null;
@@ -61,12 +63,14 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
   const renderContent = () => {
     switch (item.type) {
       case 'lesson':
+        // eslint-disable-next-line no-case-declarations
         const lessonData = item.lessonData;
         console.log('lessonData.materialUrl:', lessonData);
         // const isVideo =
         //   lessonData.materialUrl?.includes('video') ||
         //   lessonData.materialUrl?.includes('.mp4') ||
         //   lessonData.materialUrl?.includes('.webm');
+        // eslint-disable-next-line no-case-declarations
         const isPDF = lessonData.materialUrl?.includes('.pdf');
 
         return (
@@ -147,6 +151,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
         );
 
       case 'quiz':
+        // eslint-disable-next-line no-case-declarations
         const quizData = item.quizData;
         return (
           <Card>
@@ -208,6 +213,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
         );
 
       case 'assignment':
+        // eslint-disable-next-line no-case-declarations
         const assignmentData = item.assignmentData;
         return (
           <CourseAssignment

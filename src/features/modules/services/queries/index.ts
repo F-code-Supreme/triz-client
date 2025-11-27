@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useAxios } from '@/configs/axios';
 
+import { useAxios } from '@/configs/axios';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
+
+import type { ModuleResponseData, Module } from '../../types';
 import type { ModuleResponse } from '@/features/modules/services/queries/types';
-import { ModuleResponseData } from '../../types';
-import type { Module } from '@/features/modules/types';
 
 export const useGetModulesQuery = (page?: number, size?: number) => {
   const _request = useAxios();

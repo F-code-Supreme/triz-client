@@ -1,16 +1,7 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import type { PaginationState } from '@tanstack/react-table';
-
-import CourseList from '@/features/courses/components/course-list';
-import CourseFiltersComponent from '@/features/courses/components/course-filters';
-import { DefaultLayout } from '@/layouts/default-layout';
 import { Link } from '@tanstack/react-router';
-import {
-  useGetCourseQuery,
-  useGetMyEnrollmentsQuery,
-} from '@/features/courses/services/queries';
-import type { CourseFilters } from '@/features/courses/types';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+
 import {
   Pagination,
   PaginationContent,
@@ -20,6 +11,16 @@ import {
   PaginationLink,
   PaginationEllipsis,
 } from '@/components/ui/pagination';
+import CourseFiltersComponent from '@/features/courses/components/course-filters';
+import CourseList from '@/features/courses/components/course-list';
+import {
+  useGetCourseQuery,
+  useGetMyEnrollmentsQuery,
+} from '@/features/courses/services/queries';
+import { DefaultLayout } from '@/layouts/default-layout';
+
+import type { CourseFilters } from '@/features/courses/types';
+import type { PaginationState } from '@tanstack/react-table';
 
 const AllCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});

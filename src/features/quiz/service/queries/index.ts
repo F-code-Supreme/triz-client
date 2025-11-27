@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { useAxios } from '@/configs/axios';
-import { getQuizzByModulesResponse, QuizGetAnswersAttempt } from './type';
+
+import type { getQuizzByModulesResponse, QuizGetAnswersAttempt } from './type';
 
 export const useGetQuizzByModulesQuery = (moduleId: string) => {
   const _request = useAxios();

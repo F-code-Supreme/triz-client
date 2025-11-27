@@ -10,8 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { CourseLevel } from '../types';
-import type { CourseFilters } from '../types';
+import type { CourseLevel, CourseFilters } from '../types';
 
 interface CourseFiltersProps {
   filters: CourseFilters;

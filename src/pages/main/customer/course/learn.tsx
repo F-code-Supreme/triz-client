@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { Link, useSearch } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import CourseSidebar from '@/features/courses/components/course-sidebar';
+import { useGetAssignmentModuleQuery } from '@/features/assignment/services/queries';
 import CourseContent from '@/features/courses/components/course-content';
+import CourseSidebar from '@/features/courses/components/course-sidebar';
 import { useCourseContent } from '@/features/courses/hooks/use-course-content';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetLessonByModuleQuery } from '@/features/lesson/services/queries';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
-import { useGetAssignmentModuleQuery } from '@/features/assignment/services/queries';
 import { useGetQuizzByModulesQuery } from '@/features/quiz/service/queries';
-import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+
 import type { Module } from '@/features/modules/types';
 
-function CourseLearnPage() {
+const CourseLearnPage = () => {
   const search = useSearch({ from: '/course/learn/$slug' });
   const { id: courseId } = search as { id: string };
 
@@ -146,6 +147,6 @@ function CourseLearnPage() {
       </div>
     </div>
   );
-}
+};
 
 export default CourseLearnPage;
