@@ -39,7 +39,6 @@ import {
 } from '@/features/quiz/service/queries';
 import { cn } from '@/lib/utils';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const CourseQuizPage = () => {
   const search = useSearch({ from: `/course/quiz/$slug` });
   const { id: moduleId } = search as { id: string };
@@ -57,7 +56,9 @@ const CourseQuizPage = () => {
   const [quizResults, setQuizResults] = useState<any>(null);
   const [hasInProgressAttempt, setHasInProgressAttempt] = useState(false);
 
-  const { data: quizData, isLoading } = useGetQuizzByModulesQuery(moduleId);
+  const { data: quizDataArray, isLoading } =
+    useGetQuizzByModulesQuery(moduleId);
+  const quizData = quizDataArray?.[0];
   const startQuizAttemptMutation = useStartQuizAttemptMutation();
   const submitQuizAttemptMutation = useSubmitQuizAttemptMutation();
   const autoSaveQuizAnswerMutation = useAutoSaveQuizAnswerMutation();
@@ -67,12 +68,11 @@ const CourseQuizPage = () => {
   );
 
   useEffect(() => {
-    if (quizData?.durationInMinutes) {
+    if (quizData?.durationInMinutes && !hasInProgressAttempt) {
       setTimeRemaining(quizData.durationInMinutes * 60);
     }
-  }, [quizData]);
+  }, [quizData, hasInProgressAttempt]);
 
-  // Check for in-progress attempt
   useEffect(() => {
     if (inProgressAttempt && quizData) {
       if (
@@ -82,7 +82,6 @@ const CourseQuizPage = () => {
         setHasInProgressAttempt(true);
         setAttemptId(inProgressAttempt.id);
 
-        // Restore previous answers
         const restoredAnswers: Record<string, string[]> = {};
         inProgressAttempt.answers?.forEach((answer) => {
           if (!restoredAnswers[answer.questionId]) {
@@ -91,20 +90,20 @@ const CourseQuizPage = () => {
           restoredAnswers[answer.questionId].push(answer.optionId);
         });
         setAnswers(restoredAnswers);
+      } else if (inProgressAttempt === null) {
+        setHasInProgressAttempt(false);
+        setAttemptId(null);
       }
     }
   }, [inProgressAttempt, quizData]);
 
-  // Update time remaining from server when continuing
   useEffect(() => {
     if (
-      timeRemainingData?.remainingTimeInSeconds &&
+      timeRemainingData?.remainingSeconds &&
       hasInProgressAttempt &&
       attemptId
     ) {
-      setTimeRemaining(timeRemainingData.remainingTimeInSeconds);
-      setQuizStarted(true);
-      setConfirmOpen(false);
+      setTimeRemaining(timeRemainingData.remainingSeconds);
     }
   }, [timeRemainingData, hasInProgressAttempt, attemptId]);
 
@@ -144,6 +143,10 @@ const CourseQuizPage = () => {
         toast.success('Tiếp tục làm bài quiz!');
         setConfirmOpen(false);
         setQuizStarted(true);
+        // Nếu có timeRemainingData thì set lại thời gian
+        if (typeof timeRemainingData?.remainingSeconds === 'number') {
+          setTimeRemaining(timeRemainingData.remainingSeconds);
+        }
       } else {
         // Start a new quiz attempt
         const attemptResponse = await startQuizAttemptMutation.mutateAsync({

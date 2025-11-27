@@ -344,9 +344,11 @@ const CourseAssignment = ({
                     <div>
                       <h4 className="font-medium text-sm mb-2">Your Answer:</h4>
                       <div className="prose prose-sm max-w-none bg-muted p-4 rounded-lg">
-                        <ReactMarkdown>
-                          {submission.submissionContent}
-                        </ReactMarkdown>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: submission.submissionContent,
+                          }}
+                        />
                       </div>
                     </div>
                     {submission.expertComment && (

@@ -21,7 +21,6 @@ interface CourseContentProps {
 
 const CourseContent = ({ item, className }: CourseContentProps) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
-  console.log('CourseContent item:', item);
 
   if (!item) {
     return (
@@ -65,7 +64,6 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'lesson':
         // eslint-disable-next-line no-case-declarations
         const lessonData = item.lessonData;
-        console.log('lessonData.materialUrl:', lessonData);
         // const isVideo =
         //   lessonData.materialUrl?.includes('video') ||
         //   lessonData.materialUrl?.includes('.mp4') ||
