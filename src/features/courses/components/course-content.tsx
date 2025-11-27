@@ -63,10 +63,10 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'lesson':
         const lessonData = item.lessonData;
         console.log('lessonData.materialUrl:', lessonData);
-        const isVideo =
-          lessonData.materialUrl?.includes('video') ||
-          lessonData.materialUrl?.includes('.mp4') ||
-          lessonData.materialUrl?.includes('.webm');
+        // const isVideo =
+        //   lessonData.materialUrl?.includes('video') ||
+        //   lessonData.materialUrl?.includes('.mp4') ||
+        //   lessonData.materialUrl?.includes('.webm');
         const isPDF = lessonData.materialUrl?.includes('.pdf');
 
         return (
