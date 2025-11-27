@@ -78,10 +78,11 @@ const MAIN_NAV_LINKS = (t: (key: string) => string): Navbar03NavItem[] => [
 
 // Configuration for Learn TRIZ dropdown links
 const LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
+  { href: '/course', labelKey: 'learn_triz.course' },
   { href: '/books', labelKey: 'learn_triz.books' },
+  { href: '/learn-triz', labelKey: 'learn_triz.index' },
   { href: '/matrix-triz', labelKey: 'learn_triz.matrix' },
   { href: '/quiz', labelKey: 'learn_triz.quiz' },
-  { href: '/course', labelKey: 'learn_triz.course' },
 ];
 
 // Active link styling
