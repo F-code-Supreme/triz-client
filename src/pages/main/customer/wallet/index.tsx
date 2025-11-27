@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router';
 import {
   getCoreRowModel,
   useReactTable,
@@ -5,8 +6,10 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
+import { ArrowRight } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
+import { Button } from '@/components/ui/button';
 import useAuth from '@/features/auth/hooks/use-auth';
 import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
@@ -20,6 +23,7 @@ import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/quer
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const WalletPage = () => {
+  const navigate = useNavigate();
   const [topupOpen, setTopupOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -85,11 +89,21 @@ const WalletPage = () => {
   return (
     <DefaultLayout meta={{ title: 'Wallet' }}>
       <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Wallet</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your wallet balance and view transaction history
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Wallet</h1>
+            <p className="text-muted-foreground mt-2">
+              Manage your wallet balance and view transaction history
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            onClick={() => navigate({ to: '/refund' })}
+            className="gap-2"
+          >
+            <ArrowRight className="h-4 w-4" />
+            Request Refund
+          </Button>
         </div>
 
         <WalletBalanceCard

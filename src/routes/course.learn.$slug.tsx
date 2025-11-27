@@ -1,4 +1,4 @@
-import CourseLearnPage from '@/pages/main/course/learn';
+import CourseLearnPage from '@/pages/main/customer/course/learn';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/course/learn/$slug')({

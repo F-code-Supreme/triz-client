@@ -10,4 +10,4 @@ export type Transaction = {
 };
 
 export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
-export type TransactionType = 'TOPUP' | 'SPEND';
+export type TransactionType = 'TOPUP' | 'SPEND' | 'REFUND';

@@ -1,14 +1,13 @@
-import { useTranslation } from 'react-i18next';
-
 import { PrincipleSection } from '@/components/ui/principle-hero-section';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-const LearnTRIZPage = () => {
-  const { t: _t } = useTranslation();
+import { TRIZPrinciplesList } from './components/triz-principles-list';
 
+const LearnTRIZPage = () => {
   return (
     <DefaultLayout meta={{ title: '40 Nguyên Tắc Sáng Tạo' }} className="">
       <PrincipleSection />
+      <TRIZPrinciplesList />
     </DefaultLayout>
   );
 };

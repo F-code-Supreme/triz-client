@@ -88,7 +88,7 @@ export const adminSubscriptionsColumns = [
 
   columnHelper.accessor('tokensPerDayRemaining', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tokens/Day" />
+      <DataTableColumnHeader column={column} title="Trizilium/Day" />
     ),
     cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
   }),
