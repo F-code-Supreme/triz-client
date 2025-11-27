@@ -14,8 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { principlesData } from '@/pages/main/learn-triz/components/principles-data';
-import { features } from '@/pages/main/public/matrix-triz/components/triz-data';
+import { principlesData } from '@/pages/main/public/learn-triz/components/principles-data';
+
+import { features } from './triz-data';
 
 // Props nếu bạn muốn truyền data từ ngoài vào
 interface TrizMatrixProps {

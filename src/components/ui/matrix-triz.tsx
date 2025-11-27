@@ -1,5 +1,5 @@
-import { fullMatrixData } from '@/pages/main/matrix-triz/components/triz-data';
-import { TrizMatrix } from '@/pages/main/matrix-triz/components/triz-matrix';
+import { fullMatrixData } from '@/pages/main/public/matrix-triz/components/triz-data';
+import { TrizMatrix } from '@/pages/main/public/matrix-triz/components/triz-matrix';
 
 const MatrixSection = () => {
   return (
