@@ -19,7 +19,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { assignmentsColumns } from '@/features/assignment/components/assignments-columns';
-import { useGetAssignmentsQuery } from '@/features/assignment/services/queries';
+import {
+  // useGetAssignmentsQuery,
+  useGetAssignmentsQueryExpert,
+} from '@/features/assignment/services/queries';
 import { booksColumns } from '@/features/book/components/books-columns';
 import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
 import { bookStatuses } from '@/features/book/data/data';
@@ -45,7 +48,8 @@ const AdminAssignmentsManagementPage = () => {
   >({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const { data: assignmentsData, isLoading } = useGetAssignmentsQuery();
+  // const { data: assignmentsData, isLoading } = useGetAssignmentsQuery();
+  const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert();
 
   const books = useMemo(() => {
     const currentData = assignmentsData;

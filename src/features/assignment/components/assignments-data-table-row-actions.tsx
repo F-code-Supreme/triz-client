@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { type Row } from '@tanstack/react-table';
-import { Eye, Pencil } from 'lucide-react';
+import { BookDashed, Eye, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -23,6 +23,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+import AssignmentSubmissionsDialog from './assignment-submissions-dialog';
+
 import type { Assignment } from '@/features/assignment/services/queries/types';
 
 interface AssignmentsDataTableRowActionsProps<TData> {
@@ -34,6 +36,7 @@ export const AssignmentsDataTableRowActions = <TData,>({
 }: AssignmentsDataTableRowActionsProps<TData>) => {
   const assignment = row.original as Assignment;
   const [_setIsDeleteDialogOpen] = useState(false);
+  const [isSubmissionsDialogOpen, setIsSubmissionsDialogOpen] = useState(false);
 
   // Note: You'll need to pass moduleId somehow - could be from context or route params
   // const deleteAssignment = useDeleteAssignmentMutation(''); // TODO: Add moduleId
@@ -58,8 +61,11 @@ export const AssignmentsDataTableRowActions = <TData,>({
   };
 
   const handleEdit = () => {
-    // TODO: Implement edit functionality
     toast.info(`Edit assignment: ${assignment.title}`);
+  };
+
+  const handleDetailAssignment = () => {
+    setIsSubmissionsDialogOpen(true);
   };
 
   return (
@@ -82,6 +88,10 @@ export const AssignmentsDataTableRowActions = <TData,>({
           <DropdownMenuItem onClick={handleEdit}>
             <Pencil className="mr-2 h-4 w-4" />
             Chỉnh sửa
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDetailAssignment}>
+            <BookDashed className="mr-2 h-4 w-4" />
+            Chi tiết các bài
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {/* <DropdownMenuItem
@@ -120,6 +130,12 @@ export const AssignmentsDataTableRowActions = <TData,>({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog> */}
+
+      <AssignmentSubmissionsDialog
+        open={isSubmissionsDialogOpen}
+        onOpenChange={setIsSubmissionsDialogOpen}
+        assignmentId={assignment.id}
+      />
     </>
   );
 };

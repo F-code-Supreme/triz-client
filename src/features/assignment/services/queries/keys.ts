@@ -4,4 +4,5 @@ export enum AssignmentKeys {
   GetAssignmentSubmissionHistoryQuery = 'assignments/getAssignmentSubmissionHistory',
   GetAssignmentById = 'assignments/getAssignmentById',
   GetAssignmentsByModuleQuery = 'assignments/getAssignmentsByModule',
+  GetAssignmentSubmissionQuery = 'assignments/getAssignmentSubmission',
 }
