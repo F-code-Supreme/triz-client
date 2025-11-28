@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as SegmentationGameRouteImport } from './routes/segmentation-game'
+import { Route as MergingGameRouteImport } from './routes/merging-game'
 import { Route as MemoryCardRouteImport } from './routes/memory-card'
 import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
@@ -60,6 +62,16 @@ import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/cour
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
   id: '/unauthorized',
   path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SegmentationGameRoute = SegmentationGameRouteImport.update({
+  id: '/segmentation-game',
+  path: '/segmentation-game',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MergingGameRoute = MergingGameRouteImport.update({
+  id: '/merging-game',
+  path: '/merging-game',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemoryCardRoute = MemoryCardRouteImport.update({
@@ -301,6 +313,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
+  '/merging-game': typeof MergingGameRoute
+  '/segmentation-game': typeof SegmentationGameRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
@@ -349,6 +363,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
+  '/merging-game': typeof MergingGameRoute
+  '/segmentation-game': typeof SegmentationGameRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
@@ -398,6 +414,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
+  '/merging-game': typeof MergingGameRoute
+  '/segmentation-game': typeof SegmentationGameRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
@@ -448,6 +466,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/memory-card'
+    | '/merging-game'
+    | '/segmentation-game'
     | '/unauthorized'
     | '/chat-triz'
     | '/profile'
@@ -496,6 +516,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/memory-card'
+    | '/merging-game'
+    | '/segmentation-game'
     | '/unauthorized'
     | '/chat-triz'
     | '/profile'
@@ -544,6 +566,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/memory-card'
+    | '/merging-game'
+    | '/segmentation-game'
     | '/unauthorized'
     | '/(app)/chat-triz'
     | '/(app)/profile'
@@ -594,6 +618,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MatrixTrizRoute: typeof MatrixTrizRoute
   MemoryCardRoute: typeof MemoryCardRoute
+  MergingGameRoute: typeof MergingGameRoute
+  SegmentationGameRoute: typeof SegmentationGameRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
   AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
@@ -628,6 +654,20 @@ declare module '@tanstack/react-router' {
       path: '/unauthorized'
       fullPath: '/unauthorized'
       preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/segmentation-game': {
+      id: '/segmentation-game'
+      path: '/segmentation-game'
+      fullPath: '/segmentation-game'
+      preLoaderRoute: typeof SegmentationGameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merging-game': {
+      id: '/merging-game'
+      path: '/merging-game'
+      fullPath: '/merging-game'
+      preLoaderRoute: typeof MergingGameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memory-card': {
@@ -1011,6 +1051,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MatrixTrizRoute: MatrixTrizRoute,
   MemoryCardRoute: MemoryCardRoute,
+  MergingGameRoute: MergingGameRoute,
+  SegmentationGameRoute: SegmentationGameRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
   AdminAssignmentRouteRoute: AdminAssignmentRouteRoute,
