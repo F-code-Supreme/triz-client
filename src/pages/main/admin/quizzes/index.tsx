@@ -10,6 +10,16 @@ import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -31,17 +41,6 @@ import { AdminLayout } from '@/layouts/admin-layout';
 
 import CreateQuizDialog from './create-quiz';
 import DetailQuizDialog from './detail-quiz';
-
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from '@/components/ui/alert-dialog';
 
 const AdminQuizzesPage = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -260,7 +259,8 @@ const AdminQuizzesPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Quiz</AlertDialogTitle>
             <AlertDialogDescription>
-              `Are you sure you want to delete quiz "${deletingQuiz.title}"?`
+              `Are you sure you want to delete quiz &quot;${deletingQuiz.title}
+              &quot;?`
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -39,6 +39,7 @@ import {
 } from '@/features/quiz/service/queries';
 import { cn } from '@/lib/utils';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const CourseQuizPage = () => {
   const search = useSearch({ from: `/(app)/course/quiz/$slug` });
   const { id: moduleId } = search as { id: string };
