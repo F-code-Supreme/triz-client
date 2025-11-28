@@ -28,7 +28,7 @@ export const useGetLessonByModuleQuery = (moduleId: string) => {
   return useQuery({
     queryKey: [LessonKeys.GetLessonQuery, moduleId],
     queryFn: async () => {
-      const response = await _request.get<LessonResponse[]>(
+      const response = await _request.get<LessonResponse>(
         `/modules/${moduleId}/lessons`,
       );
       return response.data;

@@ -40,7 +40,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const CourseQuizPage = () => {
-  const search = useSearch({ from: `/course/quiz/$slug` });
+  const search = useSearch({ from: `/(app)/course/quiz/$slug` });
   const { id: moduleId } = search as { id: string };
   const navigate = useNavigate();
   const { user } = useAuth();

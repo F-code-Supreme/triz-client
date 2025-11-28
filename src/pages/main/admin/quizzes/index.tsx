@@ -32,6 +32,17 @@ import { AdminLayout } from '@/layouts/admin-layout';
 import CreateQuizDialog from './create-quiz';
 import DetailQuizDialog from './detail-quiz';
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
+
 const AdminQuizzesPage = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<any>(null);
@@ -39,6 +50,8 @@ const AdminQuizzesPage = () => {
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingQuiz, setDeletingQuiz] = useState<any>(null);
   const [sorting, setSorting] = useState<
     Array<{
       id: string;
@@ -66,15 +79,20 @@ const AdminQuizzesPage = () => {
     return data?.content || [];
   }, [data]);
 
-  const handleDeleteQuiz = async (quiz: any) => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure you want to delete this quiz?')) {
-      try {
-        await deleteQuizMutation.mutateAsync(quiz.id);
-        if (typeof refetch === 'function') refetch();
-      } catch (error) {
-        console.error('Failed to delete quiz:', error);
-      }
+  const handleDeleteQuiz = (quiz: any) => {
+    setDeletingQuiz(quiz);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingQuiz) return;
+    try {
+      await deleteQuizMutation.mutateAsync(deletingQuiz.id);
+      setDeleteDialogOpen(false);
+      setDeletingQuiz(null);
+      refetch();
+    } catch (error) {
+      console.error('Failed to delete quiz:', error);
     }
   };
 
@@ -236,6 +254,29 @@ const AdminQuizzesPage = () => {
         setOpen={setDetailOpen}
         selectedQuizData={selectedQuizData}
       />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Quiz</AlertDialogTitle>
+            <AlertDialogDescription>
+              `Are you sure you want to delete quiz "${deletingQuiz.title}"?`
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteQuizMutation.isPending}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleDeleteConfirm}
+              disabled={deleteQuizMutation.isPending}
+            >
+              {deleteQuizMutation.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 };

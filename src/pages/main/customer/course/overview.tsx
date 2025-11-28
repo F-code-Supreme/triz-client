@@ -26,11 +26,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 const CourseOverviewPage = () => {
   const search = useSearch({ from: `/course/$slug` });
   const { id } = search as { id: string };
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { data: course, isLoading, isError } = useGetCourseByIdQuery(id);
   const { data: modules, isLoading: isLoadingModules } =
@@ -63,9 +65,7 @@ const CourseOverviewPage = () => {
         search: { id: course.id },
         mask: { to: `/course/${course.slug}` },
       });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      // eslint-disable-next-line no-alert
       alert('Đăng ký thất bại!');
     }
   };
@@ -120,7 +120,6 @@ const CourseOverviewPage = () => {
             </div>
           </div>
 
-          {/* Course Stats */}
           <div className="space-y-4">
             <Card>
               <CardHeader>
@@ -162,7 +161,9 @@ const CourseOverviewPage = () => {
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button className="w-full">Enroll Now</Button>
+                    <Button className="w-full" disabled={!user}>
+                      {user ? 'Enroll Now' : 'Log in to enroll'}
+                    </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>

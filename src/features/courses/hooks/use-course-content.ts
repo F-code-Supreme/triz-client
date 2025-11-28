@@ -33,13 +33,13 @@ export const useCourseContent = ({
 
       // Process lessons
       if (isCurrentModule) {
-        if (lessonsData && Array.isArray(lessonsData)) {
-          lessonsData.forEach((lesson: any) => {
+        if (lessonsData?.content && Array.isArray(lessonsData.content)) {
+          lessonsData.content.forEach((lesson: any) => {
             const lessonItem: LessonContentItem = {
               id: lesson.id,
               type: 'lesson',
               order: 0,
-              title: lesson.name,
+              title: lesson.title,
               lessonData: lesson,
             };
             contents.push(lessonItem);
@@ -101,6 +101,8 @@ export const useCourseContent = ({
       };
     });
   }, [modules, lessonsData, assignmentsData, quizzesData, currentModuleId]);
+
+  console.log('Enhanced modules:', enhancedModules);
 
   const currentModule = useMemo(() => {
     return enhancedModules.find((m) => m.id === currentModuleId);

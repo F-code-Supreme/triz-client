@@ -16,7 +16,7 @@ import { useGetQuizzByModulesQuery } from '@/features/quiz/service/queries';
 import type { Module } from '@/features/modules/types';
 
 const CourseLearnPage = () => {
-  const search = useSearch({ from: '/course/learn/$slug' });
+  const search = useSearch({ from: '/(app)/course/learn/$slug' });
   const { id: courseId } = search as { id: string };
 
   const [currentItemId, setCurrentItemId] = useState<string>('');
@@ -39,6 +39,8 @@ const CourseLearnPage = () => {
   const { data: assignmentsData } =
     useGetAssignmentModuleQuery(currentModuleId);
   const { data: quizzesData } = useGetQuizzByModulesQuery(currentModuleId);
+
+  console.log('Lessons Data:', lessonsData);
 
   const { enhancedModules, currentModule } = useCourseContent({
     modules: (modulesData as Module[]) || [],
