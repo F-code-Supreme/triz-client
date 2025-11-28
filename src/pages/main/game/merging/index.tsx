@@ -1,7 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import {
   ArrowLeft,
-  Search,
   FlaskConical,
   Flame,
   Droplets,
