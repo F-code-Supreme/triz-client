@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetAssignmentsByModuleQuery } from '@/features/assignment/services/queries';
+import { useUpdateCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetLessonsByModuleQuery } from '@/features/lesson/services/queries';
 import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
@@ -41,6 +42,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
   const { data: modulesByCourseId } = useGetModulesByCourseQuery(
     courseId || '',
   );
+  const updateCourseMutation = useUpdateCourseMutation(courseId || '');
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -86,17 +88,19 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
     }
 
     setIsSubmitting(true);
-
     try {
       // TODO: Implement the actual API call to publish the course
       // await publishCourse(courseId);
-
-      // Simulate API call
-      // await new Promise((resolve) => setTimeout(resolve, 1500));
-      localStorage.removeItem('createCourseDraft_v1');
-      toast.success('Course published successfully!');
-      // TODO: Redirect to course list or course detail page
-      navigate({ to: '/admin/courses' });
+      await updateCourseMutation.mutateAsync(
+        { status: 'ACTIVE' },
+        {
+          onSuccess: () => {
+            toast.success('Xuất bản khóa học thành công!');
+            localStorage.removeItem('createCourseDraft_v1');
+            navigate({ to: '/admin/courses' });
+          },
+        },
+      );
     } catch (error) {
       let msg = 'Failed to publish course';
       if (error instanceof Error) msg = error.message;

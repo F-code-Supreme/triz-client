@@ -101,7 +101,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                   <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
                 </div>
 
-                <div className="text-right text-sm w-full">
+                <div className=" text-sm w-full">
                   {dealPrice !== null ? (
                     <div className="text-sm font-semibold text-primary">
                       Giá tiền: {formatter.format(dealPrice)}
@@ -116,7 +116,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                     </div>
                   ) : null}
 
-                  <div className="text-sm mt-1 text-muted-foreground whitespace-nowrap">
+                  <div className="text-sm mt-1 text-muted-foreground ">
                     <CourseStatusBadge status={course.status} />
                   </div>
                 </div>
