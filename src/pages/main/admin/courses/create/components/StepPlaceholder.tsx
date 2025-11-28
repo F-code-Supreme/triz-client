@@ -19,7 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetAssignmentsByModuleQuery } from '@/features/assignment/services/queries';
-import { useUpdateCourseMutation } from '@/features/courses/services/mutations';
+import { usePublishCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetLessonsByModuleQuery } from '@/features/lesson/services/queries';
 import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
@@ -42,7 +42,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
   const { data: modulesByCourseId } = useGetModulesByCourseQuery(
     courseId || '',
   );
-  const updateCourseMutation = useUpdateCourseMutation(courseId || '');
+  const publishCourseMutation = usePublishCourseMutation(courseId || '');
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -91,7 +91,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
     try {
       // TODO: Implement the actual API call to publish the course
       // await publishCourse(courseId);
-      await updateCourseMutation.mutateAsync(
+      await publishCourseMutation.mutateAsync(
         { status: 'ACTIVE' },
         {
           onSuccess: () => {
@@ -604,26 +604,6 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
         </Card>
 
         {/* Warnings/Recommendations */}
-        {(totalModules === 0 || totalLessons === 0) && (
-          <Card className="p-4 border-yellow-200 bg-yellow-50">
-            <div className="flex gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-medium text-yellow-900">
-                  Khóa học chưa hoàn chỉnh
-                </h4>
-                <ul className="text-sm text-yellow-800 mt-2 space-y-1">
-                  {totalModules === 0 && (
-                    <li>• Thêm ít nhất một chương vào khóa học của bạn</li>
-                  )}
-                  {totalLessons === 0 && totalModules > 0 && (
-                    <li>• Thêm bài học vào các chương của bạn</li>
-                  )}
-                </ul>
-              </div>
-            </div>
-          </Card>
-        )}
       </div>
 
       {/* Footer Actions */}

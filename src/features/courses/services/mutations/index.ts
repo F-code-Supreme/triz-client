@@ -45,7 +45,27 @@ export const useUpdateCourseMutation = (courseId: string) => {
     },
   });
 };
-
+export const usePublishCourseMutation = (courseId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: { status: 'DRAFT' | 'ACTIVE' }) => {
+      const response = await _request.patch<Response<Course>>(
+        `/courses/${courseId}/status`,
+        payload,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseById, courseId],
+      });
+    },
+  });
+};
 export const useDeleteCourseMutation = () => {
   const queryClient = useQueryClient();
   const _request = useAxios();
