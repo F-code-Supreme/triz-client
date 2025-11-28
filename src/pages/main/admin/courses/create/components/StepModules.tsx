@@ -38,12 +38,12 @@ import {
 } from '@/components/ui/select';
 import { useDeleteAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useReorderModuleMutation } from '@/features/courses/services/mutations';
-import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useDeleteLessonMutation } from '@/features/lesson/services/mutations';
 import {
   useCreateModuleMutation,
   useUpdateModuleMutation,
 } from '@/features/modules/services/mutations';
+import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
 
 import { AddAssignmentModal } from './AddAssignmentModal';
@@ -64,14 +64,13 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
   const courseId = courseFromLocalStorage
     ? JSON.parse(courseFromLocalStorage).id
     : null;
-  console.log('courseId', courseId);
   const parseCourse = courseFromLocalStorage
     ? JSON.parse(courseFromLocalStorage).payload
     : null;
 
-  // const modulesQuery = useGetModulesByCourseQuery(courseId ?? '');
-  const { data: courseById } = useGetCourseByIdQuery(courseId ?? '');
-  const modules = courseById?.modules ?? [];
+  const { data: modulesQuery } = useGetModulesByCourseQuery(courseId ?? '');
+
+  const modules = modulesQuery?.content ?? [];
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
@@ -169,8 +168,9 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
     const isCreateDisabled = isPending;
     const createModule = useCreateModuleMutation(courseId ?? '');
     const [name, setName] = useState('');
-    const [duration, setDuration] = useState<number>(60);
-    const [level, setLevel] = useState<'EASY' | 'MEDIUM' | 'HARD'>('EASY');
+    const [duration, setDuration] = useState<number | undefined>(undefined);
+    // start empty so placeholder is shown until user picks a level
+    const [level, setLevel] = useState<'EASY' | 'MEDIUM' | 'HARD' | ''>('');
 
     const handleCreate = () => {
       if (!courseId) {
@@ -181,6 +181,16 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
         toast.error('Tên chương là bắt buộc');
         return;
       }
+
+      if (duration === undefined || duration <= 0) {
+        toast.error('Thời lượng phải lớn hơn 0');
+        return;
+      }
+      if (!level) {
+        toast.error('Độ khó là bắt buộc');
+        return;
+      }
+
       createModule.mutate(
         { name: name.trim(), durationInMinutes: duration, level },
         {
@@ -217,7 +227,9 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
           />
           <input
             type="number"
-            className="border p-2 rounded w-28"
+            min={1}
+            className="border p-2 rounded "
+            placeholder="Nhập thời gian"
             value={duration}
             onChange={(e) => setDuration(Number(e.target.value))}
             disabled={isCreateDisabled}
@@ -228,7 +240,8 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
               setLevel(value as 'EASY' | 'MEDIUM' | 'HARD')
             }
             disabled={isCreateDisabled}
-            value={level}
+            // pass undefined when empty so SelectValue shows the placeholder
+            value={level === '' ? undefined : level}
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Chọn độ khó" />

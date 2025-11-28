@@ -82,7 +82,8 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
-  const { data: lessons } = useGetLessonsByModuleQuery(module.id);
+  const { data: lessonsQuery } = useGetLessonsByModuleQuery(module.id);
+  const lessons = lessonsQuery?.content;
   const { data: assignments } = useGetAssignmentsByModuleQuery(module.id);
   const assignmentsList = assignments ? assignments.content : [];
 

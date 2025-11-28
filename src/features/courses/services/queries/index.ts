@@ -33,5 +33,8 @@ export const useGetCourseByIdQuery = (courseId?: string) => {
       return response.data;
     },
     enabled: !!courseId,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: 1000 * 60 * 5,
   });
 };

@@ -12,10 +12,7 @@ export const useCreateCourseMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: CreateCoursePayload) => {
-      const response = await _request.post<Response<Course>>(
-        '/courses',
-        payload,
-      );
+      const response = await _request.post<Course>('/courses', payload);
       return response.data;
     },
     onSuccess: () => {

@@ -12,7 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -24,6 +23,10 @@ import {
 } from '@/components/ui/dialog';
 import { useDeleteCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+
+import CourseLevelBadge from './course-level';
+import CourseStatusBadge from './course-status';
+import formatDuration from './format-duration';
 
 import type { Course } from '@/features/courses/types';
 
@@ -88,36 +91,33 @@ const CourseItem = ({ course }: { course: Course }) => {
               </p>
 
               <div className="flex items-start justify-between gap-4">
-                <div className="text-sm text-muted-foreground">
-                  <div>Thời lượng: {course.durationInMinutes ?? 0} phút</div>
-                  <div>Cấp độ: {course.level ?? 'N/A'}</div>
+                <div className="text-sm text-muted-foreground w-full space-y-2">
+                  <div>
+                    Thời lượng: {formatDuration(course.durationInMinutes)}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    Cấp độ: <CourseLevelBadge level={course.level} />
+                  </div>
                   <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
                 </div>
 
-                <div className="text-right">
+                <div className="text-right text-sm w-full">
                   {dealPrice !== null ? (
                     <div className="text-sm font-semibold text-primary">
-                      {formatter.format(dealPrice)}
+                      Giá tiền: {formatter.format(dealPrice)}
                     </div>
                   ) : null}
 
                   {originalPrice !== null &&
                   dealPrice !== null &&
                   originalPrice > dealPrice ? (
-                    <div className="text-xs text-muted-foreground line-through">
-                      {formatter.format(originalPrice)}
+                    <div className=" text-muted-foreground line-through">
+                      Giá gốc: {formatter.format(originalPrice)}
                     </div>
                   ) : null}
 
-                  <div className="text-xs mt-1 text-muted-foreground">
-                    <Badge
-                      variant={
-                        course.status === 'ACTIVE' ? 'secondary' : 'destructive'
-                      }
-                      className={`${course.status === 'ACTIVE' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
-                    >
-                      {course.status ?? ''}
-                    </Badge>
+                  <div className="text-sm mt-1 text-muted-foreground whitespace-nowrap">
+                    <CourseStatusBadge status={course.status} />
                   </div>
                 </div>
               </div>
@@ -174,15 +174,15 @@ const CourseItem = ({ course }: { course: Course }) => {
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="font-semibold">Thời lượng:</span>{' '}
-                  {courseDetail.durationInMinutes} phút
+                  {formatDuration(courseDetail.durationInMinutes)}
                 </div>
-                <div>
-                  <span className="font-semibold">Cấp độ:</span>{' '}
-                  {courseDetail.level ?? 'N/A'}
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Cấp độ:</span>
+                  <CourseLevelBadge level={courseDetail.level} />
                 </div>
-                <div>
-                  <span className="font-semibold">Trạng thái:</span>{' '}
-                  {courseDetail.status}
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">Trạng thái:</span>
+                  <CourseStatusBadge status={courseDetail.status} />
                 </div>
                 <div>
                   <span className="font-semibold">Người học:</span>{' '}
@@ -190,7 +190,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                 </div>
                 {courseDetail.price !== null && (
                   <div>
-                    <span className="font-semibold">Giá:</span>{' '}
+                    <span className="font-semibold">Giá tiền:</span>{' '}
                     {formatter.format(courseDetail.price)}
                   </div>
                 )}
@@ -214,8 +214,9 @@ const CourseItem = ({ course }: { course: Course }) => {
                       >
                         <div className="font-medium">{module.name}</div>
                         <div className="text-muted-foreground mt-1">
-                          Thời lượng: {module.durationInMinutes} phút • Cấp độ:{' '}
-                          {module.level} • Bài học: {module.lessonCount}
+                          Thời lượng: {formatDuration(module.durationInMinutes)}{' '}
+                          • Cấp độ: {module.level} • Bài học:{' '}
+                          {module.lessonCount}
                         </div>
                       </div>
                     ))}
