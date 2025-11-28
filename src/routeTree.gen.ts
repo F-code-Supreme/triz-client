@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as SegmentationGameRouteImport } from './routes/segmentation-game'
+import { Route as PreliminaryGameRouteImport } from './routes/preliminary-game'
 import { Route as MergingGameRouteImport } from './routes/merging-game'
 import { Route as MemoryCardRouteImport } from './routes/memory-card'
 import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
@@ -67,6 +68,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
 const SegmentationGameRoute = SegmentationGameRouteImport.update({
   id: '/segmentation-game',
   path: '/segmentation-game',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreliminaryGameRoute = PreliminaryGameRouteImport.update({
+  id: '/preliminary-game',
+  path: '/preliminary-game',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MergingGameRoute = MergingGameRouteImport.update({
@@ -314,6 +320,7 @@ export interface FileRoutesByFullPath {
   '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/merging-game': typeof MergingGameRoute
+  '/preliminary-game': typeof PreliminaryGameRoute
   '/segmentation-game': typeof SegmentationGameRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
@@ -364,6 +371,7 @@ export interface FileRoutesByTo {
   '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/merging-game': typeof MergingGameRoute
+  '/preliminary-game': typeof PreliminaryGameRoute
   '/segmentation-game': typeof SegmentationGameRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/chat-triz': typeof appChatTrizRouteRoute
@@ -415,6 +423,7 @@ export interface FileRoutesById {
   '/matrix-triz': typeof MatrixTrizRoute
   '/memory-card': typeof MemoryCardRoute
   '/merging-game': typeof MergingGameRoute
+  '/preliminary-game': typeof PreliminaryGameRoute
   '/segmentation-game': typeof SegmentationGameRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
@@ -467,6 +476,7 @@ export interface FileRouteTypes {
     | '/matrix-triz'
     | '/memory-card'
     | '/merging-game'
+    | '/preliminary-game'
     | '/segmentation-game'
     | '/unauthorized'
     | '/chat-triz'
@@ -517,6 +527,7 @@ export interface FileRouteTypes {
     | '/matrix-triz'
     | '/memory-card'
     | '/merging-game'
+    | '/preliminary-game'
     | '/segmentation-game'
     | '/unauthorized'
     | '/chat-triz'
@@ -567,6 +578,7 @@ export interface FileRouteTypes {
     | '/matrix-triz'
     | '/memory-card'
     | '/merging-game'
+    | '/preliminary-game'
     | '/segmentation-game'
     | '/unauthorized'
     | '/(app)/chat-triz'
@@ -619,6 +631,7 @@ export interface RootRouteChildren {
   MatrixTrizRoute: typeof MatrixTrizRoute
   MemoryCardRoute: typeof MemoryCardRoute
   MergingGameRoute: typeof MergingGameRoute
+  PreliminaryGameRoute: typeof PreliminaryGameRoute
   SegmentationGameRoute: typeof SegmentationGameRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
@@ -661,6 +674,13 @@ declare module '@tanstack/react-router' {
       path: '/segmentation-game'
       fullPath: '/segmentation-game'
       preLoaderRoute: typeof SegmentationGameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preliminary-game': {
+      id: '/preliminary-game'
+      path: '/preliminary-game'
+      fullPath: '/preliminary-game'
+      preLoaderRoute: typeof PreliminaryGameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/merging-game': {
@@ -1052,6 +1072,7 @@ const rootRouteChildren: RootRouteChildren = {
   MatrixTrizRoute: MatrixTrizRoute,
   MemoryCardRoute: MemoryCardRoute,
   MergingGameRoute: MergingGameRoute,
+  PreliminaryGameRoute: PreliminaryGameRoute,
   SegmentationGameRoute: SegmentationGameRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
