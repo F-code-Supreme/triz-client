@@ -27,6 +27,7 @@ import useAuth from '@/features/auth/hooks/use-auth';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
+import { formatTrizilium } from '@/utils';
 
 const CourseOverviewPage = () => {
   const search = useSearch({ from: `/course/$slug` });
@@ -152,10 +153,7 @@ const CourseOverviewPage = () => {
                     <div className="flex items-center gap-2">
                       <CircleDollarSign />
                       <span>
-                        {(course.dealPrice || course.price)?.toLocaleString(
-                          'vi-VN',
-                          { style: 'currency', currency: 'VND' },
-                        )}
+                        {formatTrizilium(course.dealPrice || course.price)}
                       </span>
                     </div>
                   )}

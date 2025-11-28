@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { useDeleteCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { formatTrizilium } from '@/utils';
 
 import type { Course } from '@/features/courses/types';
 
@@ -36,12 +37,6 @@ const CourseItem = ({ course }: { course: Course }) => {
   const { data: courseDetail, isLoading } = useGetCourseByIdQuery(
     isDetailOpen ? course.id : undefined,
   );
-
-  const formatter = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  });
 
   const dealPrice = course.dealPrice ?? course.price ?? null;
   const originalPrice = course.price ?? null;
@@ -97,7 +92,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                 <div className="text-right">
                   {dealPrice !== null ? (
                     <div className="text-sm font-semibold text-primary">
-                      {formatter.format(dealPrice)}
+                      {formatTrizilium(dealPrice)}
                     </div>
                   ) : null}
 
@@ -105,7 +100,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                   dealPrice !== null &&
                   originalPrice > dealPrice ? (
                     <div className="text-xs text-muted-foreground line-through">
-                      {formatter.format(originalPrice)}
+                      {formatTrizilium(originalPrice)}
                     </div>
                   ) : null}
 
@@ -191,13 +186,13 @@ const CourseItem = ({ course }: { course: Course }) => {
                 {courseDetail.price !== null && (
                   <div>
                     <span className="font-semibold">Giá:</span>{' '}
-                    {formatter.format(courseDetail.price)}
+                    {formatTrizilium(courseDetail.price)}
                   </div>
                 )}
                 {courseDetail.dealPrice !== null && (
                   <div>
                     <span className="font-semibold">Giá ưu đãi:</span>{' '}
-                    {formatter.format(courseDetail.dealPrice)}
+                    {formatTrizilium(courseDetail.dealPrice)}
                   </div>
                 )}
               </div>

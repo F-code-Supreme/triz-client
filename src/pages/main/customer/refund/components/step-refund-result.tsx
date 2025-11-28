@@ -2,6 +2,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { CheckCircle, Home, ArrowLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { formatTrizilium } from '@/utils';
 
 import type { Transaction } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
@@ -49,7 +50,7 @@ export const StepRefundResult = ({
       <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900 rounded-lg p-6 text-center space-y-3">
         <p className="text-sm text-muted-foreground">Refund Amount</p>
         <p className="text-3xl font-bold text-green-600">
-          +{previewRefund?.amount?.toLocaleString() || 0} VND
+          +{formatTrizilium(previewRefund?.amount || 0)}
         </p>
         <p className="text-xs text-muted-foreground pt-2">
           Refunded to your wallet
