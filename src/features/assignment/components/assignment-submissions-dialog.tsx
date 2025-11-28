@@ -1,6 +1,6 @@
+import { CheckCircle, XCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import { CheckCircle, XCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -12,11 +12,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-
-import { useGetAssignmentByIdQueryExpert } from '@/features/assignment/services/queries';
+import { Textarea } from '@/components/ui/textarea';
 import { useExpertReviewAssignmentMutation } from '@/features/assignment/services/mutations';
+import { useGetAssignmentByIdQueryExpert } from '@/features/assignment/services/queries';
 
 interface AssignmentSubmissionsDialogProps {
   open: boolean;
@@ -24,11 +23,12 @@ interface AssignmentSubmissionsDialogProps {
   assignmentId: string;
 }
 
-function AssignmentSubmissionsDialog({
+const AssignmentSubmissionsDialog = ({
   open,
   onOpenChange,
   assignmentId,
-}: AssignmentSubmissionsDialogProps) {
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+}: AssignmentSubmissionsDialogProps) => {
   const [passed, setPassed] = useState<boolean | null>(null);
   const [comment, setComment] = useState('');
 
@@ -217,6 +217,6 @@ function AssignmentSubmissionsDialog({
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default AssignmentSubmissionsDialog;

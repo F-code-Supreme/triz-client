@@ -23,8 +23,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-import type { Assignment } from '@/features/assignment/services/queries/types';
 import AssignmentSubmissionsDialog from './assignment-submissions-dialog';
+
+import type { Assignment } from '@/features/assignment/services/queries/types';
 
 interface AssignmentsDataTableRowActionsProps<TData> {
   row: Row<TData>;
