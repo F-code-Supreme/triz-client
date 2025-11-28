@@ -9,7 +9,7 @@ export const useGetQuizzByModulesQuery = (moduleId: string) => {
   return useQuery({
     queryKey: ['getQuizzByModules', moduleId],
     queryFn: async () => {
-      const response = await _request.get<getQuizzByModulesResponse>(
+      const response = await _request.get<getQuizzByModulesResponse[]>(
         `/modules/${moduleId}/quizzes`,
       );
       return response.data;
@@ -23,10 +23,18 @@ export const useGetQuizAttemptInProgressQuery = () => {
   return useQuery({
     queryKey: ['quizAttemptInProgress'],
     queryFn: async () => {
-      const response = await _request.get<QuizGetAnswersAttempt>(
-        '/quiz-attempts/me/in-progress',
-      );
-      return response.data;
+      try {
+        const response = await _request.get<QuizGetAnswersAttempt>(
+          '/quiz-attempts/me/in-progress',
+        );
+        return response.data;
+      } catch (error: unknown) {
+        const axiosError = error as { response?: { status?: number } };
+        if (axiosError.response?.status === 404) {
+          return null;
+        }
+        throw error;
+      }
     },
   });
 };

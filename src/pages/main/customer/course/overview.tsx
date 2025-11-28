@@ -23,6 +23,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import useAuth from '@/features/auth/hooks/use-auth';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
@@ -31,6 +32,7 @@ const CourseOverviewPage = () => {
   const search = useSearch({ from: `/course/$slug` });
   const { id } = search as { id: string };
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { data: course, isLoading, isError } = useGetCourseByIdQuery(id);
   const { data: modules, isLoading: isLoadingModules } =
@@ -120,7 +122,6 @@ const CourseOverviewPage = () => {
             </div>
           </div>
 
-          {/* Course Stats */}
           <div className="space-y-4">
             <Card>
               <CardHeader>
@@ -162,7 +163,9 @@ const CourseOverviewPage = () => {
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button className="w-full">Enroll Now</Button>
+                    <Button className="w-full" disabled={!user}>
+                      {user ? 'Enroll Now' : 'Log in to enroll'}
+                    </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>

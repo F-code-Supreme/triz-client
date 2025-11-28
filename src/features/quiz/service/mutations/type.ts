@@ -216,5 +216,8 @@ export type GetAdminQuizzesResponse = {
 };
 
 export interface RemainingTimeResponse {
-  remainingTimeInSeconds: number;
+  remainingSeconds: number;
+  remainingMinutes?: number;
+  expirationTime?: string;
+  status?: 'IN_PROGRESS' | 'COMPLETED' | 'TIMED_OUT';
 }
