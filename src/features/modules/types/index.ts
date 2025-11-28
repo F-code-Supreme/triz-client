@@ -1,5 +1,5 @@
 interface Order {
-  id: string;
+  subsetId: string;
   type: 'lesson' | 'assignment';
 }
 

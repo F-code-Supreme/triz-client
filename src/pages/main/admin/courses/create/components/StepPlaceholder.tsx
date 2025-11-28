@@ -7,6 +7,10 @@ import {
   AlertCircle,
   Clock,
   BarChart3,
+  Video,
+  FileCode,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
@@ -14,7 +18,10 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { useGetAssignmentsByModuleQuery } from '@/features/assignment/services/queries';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { useGetLessonsByModuleQuery } from '@/features/lesson/services/queries';
+import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
 
 type Props = {
   goBack: () => void;
@@ -31,14 +38,33 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
   const { data: courseData, isLoading } = useGetCourseByIdQuery(
     courseId || undefined,
   );
+  const { data: modulesByCourseId } = useGetModulesByCourseQuery(
+    courseId || '',
+  );
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // Extract course details from response
   const course = courseData;
-  const modules = course?.modules ?? [];
+  const modules = modulesByCourseId?.content ?? [];
   const totalModules = course?.totalModules ?? 0;
   const totalLessons = course?.totalLessons ?? 0;
+
+  const [expandedModules, setExpandedModules] = React.useState<Set<string>>(
+    new Set(),
+  );
+
+  const toggleModule = (moduleId: string) => {
+    setExpandedModules((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(moduleId)) {
+        newSet.delete(moduleId);
+      } else {
+        newSet.add(moduleId);
+      }
+      return newSet;
+    });
+  };
 
   // Calculate statistics
   const totalAssignments = modules.reduce((sum, module) => {
@@ -79,6 +105,216 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const ModuleDetailCard: React.FC<{ module: any }> = ({ module }) => {
+    const { data: lessonsQuery } = useGetLessonsByModuleQuery(module.id || '');
+    const { data: assignmentsQuery } = useGetAssignmentsByModuleQuery(
+      module.id || '',
+    );
+
+    const lessons = lessonsQuery?.content ?? [];
+    const assignments = assignmentsQuery?.content ?? [];
+    const isExpanded = expandedModules.has(module.id);
+
+    const getLessonTypeIcon = (type: string) => {
+      switch (type?.toUpperCase()) {
+        case 'VIDEO':
+          return <Video className="w-4 h-4 text-blue-600" />;
+        case 'TEXT':
+          return <FileText className="w-4 h-4 text-gray-600" />;
+        case 'CODE':
+          return <FileCode className="w-4 h-4 text-purple-600" />;
+        default:
+          return <FileText className="w-4 h-4 text-gray-600" />;
+      }
+    };
+
+    return (
+      <div className="border rounded-lg bg-gray-50">
+        <button
+          type="button"
+          aria-expanded={isExpanded}
+          className="p-4 cursor-pointer hover:bg-gray-100 transition-colors text-left w-full"
+          onClick={() => toggleModule(module.id)}
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h4 className="font-medium text-base">{module.name}</h4>
+                {isExpanded ? (
+                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                )}
+              </div>
+              <div className="flex items-center gap-3 mt-2">
+                {module.level && (
+                  <Badge
+                    className={getLevelBadgeColor(module.level)}
+                    variant="secondary"
+                  >
+                    <BarChart3 className="w-3 h-3 mr-1" />
+                    {module.level}
+                  </Badge>
+                )}
+                {module.durationInMinutes > 0 && (
+                  <span className="text-sm text-gray-600 flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {module.durationInMinutes} min
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t">
+            <div className="flex items-center gap-2 text-sm">
+              <FileText className="w-4 h-4 text-gray-500" />
+              <span className="text-gray-600">{lessons.length} Bài học</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <FileText className="w-4 h-4 text-gray-500" />
+              <span className="text-gray-600">
+                {assignments.length} Bài tập
+              </span>
+            </div>
+          </div>
+        </button>
+
+        {/* Expanded content */}
+        {isExpanded && (
+          <div className="border-t bg-white p-4 space-y-4">
+            {/* Lessons Section */}
+            {lessons.length > 0 && (
+              <div>
+                <h5 className="font-medium text-sm text-gray-700 mb-2 flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  Bài học ({lessons.length})
+                </h5>
+                <div className="space-y-2">
+                  {lessons.map((lesson: any, index: number) => (
+                    <div
+                      key={lesson.id}
+                      className="flex items-start gap-3 p-3 bg-gray-50 rounded border"
+                    >
+                      <div className="flex-shrink-0 mt-0.5">
+                        {getLessonTypeIcon(lesson.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-medium text-gray-500">
+                            Bài {index + 1}
+                          </span>
+                          <Badge
+                            variant={
+                              lesson.status === 'ACTIVE'
+                                ? 'default'
+                                : 'secondary'
+                            }
+                            className={`text-xs ${
+                              lesson.status === 'ACTIVE'
+                                ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
+                            }`}
+                          >
+                            {lesson.status === 'ACTIVE'
+                              ? 'Công khai'
+                              : 'Chưa công khai'}
+                          </Badge>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900 mb-1">
+                          {lesson.title}
+                        </p>
+                        {lesson.description && (
+                          <p className="text-xs text-gray-600 line-clamp-2">
+                            {lesson.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Assignments Section */}
+            {assignments.length > 0 && (
+              <div>
+                <h5 className="font-medium text-sm text-gray-700 mb-2 flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Bài tập ({assignments.length})
+                </h5>
+                <div className="space-y-2">
+                  {assignments.map((assignment: any, index: number) => (
+                    <div
+                      key={assignment.id}
+                      className="flex items-start gap-3 p-3 bg-purple-50 rounded border border-purple-200"
+                    >
+                      <div className="flex-shrink-0 mt-0.5">
+                        <FileText className="w-4 h-4 text-purple-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-medium text-gray-500">
+                            Bài tập {index + 1}
+                          </span>
+                          <Badge
+                            variant={
+                              assignment.status === 'ACTIVE'
+                                ? 'default'
+                                : 'secondary'
+                            }
+                            className={`text-xs ${
+                              assignment.status === 'ACTIVE'
+                                ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
+                            }`}
+                          >
+                            {assignment.status === 'ACTIVE'
+                              ? 'Công khai'
+                              : 'Chưa công khai'}
+                          </Badge>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900 mb-1">
+                          {assignment.title}
+                        </p>
+                        {assignment.description && (
+                          <p className="text-xs text-gray-600 line-clamp-2 mb-2">
+                            {assignment.description}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-3 text-xs text-gray-500">
+                          {assignment.durationInMinutes > 0 && (
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {assignment.durationInMinutes} phút
+                            </span>
+                          )}
+                          {assignment.maxAttempts && (
+                            <span>
+                              Số lần làm tối đa: {assignment.maxAttempts}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {lessons.length === 0 && assignments.length === 0 && (
+              <div className="text-center py-4 text-gray-500 text-sm">
+                <AlertCircle className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                <p>Chương này chưa có bài học hoặc bài tập</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const getLevelBadgeColor = (level: string) => {
@@ -357,48 +593,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
           ) : (
             <div className="space-y-4">
               {modules.map((module) => (
-                <div
-                  key={module.id}
-                  className="border rounded-lg p-4 bg-gray-50"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h4 className="font-medium text-base">{module.name}</h4>
-                      <div className="flex items-center gap-3 mt-2">
-                        {module.level && (
-                          <Badge
-                            className={getLevelBadgeColor(module.level)}
-                            variant="secondary"
-                          >
-                            <BarChart3 className="w-3 h-3 mr-1" />
-                            {module.level}
-                          </Badge>
-                        )}
-                        {module.durationInMinutes > 0 && (
-                          <span className="text-sm text-gray-600 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {module.durationInMinutes} min
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t">
-                    <div className="flex items-center gap-2 text-sm">
-                      <FileText className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-600">
-                        {module.lessonCount ?? 0} Bài học
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm">
-                      <FileText className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-600">
-                        {module.assignmentCount ?? 0} Bài tập
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <ModuleDetailCard key={module.id} module={module} />
               ))}
             </div>
           )}

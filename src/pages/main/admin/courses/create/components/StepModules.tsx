@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/select';
 import { useDeleteAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useReorderModuleMutation } from '@/features/courses/services/mutations';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useDeleteLessonMutation } from '@/features/lesson/services/mutations';
 import {
   useCreateModuleMutation,
@@ -69,8 +70,27 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
     : null;
 
   const { data: modulesQuery } = useGetModulesByCourseQuery(courseId ?? '');
+  const { data: courseDetail } = useGetCourseByIdQuery(courseId ?? '');
 
-  const modules = modulesQuery?.content ?? [];
+  // Sort modules based on courseDetail.orders
+  const modules = React.useMemo(() => {
+    const rawModules = modulesQuery?.content ?? [];
+    const orders = courseDetail?.orders ?? [];
+
+    if (orders.length === 0) return rawModules;
+
+    // Create a map of moduleId to order index
+    const orderMap = new Map(
+      orders.map((order, index) => [order.moduleId, index]),
+    );
+
+    // Sort modules based on the order map
+    return [...rawModules].sort((a, b) => {
+      const orderA = orderMap.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+      const orderB = orderMap.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    });
+  }, [modulesQuery?.content, courseDetail?.orders]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingModuleId, setEditingModuleId] = useState<string | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);

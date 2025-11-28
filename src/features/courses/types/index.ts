@@ -1,7 +1,7 @@
 import type { Module } from '@/features/modules/types';
 
 export interface Order {
-  id: string;
+  moduleId: string;
   type: string;
 }
 

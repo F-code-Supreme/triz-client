@@ -21,7 +21,9 @@ import React from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { useReorderAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useGetAssignmentsByModuleQuery } from '@/features/assignment/services/queries';
+import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import { useReorderLessonMutation } from '@/features/lesson/services/mutations';
 import { useGetLessonsByModuleQuery } from '@/features/lesson/services/queries';
 import { LessonKeys } from '@/features/lesson/services/queries/keys';
@@ -29,6 +31,7 @@ import { LessonKeys } from '@/features/lesson/services/queries/keys';
 import { AssignmentRow } from './AssignmentRow';
 import { LessonRow } from './LessonRow';
 
+import type { Assignment } from '@/features/assignment/services/queries/types';
 import type { Lesson } from '@/features/lesson/types';
 import type { Module } from '@/features/modules/types';
 
@@ -85,7 +88,50 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
   const { data: lessonsQuery } = useGetLessonsByModuleQuery(module.id);
   const lessons = lessonsQuery?.content;
   const { data: assignments } = useGetAssignmentsByModuleQuery(module.id);
-  const assignmentsList = assignments ? assignments.content : [];
+
+  // Sort lessons based on module.orders
+  const sortedLessons = React.useMemo(() => {
+    const rawLessons = Array.isArray(lessons) ? lessons : (lessons ?? []);
+    const orders = module.orders ?? [];
+
+    if (orders.length === 0) return rawLessons;
+
+    // Create a map of lessonId to order index (only for 'lesson' type)
+    const orderMap = new Map(
+      orders
+        .filter((order) => order.type === 'lesson')
+        .map((order, index) => [order.subsetId, index]),
+    );
+
+    // Sort lessons based on the order map
+    return [...rawLessons].sort((a, b) => {
+      const orderA = orderMap.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+      const orderB = orderMap.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    });
+  }, [lessons, module.orders]);
+
+  // Sort assignments based on module.orders
+  const sortedAssignments = React.useMemo(() => {
+    const rawAssignments = assignments ? assignments.content : [];
+    const orders = module.orders ?? [];
+
+    if (orders.length === 0) return rawAssignments;
+
+    // Create a map of assignmentId to order index (only for 'assignment' type)
+    const orderMap = new Map(
+      orders
+        .filter((order) => order.type === 'assignment')
+        .map((order, index) => [order.subsetId, index]),
+    );
+
+    // Sort assignments based on the order map
+    return [...rawAssignments].sort((a, b) => {
+      const orderA = orderMap.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+      const orderB = orderMap.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+      return orderA - orderB;
+    });
+  }, [assignments, module.orders]);
 
   // setup DnD sensors for lessons (local to module)
   const sensors = useSensors(
@@ -97,7 +143,9 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
 
   const queryClient = useQueryClient();
   const reorderLessonMutation = useReorderLessonMutation(module.id);
-  const lessonsList = Array.isArray(lessons) ? lessons : (lessons ?? []);
+  const reorderAssignmentMutation = useReorderAssignmentMutation(module.id);
+  const lessonsList = sortedLessons;
+  const assignmentsList = sortedAssignments;
 
   const handleLessonDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -154,6 +202,67 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
     );
   };
   const lessonsPending = reorderLessonMutation.isPending;
+
+  const handleAssignmentDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+    const activeId = String(active.id);
+    const overId = String(over.id);
+    if (activeId === overId) return;
+    if (reorderAssignmentMutation.isPending) return;
+
+    const oldIndex = assignmentsList.findIndex(
+      (a) => String(a.id) === activeId,
+    );
+    const newIndex = assignmentsList.findIndex((a) => String(a.id) === overId);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = arrayMove(assignmentsList, oldIndex, newIndex);
+    const assignmentQueryKey = [
+      AssignmentKeys.GetAssignmentsByModuleQuery,
+      module.id,
+    ];
+
+    // snapshot previous cache
+    const previous = queryClient.getQueryData(assignmentQueryKey);
+
+    // optimistic update: preserve original shape
+    queryClient.setQueryData(assignmentQueryKey, (oldData: Assignment) => {
+      if (!oldData) return reordered;
+      if (Array.isArray(oldData)) return reordered;
+      if (oldData && typeof oldData === 'object' && 'content' in oldData) {
+        return {
+          ...oldData,
+          content: reordered,
+        };
+      }
+      // fallback
+      return reordered;
+    });
+
+    // send string ids to backend
+    reorderAssignmentMutation.mutate(
+      reordered.map((a) => String(a.id)),
+      {
+        onError: (err: unknown) => {
+          // revert to previous snapshot
+          if (previous !== undefined) {
+            queryClient.setQueryData(assignmentQueryKey, previous);
+          } else {
+            queryClient.invalidateQueries({ queryKey: assignmentQueryKey });
+          }
+          let msg = 'Failed to reorder assignments';
+          if (err instanceof Error) msg = err.message;
+          else if (typeof err === 'string') msg = err;
+          toast.error(msg);
+        },
+        onSuccess: () => {
+          toast.success('Cập nhật thứ tự bài tập thành công');
+        },
+      },
+    );
+  };
+  const assignmentsPending = reorderAssignmentMutation.isPending;
 
   const renderEditForm = () =>
     editingModuleId === module.id && EditModuleForm ? (
@@ -258,20 +367,32 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
 
   const renderAssignments = () =>
     assignmentsList && assignmentsList.length > 0 ? (
-      <div className="bg-white rounded-md border overflow-hidden">
-        {assignmentsList.map((assignment) => (
-          <AssignmentRow
-            key={assignment.id}
-            assignment={assignment}
-            moduleId={module.id}
-            onEdit={onEditAssignment}
-            onView={onViewAssignment}
-            onDelete={(assignmentId) =>
-              onDeleteAssignment?.(assignmentId, module.id)
-            }
-          />
-        ))}
-      </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleAssignmentDragEnd}
+      >
+        <SortableContext
+          items={assignmentsList.map((a) => String(a.id))}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="bg-white rounded-md border overflow-hidden">
+            {assignmentsList.map((assignment) => (
+              <AssignmentRow
+                key={assignment.id}
+                assignment={assignment}
+                moduleId={module.id}
+                onEdit={onEditAssignment}
+                onView={onViewAssignment}
+                onDelete={(assignmentId) =>
+                  onDeleteAssignment?.(assignmentId, module.id)
+                }
+                disabled={disabled || assignmentsPending}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
     ) : null;
 
   return (
