@@ -38,6 +38,7 @@ import {
 import { roleColors } from '@/features/user/components/users-columns';
 import { useGetUserByIdQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
+import { formatTrizilium } from '@/utils';
 
 const pageTitle = 'User Details';
 
@@ -363,7 +364,7 @@ const AdminUserDetailPage = () => {
                     {walletLoading
                       ? 'Loading...'
                       : walletData
-                        ? `${walletData.balance.toLocaleString()} VND`
+                        ? formatTrizilium(walletData.balance)
                         : 'N/A'}
                   </p>
                 </div>

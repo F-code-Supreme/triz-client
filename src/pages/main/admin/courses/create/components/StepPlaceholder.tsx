@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { formatTrizilium } from '@/utils';
 
 type Props = {
   goBack: () => void;
@@ -181,19 +182,11 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                   <div className="text-right ml-4">
                     <p className="text-sm text-gray-500 mb-1">Giá khóa học</p>
                     <p className="text-3xl font-bold text-green-600">
-                      {new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
-                        maximumFractionDigits: 0,
-                      }).format(course.price)}
+                      {formatTrizilium(course.price)}
                     </p>
                     {course.dealPrice && course.dealPrice < course.price && (
                       <p className="text-sm text-gray-400 line-through">
-                        {new Intl.NumberFormat('vi-VN', {
-                          style: 'currency',
-                          currency: 'VND',
-                          maximumFractionDigits: 0,
-                        }).format(course.dealPrice)}
+                        {formatTrizilium(course.dealPrice)}
                       </p>
                     )}
                   </div>
