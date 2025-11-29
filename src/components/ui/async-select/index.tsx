@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -17,6 +16,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useDebounce } from '@/hooks';
+import { cn } from '@/lib/utils';
 
 export interface Option {
   value: string;
@@ -65,6 +65,7 @@ export interface AsyncSelectProps<T> {
   clearable?: boolean;
 }
 
+// eslint-disable-next-line react/function-component-definition
 export function AsyncSelect<T>({
   fetcher,
   preload,
@@ -259,7 +260,7 @@ export function AsyncSelect<T>({
   );
 }
 
-function DefaultLoadingSkeleton() {
+const DefaultLoadingSkeleton = () => {
   return (
     <CommandGroup>
       {[1, 2, 3].map((i) => (
@@ -275,4 +276,4 @@ function DefaultLoadingSkeleton() {
       ))}
     </CommandGroup>
   );
-}
+};

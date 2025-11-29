@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { AsyncSelect } from '@/components/ui/async-select';
 import { Badge } from '@/components/ui/badge';
 import { BarChart, LineChart } from '@/components/ui/chart';
 import {
@@ -16,7 +17,6 @@ import { PeriodFilter } from './period-filter';
 import { StatCard } from './stat-card';
 
 import type { DashboardData, GameStats } from '../types';
-import { AsyncSelect } from '@/components/ui/async-select';
 
 interface GameSectionProps {
   data: DashboardData['games'];
