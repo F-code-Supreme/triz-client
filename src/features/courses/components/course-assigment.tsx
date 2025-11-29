@@ -7,7 +7,7 @@ import {
   AlertCircle,
   History,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 
@@ -56,7 +56,6 @@ const CourseAssignment = ({
   maxAttempts,
 }: CourseAssignmentProps) => {
   const [answer, setAnswer] = useState<Content>('');
-  const [attemptCount, setAttemptCount] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
 
   const { user } = useAuth();
@@ -66,6 +65,14 @@ const CourseAssignment = ({
     useSubmitAssignmentMutation();
   const { data: submissionHistory, isLoading: isLoadingHistory } =
     useGetAssignmentSubmissionHistoryQuery(user?.id, assignmentId);
+
+  const [attemptCount, setAttemptCount] = useState(0);
+
+  useEffect(() => {
+    if (submissionHistory?.content) {
+      setAttemptCount(submissionHistory.content.length);
+    }
+  }, [submissionHistory, moduleId]);
 
   const formatDuration = (minutes: number) => {
     if (!minutes) return '';
@@ -93,7 +100,6 @@ const CourseAssignment = ({
         onSuccess: () => {
           toast.success('Assignment submitted successfully!');
           setAttemptCount((prev) => prev + 1);
-          // Invalidate history query to refresh submission history
           queryClient.invalidateQueries({
             queryKey: [
               AssignmentKeys.GetAssignmentSubmissionHistoryQuery,
@@ -113,7 +119,6 @@ const CourseAssignment = ({
   };
 
   const canSubmit = attemptCount < maxAttempts;
-  const remainingAttempts = maxAttempts - attemptCount;
 
   if (isLoading) {
     return (
@@ -157,18 +162,14 @@ const CourseAssignment = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="flex items-center gap-1 cursor-help">
-                        <AlertCircle className="w-4 h-4" />
-                        {remainingAttempts} attempt
-                        {remainingAttempts !== 1 && 's'} left
+                      <span
+                        className={`flex items-center gap-1 cursor-help ${attemptCount === maxAttempts ? 'text-red-600' : ''}`}
+                      >
+                        <AlertCircle className={`w-4 h-4 `} />
+                        {attemptCount}/{maxAttempts} attempt
+                        {maxAttempts !== 1 && 's'}
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        You have {remainingAttempts} out of {maxAttempts}{' '}
-                        attempts remaining
-                      </p>
-                    </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>

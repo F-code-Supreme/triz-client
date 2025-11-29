@@ -27,10 +27,6 @@ const CourseList = ({
       }
     }
 
-    if (filters?.status && course.status !== filters.status) {
-      return false;
-    }
-
     if (filters?.level && course.level !== filters.level) {
       return false;
     }
@@ -65,10 +61,7 @@ const CourseList = ({
         </div>
         <h3 className="text-lg font-semibold mb-2">No courses found</h3>
         <p className="text-muted-foreground">
-          {filters?.search ||
-          filters?.status ||
-          filters?.category ||
-          filters?.level
+          {filters?.search || filters?.level
             ? 'Try adjusting your filters to see more courses.'
             : "You haven't enrolled in any courses yet."}
         </p>

@@ -3,7 +3,7 @@ import {
   PieChart as RechartsPieChart,
   Cell,
   Tooltip,
-  Legend,
+  // Legend,
   ResponsiveContainer,
 } from 'recharts';
 
@@ -47,8 +47,36 @@ export const PieChart = ({
   innerRadius = 0,
   outerRadius = 100,
 }: PieChartProps) => {
-  const renderLabel = (entry: any) => {
-    return `${entry.name}: ${entry.value}`;
+  // const renderLabel = (entry: any) => {
+  //   return `${entry.name}: ${entry.value}`;
+  // };
+
+  const renderLabel = (props: any) => {
+    const { cx, cy, midAngle, outerRadius, name, value, index } = props;
+    const RADIAN = Math.PI / 180;
+
+    const labelRadius = outerRadius + 24;
+    const x = cx + labelRadius * Math.cos(-midAngle * RADIAN);
+    const y = cy + labelRadius * Math.sin(-midAngle * RADIAN);
+
+    const labelColor = colors[index % colors.length];
+
+    const labelText = `${name}: ${value}`;
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={labelColor}
+        textAnchor={x > cx ? 'start' : 'end'}
+        dominantBaseline="central"
+        fontSize={12}
+        overflow="visible"
+        fontWeight={500}
+      >
+        {labelText}
+      </text>
+    );
   };
 
   return (
@@ -87,7 +115,7 @@ export const PieChart = ({
                 borderRadius: 'var(--radius)',
               }}
             />
-            <Legend />
+            {/* <Legend /> */}
           </RechartsPieChart>
         </ResponsiveContainer>
       </CardContent>

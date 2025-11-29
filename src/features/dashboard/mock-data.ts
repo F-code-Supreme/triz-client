@@ -480,6 +480,7 @@ export const mockDashboardData: DashboardData = {
         plays: 7800,
         averageScore: 7650,
         completionRate: 75.8,
+        averageTimePlay: 12.5,
       },
       {
         id: 'game-2',
@@ -487,6 +488,7 @@ export const mockDashboardData: DashboardData = {
         plays: 6500,
         averageScore: 7100,
         completionRate: 71.5,
+        averageTimePlay: 15.2,
       },
       {
         id: 'game-3',
@@ -494,6 +496,7 @@ export const mockDashboardData: DashboardData = {
         plays: 5600,
         averageScore: 8200,
         completionRate: 79.3,
+        averageTimePlay: 18.7,
       },
       {
         id: 'game-4',
@@ -501,6 +504,7 @@ export const mockDashboardData: DashboardData = {
         plays: 4900,
         averageScore: 6850,
         completionRate: 68.2,
+        averageTimePlay: 10.3,
       },
       {
         id: 'game-5',
@@ -508,6 +512,7 @@ export const mockDashboardData: DashboardData = {
         plays: 3700,
         averageScore: 6400,
         completionRate: 64.5,
+        averageTimePlay: 8.9,
       },
     ],
     topPlayers: [
@@ -546,6 +551,7 @@ export const mockDashboardData: DashboardData = {
       plays: 7800,
       averageScore: 7650,
       completionRate: 75.8,
+      averageTimePlay: 12.5,
     },
   },
   chat: {

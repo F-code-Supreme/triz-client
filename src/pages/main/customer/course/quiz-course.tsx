@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearch } from '@tanstack/react-router';
+import { Link, useSearch } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -43,7 +43,6 @@ import { cn } from '@/lib/utils';
 const CourseQuizPage = () => {
   const search = useSearch({ from: `/(app)/course/quiz/$slug` });
   const { id: moduleId } = search as { id: string };
-  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
@@ -508,7 +507,7 @@ const CourseQuizPage = () => {
               Retake Quiz
             </Button>
             <Button
-              onClick={() => navigate({ to: '/course/my-course' })}
+              onClick={() => window.history.back()}
               variant="outline"
               className="flex-1"
             >
@@ -547,12 +546,6 @@ const CourseQuizPage = () => {
                   {formatTime(timeRemaining)}
                 </span>
               </div>
-              <Button
-                onClick={handleSubmitQuiz}
-                disabled={answeredCount !== quizData.questions.length}
-              >
-                Submit Quiz
-              </Button>
             </div>
           </div>
         </div>

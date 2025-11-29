@@ -109,9 +109,6 @@ const CourseOverviewPage = () => {
                   <Badge className={`text-xs ${getLevelColor(course.level)}`}>
                     {course.level || 'Unknown'}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {course.status || 'Unknown'}
-                  </Badge>
                 </div>
                 <h1 className="text-3xl font-bold text-foreground mb-2">
                   {course.title}
