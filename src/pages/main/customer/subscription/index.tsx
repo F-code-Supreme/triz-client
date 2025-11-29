@@ -1,3 +1,4 @@
+import { useNavigate } from '@tanstack/react-router';
 import {
   getCoreRowModel,
   useReactTable,
@@ -5,7 +6,7 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
-import { AlertCircle, X } from 'lucide-react';
+import { AlertCircle, ArrowRight, X } from 'lucide-react';
 import { useState, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
 
@@ -50,6 +51,7 @@ import type { Subscription } from '@/features/subscription/types';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const SubscriptionPage = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -155,11 +157,23 @@ const SubscriptionPage = () => {
     <DefaultLayout meta={{ title: 'My Subscription' }}>
       <div className="space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Subscription</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your subscription and view subscription history
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              My Subscription
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Manage your subscription and view subscription history
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            onClick={() => navigate({ to: '/refund' })}
+            className="gap-2"
+          >
+            <ArrowRight className="h-4 w-4" />
+            Request Refund
+          </Button>
         </div>
 
         {/* Active Subscription Card */}

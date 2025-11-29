@@ -5,7 +5,7 @@ import {
   BookOpen,
   Wallet,
   CalendarSync,
-  Zap,
+  Gem,
 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +39,7 @@ import useLogout from '@/features/auth/hooks/use-logout';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { formatTriziliumShort } from '@/utils';
 
 import { ThemeSwitcher } from './shadcn-io/theme-switcher';
 import { useTheme } from '../theme/theme-provider';
@@ -373,9 +374,9 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                 <div className="hidden sm:flex items-center space-x-4">
                   {/* Token Count Display */}
                   <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
-                    <Zap className="h-4 w-4 text-secondary" />
+                    <Gem className="h-4 w-4 text-secondary" />
                     <span className="text-sm font-medium">
-                      {(wallet?.balance ?? 0).toLocaleString()}
+                      {formatTriziliumShort(wallet?.balance || 0)}
                     </span>
                   </div>
                   {/* User Dropdown Menu */}

@@ -6,6 +6,7 @@ import {
   // Legend,
   ResponsiveContainer,
 } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -28,7 +29,7 @@ interface PieChartProps {
   outerRadius?: number;
 }
 
-export function PieChart({
+export const PieChart = ({
   data,
   title,
   description,
@@ -45,7 +46,7 @@ export function PieChart({
   showLabel = true,
   innerRadius = 0,
   outerRadius = 100,
-}: PieChartProps) {
+}: PieChartProps) => {
   // const renderLabel = (entry: any) => {
   //   return `${entry.name}: ${entry.value}`;
   // };
@@ -120,9 +121,9 @@ export function PieChart({
       </CardContent>
     </Card>
   );
-}
+};
 
 // Donut Chart variant
-export function DonutChart(props: Omit<PieChartProps, 'innerRadius'>) {
+export const DonutChart = (props: Omit<PieChartProps, 'innerRadius'>) => {
   return <PieChart {...props} innerRadius={60} />;
-}
+};

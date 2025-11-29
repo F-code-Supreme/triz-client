@@ -1,6 +1,8 @@
+import { PieChart } from '@/components/ui/chart';
+
 import { DashboardSection, ChartCard } from './dashboard-section';
 import { StatCard } from './stat-card';
-import { PieChart } from '@/components/ui/chart';
+
 import type { DashboardData } from '../types';
 
 interface ChatForumSectionProps {

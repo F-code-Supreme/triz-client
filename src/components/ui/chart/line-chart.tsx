@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -29,14 +30,14 @@ interface LineChartProps {
   height?: number;
 }
 
-export function LineChart({
+export const LineChart = ({
   data,
   xKey,
   lines,
   title,
   description,
   height = 350,
-}: LineChartProps) {
+}: LineChartProps) => {
   const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1'];
 
   return (
@@ -86,4 +87,4 @@ export function LineChart({
       </CardContent>
     </Card>
   );
-}
+};

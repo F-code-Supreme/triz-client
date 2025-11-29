@@ -85,8 +85,8 @@ export const useReorderAssignmentMutation = (moduleId: string) => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (assignmentIds: string[]) => {
-      const payload = assignmentIds.map((id) => ({
-        id,
+      const payload = assignmentIds.map((subsetId) => ({
+        subsetId,
         type: 'assignment',
       }));
 

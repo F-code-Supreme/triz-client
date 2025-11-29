@@ -85,8 +85,8 @@ export const useReorderLessonMutation = (moduleId: string) => {
 
   return useMutation({
     mutationFn: async (lessonIds: string[]) => {
-      const payload = lessonIds.map((id) => ({
-        id,
+      const payload = lessonIds.map((subsetId) => ({
+        subsetId,
         type: 'lesson',
       }));
 

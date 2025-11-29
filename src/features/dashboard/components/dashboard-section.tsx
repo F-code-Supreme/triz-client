@@ -5,7 +5,8 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { ReactNode } from 'react';
+
+import type { ReactNode } from 'react';
 
 interface DashboardSectionProps {
   title: string;

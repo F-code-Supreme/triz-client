@@ -164,10 +164,6 @@
     "vite": "^6.1.0",
     "vitest": "^3.0.5"
   },
-  "optionalDependencies": {
-    "@rollup/rollup-darwin-arm64": "^4.53.3",
-    "@rollup/rollup-linux-x64-gnu": "^4.53.3"
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",

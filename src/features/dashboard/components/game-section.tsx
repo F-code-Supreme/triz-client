@@ -1,6 +1,6 @@
-import { DashboardSection, ChartCard } from './dashboard-section';
-import { StatCard } from './stat-card';
-import { PeriodFilter } from './period-filter';
+import { useState } from 'react';
+
+import { Badge } from '@/components/ui/badge';
 import { BarChart, LineChart } from '@/components/ui/chart';
 import {
   Table,
@@ -10,9 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+
+import { DashboardSection, ChartCard } from './dashboard-section';
+import { PeriodFilter } from './period-filter';
+import { StatCard } from './stat-card';
+
 import type { DashboardData, GameStats } from '../types';
-import { useState } from 'react';
 import { AsyncSelect } from '@/components/ui/async-select';
 
 interface GameSectionProps {
