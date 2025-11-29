@@ -16,7 +16,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useQueryClient } from '@tanstack/react-query';
-import { GripVertical, MoreHorizontalIcon, Pencil, Plus } from 'lucide-react';
+import { ChevronDown, GripVertical, Pencil, Plus } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
@@ -325,7 +325,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" aria-label="Open menu">
-                <MoreHorizontalIcon />
+                <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
