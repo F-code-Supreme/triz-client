@@ -78,7 +78,7 @@ export const CourseStatusBadge: React.FC<{
 
   return (
     <div
-      className={`inline-flex items-center gap-2 rounded-full px-2 py-0.5 text-xs font-semibold ${meta.bgClass} ${meta.textClass} ${className}`}
+      className={`inline-flex items-center gap-2 rounded-full px-2 py-0.5 text-[10px] font-semibold ${meta.bgClass} ${meta.textClass} ${className}`}
       title={meta.description}
     >
       <Icon className="h-3.5 w-3.5 opacity-90" />

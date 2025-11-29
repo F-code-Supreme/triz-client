@@ -199,7 +199,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
           </Button>
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
-            <span className="font-medium text-sm">ChatTriz</span>
+            <span className="font-medium text-sm">Chat Triz</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
