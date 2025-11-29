@@ -1,5 +1,5 @@
 export function formatDuration(minutes?: number | null): string {
-  if (minutes == null) return '0 phút';
+  if (minutes === null) return '0 phút';
   const mins = Math.max(0, Math.floor(Number(minutes) || 0));
 
   if (mins >= 60) {

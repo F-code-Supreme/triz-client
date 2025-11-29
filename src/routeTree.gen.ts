@@ -57,7 +57,7 @@ import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$qui
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
-import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz.$slug/route'
+import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
