@@ -36,6 +36,7 @@ import {
 import { Response } from '@/components/ui/shadcn-io/ai/response';
 import { STRING_EMPTY } from '@/constants';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { useGetMeQuery } from '@/features/auth/services/queries';
 import { useChatMutation } from '@/features/chat-triz/services/mutations';
 import { useGetConversationQuery } from '@/features/conversation/services/queries';
 import { useConversationsQueryStore } from '@/features/conversation/store/use-conversations-query-store';
@@ -67,6 +68,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
     useConversationsQueryStore();
 
   const { user } = useAuth();
+  const { data: userData } = useGetMeQuery();
 
   const { isRecording, startRecording } = useAudioRecorderStore();
 
@@ -244,8 +246,8 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
                   <MessageAvatar
                     src={
                       message.role === 'USER'
-                        ? 'https://github.com/dovazencot.png'
-                        : 'https://github.com/vercel.png'
+                        ? userData?.avatarUrl || '/logo.svg'
+                        : '/chatbot.svg'
                     }
                     name={message.role === 'USER' ? 'User' : 'AI'}
                   />
