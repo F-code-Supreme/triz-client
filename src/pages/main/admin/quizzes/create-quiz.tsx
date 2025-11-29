@@ -67,10 +67,11 @@ const CreateQuizDialog = ({
     }
 
     try {
-      await createQuizMutation.mutateAsync({
-        ...form,
-        questions,
-      });
+      // await createQuizMutation.mutateAsync({
+      //   ...form,
+
+      //   questions,
+      // });
 
       toast.success('Quiz created successfully');
       setOpen(false);

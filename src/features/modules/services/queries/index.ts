@@ -33,6 +33,7 @@ export const useGetModuleByCourseQuery = (courseId: string) => {
       );
       return response.data.content;
     },
+    enabled: !!courseId,
   });
 };
 export const useGetModulesByCourseQuery = (courseId: string) => {
