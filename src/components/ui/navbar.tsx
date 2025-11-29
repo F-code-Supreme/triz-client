@@ -6,6 +6,11 @@ import {
   Wallet,
   CalendarSync,
   CircleDollarSign,
+  GraduationCap,
+  BookCheck,
+  Lightbulb,
+  Grid3x3,
+  Gamepad2,
 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -54,6 +59,7 @@ export interface Navbar03NavItem {
 export interface LearnTrizNavItem {
   href: string;
   labelKey: string;
+  icon: React.ElementType;
 }
 
 export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
@@ -79,11 +85,12 @@ const MAIN_NAV_LINKS = (t: (key: string) => string): Navbar03NavItem[] => [
 
 // Configuration for Learn TRIZ dropdown links
 const LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
-  { href: '/course', labelKey: 'learn_triz.course' },
-  { href: '/books', labelKey: 'learn_triz.books' },
-  { href: '/learn-triz', labelKey: 'learn_triz.index' },
-  { href: '/matrix-triz', labelKey: 'learn_triz.matrix' },
-  { href: '/quiz', labelKey: 'learn_triz.quiz' },
+  { href: '/course', labelKey: 'learn_triz.course', icon: GraduationCap },
+  { href: '/games', labelKey: 'learn_triz.games', icon: Gamepad2 },
+  { href: '/books', labelKey: 'learn_triz.books', icon: BookOpen },
+  { href: '/learn-triz', labelKey: 'learn_triz.index', icon: Lightbulb },
+  { href: '/matrix-triz', labelKey: 'learn_triz.matrix', icon: Grid3x3 },
+  { href: '/quiz', labelKey: 'learn_triz.quiz', icon: BookCheck },
 ];
 
 // Active link styling
@@ -180,17 +187,21 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         <div className="px-3 py-1 text-xs font-semibold text-muted-foreground">
                           {t('learn_triz')}
                         </div>
-                        {learnTrizNavLinks.map((link, index) => (
-                          <NavigationMenuItem key={index} className="w-full">
-                            <Link
-                              to={link.href}
-                              className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline pl-6"
-                            >
-                              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                              {t(link.labelKey as any)}
-                            </Link>
-                          </NavigationMenuItem>
-                        ))}
+                        {learnTrizNavLinks.map((link, index) => {
+                          const Icon = link.icon;
+                          return (
+                            <NavigationMenuItem key={index} className="w-full">
+                              <Link
+                                to={link.href}
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline pl-6"
+                              >
+                                <Icon className="mr-2 h-4 w-4" />
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {t(link.labelKey as any)}
+                              </Link>
+                            </NavigationMenuItem>
+                          );
+                        })}
                       </div>
                       <div className="w-full border-t">
                         {isAuthenticated ? (
@@ -331,21 +342,27 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
                       <ul className="grid w-[200px] gap-3 p-4">
-                        {learnTrizNavLinks.map((link, index) => (
-                          <li key={index}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                to={link.href}
-                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                              >
-                                <div className="text-sm font-medium leading-none">
-                                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                  {t(link.labelKey as any)}
-                                </div>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
-                        ))}
+                        {learnTrizNavLinks.map((link, index) => {
+                          const Icon = link.icon;
+                          return (
+                            <li key={index}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to={link.href}
+                                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <Icon className="h-4 w-4" />
+                                    <div className="text-sm font-medium leading-none">
+                                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                      {t(link.labelKey as any)}
+                                    </div>
+                                  </div>
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
