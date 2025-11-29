@@ -1,6 +1,6 @@
 interface Order {
-  id: string;
-  type: 'lesson' | 'assignment' | 'quiz';
+  subsetId: string;
+  type: 'lesson' | 'assignment';
 }
 
 export interface Module {

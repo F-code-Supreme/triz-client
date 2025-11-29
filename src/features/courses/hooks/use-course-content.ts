@@ -80,7 +80,7 @@ export const useCourseContent = ({
         // Sort contents based on module.orders
         if (module.orders && Array.isArray(module.orders)) {
           contents.forEach((item) => {
-            const orderInfo = module.orders.find((o) => o.id === item.id);
+            const orderInfo = module.orders.find((o) => o.subsetId === item.id);
             if (orderInfo) {
               item.order = module.orders.indexOf(orderInfo);
             }

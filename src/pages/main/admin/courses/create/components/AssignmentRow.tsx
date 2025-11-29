@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Paperclip, Eye, Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
 
@@ -12,6 +14,7 @@ type AssignmentRowProps = {
   onEdit?: (assignmentId: string, moduleId: string) => void;
   onView?: (assignmentId: string, moduleId: string) => void;
   onDelete?: (assignmentId: string) => void;
+  disabled?: boolean;
 };
 
 export const AssignmentRow: React.FC<AssignmentRowProps> = ({
@@ -20,12 +23,50 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
   onEdit,
   onView,
   onDelete,
+  disabled = false,
 }) => {
+  // ensure sortable id is string so it matches SortableContext items
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: String(assignment.id), disabled });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   return (
-    <div className="flex items-center border-b last:border-b-0 hover:bg-gray-50">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center border-b last:border-b-0 hover:bg-gray-50"
+    >
       {/* Drag handle */}
       <div className="flex items-center justify-center w-[72px] h-14 border-r">
-        <GripVertical className="h-4 w-4 text-gray-400" />
+        <button
+          className={
+            disabled
+              ? 'cursor-not-allowed opacity-60'
+              : 'cursor-grab active:cursor-grabbing touch-none'
+          }
+          {...(disabled ? {} : attributes)}
+          {...(disabled ? {} : listeners)}
+          aria-disabled={disabled}
+          type="button"
+          title={disabled ? 'Reordering disabled' : 'Drag to reorder'}
+        >
+          {disabled ? (
+            <span className="inline-block w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <GripVertical className="h-4 w-4 text-gray-400" />
+          )}
+        </button>
       </div>
 
       {/* Assignment number */}

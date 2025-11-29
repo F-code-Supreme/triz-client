@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 
 import { LinkBubbleMenu } from './components/bubble-menu/link-bubble-menu';
 import { MeasuredContainer } from './components/measured-container';
-import { SectionFive } from './components/section/five';
 import { SectionFour } from './components/section/four';
 import { SectionOne } from './components/section/one';
 import { SectionThree } from './components/section/three';
@@ -60,12 +59,6 @@ const Toolbar = ({ editor }: { editor: Editor }) => (
       />
 
       <Separator orientation="vertical" className="mx-2" />
-
-      <SectionFive
-        editor={editor}
-        activeActions={['codeBlock', 'blockquote', 'horizontalRule']}
-        mainActionCount={0}
-      />
     </div>
   </div>
 );

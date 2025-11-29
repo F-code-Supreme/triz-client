@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectTrigger,
@@ -14,6 +15,10 @@ import {
   useCreateCourseMutation,
   useUpdateCourseMutation,
 } from '@/features/courses/services/mutations';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { useUploadFileMutation } from '@/features/media/services/mutations';
+
+import type { Course } from '@/features/courses/types';
 
 type Errors = {
   title?: string;
@@ -56,9 +61,13 @@ const StepBasic: React.FC<Props> = ({
   const [thumbnailUrl, setThumbnailUrl] = useState<string>(
     thumbnailPreview ?? '',
   );
+  const uploadFile = useUploadFileMutation();
   const [localErrors, setLocalErrors] = useState<Errors>({});
   const [existingCourseId, setExistingCourseId] = useState<string | null>(null);
+  const [draftId, setDraftId] = useState<string | null>(null);
 
+  const { data: existingCourse } = useGetCourseByIdQuery(draftId ?? undefined);
+  const [serverPopulated, setServerPopulated] = useState<boolean>(false);
   const createCourse = useCreateCourseMutation();
   const updateCourse = useUpdateCourseMutation(existingCourseId ?? '');
 
@@ -71,9 +80,10 @@ const StepBasic: React.FC<Props> = ({
       if (!saved) return;
 
       const id = typeof saved.id === 'string' && saved.id ? saved.id : null;
+      // If there's an id, defer restoring until we verify the server has the course.
       if (id) {
-        setExistingCourseId(id);
-        if (setCourseId) setCourseId(id);
+        setDraftId(id);
+        return;
       }
 
       const payload = (saved.payload ?? saved) as Record<string, unknown>;
@@ -111,12 +121,38 @@ const StepBasic: React.FC<Props> = ({
       // ignore parse errors
     }
   };
-
   useEffect(() => {
     restoreDraft();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // When we receive an existing course from the server (queried by draftId),
+  // populate the form fields from that server response exactly once.
+  useEffect(() => {
+    if (!existingCourse) return;
+    if (serverPopulated) return;
+
+    setExistingCourseId(existingCourse.id as string);
+    setCourseId?.(existingCourse.id as string);
+    setTitle(existingCourse.title ?? '');
+    setDescription(existingCourse.description ?? '');
+    setDurationInMinutes(existingCourse.durationInMinutes ?? 60);
+    setLevel((existingCourse.level as any) ?? 'STARTER');
+    setPrice(existingCourse.price ?? 0);
+    setPriceDisplay(String(existingCourse.price ?? 0));
+    setDealPrice(existingCourse.dealPrice ?? 0);
+    setDealPriceDisplay(String(existingCourse.dealPrice ?? 0));
+    setThumbnailUrl(existingCourse.thumbnailUrl ?? '');
+
+    try {
+      localStorage.removeItem('createCourseDraft_v1');
+    } catch {
+      // ignore
+    }
+
+    setServerPopulated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [existingCourse]);
   const validate = () => {
     const e: Errors = {};
     if (!title.trim()) e.title = 'Tiêu đề là bắt buộc';
@@ -158,25 +194,13 @@ const StepBasic: React.FC<Props> = ({
       : 'Khóa học đã được tạo thành công, tiếp tục bước tiếp theo.';
 
     mutation.mutate(payload, {
-      onSuccess: (res: unknown) => {
-        let id: string | undefined = existingCourseId ?? undefined;
-
-        // If creating new course, extract ID from response
-        if (!existingCourseId && typeof res === 'object' && res !== null) {
-          const maybeId = (res as Record<string, unknown>).id;
-          if (typeof maybeId === 'string') {
-            id = maybeId;
-          }
-        }
-
-        if (id && setCourseId) setCourseId(id);
-
+      onSuccess: (res) => {
+        const response = res as Course;
         localStorage.setItem(
           'createCourseDraft_v1',
-          JSON.stringify({ payload, id }),
+          JSON.stringify({ payload, id: response.id as string }),
         );
         toast.success(successMessage);
-
         goNext();
       },
       onError: (error: unknown) => {
@@ -205,18 +229,49 @@ const StepBasic: React.FC<Props> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Thumbnail */}
         <div className="col-span-1">
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-700">
             Ảnh đại diện khóa học <span className="text-red-500">*</span>
           </label>
-          <input
-            required
-            type="text"
-            value={thumbnailUrl}
-            onChange={(e) => setThumbnailUrl(e.target.value)}
-            placeholder="https://example.com/image.jpg hoặc URL dữ liệu"
-            className="mt-1 block w-full rounded-md border px-3 py-2"
-            disabled={loading}
-          />
+
+          <div className="mt-1 flex items-center gap-2">
+            <Input
+              id="picture"
+              type="file"
+              accept="image/*"
+              placeholder="Chọn ảnh cho khóa học"
+              onChange={(e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (!file) return;
+                // uploadFile expects an object payload with `file` property
+                uploadFile.mutate(
+                  { file },
+                  {
+                    onSuccess: (res: {
+                      flag: boolean;
+                      code: number;
+                      data: string;
+                    }) => {
+                      if (res.code === 200) {
+                        setThumbnailUrl(res.data);
+                      }
+                      toast.success('Tải ảnh lên thành công');
+                    },
+                    onError: () => {
+                      toast.error('Tải ảnh lên thất bại. Vui lòng thử lại.');
+                    },
+                  },
+                );
+              }}
+              disabled={loading || uploadFile.isPending}
+            />
+
+            {uploadFile.progress > 0 && uploadFile.isPending && (
+              <div className="text-sm text-muted-foreground">
+                {uploadFile.progress}%
+              </div>
+            )}
+          </div>
+
           {thumbnailUrl && (
             <div className="mt-2 w-full h-64 overflow-hidden rounded-md border bg-white">
               <img
@@ -229,6 +284,7 @@ const StepBasic: React.FC<Props> = ({
               />
             </div>
           )}
+
           {(errors.thumbnail || localErrors.thumbnail) && (
             <p className="text-sm text-red-600 mt-2">
               {errors.thumbnail ?? localErrors.thumbnail}
