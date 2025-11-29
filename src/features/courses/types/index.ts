@@ -138,7 +138,8 @@ export interface LessonContentItem extends BaseContentItem {
   lessonData: {
     id: string;
     name: string;
-    materialUrl: string;
+    videoUrl?: string;
+    content?: string;
     createdAt: string;
     updatedAt: string;
     moduleId: string;
@@ -255,7 +256,8 @@ export interface LessonContentItem extends BaseContentItem {
   lessonData: {
     id: string;
     name: string;
-    materialUrl: string;
+    videoUrl?: string;
+    content?: string;
     createdAt: string;
     updatedAt: string;
     moduleId: string;

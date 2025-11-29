@@ -18,11 +18,10 @@ import type { Editor } from '@tiptap/react';
 import type { VariantProps } from 'class-variance-authority';
 
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
-interface TextStyle
-  extends Omit<
-    FormatAction,
-    'value' | 'icon' | 'action' | 'isActive' | 'canExecute'
-  > {
+interface TextStyle extends Omit<
+  FormatAction,
+  'value' | 'icon' | 'action' | 'isActive' | 'canExecute'
+> {
   element: keyof React.JSX.IntrinsicElements;
   level?: Level;
   className: string;

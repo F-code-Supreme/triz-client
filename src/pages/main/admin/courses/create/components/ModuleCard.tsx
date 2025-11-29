@@ -324,8 +324,8 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" aria-label="Open menu">
-                <ChevronDown />
+              <Button variant="ghost" aria-label="Open menu" size="sm">
+                + Thêm <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">

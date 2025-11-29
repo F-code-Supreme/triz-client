@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  PlayCircle,
   FileText,
   PenTool,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Newspaper,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -50,7 +50,7 @@ const CourseSidebar = ({
   const getItemIcon = (type: string) => {
     switch (type) {
       case 'lesson':
-        return PlayCircle;
+        return Newspaper;
       case 'quiz':
         return PenTool;
       case 'assignment':

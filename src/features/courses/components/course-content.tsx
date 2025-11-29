@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 import CourseAssignment from './course-assigment';
-import video from '../../../assets/images/clip5.1.mp4';
 
 import type { ModuleContentItem } from '../types';
 
@@ -64,17 +63,17 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'lesson':
         // eslint-disable-next-line no-case-declarations
         const lessonData = item.lessonData;
-        // const isVideo =
-        //   lessonData.materialUrl?.includes('video') ||
-        //   lessonData.materialUrl?.includes('.mp4') ||
-        //   lessonData.materialUrl?.includes('.webm');
         // eslint-disable-next-line no-case-declarations
-        const isPDF = lessonData.materialUrl?.includes('.pdf');
+        const isVideo =
+          lessonData.videoUrl?.includes('video') ||
+          lessonData.videoUrl?.includes('.mp4') ||
+          lessonData.videoUrl?.includes('.webm');
+        // eslint-disable-next-line no-case-declarations
 
         return (
           <div className="space-y-6">
             {/* Video Player */}
-            {/* {isVideo && (
+            {isVideo && (
               <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
                 {isVideoLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -89,41 +88,19 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                   controls
                   onLoadedData={() => setIsVideoLoading(false)}
                 >
-                  <source src={lessonData.materialUrl} type="video/mp4" />
+                  <source src={lessonData.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
-            )} */}
-
-            {/* test */}
-            <div className="relative rounded-lg overflow-hidden">
-              {isVideoLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                  <div className="text-center">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Loading video...</p>
-                  </div>
-                </div>
-              )}
-              <video
-                className="w-3/4 h-full mx-auto rounded-lg"
-                controls
-                onLoadedData={() => setIsVideoLoading(false)}
-              >
-                <source src={video} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
+            )}
 
             {/* PDF Viewer */}
-            {isPDF && (
-              <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
-                <iframe
-                  src={lessonData.materialUrl}
-                  className="w-full h-full"
-                  title={lessonData.name}
-                />
-              </div>
+            {lessonData?.content && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: lessonData.content,
+                }}
+              />
             )}
 
             {/* {!isVideo && !isPDF && (
@@ -213,7 +190,6 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'assignment':
         // eslint-disable-next-line no-case-declarations
         const assignmentData = item.assignmentData;
-        console.log('Assignment Data:', assignmentData);
         return (
           <CourseAssignment
             moduleId={assignmentData.moduleId}
