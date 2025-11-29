@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { useDeleteCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { formatTrizilium } from '@/utils';
 
 import CourseLevelBadge from './course-level';
 import CourseStatusBadge from './course-status';
@@ -39,12 +40,6 @@ const CourseItem = ({ course }: { course: Course }) => {
   const { data: courseDetail, isLoading } = useGetCourseByIdQuery(
     isDetailOpen ? course.id : undefined,
   );
-
-  const formatter = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  });
 
   const dealPrice = course.dealPrice ?? course.price ?? null;
   const originalPrice = course.price ?? null;
@@ -104,7 +99,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                 <div className=" text-sm w-full">
                   {dealPrice !== null ? (
                     <div className="text-sm font-semibold text-primary">
-                      Giá tiền: {formatter.format(dealPrice)}
+                      Giá tiền: {formatTrizilium(dealPrice)}
                     </div>
                   ) : null}
 
@@ -112,7 +107,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                   dealPrice !== null &&
                   originalPrice > dealPrice ? (
                     <div className=" text-muted-foreground line-through">
-                      Giá gốc: {formatter.format(originalPrice)}
+                      Giá gốc: {formatTrizilium(originalPrice)}
                     </div>
                   ) : null}
 
@@ -191,13 +186,13 @@ const CourseItem = ({ course }: { course: Course }) => {
                 {courseDetail.price !== null && (
                   <div>
                     <span className="font-semibold">Giá tiền:</span>{' '}
-                    {formatter.format(courseDetail.price)}
+                    {formatTrizilium(courseDetail.price)}
                   </div>
                 )}
                 {courseDetail.dealPrice !== null && (
                   <div>
                     <span className="font-semibold">Giá ưu đãi:</span>{' '}
-                    {formatter.format(courseDetail.dealPrice)}
+                    {formatTrizilium(courseDetail.dealPrice)}
                   </div>
                 )}
               </div>

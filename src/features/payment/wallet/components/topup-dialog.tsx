@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { formatTrizilium } from '@/utils';
 
 import { useTopupWalletMutation } from '../services/mutations';
 
@@ -40,8 +41,8 @@ const TOPUP_PRESETS = [10000, 100000, 250000, 500000, 1000000];
 const topupSchema = z.object({
   amount: z.coerce
     .number()
-    .min(1000, 'Minimum amount is 1,000 VND')
-    .max(2000000000, 'Maximum amount is 2,000,000,000 VND'),
+    .min(1000, 'Minimum amount is 1,000 Trizilium')
+    .max(2000000000, 'Maximum amount is 2,000,000,000 Trizilium'),
   provider: z.enum(['PAYOS', 'STRIPE', 'PAYPAL'] as const),
 });
 
@@ -154,7 +155,8 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
                   </FormControl>
                   <FormMessage />
                   <p className="text-xs text-muted-foreground mt-2">
-                    Minimum: 1,000 VND | Maximum: 2,000,000,000 VND
+                    Minimum: {formatTrizilium(1000)} | Maximum:{' '}
+                    {formatTrizilium(2000000000)}
                   </p>
                 </FormItem>
               )}

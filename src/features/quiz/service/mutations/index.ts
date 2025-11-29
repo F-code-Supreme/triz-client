@@ -13,16 +13,16 @@ import type {
   UpdateQuizPayload,
   UpdateQuizResponse,
   GetAdminQuizzesResponse,
+  RemainingTimeResponse,
 } from './type';
 
 // users
-
 export const useGetQuizzesMutation = () => {
   const _request = useAxios();
   return useQuery({
     queryKey: ['getQuizzes'],
     queryFn: async () => {
-      const res = await _request.get<GetQuizzesResponse>('/quizzes');
+      const res = await _request.get<GetQuizzesResponse>('');
       return res.data;
     },
   });
@@ -93,7 +93,7 @@ export const useGetQuizAttemptRemainingTimeQuery = (attemptId: string) => {
   return useQuery({
     queryKey: ['quizAttemptRemainingTime', attemptId],
     queryFn: async () => {
-      const res = await _request.get(
+      const res = await _request.get<RemainingTimeResponse>(
         `/quiz-attempts/${attemptId}/remaining-time`,
       );
       return res.data;
@@ -115,8 +115,6 @@ export const useGetUserQuizAttemptsQuery = (userId: string) => {
     enabled: !!userId,
   });
 };
-
-// admin
 
 export const useGetAdminQuizzesQuery = () => {
   const _request = useAxios();

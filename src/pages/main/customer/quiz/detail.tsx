@@ -418,10 +418,8 @@ const QuizDetail = () => {
   };
 
   const handleRetryQuiz = () => {
-    // Clear current attempt data
     localStorage.removeItem(`quiz-attempt-${quizId}`);
     setShowResults(false);
-    // Navigate back to quiz list or reload the page to start fresh
     navigate({ to: `/quiz/${quizId}` });
   };
   if (isLoading) {

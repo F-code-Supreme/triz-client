@@ -2,25 +2,38 @@ import { Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-import CourseFiltersComponent from '@/features/course/components/course-filters';
-import CourseList from '@/features/course/components/course-list';
-import { mockCourses } from '@/features/course/data/mock-courses';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationLink,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
+import CourseFiltersComponent from '@/features/courses/components/course-filters';
+import CourseList from '@/features/courses/components/course-list';
+import {
+  useGetCourseQuery,
+  useGetMyEnrollmentsQuery,
+} from '@/features/courses/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
-import type { CourseFilters } from '@/features/course/types';
-// import { De } from 'zod/v4/locales';
+import type { CourseFilters } from '@/features/courses/types';
+import type { PaginationState } from '@tanstack/react-table';
 
 const AllCoursePage = () => {
   const [filters, setFilters] = useState<CourseFilters>({});
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 9,
+  });
+  const { data, isLoading, isError } = useGetCourseQuery(pagination);
+  const { data: enrollmentsData } = useGetMyEnrollmentsQuery();
 
-  // Stats calculation
-  // const totalCourses = mockCourses.length;
-  // const completedCourses = mockCourses.filter(
-  //   (course) => course.status === 'COMPLETED',
-  // ).length;
-  // const inProgressCourses = mockCourses.filter(
-  //   (course) => course.status === 'IN_PROGRESS',
-  // ).length;
+  const enrolledCourseIds = (enrollmentsData?.content || []).map(
+    (enrollment) => enrollment.courseId,
+  );
 
   return (
     <DefaultLayout meta={{ title: 'My Courses' }}>
@@ -70,7 +83,98 @@ const AllCoursePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <CourseList courses={mockCourses} filters={filters} />
+          {isLoading ? (
+            <div>Loading courses...</div>
+          ) : isError ? (
+            <div>Failed to load courses.</div>
+          ) : (
+            <>
+              <CourseList
+                courses={data?.content || []}
+                filters={filters}
+                enrolledCourseIds={enrolledCourseIds}
+              />
+
+              {/* Pagination */}
+              {data?.page && data.page.totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (pagination.pageIndex > 0) {
+                              setPagination((prev) => ({
+                                ...prev,
+                                pageIndex: prev.pageIndex - 1,
+                              }));
+                            }
+                          }}
+                          className={
+                            pagination.pageIndex === 0
+                              ? 'pointer-events-none opacity-50'
+                              : ''
+                          }
+                        />
+                      </PaginationItem>
+
+                      {Array.from(
+                        { length: data.page.totalPages },
+                        (_, i) => i,
+                      ).map((pageNum) => (
+                        <PaginationItem key={pageNum}>
+                          <PaginationLink
+                            href="#"
+                            isActive={pageNum === pagination.pageIndex}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setPagination((prev) => ({
+                                ...prev,
+                                pageIndex: pageNum,
+                              }));
+                            }}
+                          >
+                            {pageNum + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+
+                      {data.page.totalPages > 5 && (
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      )}
+
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (
+                              pagination.pageIndex <
+                              data.page.totalPages - 1
+                            ) {
+                              setPagination((prev) => ({
+                                ...prev,
+                                pageIndex: prev.pageIndex + 1,
+                              }));
+                            }
+                          }}
+                          className={
+                            pagination.pageIndex >= data.page.totalPages - 1
+                              ? 'pointer-events-none opacity-50'
+                              : ''
+                          }
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                </div>
+              )}
+            </>
+          )}
         </motion.div>
       </div>
     </DefaultLayout>

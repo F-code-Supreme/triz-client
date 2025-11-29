@@ -98,3 +98,23 @@ export const useReorderAssignmentMutation = (moduleId: string) => {
     },
   });
 };
+
+// expert
+export const useExpertReviewAssignmentMutation = (submissionId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: { passed: boolean; comment?: string }) => {
+      const response = await _request.put(
+        `/asm-submissions/${submissionId}/expert-grade`,
+        payload,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [AssignmentKeys.GetAssignmentQuery],
+      });
+    },
+  });
+};
