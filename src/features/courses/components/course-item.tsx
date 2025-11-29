@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { useDeleteCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
-import { formatTrizilium } from '@/utils';
+import { formatTrizilium, formatTriziliumShort } from '@/utils';
 
 import CourseLevelBadge from './course-level';
 import CourseStatusBadge from './course-status';
@@ -68,7 +68,7 @@ const CourseItem = ({ course }: { course: Course }) => {
               <img
                 src={thumbnail}
                 alt={course.title}
-                className="h-40 w-full object-cover"
+                className="h-44 w-full object-cover"
               />
             ) : (
               <div className="flex h-40 w-full items-center justify-center text-sm text-muted-foreground">
@@ -78,15 +78,15 @@ const CourseItem = ({ course }: { course: Course }) => {
           </div>
 
           <div className="p-3">
-            <div className="min-h-40">
+            <div className="h-40 min-h-40">
               <h2 className="text-base font-semibold">{course.title}</h2>
 
-              <p className="mb-2 text-sm text-muted-foreground">
+              <p className="mb-2 text-xs text-muted-foreground">
                 {course.shortDescription ?? course.description}
               </p>
 
-              <div className="flex items-start justify-between gap-4">
-                <div className="text-sm text-muted-foreground w-full space-y-2">
+              <div className="flex items-start justify-between gap-4 w-full">
+                <div className="text-xs text-muted-foreground w-[55%] space-y-2">
                   <div>
                     Thời lượng: {formatDuration(course.durationInMinutes)}
                   </div>
@@ -96,10 +96,10 @@ const CourseItem = ({ course }: { course: Course }) => {
                   <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
                 </div>
 
-                <div className=" text-sm w-full">
+                <div className="text-right text-xs w-[45%] flex flex-col items-end">
                   {dealPrice !== null ? (
                     <div className="text-sm font-semibold text-primary">
-                      Giá tiền: {formatTrizilium(dealPrice)}
+                      Giá tiền: {formatTriziliumShort(dealPrice)}
                     </div>
                   ) : null}
 
@@ -107,11 +107,11 @@ const CourseItem = ({ course }: { course: Course }) => {
                   dealPrice !== null &&
                   originalPrice > dealPrice ? (
                     <div className=" text-muted-foreground line-through">
-                      Giá gốc: {formatTrizilium(originalPrice)}
+                      Giá gốc: {formatTriziliumShort(originalPrice)}
                     </div>
                   ) : null}
 
-                  <div className="text-sm mt-1 text-muted-foreground ">
+                  <div className=" mt-1 text-muted-foreground ">
                     <CourseStatusBadge status={course.status} />
                   </div>
                 </div>

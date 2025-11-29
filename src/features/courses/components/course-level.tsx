@@ -28,7 +28,7 @@ export interface CourseLevelMeta {
 export const COURSE_LEVELS: Record<string, CourseLevelMeta> = {
   STARTER: {
     key: 'STARTER',
-    label: 'Starter',
+    label: 'Cơ bản',
     bgClass: 'bg-green-50',
     textClass: 'text-green-800',
     Icon: Star,
@@ -37,7 +37,7 @@ export const COURSE_LEVELS: Record<string, CourseLevelMeta> = {
   },
   BEGINNER: {
     key: 'BEGINNER',
-    label: 'Beginner',
+    label: 'Sơ cấp',
     bgClass: 'bg-emerald-100',
     textClass: 'text-emerald-900',
     Icon: Star,
@@ -46,7 +46,7 @@ export const COURSE_LEVELS: Record<string, CourseLevelMeta> = {
   },
   INTERMEDIATE: {
     key: 'INTERMEDIATE',
-    label: 'Intermediate',
+    label: 'Trung cấp',
     bgClass: 'bg-yellow-100',
     textClass: 'text-yellow-900',
     Icon: Zap,
@@ -55,7 +55,7 @@ export const COURSE_LEVELS: Record<string, CourseLevelMeta> = {
   },
   ADVANCED: {
     key: 'ADVANCED',
-    label: 'Advanced',
+    label: 'Nâng cao',
     bgClass: 'bg-rose-100',
     textClass: 'text-rose-900',
     Icon: Award,
@@ -95,7 +95,7 @@ export const CourseLevelBadge: React.FC<{
 
   return (
     <div
-      className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium ${meta.bgClass} ${meta.textClass} ${className}`}
+      className={`flex items-center gap-2  rounded-full px-3 py-1 text-[10px] ${meta.bgClass} ${meta.textClass} ${className}`}
       title={meta.description}
     >
       <Icon className="h-3.5 w-3.5 opacity-90" />
