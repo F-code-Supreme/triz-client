@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { MoreHorizontal, Eye, Trash2, Edit } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
