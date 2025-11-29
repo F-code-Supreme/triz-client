@@ -40,8 +40,6 @@ const CourseLearnPage = () => {
     useGetAssignmentModuleQuery(currentModuleId);
   const { data: quizzesData } = useGetQuizzByModulesQuery(currentModuleId);
 
-  console.log('Lessons Data:', lessonsData);
-
   const { enhancedModules, currentModule } = useCourseContent({
     modules: (modulesData as Module[]) || [],
     lessonsData,

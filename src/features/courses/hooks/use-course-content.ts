@@ -102,8 +102,6 @@ export const useCourseContent = ({
     });
   }, [modules, lessonsData, assignmentsData, quizzesData, currentModuleId]);
 
-  console.log('Enhanced modules:', enhancedModules);
-
   const currentModule = useMemo(() => {
     return enhancedModules.find((m) => m.id === currentModuleId);
   }, [enhancedModules, currentModuleId]);

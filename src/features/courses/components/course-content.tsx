@@ -213,6 +213,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'assignment':
         // eslint-disable-next-line no-case-declarations
         const assignmentData = item.assignmentData;
+        console.log('Assignment Data:', assignmentData);
         return (
           <CourseAssignment
             moduleId={assignmentData.moduleId}

@@ -30,6 +30,7 @@ const AllCoursePage = () => {
   });
   const { data, isLoading, isError } = useGetCourseQuery(pagination);
   const { data: enrollmentsData } = useGetMyEnrollmentsQuery();
+  const courseData = data?.content.filter((c) => c.status === 'ACTIVE') || [];
 
   const enrolledCourseIds = (enrollmentsData?.content || []).map(
     (enrollment) => enrollment.courseId,
@@ -90,7 +91,7 @@ const AllCoursePage = () => {
           ) : (
             <>
               <CourseList
-                courses={data?.content || []}
+                courses={courseData}
                 filters={filters}
                 enrolledCourseIds={enrolledCourseIds}
               />

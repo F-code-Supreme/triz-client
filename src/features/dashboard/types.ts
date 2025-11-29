@@ -66,6 +66,7 @@ export interface GameStats {
   plays: number;
   averageScore: number;
   completionRate: number;
+  averageTimePlay: number; // in minutes
 }
 
 export interface GamePeriodData {
