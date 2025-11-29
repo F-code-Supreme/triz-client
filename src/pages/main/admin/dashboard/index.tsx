@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { AdminLayout } from '@/layouts/admin-layout';
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   RevenueSection,
   ChatForumSection,
   mockDashboardData,
   GameSection,
 } from '@/features/dashboard';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminDashboardPage = () => {
   const dashboardData = mockDashboardData;

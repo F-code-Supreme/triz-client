@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+
 import {
   Card,
   CardContent,
@@ -31,7 +32,7 @@ interface BarChartProps {
   stacked?: boolean;
 }
 
-export function BarChart({
+export const BarChart = ({
   data,
   xKey,
   bars,
@@ -40,7 +41,7 @@ export function BarChart({
   height = 350,
   layout = 'horizontal',
   stacked = false,
-}: BarChartProps) {
+}: BarChartProps) => {
   const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1'];
 
   return (
@@ -106,4 +107,4 @@ export function BarChart({
       </CardContent>
     </Card>
   );
-}
+};

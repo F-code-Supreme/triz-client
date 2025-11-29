@@ -1,6 +1,5 @@
-import { DashboardSection, ChartCard } from './dashboard-section';
-import { StatCard } from './stat-card';
-import { PeriodFilter } from './period-filter';
+import { useState, useMemo } from 'react';
+
 import { AreaChart, BarChart, PieChart } from '@/components/ui/chart';
 import {
   Table,
@@ -10,8 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
+import { DashboardSection, ChartCard } from './dashboard-section';
+import { PeriodFilter } from './period-filter';
+import { StatCard } from './stat-card';
+
 import type { DashboardData } from '../types';
-import { useState, useMemo } from 'react';
 
 interface RevenueSectionProps {
   data: DashboardData['revenue'];
