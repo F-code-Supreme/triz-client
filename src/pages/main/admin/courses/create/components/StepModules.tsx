@@ -249,7 +249,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             type="number"
             min={1}
             className="border p-2 rounded "
-            placeholder="Nhập thời gian"
+            placeholder="Nhập thời lượng (phút)"
             value={duration}
             onChange={(e) => setDuration(Number(e.target.value))}
             disabled={isCreateDisabled}

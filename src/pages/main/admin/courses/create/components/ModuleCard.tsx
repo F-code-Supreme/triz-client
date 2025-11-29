@@ -16,11 +16,18 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useQueryClient } from '@tanstack/react-query';
-import { GripVertical, Pencil, Plus } from 'lucide-react';
+import { GripVertical, MoreHorizontalIcon, Pencil, Plus } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useReorderAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useGetAssignmentsByModuleQuery } from '@/features/assignment/services/queries';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
@@ -299,7 +306,8 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
             )}
           </button>
           <h3 className="font-medium text-base">
-            {module.name} ({module.lessonCount} bài học,{' '}
+            {module.name} - Thời lượng: {module.durationInMinutes} phút - Mức
+            độ: {module.level} ({module.lessonCount} bài học,{' '}
             {module.assignmentCount} bài tập)
           </h3>
         </div>
@@ -313,24 +321,40 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
             <Pencil className="mr-2 h-4 w-4" />
             Chỉnh sửa
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onAddAssignment?.(module.id)}
-            disabled={disabled}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Thêm bài tập
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onAddLesson?.(module.id)}
-            disabled={disabled}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Thêm bài học
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" aria-label="Open menu">
+                <MoreHorizontalIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onAddAssignment?.(module.id)}
+                    disabled={disabled}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Thêm bài tập
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onAddLesson?.(module.id)}
+                    disabled={disabled}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Thêm bài học
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     );
