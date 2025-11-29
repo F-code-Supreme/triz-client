@@ -39,8 +39,7 @@ import {
 } from '@/features/quiz/service/mutations';
 import { AdminLayout } from '@/layouts/admin-layout';
 
-import CreateQuizDialog from './create-quiz';
-import DetailQuizDialog from './detail-quiz';
+import DetailQuizDialog from '../../../../features/quiz/components/quiz-detail-dialog';
 
 const AdminQuizzesPage = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -239,12 +238,6 @@ const AdminQuizzesPage = () => {
         open={isEditOpen}
         onOpenChange={setIsEditOpen}
         quiz={selectedQuiz}
-        onSuccess={() => refetch?.()}
-      />
-
-      <CreateQuizDialog
-        open={false}
-        setOpen={() => {}}
         onSuccess={() => refetch?.()}
       />
 
