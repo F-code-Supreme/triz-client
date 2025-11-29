@@ -43,7 +43,7 @@ const topupSchema = z.object({
     .number()
     .min(1000, 'Minimum amount is 1,000 Trizilium')
     .max(2000000000, 'Maximum amount is 2,000,000,000 Trizilium'),
-  provider: z.enum(['PAYOS', 'STRIPE', 'PAYPAL'] as const),
+  provider: z.enum(['PAYOS', 'STRIPE'] as const),
 });
 
 type TopupFormValues = z.infer<typeof topupSchema>;
