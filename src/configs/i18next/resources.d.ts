@@ -143,6 +143,7 @@ interface Resources {
     "learn_triz": "Learn TRIZ",
     "learn_triz.books": "Book",
     "learn_triz.course": "Course",
+    "learn_triz.games": "Games",
     "learn_triz.index": "Principle",
     "learn_triz.matrix": "Matrix",
     "learn_triz.quiz": "Quiz",
