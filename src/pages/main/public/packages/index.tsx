@@ -15,7 +15,7 @@ import { PurchaseInvoiceDialog } from '@/features/subscription/components';
 import { useGetSubscriptionsByUserQuery } from '@/features/subscription/services/queries';
 import { SubscriptionStatus } from '@/features/subscription/types';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { formatNumber } from '@/utils';
+import { formatTrizilium, formatDailyTrizilium } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
 
@@ -96,8 +96,7 @@ const PackagesPricingPage = () => {
   const [invoiceOpen, setInvoiceOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
 
-  // Convert wallet balance from VND to tokens
-  const walletBalanceInTokens = useMemo(() => {
+  const walletBalanceInTrizilium = useMemo(() => {
     return wallet?.balance || 0;
   }, [wallet]);
 
@@ -236,15 +235,20 @@ const PackagesPricingPage = () => {
                           </div>
                           <div className="space-y-2">
                             <div className="text-4xl font-bold">
-                              {formatNumber(pkg.priceInTokens)}
+                              {formatTrizilium(pkg.priceInTokens, {
+                                showSymbol: false,
+                              })}
                             </div>
-                            <div className="text-muted-foreground">tokens</div>
+                            <div className="text-muted-foreground">
+                              Trizilium
+                            </div>
                           </div>
                           <div className="text-sm text-muted-foreground">
                             <span className="font-semibold text-foreground">
-                              {formatNumber(pkg.chatTokenPerDay)}
-                            </span>{' '}
-                            tokens/day
+                              {formatDailyTrizilium(pkg.chatTokenPerDay, {
+                                shortForm: true,
+                              })}
+                            </span>
                           </div>
                           <Button
                             className="w-full"
@@ -363,7 +367,7 @@ const PackagesPricingPage = () => {
           open={invoiceOpen}
           onOpenChange={setInvoiceOpen}
           package={selectedPackage}
-          walletBalance={walletBalanceInTokens}
+          walletBalance={walletBalanceInTrizilium}
         />
       </div>
     </DefaultLayout>

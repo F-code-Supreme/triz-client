@@ -1,5 +1,17 @@
-import { Link } from '@tanstack/react-router';
-import { User, LogOut, BookOpen, Wallet, CalendarSync } from 'lucide-react';
+import { Link, useMatchRoute } from '@tanstack/react-router';
+import {
+  User,
+  LogOut,
+  BookOpen,
+  Wallet,
+  CalendarSync,
+  CircleDollarSign,
+  GraduationCap,
+  BookCheck,
+  Lightbulb,
+  Grid3x3,
+  Gamepad2,
+} from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +30,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import {
@@ -27,8 +41,10 @@ import {
 } from '@/components/ui/popover';
 import useAuth from '@/features/auth/hooks/use-auth';
 import useLogout from '@/features/auth/hooks/use-logout';
+import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { useMediaQuery } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { formatTriziliumShort } from '@/utils';
 
 import { ThemeSwitcher } from './shadcn-io/theme-switcher';
 import { useTheme } from '../theme/theme-provider';
@@ -40,10 +56,17 @@ export interface Navbar03NavItem {
   active?: boolean;
 }
 
+export interface LearnTrizNavItem {
+  href: string;
+  labelKey: string;
+  icon: React.ElementType;
+}
+
 export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
   logo?: React.ReactNode;
   logoHref?: string;
   navigationLinks?: Navbar03NavItem[];
+  learnTrizLinks?: LearnTrizNavItem[];
   signInText?: string;
   signInHref?: string;
   ctaText?: string;
@@ -52,26 +75,59 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
   onCtaClick?: () => void;
 }
 
+// Configuration for navigation links
+const MAIN_NAV_LINKS = (t: (key: string) => string): Navbar03NavItem[] => [
+  { href: '/', label: t('home'), active: true },
+  { href: '#', label: t('forum') },
+  { href: '/chat-triz', label: t('chat_ai') },
+  { href: '/packages', label: t('packages') },
+];
+
+// Configuration for Learn TRIZ dropdown links
+const LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
+  { href: '/course', labelKey: 'learn_triz.course', icon: GraduationCap },
+  { href: '/games', labelKey: 'learn_triz.games', icon: Gamepad2 },
+  { href: '/books', labelKey: 'learn_triz.books', icon: BookOpen },
+  { href: '/learn-triz', labelKey: 'learn_triz.index', icon: Lightbulb },
+  { href: '/matrix-triz', labelKey: 'learn_triz.matrix', icon: Grid3x3 },
+  { href: '/quiz', labelKey: 'learn_triz.quiz', icon: BookCheck },
+];
+
+// Active link styling
+const activeLinkClass =
+  'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-100 text-primary';
+const hoverLinkClass =
+  'relative before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100';
+
 export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
-  ({ className, navigationLinks, ...props }, ref) => {
+  ({ className, navigationLinks, learnTrizLinks, ...props }, ref) => {
     const { theme, setTheme } = useTheme();
     const { t } = useTranslation('header');
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const logout = useLogout();
+    const matchRoute = useMatchRoute();
 
-    // Default navigation links if none provided
-    const defaultNavigationLinks: Navbar03NavItem[] = [
-      { href: '/', label: t('home'), active: true },
-      { href: '/learn-triz', label: t('learn_triz') },
-      { href: '/course', label: t('course') },
-      { href: '/quiz', label: t('quiz') },
-      { href: '#', label: t('forum') },
-      { href: '/chat-triz', label: t('chat_ai') },
-    ];
+    // Fetch active subscription and wallet
+    const { data: wallet } = useGetWalletByUserQuery(user?.id);
 
-    const navLinks = navigationLinks || defaultNavigationLinks;
+    // Use provided links or fall back to default configuration
+    const navLinks =
+      navigationLinks || MAIN_NAV_LINKS(t as (key: string) => string);
+    const learnTrizNavLinks = learnTrizLinks || LEARN_TRIZ_LINKS;
     const isMobile = useMediaQuery('(max-width: 767px)'); // 767px is md breakpoint
     const containerRef = React.useRef<HTMLElement>(null);
+
+    // Check if a link is active using TanStack Router's useMatchRoute
+    const isLinkActive = (href?: string) => {
+      if (!href || href === '#') return false;
+      const match = matchRoute({ to: href, fuzzy: true });
+      return !!match;
+    };
+
+    // Check if Learn TRIZ dropdown should be active
+    const isLearnTrizActive = () => {
+      return learnTrizNavLinks.some((link) => isLinkActive(link.href));
+    };
 
     // Combine refs
     const combinedRef = React.useCallback(
@@ -126,7 +182,28 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           </Link>
                         </NavigationMenuItem>
                       ))}
-                      <div className="w-full border-t pt-2 mt-2">
+                      {/* Learn TRIZ submenu items */}
+                      <div className="w-full border-t pt-2">
+                        <div className="px-3 py-1 text-xs font-semibold text-muted-foreground">
+                          {t('learn_triz')}
+                        </div>
+                        {learnTrizNavLinks.map((link, index) => {
+                          const Icon = link.icon;
+                          return (
+                            <NavigationMenuItem key={index} className="w-full">
+                              <Link
+                                to={link.href}
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline pl-6"
+                              >
+                                <Icon className="mr-2 h-4 w-4" />
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {t(link.labelKey as any)}
+                              </Link>
+                            </NavigationMenuItem>
+                          );
+                        })}
+                      </div>
+                      <div className="w-full border-t">
                         {isAuthenticated ? (
                           <>
                             <NavigationMenuItem className="w-full">
@@ -156,7 +233,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                                 {t('dropdown_menu.wallet')}
                               </Link>
                             </NavigationMenuItem>
-                            <NavigationMenuItem className="w-full">
+                            <NavigationMenuItem className="w-full border-b mb-2">
                               <Link
                                 to="/subscription"
                                 className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
@@ -164,6 +241,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                                 <CalendarSync className="mr-2 h-4 w-4" />
                                 {t('dropdown_menu.subscriptions')}
                               </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full mb-2">
+                              <ThemeSwitcher
+                                value={theme}
+                                onChange={setTheme}
+                              />
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full border-b pb-2">
+                              <LocaleSwitcher />
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
                               <button
@@ -177,7 +263,16 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           </>
                         ) : (
                           <>
+                            <NavigationMenuItem className="w-full mb-2">
+                              <ThemeSwitcher
+                                value={theme}
+                                onChange={setTheme}
+                              />
+                            </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
+                              <LocaleSwitcher />
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full border-t mt-2">
                               <Link
                                 search={{
                                   redirect: window.location.pathname,
@@ -210,12 +305,8 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             {/* Logo Title */}
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">
-                    T
-                  </span>
-                </div>
-                <span className="hidden font-bold text-lg sm:inline-block">
+                <img src="/logo.svg" alt="TRIZ Logo" className="h-8 w-8" />
+                <span className="hidden font-bold text-[16px] sm:inline-block max-w-56">
                   {t('logo_title')}
                 </span>
               </Link>
@@ -224,12 +315,67 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             {/* Navigation Menu */}
             <div className="hidden md:flex">
               <NavigationMenu>
-                <NavigationMenuList>
-                  {navLinks.map((link, index) => (
+                <NavigationMenuList className="flex-wrap">
+                  {/* Home Link */}
+                  <NavigationMenuItem>
+                    <NavigationMenuLink
+                      data-active={cn(isLinkActive('/'))}
+                      asChild
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        hoverLinkClass,
+                        isLinkActive('/') && activeLinkClass,
+                      )}
+                    >
+                      <Link to="/">{t('home')}</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  {/* Learn TRIZ Dropdown */}
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger
+                      className={cn(
+                        hoverLinkClass,
+                        isLearnTrizActive() && activeLinkClass,
+                      )}
+                    >
+                      {t('learn_triz')}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-3 p-4">
+                        {learnTrizNavLinks.map((link, index) => {
+                          const Icon = link.icon;
+                          return (
+                            <li key={index}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to={link.href}
+                                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <Icon className="h-4 w-4" />
+                                    <div className="text-sm font-medium leading-none">
+                                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                      {t(link.labelKey as any)}
+                                    </div>
+                                  </div>
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  {/* Other Navigation Links (excluding Home) */}
+                  {navLinks.slice(1).map((link, index) => (
                     <NavigationMenuItem key={index}>
                       <NavigationMenuLink
                         asChild
-                        className={cn(navigationMenuTriggerStyle())}
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          hoverLinkClass,
+                          isLinkActive(link.href) && activeLinkClass,
+                        )}
                       >
                         <Link to={link.href}>{link.label}</Link>
                       </NavigationMenuLink>
@@ -242,7 +388,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             {/* Auth Buttons & Locale Switcher */}
             <div className="flex items-center space-x-4">
               {isAuthenticated ? (
-                <div className="hidden sm:flex items-center space-x-2">
+                <div className="hidden sm:flex items-center space-x-4">
+                  {/* Token Count Display */}
+                  <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
+                    <CircleDollarSign className="h-4 w-4 text-secondary" />
+                    <span className="text-sm font-medium">
+                      {formatTriziliumShort(wallet?.balance || 0)}
+                    </span>
+                  </div>
+                  {/* User Dropdown Menu */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -280,6 +434,13 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild className="mb-2">
+                        <ThemeSwitcher value={theme} onChange={setTheme} />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <LocaleSwitcher />
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={logout}
                         className="cursor-pointer"
@@ -312,15 +473,10 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       {t('sign_up')}
                     </Link>
                   </Button>
+                  <ThemeSwitcher value={theme} onChange={setTheme} />
+                  <LocaleSwitcher />
                 </div>
               )}
-
-              <ThemeSwitcher
-                defaultValue="system"
-                value={theme}
-                onChange={setTheme}
-              />
-              <LocaleSwitcher />
             </div>
           </div>
         </div>

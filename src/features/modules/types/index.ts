@@ -1,5 +1,5 @@
 interface Order {
-  id: string;
+  subsetId: string;
   type: 'lesson' | 'assignment';
 }
 
@@ -15,4 +15,8 @@ export interface Module {
   quizCount: number;
   assignmentCount: number;
   orders: Order[];
+}
+
+export interface ModuleResponseData {
+  content: Module[];
 }

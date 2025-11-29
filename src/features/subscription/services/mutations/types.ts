@@ -23,3 +23,13 @@ export interface IEditAutoRenewalPayload {
   subscriptionId: string;
   autoRenew: boolean;
 }
+
+export interface ICancelSubscriptionPayload {
+  userId: string;
+  subscriptionId: string;
+}
+
+export interface IRefundSubscriptionPayload {
+  userId: string;
+  transactionId: string;
+}

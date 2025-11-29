@@ -10,7 +10,6 @@ import StepPlaceholder from './components/StepPlaceholder';
 const CreateCoursePage = () => {
   // Step and form state
   const [step, setStep] = useState(1);
-  const [courseId, setCourseId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [thumbnailPreview] = useState<string | null>(null);
@@ -33,13 +32,13 @@ const CreateCoursePage = () => {
   };
 
   return (
-    <AdminLayout meta={{ title: 'Admin Manage Course' }}>
+    <AdminLayout meta={{ title: 'Quản lý khóa học' }}>
       <div className="space-y-6 p-4">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Create Course</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Tạo khóa học</h1>
             <p className="text-muted-foreground">
-              Create a new course with multiple modules and assignments.
+              Tạo một khóa học mới với nhiều chương trình và bài tập.
             </p>
           </div>
         </div>
@@ -49,21 +48,21 @@ const CreateCoursePage = () => {
           <div className="flex items-center space-x-4">
             <StepIndicator
               number={1}
-              label="Basic"
+              label="Thông tin cơ bản"
               active={step === 1}
               completed={step > 1}
             />
             <div className="flex-1 h-0.5 bg-gray-200" />
             <StepIndicator
               number={2}
-              label="Modules"
+              label="Quản lý chương trình"
               active={step === 2}
               completed={step > 2}
             />
             <div className="flex-1 h-0.5 bg-gray-200" />
             <StepIndicator
               number={3}
-              label="Publish"
+              label="Xuất bản & Tổng kết"
               active={step === 3}
               completed={step > 3}
             />
@@ -80,20 +79,16 @@ const CreateCoursePage = () => {
             thumbnailPreview={thumbnailPreview}
             errors={errors}
             goNext={goNext}
-            setCourseId={setCourseId}
           />
         )}
 
         {/* Step 2: Modules */}
-        {step === 2 && (
-          <StepModules goNext={goNext} goBack={goBack} courseId={courseId} />
-        )}
+        {step === 2 && <StepModules goNext={goNext} goBack={goBack} />}
 
         {/* Step 3: Summary & Publish */}
         {step === 3 && (
           <StepPlaceholder
             goBack={goBack}
-            courseId={courseId}
             title={title}
             description={description}
           />

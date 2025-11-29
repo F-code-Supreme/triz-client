@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+import { CourseKeys } from '@/features/courses/services/queries/keys';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
 
 import type {
@@ -23,7 +24,10 @@ export const useCreateModuleMutation = (courseId: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [ModuleKeys.GetModuleQuery],
+        queryKey: [ModuleKeys.GetModulesByCourseQuery, courseId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [CourseKeys.GetCourseById, courseId],
       });
     },
   });
@@ -42,7 +46,7 @@ export const useUpdateModuleMutation = (id: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [ModuleKeys.GetModuleQuery],
+        queryKey: [ModuleKeys.GetModulesByCourseQuery],
       });
     },
   });

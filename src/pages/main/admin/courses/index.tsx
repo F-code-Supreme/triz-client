@@ -1,7 +1,8 @@
-import { Link } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
@@ -15,48 +16,68 @@ import CourseItem from '@/features/courses/components/course-item';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
+import type { PaginationState } from '@tanstack/react-table';
+
 const AdminManageCoursePage = () => {
-  const [page, setPage] = useState<number>(1);
+  const navigate = useNavigate();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 8,
+  });
 
-  const {
-    data,
-    isFetching: _isFetching,
-    isLoading: _isLoading,
-  } = useGetCourseQuery();
+  const { data, isFetching, isLoading } = useGetCourseQuery(pagination);
 
-  const pagedItems = data?.content ?? [];
+  const isBusy = isFetching || isLoading;
+
+  const coursesData = data?.content ?? [];
   const apiPage = data?.page;
 
   const totalPages = apiPage ? Math.max(1, apiPage.totalPages) : 1;
 
   const renderTabContent = () => {
     return (
-      <div className="space-y-6 p-4">
+      <div className="space-y-6 p-8">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">
-              Manage Courses
+              Quản lý khóa học
             </h1>
             <p className="text-muted-foreground">
-              Manage courses offered on the platform. You can add, edit, or
-              remove courses as needed.
+              Quản lý các khóa học được cung cấp trên nền tảng. Bạn có thể thêm,
+              chỉnh sửa hoặc xóa các khóa học khi cần thiết.
             </p>
           </div>
           <div>
-            <Link
-              to="/admin/courses/create"
-              className="bg-blue-400 text-white px-4 py-2 rounded-md flex items-center"
+            <Button
+              onClick={() => {
+                navigate({ to: '/admin/courses/create' });
+              }}
             >
               <PlusIcon className="mr-2 h-4 w-4" />
-              Create Course
-            </Link>
+              Tạo khóa học
+            </Button>
           </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {pagedItems.map((course) => (
-            <CourseItem key={course.id} course={course} />
-          ))}
+          {isBusy
+            ? // simple skeleton placeholders
+              Array.from({ length: Math.max(pagination.pageSize ?? 4, 4) }).map(
+                (_, i) => (
+                  <div
+                    key={i}
+                    className="animate-pulse p-4 border rounded-md bg-card "
+                    aria-hidden
+                  >
+                    <div className="h-56 bg-gray-200 rounded mb-2" />
+                    <div className="h-8 bg-gray-200 rounded w-3/4 mb-1" />
+                    <div className="h-8 bg-gray-200 rounded w-1/2" />
+                  </div>
+                ),
+              )
+            : coursesData.map((course) => (
+                <CourseItem key={course.id} course={course} />
+              ))}
         </div>
 
         {/* Pagination */}
@@ -67,9 +88,15 @@ const AdminManageCoursePage = () => {
                 <PaginationPrevious
                   size="sm"
                   href="#"
+                  aria-disabled={isBusy}
+                  className={isBusy ? 'opacity-50 ' : ''}
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
-                    setPage((p) => Math.max(1, p - 1));
+                    if (isBusy) return;
+                    setPagination((prev) => ({
+                      ...prev,
+                      pageIndex: Math.max(0, prev.pageIndex - 1),
+                    }));
                   }}
                 />
               </PaginationItem>
@@ -81,10 +108,16 @@ const AdminManageCoursePage = () => {
                     <PaginationLink
                       size="sm"
                       href="#"
-                      isActive={p === page}
+                      isActive={p === pagination.pageIndex + 1}
+                      aria-disabled={isBusy}
+                      className={isBusy ? 'opacity-50 pointer-events-none' : ''}
                       onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
-                        setPage(p);
+                        if (isBusy) return;
+                        setPagination((prev) => ({
+                          ...prev,
+                          pageIndex: p - 1,
+                        }));
                       }}
                     >
                       {p}
@@ -100,9 +133,15 @@ const AdminManageCoursePage = () => {
                 <PaginationNext
                   size="sm"
                   href="#"
+                  aria-disabled={isBusy}
+                  className={isBusy ? 'opacity-50 pointer-events-none' : ''}
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
-                    setPage((p) => Math.min(totalPages, p + 1));
+                    if (isBusy) return;
+                    setPagination((prev) => ({
+                      ...prev,
+                      pageIndex: Math.min(totalPages - 1, prev.pageIndex + 1),
+                    }));
                   }}
                 />
               </PaginationItem>

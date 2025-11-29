@@ -1,17 +1,16 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
-import { useAxios } from '@/configs/axios';
+import { request, useAxios } from '@/configs/axios';
 import { PackageKeys } from '@/features/packages/services/queries/keys';
 
 import type { Package, PackageResponse } from '@/features/packages/types';
 
 // PUBLIC
 export const useGetActivePackagesQuery = () => {
-  const _request = useAxios();
   return useQuery({
     queryKey: [PackageKeys.GetActivePackagesQuery],
     queryFn: async ({ signal }) => {
-      const response = await _request.get<Package[]>('/packages/public', {
+      const response = await request.get<Package[]>('/packages/public', {
         signal,
       });
 
@@ -21,13 +20,12 @@ export const useGetActivePackagesQuery = () => {
 };
 
 export const useGetPackageByIdQuery = (packageId?: string) => {
-  const _request = useAxios();
   return useQuery({
     queryKey: [PackageKeys.GetPackageByIdQuery, packageId],
     queryFn: packageId
       ? async ({ signal }) => {
-          const response = await _request.get<Package>(
-            `/packages/public/${packageId}`,
+          const response = await request.get<Package>(
+            `/packages/${packageId}`,
             {
               signal,
             },

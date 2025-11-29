@@ -3,37 +3,86 @@ import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
 
-import type { Transaction } from '@/features/payment/transaction/types';
+import type {
+  Transaction,
+  TransactionType,
+} from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
 
 type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 const columnHelper = createColumnHelper<TransactionWithTimestamp>();
 
-export const getTransactionTypeLabel = (type: string): string => {
-  return type === 'TOPUP' ? 'Top Up' : 'Spend';
+export const getTransactionTypeLabel = (type: TransactionType): string => {
+  switch (type) {
+    case 'TOPUP':
+      return 'Top Up';
+    case 'REFUND':
+      return 'Refund';
+    default:
+      return 'Spend';
+  }
 };
 
-export const getTransactionTypeColor = (type: string): string => {
-  return type === 'TOPUP' ? 'text-green-600' : 'text-red-600';
+export const getTransactionTypeColor = (type: TransactionType): string => {
+  switch (type) {
+    case 'TOPUP':
+      return 'text-green-600';
+    case 'REFUND':
+      return 'text-blue-600';
+    default:
+      return 'text-red-600';
+  }
 };
 
 export const getTransactionStatusColor = (status: string): string => {
   switch (status) {
     case 'COMPLETED':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 hover:bg-green-100/90';
     case 'PENDING':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100/90';
     case 'CANCELLED':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 hover:bg-red-100/90';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
   }
 };
 
 export const transactionsColumns = [
+  columnHelper.accessor('id', {
+    id: 'id',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="ID" />
+    ),
+    cell: (info) => {
+      const id = info.getValue();
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-[100px] truncate font-mono text-sm cursor-help">
+                {id}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="font-mono text-xs">
+              {id}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  }),
+
   columnHelper.accessor('orderCode', {
     header: 'Order Code',
     cell: (info) => (
@@ -61,8 +110,14 @@ export const transactionsColumns = [
       const amount = info.getValue();
       const type = info.row.original.type;
       return (
-        <span className={type === 'TOPUP' ? 'text-green-600' : 'text-red-600'}>
-          {type === 'TOPUP' ? '+' : '-'}
+        <span
+          className={
+            type === 'TOPUP' || type === 'REFUND'
+              ? 'text-green-600'
+              : 'text-red-600'
+          }
+        >
+          {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
           {amount.toLocaleString()} VND
         </span>
       );

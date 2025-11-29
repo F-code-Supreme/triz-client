@@ -8,6 +8,7 @@ import {
   Receipt,
   Layers2,
   CalendarSync,
+  Archive,
 } from 'lucide-react';
 
 import type { LucideIcon } from 'lucide-react';
@@ -61,23 +62,13 @@ export const adminSidebarData: AdminSidebarData = {
           icon: BookOpen,
         },
         {
-          title: 'Packages',
-          url: '/admin/packages',
-          icon: Package,
-        },
-        {
-          title: 'FlashCards',
+          title: 'Flashcards',
           url: '/admin/flashcards',
           icon: Layers2,
           // children: [
           //   { title: 'Deck', url: '/admin/flashcards/deck', icon: BookOpen },
           //   { title: 'Card', url: '/admin/flashcards/card', icon: BookOpen },
           // ],
-        },
-        {
-          title: 'Subscriptions',
-          url: '/admin/subscriptions',
-          icon: CalendarSync,
         },
         {
           title: 'Courses',
@@ -90,9 +81,39 @@ export const adminSidebarData: AdminSidebarData = {
           icon: BookCheck,
         },
         {
+          title: 'Assignments',
+          url: '/admin/assignment',
+          icon: BookCheck,
+        },
+      ],
+    },
+    {
+      title: 'Payment',
+      items: [
+        {
+          title: 'Packages',
+          url: '/admin/packages',
+          icon: Package,
+        },
+        {
+          title: 'Subscriptions',
+          url: '/admin/subscriptions',
+          icon: CalendarSync,
+        },
+        {
           title: 'Transactions',
           url: '/admin/transactions',
           icon: Receipt,
+        },
+      ],
+    },
+    {
+      title: 'Others',
+      items: [
+        {
+          title: 'Archive',
+          url: '/admin/archive',
+          icon: Archive,
         },
       ],
     },

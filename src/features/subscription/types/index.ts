@@ -6,17 +6,18 @@ export interface Subscription {
   autoRenew: boolean;
   tokensPerDayRemaining: number;
   lastTokenRefreshDate: string;
-  lastRenewalAttemptDate: string;
+  lastRenewalAttemptDate: string | null;
   userId: string;
   userFullName: string;
   packageId: string;
   packageName: string;
-  walletTransId: string;
+  packageChatTokenPerDay: number;
 }
 
 export enum SubscriptionStatus {
   ACTIVE = 'ACTIVE',
   PENDING = 'PENDING',
   EXPIRED = 'EXPIRED',
-  CANCELED = 'CANCELED',
+  CANCELED = 'CANCELLED',
+  REFUNDED = 'REFUNDED',
 }

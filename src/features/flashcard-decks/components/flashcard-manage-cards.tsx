@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react';
 import {
   flexRender,
   getCoreRowModel,
@@ -9,41 +8,11 @@ import {
   type ColumnDef,
 } from '@tanstack/react-table';
 import { Plus, MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { toast } from 'sonner';
 
-import { useGetFlashcardsByDeckIdQuery } from '@/features/flashcard/services/queries/queries';
-import {
-  useCreateFlashcardMutation,
-  useUpdateFlashcardMutation,
-  useDeleteFlashcardMutation,
-} from '@/features/flashcard/services/mutations';
-import type { Flashcard } from '@/features/flashcard/types';
-import { FlashcardCardForm } from './flashcard-card-form';
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DataTableToolbar, DataTablePagination } from '@/components/data-table';
+import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,9 +23,47 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { DataTableToolbar, DataTablePagination } from '@/components/data-table';
-import { DataTableColumnHeader } from '@/components/data-table/column-header';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  useCreateFlashcardMutation,
+  useUpdateFlashcardMutation,
+  useDeleteFlashcardMutation,
+} from '@/features/flashcard/services/mutations';
+import { useGetFlashcardsByDeckIdQuery } from '@/features/flashcard/services/queries/queries';
+
+import { FlashcardCardForm } from './flashcard-card-form';
+
+import type { Flashcard } from '@/features/flashcard/types';
 
 // Card row actions component
 interface CardRowActionsProps {
@@ -91,6 +98,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       });
       toast.success('Card updated successfully');
       setIsEditOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to update card');
     }
@@ -104,6 +112,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       });
       toast.success('Card deleted successfully');
       setIsDeleteOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to delete card');
     }
@@ -289,7 +298,23 @@ const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
     ),
-    cell: ({ row }) => <div className="w-[100px]">{row.getValue('id')}</div>,
+    cell: ({ row }) => {
+      const id = row.getValue('id') as string;
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-[100px] truncate font-mono text-sm cursor-help">
+                {id}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="font-mono text-xs">
+              {id}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -381,7 +406,7 @@ export const FlashcardManageCardsDialog = ({
   const { data: cards = [], isLoading } = useGetFlashcardsByDeckIdQuery(deckId);
   const createMutation = useCreateFlashcardMutation();
 
-  console.log('Cards:', cards);
+  // console.log('Cards:', cards);
 
   const handleCreate = async (values: {
     term: string;
@@ -405,6 +430,7 @@ export const FlashcardManageCardsDialog = ({
       });
       toast.success('Card created successfully');
       setIsCreateOpen(false);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast.error('Failed to create card');
     }

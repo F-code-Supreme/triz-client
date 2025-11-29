@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -13,23 +13,52 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  useCreateAssignmentMutation,
+  useUpdateAssignmentMutation,
+} from '@/features/assignment/services/mutations';
+import { useGetAssignmentByIdQuery } from '@/features/assignment/services/queries';
 
 type AddAssignmentModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   moduleId: string;
+  assignmentId?: string;
+  onSaved?: () => void;
+  viewMode?: boolean;
 };
 
 export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
   open,
   onOpenChange,
-  moduleId: _moduleId,
+  moduleId,
+  assignmentId,
+  onSaved,
+  viewMode = false,
 }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [durationInMinutes, setDurationInMinutes] = React.useState<number>(60);
   const [maxAttempts, setMaxAttempts] = React.useState<number>(3);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const createAssignment = useCreateAssignmentMutation(moduleId);
+  const updateAssignment = useUpdateAssignmentMutation(assignmentId || '');
+  const assignmentQuery = useGetAssignmentByIdQuery(assignmentId);
+
+  const isSubmitting = createAssignment.isPending || updateAssignment.isPending;
+  const isFetching = assignmentQuery.isFetching;
+  const isDisabled = isFetching || isSubmitting || viewMode;
+
+  // Load assignment data when editing
+  useEffect(() => {
+    if (!assignmentQuery.data) return;
+    const data = assignmentQuery.data;
+
+    setTitle(data.title ?? '');
+    setDescription(data.description ?? '');
+    setDurationInMinutes(data.durationInMinutes ?? 60);
+    setMaxAttempts(data.maxAttempts ?? 3);
+  }, [assignmentQuery.data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,27 +83,39 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
       return;
     }
 
-    setIsSubmitting(true);
+    const payload = {
+      title: title.trim(),
+      description: description.trim(),
+      durationInMinutes,
+      maxAttempts,
+    };
+
+    const mutation = assignmentId ? updateAssignment : createAssignment;
+    const successMessage = assignmentId
+      ? 'Cập nhật bài tập thành công'
+      : 'Tạo bài tập thành công';
 
     try {
-      // TODO: Implement the actual API call to create assignment
-      // const response = await createAssignment({
-      //   moduleId,
-      //   title: title.trim(),
-      //   description: description.trim(),
-      //   durationInMinutes,
-      //   maxAttempts,
-      // });
-
-      toast.success('Assignment created successfully');
-      handleClose();
+      mutation.mutate(payload, {
+        onSuccess: () => {
+          toast.success(successMessage);
+          handleClose();
+          onSaved?.();
+        },
+        onError: (error) => {
+          let msg = assignmentId
+            ? 'Failed to update assignment'
+            : 'Failed to create assignment';
+          if (error instanceof Error) msg = error.message;
+          else if (typeof error === 'string') msg = error;
+          toast.error(msg);
+        },
+      });
     } catch (error) {
-      let msg = 'Failed to create assignment';
+      let msg = 'Failed to save assignment';
       if (error instanceof Error) msg = error.message;
       else if (typeof error === 'string') msg = error;
       toast.error(msg);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -91,45 +132,59 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
       <DialogContent className="sm:max-w-[525px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add Assignment</DialogTitle>
+            <DialogTitle>
+              {viewMode
+                ? 'Xem Bài Tập'
+                : assignmentId
+                  ? 'Chỉnh sửa Bài Tập'
+                  : 'Thêm Bài Tập'}
+            </DialogTitle>
             <DialogDescription>
-              Create a new assignment for this module. Fill in all the required
-              fields below.
+              {viewMode
+                ? 'Xem chi tiết bài tập.'
+                : assignmentId
+                  ? 'Chỉnh sửa thông tin bài tập. Vui lòng cập nhật các trường cần thiết.'
+                  : 'Tạo bài tập mới cho chương này. Vui lòng điền tất cả các trường bắt buộc bên dưới.'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">
-                Title <span className="text-red-500">*</span>
+                Tiêu đề {!viewMode && <span className="text-red-500">*</span>}
               </Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter assignment title"
-                required
+                placeholder="Nhập tiêu đề bài tập"
+                required={!viewMode}
+                disabled={isDisabled}
+                readOnly={viewMode}
               />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="description">
-                Description <span className="text-red-500">*</span>
+                Mô tả {!viewMode && <span className="text-red-500">*</span>}
               </Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter assignment description"
+                placeholder="Nhập mô tả bài tập"
                 rows={4}
-                required
+                required={!viewMode}
+                disabled={isDisabled}
+                readOnly={viewMode}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="duration">
-                  Duration (minutes) <span className="text-red-500">*</span>
+                  Thời lượng (phút){' '}
+                  {!viewMode && <span className="text-red-500">*</span>}
                 </Label>
                 <Input
                   id="duration"
@@ -137,13 +192,16 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                   min="1"
                   value={durationInMinutes}
                   onChange={(e) => setDurationInMinutes(Number(e.target.value))}
-                  required
+                  required={!viewMode}
+                  disabled={isDisabled}
+                  readOnly={viewMode}
                 />
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="maxAttempts">
-                  Max Attempts <span className="text-red-500">*</span>
+                  Số lần thử tối đa{' '}
+                  {!viewMode && <span className="text-red-500">*</span>}
                 </Label>
                 <Input
                   id="maxAttempts"
@@ -151,7 +209,9 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                   min="1"
                   value={maxAttempts}
                   onChange={(e) => setMaxAttempts(Number(e.target.value))}
-                  required
+                  required={!viewMode}
+                  disabled={isDisabled}
+                  readOnly={viewMode}
                 />
               </div>
             </div>
@@ -162,13 +222,21 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
               type="button"
               variant="outline"
               onClick={handleClose}
-              disabled={isSubmitting}
+              disabled={isFetching || isSubmitting}
             >
-              Cancel
+              {viewMode ? 'Đóng' : 'Hủy'}
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Assignment'}
-            </Button>
+            {!viewMode && (
+              <Button type="submit" disabled={isDisabled}>
+                {isSubmitting
+                  ? assignmentId
+                    ? 'Đang cập nhật...'
+                    : 'Đang tạo...'
+                  : assignmentId
+                    ? 'Cập nhật bài tập'
+                    : 'Tạo bài tập'}
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>

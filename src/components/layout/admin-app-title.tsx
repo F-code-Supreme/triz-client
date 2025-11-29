@@ -1,18 +1,76 @@
 import { Link } from '@tanstack/react-router';
+import { Menu, X } from 'lucide-react';
+
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
+
+import { Button } from '../ui/button';
 
 export const AdminAppTitle = () => {
+  const { setOpenMobile } = useSidebar();
+
   return (
-    <Link
-      to="/admin"
-      className="flex items-center gap-2 font-semibold no-underline hover:opacity-80 transition-opacity"
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          size="lg"
+          className="gap-0 py-0 hover:bg-transparent active:bg-transparent"
+          asChild
+        >
+          <div>
+            <Link
+              to="/admin"
+              onClick={() => setOpenMobile(false)}
+              className="flex items-center gap-2 flex-1 text-start text-sm leading-tight"
+            >
+              <img
+                src="/logo.svg"
+                alt="TRIZ Logo"
+                className="h-8 w-8 shrink-0"
+              />
+              <div className="min-w-0">
+                <span className="truncate font-bold block">TRIZ Admin</span>
+                <span className="truncate text-xs text-muted-foreground block">
+                  Management
+                </span>
+              </div>
+            </Link>
+            <ToggleSidebar className="md:hidden" />
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+};
+
+const ToggleSidebar = ({
+  className,
+  onClick,
+  ...props
+}: React.ComponentProps<typeof Button>) => {
+  const { toggleSidebar } = useSidebar();
+
+  return (
+    <Button
+      data-sidebar="trigger"
+      data-slot="sidebar-trigger"
+      variant="ghost"
+      size="icon"
+      className={cn('aspect-square size-8 max-md:scale-125', className)}
+      onClick={(event) => {
+        onClick?.(event);
+        toggleSidebar();
+      }}
+      {...props}
     >
-      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-        <span className="text-sm font-bold">T</span>
-      </div>
-      <div className="flex flex-col gap-0.5 leading-none">
-        <span>TRIZ Admin</span>
-        <span className="text-xs text-muted-foreground">Management</span>
-      </div>
-    </Link>
+      <X className="md:hidden" />
+      <Menu className="max-md:hidden" />
+      <span className="sr-only">Toggle Sidebar</span>
+    </Button>
   );
 };

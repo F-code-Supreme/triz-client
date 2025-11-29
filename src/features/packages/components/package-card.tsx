@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
+import { formatTrizilium, formatDailyTrizilium } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
 
@@ -33,8 +34,8 @@ const PackageCard: React.FC<PackageCardProps> = ({
               variant={pkg.status === 'ACTIVE' ? 'default' : 'secondary'}
               className={
                 pkg.status === 'ACTIVE'
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-gray-400 hover:bg-gray-500'
+                  ? 'bg-green-500 hover:bg-green-500/90'
+                  : 'bg-gray-400 hover:bg-gray-400/90'
               }
             >
               {pkg.status}
@@ -48,7 +49,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Price:</span>
             <span className="font-semibold text-lg">
-              {pkg.priceInTokens.toLocaleString()} tokens
+              {formatTrizilium(pkg.priceInTokens)}
             </span>
           </div>
           <div className="flex justify-between items-center">
@@ -58,7 +59,9 @@ const PackageCard: React.FC<PackageCardProps> = ({
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Daily Tokens:</span>
             <span className="font-medium">
-              {pkg.chatTokenPerDay.toLocaleString()}
+              {formatDailyTrizilium(pkg.chatTokenPerDay, {
+                shortForm: true,
+              })}
             </span>
           </div>
         </div>

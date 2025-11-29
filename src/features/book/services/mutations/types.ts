@@ -1,9 +1,5 @@
 import type { AdminBook } from '../../types';
 
-export interface IUploadFilePayload {
-  file: File;
-}
-
 export interface IUpdateBookPayload extends Omit<AdminBook, 'id'> {
   bookId: string;
 }

@@ -1,8 +1,9 @@
 import { ChevronRight } from 'lucide-react';
-import React, { useState } from 'react';
-// import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectTrigger,
@@ -10,7 +11,14 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { useCreateCourseMutation } from '@/features/courses/services/mutations';
+import {
+  useCreateCourseMutation,
+  useUpdateCourseMutation,
+} from '@/features/courses/services/mutations';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { useUploadFileMutation } from '@/features/media/services/mutations';
+
+import type { Course } from '@/features/courses/types';
 
 type Errors = {
   title?: string;
@@ -40,9 +48,8 @@ const StepBasic: React.FC<Props> = ({
   thumbnailPreview,
   errors,
   goNext,
-  // setCourseId,
+  setCourseId,
 }) => {
-  // use parent's `description` as the short description field
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
     'STARTER',
@@ -54,98 +61,230 @@ const StepBasic: React.FC<Props> = ({
   const [thumbnailUrl, setThumbnailUrl] = useState<string>(
     thumbnailPreview ?? '',
   );
-  const [localErrors, _setLocalErrors] = useState<Errors>({});
+  const uploadFile = useUploadFileMutation();
+  const [localErrors, setLocalErrors] = useState<Errors>({});
+  const [existingCourseId, setExistingCourseId] = useState<string | null>(null);
+  const [draftId, setDraftId] = useState<string | null>(null);
 
+  const { data: existingCourse } = useGetCourseByIdQuery(draftId ?? undefined);
+  const [serverPopulated, setServerPopulated] = useState<boolean>(false);
   const createCourse = useCreateCourseMutation();
+  const updateCourse = useUpdateCourseMutation(existingCourseId ?? '');
 
-  // const validate = () => {
-  //   const e: Errors = {};
-  //   if (!title.trim()) e.title = 'Title is required';
-  //   if (!description.trim()) e.description = 'Short description is required';
-  //   if (!thumbnailUrl.trim()) e.thumbnail = 'Thumbnail is required';
-  //   if (!(price > 0)) e.price = 'Price must be greater than 0';
-  //   setLocalErrors(e);
-  //   return Object.keys(e).length === 0;
-  // };
+  const restoreDraft = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem('createCourseDraft_v1');
+      if (!raw) return;
+      const saved = JSON.parse(raw) as Record<string, unknown>;
+      if (!saved) return;
+
+      const id = typeof saved.id === 'string' && saved.id ? saved.id : null;
+      // If there's an id, defer restoring until we verify the server has the course.
+      if (id) {
+        setDraftId(id);
+        return;
+      }
+
+      const payload = (saved.payload ?? saved) as Record<string, unknown>;
+
+      const setIfString = (key: string, setter: (v: string) => void) => {
+        const val = payload[key];
+        if (typeof val === 'string') setter(val);
+      };
+      const setIfNumber = (key: string, setter: (v: number) => void) => {
+        const val = payload[key];
+        if (typeof val === 'number') setter(val);
+      };
+
+      setIfString('title', setTitle);
+      setIfString('description', setDescription);
+      setIfNumber('durationInMinutes', setDurationInMinutes);
+
+      const levelVal = payload.level;
+      if (['STARTER', 'INTERMEDIATE', 'ADVANCED'].includes(String(levelVal)))
+        setLevel(levelVal as 'STARTER' | 'INTERMEDIATE' | 'ADVANCED');
+
+      if (typeof payload.price === 'number') {
+        setPrice(payload.price);
+        setPriceDisplay(String(payload.price));
+      }
+
+      if (typeof payload.dealPrice === 'number') {
+        setDealPrice(payload.dealPrice);
+        setDealPriceDisplay(String(payload.dealPrice));
+      }
+
+      if (typeof payload.thumbnailUrl === 'string' && payload.thumbnailUrl)
+        setThumbnailUrl(payload.thumbnailUrl);
+    } catch {
+      // ignore parse errors
+    }
+  };
+  useEffect(() => {
+    restoreDraft();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // When we receive an existing course from the server (queried by draftId),
+  // populate the form fields from that server response exactly once.
+  useEffect(() => {
+    if (!existingCourse) return;
+    if (serverPopulated) return;
+
+    setExistingCourseId(existingCourse.id as string);
+    setCourseId?.(existingCourse.id as string);
+    setTitle(existingCourse.title ?? '');
+    setDescription(existingCourse.description ?? '');
+    setDurationInMinutes(existingCourse.durationInMinutes ?? 60);
+    setLevel((existingCourse.level as any) ?? 'STARTER');
+    setPrice(existingCourse.price ?? 0);
+    setPriceDisplay(String(existingCourse.price ?? 0));
+    setDealPrice(existingCourse.dealPrice ?? 0);
+    setDealPriceDisplay(String(existingCourse.dealPrice ?? 0));
+    setThumbnailUrl(existingCourse.thumbnailUrl ?? '');
+
+    try {
+      localStorage.removeItem('createCourseDraft_v1');
+    } catch {
+      // ignore
+    }
+
+    setServerPopulated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [existingCourse]);
+  const validate = () => {
+    const e: Errors = {};
+    if (!title.trim()) e.title = 'Tiêu đề là bắt buộc';
+    if (!description.trim()) e.description = 'Mô tả ngắn là bắt buộc';
+    if (!thumbnailUrl.trim()) e.thumbnail = 'Ảnh đại diện là bắt buộc';
+    if (!(price > 0)) e.price = 'Giá phải lớn hơn 0';
+    if (dealPrice > 0 && dealPrice >= price) {
+      e.dealPrice = 'Giá khuyến mãi phải nhỏ hơn giá gốc';
+    }
+    setLocalErrors(e);
+    return Object.keys(e).length === 0;
+  };
 
   const handleCreate = () => {
-    // if (!validate()) return;
+    if (!validate()) return;
 
-    // const payload = {
-    //   title: title.trim(),
-    //   description: description.trim(),
-    //   shortDescription: description.trim(),
-    //   durationInMinutes,
-    //   level,
-    //   price,
-    //   dealPrice,
-    //   // backend expects a URL; as a fallback use data URL preview
-    //   thumbnailUrl: thumbnailUrl ?? '',
-    // };
+    const payload = {
+      title: title.trim(),
+      description: description.trim(),
+      shortDescription: description.trim(),
+      durationInMinutes,
+      level,
+      price,
+      dealPrice,
+      thumbnailUrl: thumbnailUrl ?? '',
+    };
 
-    // const getErrorMessage = (err: unknown) => {
-    //   if (typeof err === 'object' && err !== null) {
-    //     const e = err as Record<string, unknown>;
-    //     if (typeof e.message === 'string') return e.message;
-    //   }
-    //   return 'An error occurred while creating the course.';
-    // };
+    const getErrorMessage = (err: unknown) => {
+      if (typeof err === 'object' && err !== null) {
+        const e = err as Record<string, unknown>;
+        if (typeof e.message === 'string') return e.message;
+      }
+      return 'An error occurred while creating the course.';
+    };
 
-    // createCourse.mutate(payload, {
-    //   onSuccess: (res: unknown) => {
-    //     let id: string | undefined;
-    //     if (typeof res === 'object' && res !== null && 'id' in res) {
-    //       const maybeId = (res as Record<string, unknown>).id;
-    //       if (typeof maybeId === 'string') {
-    //         id = maybeId;
-    //       }
-    //     }
-    //     if (id && setCourseId) setCourseId(id);
-    // Proceed to next step on success
-    goNext();
-    //   },
-    //   onError: (error: unknown) => {
-    //     toast.error(getErrorMessage(error));
-    //   },
-    // });
+    const mutation = existingCourseId ? updateCourse : createCourse;
+    const successMessage = existingCourseId
+      ? 'Khóa học đã được cập nhật thành công!'
+      : 'Khóa học đã được tạo thành công, tiếp tục bước tiếp theo.';
+
+    mutation.mutate(payload, {
+      onSuccess: (res) => {
+        const response = res as Course;
+        localStorage.setItem(
+          'createCourseDraft_v1',
+          JSON.stringify({ payload, id: response.id as string }),
+        );
+        toast.success(successMessage);
+        goNext();
+      },
+      onError: (error: unknown) => {
+        toast.error(getErrorMessage(error));
+      },
+    });
   };
 
   // react-query mutation result typing may vary across versions; access isLoading defensively
   const loading = Boolean(
-    (createCourse as unknown as { isLoading?: boolean }).isLoading,
+    (createCourse as unknown as { isLoading?: boolean }).isLoading ||
+    (updateCourse as unknown as { isLoading?: boolean }).isLoading,
   );
 
   return (
     <div className="rounded-md border p-6">
-      <h2 className="text-lg font-semibold mb-4">Basic information</h2>
+      <h2 className="text-lg font-bold mb-4">
+        Thông tin cơ bản khóa học
+        {existingCourseId && (
+          <span className="ml-2 text-sm font-normal text-muted-foreground">
+            (Đang chỉnh sửa)
+          </span>
+        )}
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Thumbnail */}
         <div className="col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Thumbnail URL
+          <label className="block text-sm font-semibold text-gray-700">
+            Ảnh đại diện khóa học <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            value={thumbnailUrl}
-            onChange={(e) => setThumbnailUrl(e.target.value)}
-            placeholder="https://example.com/image.jpg or data URL"
-            className="mt-1 block w-full rounded-md border px-3 py-2"
-            disabled={loading}
-          />
+
+          <div className="mt-1 flex items-center gap-2">
+            <Input
+              id="picture"
+              type="file"
+              accept="image/*"
+              placeholder="Chọn ảnh cho khóa học"
+              onChange={(e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (!file) return;
+                // uploadFile expects an object payload with `file` property
+                uploadFile.mutate(
+                  { file },
+                  {
+                    onSuccess: (res: {
+                      flag: boolean;
+                      code: number;
+                      data: string;
+                    }) => {
+                      if (res.code === 200) {
+                        setThumbnailUrl(res.data);
+                      }
+                      toast.success('Tải ảnh lên thành công');
+                    },
+                    onError: () => {
+                      toast.error('Tải ảnh lên thất bại. Vui lòng thử lại.');
+                    },
+                  },
+                );
+              }}
+              disabled={loading || uploadFile.isPending}
+            />
+
+            {uploadFile.progress > 0 && uploadFile.isPending && (
+              <div className="text-sm text-muted-foreground">
+                {uploadFile.progress}%
+              </div>
+            )}
+          </div>
+
           {thumbnailUrl && (
-            <div className="mt-2 w-full h-28 overflow-hidden rounded-md border bg-white">
+            <div className="mt-2 w-full h-64 overflow-hidden rounded-md border bg-white">
               <img
                 src={thumbnailUrl}
                 alt="thumbnail preview"
                 className="object-cover w-full h-full"
                 onError={(e) => {
-                  // hide broken image by clearing src (keeps UI simple);
                   (e.target as HTMLImageElement).src = '';
                 }}
               />
             </div>
           )}
+
           {(errors.thumbnail || localErrors.thumbnail) && (
             <p className="text-sm text-red-600 mt-2">
               {errors.thumbnail ?? localErrors.thumbnail}
@@ -156,15 +295,15 @@ const StepBasic: React.FC<Props> = ({
         {/* Title + Description + meta */}
         <div className="md:col-span-2 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Course Title
+            <label className="block text-sm font-semibold text-gray-700">
+              Tiêu đề khóa học <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter course title"
+              className="mt-1 block w-full rounded-md border px-3 py-2 "
+              placeholder="Nhập tiêu đề khóa học"
               disabled={loading}
             />
             {(errors.title || localErrors.title) && (
@@ -175,15 +314,15 @@ const StepBasic: React.FC<Props> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Short Description
+            <label className="block text-sm font-semibold text-gray-700">
+              Mô tả ngắn <span className="text-red-500">*</span>
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="mt-1 block w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Short description for listings"
+              className="mt-1 block w-full rounded-md border px-3 py-2"
+              placeholder="Mô tả ngắn cho khóa học"
               disabled={loading}
             />
             {localErrors.description && (
@@ -195,8 +334,8 @@ const StepBasic: React.FC<Props> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Duration (minutes)
+              <label className="block text-sm font-semibold text-gray-700">
+                Thời lượng (phút)
               </label>
               <input
                 type="number"
@@ -209,8 +348,8 @@ const StepBasic: React.FC<Props> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Level
+              <label className="block text-sm font-semibold text-gray-700">
+                Mức độ
               </label>
               <Select
                 value={level}
@@ -222,9 +361,9 @@ const StepBasic: React.FC<Props> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="STARTER">Starter</SelectItem>
-                  <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-                  <SelectItem value="ADVANCED">Advanced</SelectItem>
+                  <SelectItem value="STARTER">Sơ cấp</SelectItem>
+                  <SelectItem value="INTERMEDIATE">Trung cấp</SelectItem>
+                  <SelectItem value="ADVANCED">Nâng cao</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -232,8 +371,8 @@ const StepBasic: React.FC<Props> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Price
+              <label className="block text-sm font-semibold text-gray-700">
+                Giá <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -253,8 +392,8 @@ const StepBasic: React.FC<Props> = ({
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Deal Price
+              <label className="block text-sm font-semibold text-gray-700">
+                Giá ưu đãi
               </label>
               <input
                 type="text"
@@ -284,7 +423,13 @@ const StepBasic: React.FC<Props> = ({
         <div />
         <div className="flex items-center gap-3">
           <Button type="button" onClick={handleCreate} disabled={loading}>
-            {loading ? 'Creating...' : 'Create & Next'}
+            {loading
+              ? existingCourseId
+                ? 'Đang cập nhật...'
+                : 'Tạo...'
+              : existingCourseId
+                ? 'Cập nhật & Tiếp tục'
+                : 'Tạo & Tiếp tục'}
             <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
