@@ -259,7 +259,7 @@ const AdminQuizzesPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Quiz</AlertDialogTitle>
             <AlertDialogDescription>
-              `Are you sure you want to delete quiz &quot;${deletingQuiz.title}
+              `Are you sure you want to delete quiz &quot;${deletingQuiz?.title}
               &quot;?`
             </AlertDialogDescription>
           </AlertDialogHeader>
