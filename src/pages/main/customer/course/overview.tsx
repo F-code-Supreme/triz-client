@@ -23,6 +23,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
@@ -54,7 +55,65 @@ const CourseOverviewPage = () => {
     }
   };
 
-  if (isLoading) return <div>Loading course...</div>;
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="mb-8">
+          <Skeleton className="h-10 w-48 mb-6" />
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="md:col-span-2">
+              <div className="flex items-start gap-4 mb-4">
+                <Skeleton className="w-24 h-24 rounded-lg" />
+                <div className="flex-1 space-y-3">
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-8 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <Skeleton className="h-6 w-40" />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <Skeleton key={i} className="h-6 w-full" />
+                    ))}
+                  </div>
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-20 w-full" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-6 w-48" />
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-24 w-full rounded-lg" />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
   if (isError || !course) return <div>Failed to load course.</div>;
 
   const handleEnroll = async () => {
@@ -206,7 +265,17 @@ const CourseOverviewPage = () => {
             </CardHeader>
             <CardContent>
               {isLoadingModules ? (
-                <div>Loading modules...</div>
+                <div className="space-y-4">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="border rounded-lg p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-5 w-48" />
+                        <Skeleton className="h-4 w-20" />
+                      </div>
+                      <Skeleton className="h-4 w-32" />
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <div className="space-y-4">
                   {modules.map((module) => (
