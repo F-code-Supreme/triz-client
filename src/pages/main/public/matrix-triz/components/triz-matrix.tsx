@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import {
   Dialog,
@@ -53,6 +53,9 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
     null,
   );
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // Ref to the scrollable matrix container
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   // Hàm helper để lấy màu nền cho ô
   const getCellContent = (rIndex: number, cIndex: number) => {
@@ -238,13 +241,50 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
       requestAnimationFrame(animateRow);
 
       // Scroll to the cell - will be implemented if needed
-      // You can add smooth scroll logic here
+      // Scrolling handled after animation when the cell is highlighted
     } else {
       // No principles found for this combination - show dialog
       setShowNoSolutionDialog(true);
       setHighlightedCell(null);
     }
   };
+
+  // When a cell becomes highlighted (after find animation), scroll it into view
+  useEffect(() => {
+    if (!highlightedCell) return;
+
+    const id = `cell-${highlightedCell.r}-${highlightedCell.c}`;
+    const el = document.getElementById(id);
+
+    if (el) {
+      // Try to scroll smoothly and center the cell in the viewport of its scroll container
+      try {
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        // Fallback for older browsers: compute offsets relative to container
+        const container = containerRef.current;
+        if (container) {
+          const elRect = el.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          const offsetTop =
+            elRect.top - containerRect.top + container.scrollTop;
+          const offsetLeft =
+            elRect.left - containerRect.left + container.scrollLeft;
+
+          container.scrollTo({
+            top: offsetTop - container.clientHeight / 2,
+            left: offsetLeft - container.clientWidth / 2,
+            behavior: 'smooth',
+          });
+        }
+      }
+    }
+  }, [highlightedCell]);
 
   return (
     <>
@@ -324,6 +364,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
         {/* Grid Container - Xử lý cuộn */}
         <div
           className="flex-1 overflow-auto relative"
+          ref={containerRef}
           style={{ scrollbarWidth: 'thin' }}
         >
           <div
@@ -395,6 +436,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
                   return (
                     <button
                       key={`cell-${rIndex}-${cIndex}`}
+                      id={`cell-${rIndex}-${cIndex}`}
                       type="button"
                       aria-label={`Cell ${rIndex + 1} → ${cIndex + 1}`}
                       style={showScan ? scanStyle : {}}

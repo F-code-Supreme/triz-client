@@ -16,10 +16,8 @@ import { useMinimalTiptapEditor } from './hooks/use-minimal-tiptap';
 import type { UseMinimalTiptapEditorProps } from './hooks/use-minimal-tiptap';
 import type { Content, Editor } from '@tiptap/react';
 
-export interface MinimalTiptapProps extends Omit<
-  UseMinimalTiptapEditorProps,
-  'onUpdate'
-> {
+export interface MinimalTiptapProps
+  extends Omit<UseMinimalTiptapEditorProps, 'onUpdate'> {
   value?: Content;
   onChange?: (value: Content) => void;
   className?: string;
