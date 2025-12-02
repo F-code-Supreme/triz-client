@@ -1,16 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface Step7Props {
+import type { StepData } from '../../six-steps-workflow';
+
+export interface Step7Props {
   onBack: () => void;
-  stepData?: {
-    step1?: { understanding: string };
-    step2?: { objective: string };
-    step3?: { questions: string };
-    step4?: { contradiction: string };
-    step5?: { ideas: string };
-    step6?: { decision: string };
-  };
+  stepData?: StepData;
 }
 
 export const Step7Summary = ({ onBack, stepData }: Step7Props) => {
@@ -42,10 +37,27 @@ export const Step7Summary = ({ onBack, stepData }: Step7Props) => {
               <h3 className="font-semibold text-lg">
                 Bước 2: Đề ra mục đích cần đạt
               </h3>
-              <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm whitespace-pre-wrap">
-                  {stepData.step2.objective}
-                </p>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Tất cả mục tiêu:
+                  </p>
+                  {stepData.step2.goals.map((goal, index) => (
+                    <div key={goal.id} className="text-sm">
+                      {index + 1}. {goal.text}
+                    </div>
+                  ))}
+                </div>
+                {stepData.step2.selectedGoal && (
+                  <div className="space-y-2 pt-2 border-t">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Mục tiêu đã chọn:
+                    </p>
+                    <div className="text-sm font-semibold text-primary">
+                      {stepData.step2.selectedGoal.text}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

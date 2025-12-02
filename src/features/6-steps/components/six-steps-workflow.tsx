@@ -12,9 +12,11 @@ import {
   Step7Summary,
 } from './steps';
 
-interface StepData {
+import type { GoalItem } from './steps';
+
+export interface StepData {
   step1?: { understanding: string };
-  step2?: { objective: string };
+  step2?: { goals: GoalItem[]; selectedGoal?: GoalItem };
   step3?: { questions: string };
   step4?: { contradiction: string };
   step5?: { ideas: string };
@@ -63,7 +65,7 @@ export const SixStepsWorkflow = () => {
       <HorizontalStepper steps={STEPS} currentStep={currentStep} />
 
       {/* Step Content */}
-      <div className="min-h-[calc(100%-64px)]">
+      <div className="h-[calc(100vh-230px)]">
         {currentStep === 1 && (
           <Step1UnderstandProblem
             onNext={(data) => handleStepNext(1, data)}

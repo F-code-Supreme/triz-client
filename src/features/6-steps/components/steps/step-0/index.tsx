@@ -3,12 +3,12 @@ import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import PrincipleLabel from '../introduction/principle-label';
-import Corner1 from '../svg/corner-1';
-import Corner2 from '../svg/corner-2';
-import Corner3 from '../svg/corner-3';
-import Corner4 from '../svg/corner-4';
-import LogoTriz from '../svg/logo-triz';
+import PrincipleLabel from './principle-label';
+import Corner1 from '../../svg/corner-1';
+import Corner2 from '../../svg/corner-2';
+import Corner3 from '../../svg/corner-3';
+import Corner4 from '../../svg/corner-4';
+import LogoTriz from '../../svg/logo-triz';
 
 interface Step0IntroductionProps {
   onStart: () => void;
