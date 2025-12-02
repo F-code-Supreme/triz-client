@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { HorizontalStepper } from './stepper';
 import {
   Step0Introduction,
@@ -11,17 +9,10 @@ import {
   Step6MakeDecision,
   Step7Summary,
 } from './steps';
+import { useSixStepDataStore } from '../store/useSixStepDataStore';
 
-import type { GoalItem } from './steps';
-
-export interface StepData {
-  step1?: { understanding: string };
-  step2?: { goals: GoalItem[]; selectedGoal?: GoalItem };
-  step3?: { questions: string };
-  step4?: { contradiction: string };
-  step5?: { ideas: string };
-  step6?: { decision: string };
-}
+// Re-export for backward compatibility
+export type { SixStepData as StepData } from '../store/useSixStepDataStore';
 
 const STEPS = [
   { number: 1, label: 'Hiểu bài toán' },
@@ -34,20 +25,48 @@ const STEPS = [
 ];
 
 export const SixStepsWorkflow = () => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [stepData, setStepData] = useState<StepData>({});
-  const [hasStarted, setHasStarted] = useState(false);
+  const {
+    currentStep,
+    hasStarted,
+    stepData,
+    nextStep,
+    previousStep,
+    setHasStarted,
+    updateStep1,
+    updateStep2,
+    updateStep3,
+    updateStep4,
+    updateStep5,
+    updateStep6,
+  } = useSixStepDataStore();
 
-  const handleStepNext = (step: number, data: Record<string, unknown>) => {
-    setStepData((prev) => ({
-      ...prev,
-      [`step${step}`]: data,
-    }));
-    setCurrentStep(step + 1);
+  const handleStepNext = (step: number, data: unknown) => {
+    // Update the appropriate step data based on step number
+    switch (step) {
+      case 1:
+        updateStep1(data as typeof stepData.step1);
+        break;
+      case 2:
+        updateStep2(data as typeof stepData.step2);
+        break;
+      case 3:
+        updateStep3(data as typeof stepData.step3);
+        break;
+      case 4:
+        updateStep4(data as typeof stepData.step4);
+        break;
+      case 5:
+        updateStep5(data as typeof stepData.step5);
+        break;
+      case 6:
+        updateStep6(data as typeof stepData.step6);
+        break;
+    }
+    nextStep();
   };
 
   const handleStepBack = () => {
-    setCurrentStep((prev) => Math.max(1, prev - 1));
+    previousStep();
   };
 
   const handleStart = () => {
@@ -67,17 +86,13 @@ export const SixStepsWorkflow = () => {
       {/* Step Content */}
       <div className="h-[calc(100vh-230px)]">
         {currentStep === 1 && (
-          <Step1UnderstandProblem
-            onNext={(data) => handleStepNext(1, data)}
-            initialData={stepData.step1}
-          />
+          <Step1UnderstandProblem onNext={(data) => handleStepNext(1, data)} />
         )}
 
         {currentStep === 2 && (
           <Step2DefineObjective
             onNext={(data) => handleStepNext(2, data)}
             onBack={handleStepBack}
-            initialData={stepData.step2}
           />
         )}
 
@@ -113,9 +128,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {currentStep === 7 && (
-          <Step7Summary onBack={handleStepBack} stepData={stepData} />
-        )}
+        {currentStep === 7 && <Step7Summary onBack={handleStepBack} />}
       </div>
     </div>
   );

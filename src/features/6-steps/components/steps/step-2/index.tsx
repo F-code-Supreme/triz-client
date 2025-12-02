@@ -1,47 +1,87 @@
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useStep2SuggestionMutation } from '@/features/6-steps/services/mutations';
+import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
-import Goal from './Goal';
 import ActionButtons from '../../ActionButtons';
+import { SelectableItem } from '../../SelectableItem';
+import { SelectableItemSkeletonList } from '../../SelectableItemSkeleton';
 
-export interface GoalItem {
-  id: string;
-  text: string;
-}
+import type {
+  GoalItem,
+  SixStepData,
+} from '@/features/6-steps/store/useSixStepDataStore';
 
 interface Step2Props {
-  onNext: (data: { goals: GoalItem[]; selectedGoal?: GoalItem }) => void;
+  onNext: (data: SixStepData['step2']) => void;
   onBack: () => void;
   initialData?: { goals: GoalItem[] };
+  selectedMiniProblem?: string;
 }
 
-// Mock data for goals
-const MOCK_GOALS: GoalItem[] = [
-  { id: '1', text: 'Kéo dài thời lượng pin' },
-  { id: '2', text: 'Duy trì hiệu năng CPU cao' },
-  { id: '3', text: 'Giảm nhiệt độ thiết bị' },
-  { id: '4', text: 'Giảm nhiệt độ thiết bị' },
-  { id: '5', text: 'Giảm nhiệt độ thiết bị' },
-  { id: '6', text: 'Giảm nhiệt độ thiết bị' },
-  { id: '7', text: 'Giảm nhiệt độ thiết bị' },
-  { id: '8', text: 'Giảm nhiệt độ thiết bị' },
-  { id: '9', text: 'Giảm nhiệt độ thiết bị' },
-];
+export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
+  const { stepData } = useSixStepDataStore();
+  const initialData = stepData.step2;
+  const selectedMiniProblem = stepData.step1?.selectedMiniProblem;
 
-export const Step2DefineObjective = ({
-  onNext,
-  onBack,
-  initialData,
-}: Step2Props) => {
-  const [goals, setGoals] = useState<GoalItem[]>(
-    initialData?.goals || MOCK_GOALS,
-  );
+  const [goals, setGoals] = useState<GoalItem[]>(initialData?.goals || []);
   const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
   const [isAddingGoal, setIsAddingGoal] = useState(false);
   const [newGoalText, setNewGoalText] = useState('');
+
+  const step2Mutation = useStep2SuggestionMutation();
+
+  // Update local state when store data changes
+  useEffect(() => {
+    if (initialData?.goals) {
+      setGoals(initialData.goals);
+    }
+  }, [initialData]);
+
+  // Fetch goal suggestions when component mounts or mini problem changes
+  useEffect(() => {
+    const fetchGoalSuggestions = async () => {
+      if (selectedMiniProblem && goals.length === 0) {
+        try {
+          const response = await step2Mutation.mutateAsync({
+            miniProblem: selectedMiniProblem,
+          });
+
+          // Convert API response to goals
+          const suggestedGoals: GoalItem[] = [];
+
+          // Add main goal
+          if (response.goal) {
+            suggestedGoals.push({
+              id: 'main-goal',
+              text: response.goal,
+            });
+          }
+
+          // Add secondary goals if available
+          if (response.secondaryGoals && response.secondaryGoals.length > 0) {
+            response.secondaryGoals.forEach((goal, index) => {
+              suggestedGoals.push({
+                id: `secondary-${index}`,
+                text: goal,
+              });
+            });
+          }
+
+          setGoals(suggestedGoals);
+        } catch (error) {
+          console.error('Failed to get goal suggestions:', error);
+          setGoals([]);
+        }
+      }
+    };
+
+    fetchGoalSuggestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedMiniProblem]);
 
   const handleNext = () => {
     if (goals.length > 0 && selectedGoalId) {
@@ -88,64 +128,78 @@ export const Step2DefineObjective = ({
 
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
-      <div className="flex-1 flex flex-col gap-8">
+      <div className="flex-1 flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Mục tiêu bạn muốn đạt được từ vấn đề là gì?
         </div>
-        <div className="self-stretch px-6 py-5 bg-blue-50 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
-          <div className="justify-start text-blue-800 text-base font-bold leading-6">
-            Vấn đề: Pin điện thoại nhanh hết nhưng không được giảm hiệu năng
-            CPU.
+        <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
+          <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
+            Bài toán mini: {selectedMiniProblem || 'Chưa có bài toán mini'}
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+
+        <div className="self-stretch justify-start text-sm font-semibold leading-6 text-slate-600 ">
+          Chọn 1 trong các mục tiêu sau:
+        </div>
+
+        {step2Mutation.isPending ? (
           <ScrollArea className="h-[45vh] pr-4">
             <div className="flex flex-col gap-3">
-              {goals.map((goal) => (
-                <Goal
-                  key={goal.id}
-                  goal={goal.text}
-                  isSelected={selectedGoalId === goal.id}
-                  onEdit={(newText) => handleEditGoal(goal.id, newText)}
-                  onSelect={() => setSelectedGoalId(goal.id)}
-                />
-              ))}
+              <SelectableItemSkeletonList count={5} />
             </div>
           </ScrollArea>
-          {/* Add more goals */}
-          <div>
-            {isAddingGoal ? (
-              <div className="w-full pl-3.5 pr-3 py-4 rounded-lg bg-secondary-foreground outline outline-1 outline-offset-[-1px] outline-primary flex items-center gap-3">
-                <input
-                  type="text"
-                  value={newGoalText}
-                  onChange={(e) => setNewGoalText(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  onBlur={handleAddGoal}
-                  placeholder="Nhập mục tiêu mới..."
-                  className="flex-1 text-primary dark:text-foreground text-sm font-normal leading-5 bg-transparent outline-none"
-                  autoFocus
-                />
+        ) : (
+          <div className="flex flex-col gap-4">
+            <ScrollArea className="h-[45vh] pr-4">
+              <div className="flex flex-col gap-3">
+                {goals.map((goal) => (
+                  <SelectableItem
+                    key={goal.id}
+                    id={goal.id}
+                    text={goal.text}
+                    isSelected={selectedGoalId === goal.id}
+                    isEditable={true}
+                    onEdit={handleEditGoal}
+                    onSelect={(id) => setSelectedGoalId(id)}
+                  />
+                ))}
               </div>
-            ) : (
-              <Button
-                variant="ghost"
-                onClick={() => setIsAddingGoal(true)}
-                className="rounded-lg pl-1 pr-1"
-              >
-                <Plus className="w-4 h-4 text-secondary" />
-                <span className="text-sm font-normal leading-5">
-                  Thêm mục tiêu khác
-                </span>
-              </Button>
-            )}
+            </ScrollArea>
+            {/* Add more goals */}
+            <div>
+              {isAddingGoal ? (
+                <div className="w-full pl-3.5 pr-3 py-4 rounded-lg bg-secondary-foreground outline outline-1 outline-offset-[-1px] outline-primary flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={newGoalText}
+                    onChange={(e) => setNewGoalText(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    onBlur={handleAddGoal}
+                    placeholder="Nhập mục tiêu mới..."
+                    className="flex-1 text-primary dark:text-foreground text-sm font-normal leading-5 bg-transparent outline-none"
+                    autoFocus
+                  />
+                </div>
+              ) : (
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsAddingGoal(true)}
+                  className="rounded-lg pl-1 pr-1"
+                >
+                  <Plus className="w-4 h-4 text-secondary" />
+                  <span className="text-sm font-normal leading-5">
+                    Thêm mục tiêu khác
+                  </span>
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <ActionButtons
         onBack={onBack}
         onNext={handleNext}
-        disableNext={!selectedGoalId}
+        disableNext={!selectedGoalId || step2Mutation.isPending}
       />
     </div>
   );

@@ -1,16 +1,25 @@
 import { Check, Pencil } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
-interface GoalProps {
-  goal: string;
+interface SelectableItemProps {
+  id: string;
+  text: string;
   isSelected?: boolean;
-  onEdit?: (newGoal: string) => void;
-  onSelect?: () => void;
+  isEditable?: boolean;
+  onEdit?: (id: string, newText: string) => void;
+  onSelect?: (id: string) => void;
 }
 
-const Goal = ({ goal, isSelected = false, onEdit, onSelect }: GoalProps) => {
+export const SelectableItem = ({
+  id,
+  text,
+  isSelected = false,
+  isEditable = false,
+  onEdit,
+  onSelect,
+}: SelectableItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(goal);
+  const [editValue, setEditValue] = useState(text);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -21,10 +30,10 @@ const Goal = ({ goal, isSelected = false, onEdit, onSelect }: GoalProps) => {
   }, [isEditing]);
 
   const handleSave = () => {
-    if (editValue.trim() && editValue !== goal && onEdit) {
-      onEdit(editValue.trim());
+    if (editValue.trim() && editValue !== text && onEdit) {
+      onEdit(id, editValue.trim());
     } else {
-      setEditValue(goal); // Reset if no change
+      setEditValue(text); // Reset if no change
     }
     setIsEditing(false);
   };
@@ -33,7 +42,7 @@ const Goal = ({ goal, isSelected = false, onEdit, onSelect }: GoalProps) => {
     if (e.key === 'Enter') {
       handleSave();
     } else if (e.key === 'Escape') {
-      setEditValue(goal);
+      setEditValue(text);
       setIsEditing(false);
     }
   };
@@ -42,16 +51,23 @@ const Goal = ({ goal, isSelected = false, onEdit, onSelect }: GoalProps) => {
     handleSave();
   };
 
+  const handleClick = () => {
+    if (!isEditing && onSelect) {
+      onSelect(id);
+    }
+  };
+
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
       role="button"
-      onClick={!isEditing && onSelect ? onSelect : undefined}
-      className={`w-full pl-3.5 pr-3 py-4 rounded-lg outline outline-1 outline-offset-[-1px] flex justify-between items-center gap-5 transition-all ${
+      tabIndex={0}
+      onClick={handleClick}
+      className={`w-full pl-3.5 pr-3 py-4 rounded-lg bg-primary-foreground outline outline-1 outline-offset-[-1px] flex justify-between items-center gap-5 transition-all ${
         isSelected
-          ? 'bg-secondary/90 outline-primary'
-          : 'bg-secondary-foreground outline-slate-100 dark:outline-slate-800'
-      } ${onSelect && !isEditing ? 'cursor-pointer hover:outline-primary/50' : ''}`}
+          ? 'outline-secondary'
+          : 'outline-slate-100 dark:outline-slate-800'
+      } ${onSelect && !isEditing ? 'cursor-pointer hover:outline-secondary' : ''}`}
     >
       {isEditing ? (
         <>
@@ -67,38 +83,26 @@ const Goal = ({ goal, isSelected = false, onEdit, onSelect }: GoalProps) => {
           <button
             onClick={handleSave}
             className="flex-shrink-0 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
-            aria-label="Save goal"
+            aria-label="Save"
           >
             <Check className="w-4 h-4 text-green-600" />
           </button>
         </>
       ) : (
         <>
-          <div
-            className={`flex-1 text-sm font-normal leading-5 ${
-              isSelected
-                ? 'text-secondary-foreground'
-                : 'text-primary dark:text-foreground'
-            }`}
-          >
-            {goal}
+          <div className="flex-1 text-sm font-normal leading-5 text-primary dark:text-foreground">
+            {text}
           </div>
-          {onEdit && (
+          {isEditable && onEdit && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setIsEditing(true);
               }}
               className="flex-shrink-0 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
-              aria-label="Edit goal"
+              aria-label="Edit"
             >
-              <Pencil
-                className={`w-4 h-4 ${
-                  isSelected
-                    ? 'text-secondary-foreground'
-                    : 'text-primary dark:text-foreground'
-                }`}
-              />
+              <Pencil className="w-4 h-4 text-primary dark:text-foreground" />
             </button>
           )}
         </>
@@ -106,5 +110,3 @@ const Goal = ({ goal, isSelected = false, onEdit, onSelect }: GoalProps) => {
     </div>
   );
 };
-
-export default Goal;

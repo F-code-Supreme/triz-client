@@ -1,14 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-import type { StepData } from '../../six-steps-workflow';
+import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
 export interface Step7Props {
   onBack: () => void;
-  stepData?: StepData;
 }
 
-export const Step7Summary = ({ onBack, stepData }: Step7Props) => {
+export const Step7Summary = ({ onBack }: Step7Props) => {
+  const { stepData } = useSixStepDataStore();
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <Card>
@@ -23,10 +22,25 @@ export const Step7Summary = ({ onBack, stepData }: Step7Props) => {
           {stepData?.step1 && (
             <div className="space-y-2">
               <h3 className="font-semibold text-lg">Bước 1: Hiểu bài toán</h3>
-              <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm whitespace-pre-wrap">
-                  {stepData.step1.understanding}
-                </p>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Vấn đề ban đầu:
+                  </p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {stepData.step1.understanding}
+                  </p>
+                </div>
+                {stepData.step1.selectedMiniProblem && (
+                  <div className="space-y-2 pt-2 border-t">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Vấn đề nhỏ đã chọn:
+                    </p>
+                    <div className="text-sm font-semibold text-primary">
+                      {stepData.step1.selectedMiniProblem}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
