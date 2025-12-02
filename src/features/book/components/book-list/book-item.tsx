@@ -1,10 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { BookOpen, Calendar, User } from 'lucide-react';
 
-import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
 
 import type { Book } from '../../types';
 
@@ -23,7 +21,7 @@ const BookItem = ({
     <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
       {/* Book Cover */}
       <Link key={book.id} to="/books/$bookId" params={{ bookId: book.id }}>
-        <div className="relative w-full h-48 bg-gradient-to-br from-sky-200 to-blue-400 overflow-hidden">
+        <div className="relative w-full aspect-[3/4] bg-gradient-to-br from-sky-200 to-blue-400 overflow-hidden">
           {book.bCoverUrl ? (
             <img
               src={book.bCoverUrl}
@@ -74,18 +72,6 @@ const BookItem = ({
             <span className="line-clamp-1">{book.publisher}</span>
           </div>
         )}
-
-        {/* Read Button */}
-        <Link
-          to="/books/$bookId"
-          params={{ bookId: book.id }}
-          className={cn(
-            buttonVariants({ variant: 'default', size: 'default' }),
-            'w-full mt-4',
-          )}
-        >
-          Read Book
-        </Link>
       </CardContent>
     </Card>
   );
