@@ -14,75 +14,75 @@ const tabs = [
   { id: 'rising', label: 'Đang nổi' },
 ];
 
-const communities = [
-  {
-    id: 'c1',
-    title: 'Altshuller Institute for TRIZ Studies',
-    members: '72.2k thành viên',
-    image:
-      'https://www.figma.com/api/mcp/asset/07ef6892-d172-4cb6-a2e0-e00bf4485f4b',
-    href: '/forum',
-  },
-  {
-    id: 'c2',
-    title: 'International TRIZ Association',
-    members: '193 thành viên',
-    image:
-      'https://www.figma.com/api/mcp/asset/45e91209-ec72-4659-9725-fb96eae13584',
-    href: '/forum',
-  },
-  {
-    id: 'c3',
-    title: 'TRIZ Developers Summit',
-    members: '130k thành viên',
-    image:
-      'https://www.figma.com/api/mcp/asset/be2b6509-cd0e-44b0-81ba-eea4b95e665e',
-    href: '/forum',
-  },
-];
+// const communities = [
+//   {
+//     id: 'c1',
+//     title: 'Altshuller Institute for TRIZ Studies',
+//     members: '72.2k thành viên',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/07ef6892-d172-4cb6-a2e0-e00bf4485f4b',
+//     href: '/forum',
+//   },
+//   {
+//     id: 'c2',
+//     title: 'International TRIZ Association',
+//     members: '193 thành viên',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/45e91209-ec72-4659-9725-fb96eae13584',
+//     href: '/forum',
+//   },
+//   {
+//     id: 'c3',
+//     title: 'TRIZ Developers Summit',
+//     members: '130k thành viên',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/be2b6509-cd0e-44b0-81ba-eea4b95e665e',
+//     href: '/forum',
+//   },
+// ];
 
-const recentViews = [
-  {
-    id: 'r1',
-    title: 'Trong quá trình tối ưu hóa một công đoạn lắp ráp',
-    date: '1 ngày trước',
-    image:
-      'https://www.figma.com/api/mcp/asset/34d34500-f7ff-45be-bc1f-6e5024d62a59',
-    href: '#',
-  },
-  {
-    id: 'r2',
-    title: 'Mình đang nghiên cứu giảm tiếng ồn của quạt gió',
-    date: '20/12/2025',
-    image:
-      'https://www.figma.com/api/mcp/asset/412a8323-468c-4ef1-ba77-c4d5d4f328c7',
-    href: '#',
-  },
-  {
-    id: 'r3',
-    title: 'Trước đây mình rất hay “ép” ARIZ vào bất kỳ',
-    date: '19/12/2025',
-    image:
-      'https://www.figma.com/api/mcp/asset/39626a00-10d0-4894-b019-a917f6519a4f',
-    href: '#',
-  },
-  {
-    id: 'r4',
-    title: 'Nguyên tắc 35 thường bị nghĩ là chỉ áp dụng',
-    date: '18/12/2025',
-    image:
-      'https://www.figma.com/api/mcp/asset/0551a89f-bda5-4aca-a046-266b993ef62d',
-    href: '#',
-  },
-  {
-    id: 'r5',
-    title: 'Nhiều bạn mới học TRIZ thường gộp hai loại xung',
-    date: '17/12/2025',
-    image:
-      'https://www.figma.com/api/mcp/asset/a9cf56e6-257d-45c4-a5b4-8b175e9dd0c6',
-    href: '#',
-  },
-];
+// const recentViews = [
+//   {
+//     id: 'r1',
+//     title: 'Trong quá trình tối ưu hóa một công đoạn lắp ráp',
+//     date: '1 ngày trước',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/34d34500-f7ff-45be-bc1f-6e5024d62a59',
+//     href: '#',
+//   },
+//   {
+//     id: 'r2',
+//     title: 'Mình đang nghiên cứu giảm tiếng ồn của quạt gió',
+//     date: '20/12/2025',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/412a8323-468c-4ef1-ba77-c4d5d4f328c7',
+//     href: '#',
+//   },
+//   {
+//     id: 'r3',
+//     title: 'Trước đây mình rất hay “ép” ARIZ vào bất kỳ',
+//     date: '19/12/2025',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/39626a00-10d0-4894-b019-a917f6519a4f',
+//     href: '#',
+//   },
+//   {
+//     id: 'r4',
+//     title: 'Nguyên tắc 35 thường bị nghĩ là chỉ áp dụng',
+//     date: '18/12/2025',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/0551a89f-bda5-4aca-a046-266b993ef62d',
+//     href: '#',
+//   },
+//   {
+//     id: 'r5',
+//     title: 'Nhiều bạn mới học TRIZ thường gộp hai loại xung',
+//     date: '17/12/2025',
+//     image:
+//       'https://www.figma.com/api/mcp/asset/a9cf56e6-257d-45c4-a5b4-8b175e9dd0c6',
+//     href: '#',
+//   },
+// ];
 
 const ForumPage: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState(tabs[0].id);
