@@ -129,7 +129,7 @@ const ForumPage: React.FC = () => {
       {/* Page content: two-column layout (main feed + right sidebar) */}
       <main className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="col-span-3 flex flex-col gap-6">
+          <div className="col-span-4 flex flex-col gap-6">
             {/* Composer (from Figma node 3239:16193) */}
             <div className=" flex items-center gap-4 p-4 border bg-white border-slate-200 rounded-lg">
               <div className="shrink-0">
@@ -224,7 +224,7 @@ const ForumPage: React.FC = () => {
             />
           </div>
 
-          <aside className="hidden lg:block">
+          {/* <aside className="hidden lg:block">
             <div className="bg-white box-border w-full p-4 rounded-lg border border-slate-200">
               <div className="flex items-center justify-between mb-4">
                 <p className="font-medium text-[16px] text-slate-900">
@@ -291,7 +291,7 @@ const ForumPage: React.FC = () => {
                 ))}
               </div>
             </div>
-          </aside>
+          </aside> */}
         </div>
       </main>
     </DefaultLayout>
