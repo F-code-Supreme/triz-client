@@ -256,6 +256,20 @@ export const useMinimalTiptapEditor = ({
     },
   });
 
+  React.useEffect(() => {
+    if (!mainEditor) return;
+    if (!value) return;
+    try {
+      if (mainEditor.isEmpty) {
+        mainEditor.commands.setContent(value);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      // ignore failures to set content
+      // console.error('Failed to set editor content', err);
+    }
+  }, [mainEditor, value]);
+
   return mainEditor;
 };
 

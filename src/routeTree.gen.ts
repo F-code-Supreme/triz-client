@@ -58,6 +58,7 @@ import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$qui
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
+import { Route as AdminCoursesEditCourseIdRouteImport } from './routes/admin/courses/edit/$courseId'
 import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
 
@@ -307,6 +308,12 @@ const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   path: '/',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
+const AdminCoursesEditCourseIdRoute =
+  AdminCoursesEditCourseIdRouteImport.update({
+    id: '/edit/$courseId',
+    path: '/edit/$courseId',
+    getParentRoute: () => AdminCoursesRouteRoute,
+  } as any)
 const appCourseQuizSlugRouteRoute = appCourseQuizSlugRouteRouteImport.update({
   id: '/course/quiz/$slug',
   path: '/course/quiz/$slug',
@@ -369,6 +376,7 @@ export interface FileRoutesByFullPath {
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
+  '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof appRouteRouteWithChildren
@@ -420,6 +428,7 @@ export interface FileRoutesByTo {
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
+  '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -474,6 +483,7 @@ export interface FileRoutesById {
   '/books/$bookId/': typeof BooksBookIdIndexRoute
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
+  '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -528,6 +538,7 @@ export interface FileRouteTypes {
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
+    | '/admin/courses/edit/$courseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -579,6 +590,7 @@ export interface FileRouteTypes {
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
+    | '/admin/courses/edit/$courseId'
   id:
     | '__root__'
     | '/'
@@ -632,6 +644,7 @@ export interface FileRouteTypes {
     | '/books/$bookId/'
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
+    | '/admin/courses/edit/$courseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1014,6 +1027,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
+    '/admin/courses/edit/$courseId': {
+      id: '/admin/courses/edit/$courseId'
+      path: '/edit/$courseId'
+      fullPath: '/admin/courses/edit/$courseId'
+      preLoaderRoute: typeof AdminCoursesEditCourseIdRouteImport
+      parentRoute: typeof AdminCoursesRouteRoute
+    }
     '/(app)/course/quiz/$slug': {
       id: '/(app)/course/quiz/$slug'
       path: '/course/quiz/$slug'
@@ -1078,11 +1098,13 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 interface AdminCoursesRouteRouteChildren {
   AdminCoursesIndexRouteRoute: typeof AdminCoursesIndexRouteRoute
   AdminCoursesCreateRouteRoute: typeof AdminCoursesCreateRouteRoute
+  AdminCoursesEditCourseIdRoute: typeof AdminCoursesEditCourseIdRoute
 }
 
 const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
   AdminCoursesIndexRouteRoute: AdminCoursesIndexRouteRoute,
   AdminCoursesCreateRouteRoute: AdminCoursesCreateRouteRoute,
+  AdminCoursesEditCourseIdRoute: AdminCoursesEditCourseIdRoute,
 }
 
 const AdminCoursesRouteRouteWithChildren =

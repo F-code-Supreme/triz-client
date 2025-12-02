@@ -38,6 +38,7 @@ type Props = {
   errors: Errors;
   goNext: () => void;
   setCourseId?: (id: string) => void;
+  initialCourse?: Course | null;
 };
 
 const StepBasic: React.FC<Props> = ({
@@ -49,6 +50,7 @@ const StepBasic: React.FC<Props> = ({
   errors,
   goNext,
   setCourseId,
+  initialCourse,
 }) => {
   const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
@@ -70,6 +72,33 @@ const StepBasic: React.FC<Props> = ({
   const [serverPopulated, setServerPopulated] = useState<boolean>(false);
   const createCourse = useCreateCourseMutation();
   const updateCourse = useUpdateCourseMutation(existingCourseId ?? '');
+
+  // If an initial course is provided (edit mode), populate the form from it once.
+  useEffect(() => {
+    if (!initialCourse) return;
+    if (serverPopulated) return;
+
+    setExistingCourseId(initialCourse.id as string);
+    setCourseId?.(initialCourse.id as string);
+    setTitle(initialCourse.title ?? '');
+    setDescription(initialCourse.description ?? '');
+    setDurationInMinutes(initialCourse.durationInMinutes ?? 60);
+    setLevel((initialCourse.level as any) ?? 'STARTER');
+    setPrice(initialCourse.price ?? 0);
+    setPriceDisplay(String(initialCourse.price ?? 0));
+    setDealPrice(initialCourse.dealPrice ?? 0);
+    setDealPriceDisplay(String(initialCourse.dealPrice ?? 0));
+    setThumbnailUrl(initialCourse.thumbnailUrl ?? '');
+
+    try {
+      localStorage.removeItem('createCourseDraft_v1');
+    } catch {
+      // ignore
+    }
+
+    setServerPopulated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialCourse]);
 
   const restoreDraft = () => {
     if (typeof window === 'undefined') return;
