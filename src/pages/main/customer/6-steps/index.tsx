@@ -1,4 +1,4 @@
-import SixStepsIntroduction from '@/features/6-steps/components/introduction';
+import { SixStepsWorkflow } from '@/features/6-steps/components';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const SixStepsPage = () => {
@@ -7,7 +7,7 @@ const SixStepsPage = () => {
       className="py-8"
       meta={{ title: '6 Steps to Innovative Problem Solving' }}
     >
-      <SixStepsIntroduction />
+      <SixStepsWorkflow />
     </DefaultLayout>
   );
 };

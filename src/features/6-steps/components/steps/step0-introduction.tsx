@@ -3,14 +3,18 @@ import { ArrowRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import PrincipleLabel from './principle-label';
+import PrincipleLabel from '../introduction/principle-label';
 import Corner1 from '../svg/corner-1';
 import Corner2 from '../svg/corner-2';
 import Corner3 from '../svg/corner-3';
 import Corner4 from '../svg/corner-4';
 import LogoTriz from '../svg/logo-triz';
 
-const SixStepsIntroduction = () => {
+interface Step0IntroductionProps {
+  onStart: () => void;
+}
+
+export const Step0Introduction = ({ onStart }: Step0IntroductionProps) => {
   return (
     <div className="relative flex flex-col gap-12">
       <div className="h-[480px] relative overflow-hidden w-full py-4">
@@ -170,7 +174,7 @@ const SixStepsIntroduction = () => {
         className="flex justify-center"
       >
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button size="lg">
+          <Button size="lg" onClick={onStart}>
             Bắt Đầu Ngay <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </motion.div>
@@ -178,5 +182,3 @@ const SixStepsIntroduction = () => {
     </div>
   );
 };
-
-export default SixStepsIntroduction;
