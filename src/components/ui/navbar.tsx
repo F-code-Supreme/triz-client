@@ -11,6 +11,7 @@ import {
   Lightbulb,
   Grid3x3,
   Gamepad2,
+  Footprints,
 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -62,11 +63,18 @@ export interface LearnTrizNavItem {
   icon: React.ElementType;
 }
 
+export interface ToolsNavItem {
+  href: string;
+  labelKey: string;
+  icon: React.ElementType;
+}
+
 export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
   logo?: React.ReactNode;
   logoHref?: string;
   navigationLinks?: Navbar03NavItem[];
   learnTrizLinks?: LearnTrizNavItem[];
+  toolsLinks?: ToolsNavItem[];
   signInText?: string;
   signInHref?: string;
   ctaText?: string;
@@ -93,6 +101,11 @@ const LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
   { href: '/quiz', labelKey: 'learn_triz.quiz', icon: BookCheck },
 ];
 
+// Configuration for Tools dropdown links
+const TOOLS_LINKS: ToolsNavItem[] = [
+  { href: '/6-steps', labelKey: 'tools.six_steps', icon: Footprints },
+];
+
 // Active link styling
 const activeLinkClass =
   'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-100 text-primary';
@@ -100,7 +113,10 @@ const hoverLinkClass =
   'relative before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5 before:bg-primary before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100';
 
 export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
-  ({ className, navigationLinks, learnTrizLinks, ...props }, ref) => {
+  (
+    { className, navigationLinks, learnTrizLinks, toolsLinks, ...props },
+    ref,
+  ) => {
     const { theme, setTheme } = useTheme();
     const { t } = useTranslation('header');
     const { isAuthenticated, user } = useAuth();
@@ -114,6 +130,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     const navLinks =
       navigationLinks || MAIN_NAV_LINKS(t as (key: string) => string);
     const learnTrizNavLinks = learnTrizLinks || LEARN_TRIZ_LINKS;
+    const toolsNavLinks = toolsLinks || TOOLS_LINKS;
     const isMobile = useMediaQuery('(max-width: 767px)'); // 767px is md breakpoint
     const containerRef = React.useRef<HTMLElement>(null);
 
@@ -127,6 +144,11 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     // Check if Learn TRIZ dropdown should be active
     const isLearnTrizActive = () => {
       return learnTrizNavLinks.some((link) => isLinkActive(link.href));
+    };
+
+    // Check if Tools dropdown should be active
+    const isToolsActive = () => {
+      return toolsNavLinks.some((link) => isLinkActive(link.href));
     };
 
     // Combine refs
@@ -188,6 +210,27 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                           {t('learn_triz')}
                         </div>
                         {learnTrizNavLinks.map((link, index) => {
+                          const Icon = link.icon;
+                          return (
+                            <NavigationMenuItem key={index} className="w-full">
+                              <Link
+                                to={link.href}
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline pl-6"
+                              >
+                                <Icon className="mr-2 h-4 w-4" />
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {t(link.labelKey as any)}
+                              </Link>
+                            </NavigationMenuItem>
+                          );
+                        })}
+                      </div>
+                      {/* Tools submenu items */}
+                      <div className="w-full border-t pt-2">
+                        <div className="px-3 py-1 text-xs font-semibold text-muted-foreground">
+                          {t('tools')}
+                        </div>
+                        {toolsNavLinks.map((link, index) => {
                           const Icon = link.icon;
                           return (
                             <NavigationMenuItem key={index} className="w-full">
@@ -313,10 +356,10 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
             </div>
 
             {/* Navigation Menu */}
-            <div className="hidden md:flex">
+            <div className="hidden md:flex items-center gap-1">
+              {/* Home Link */}
               <NavigationMenu>
-                <NavigationMenuList className="flex-wrap">
-                  {/* Home Link */}
+                <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuLink
                       data-active={cn(isLinkActive('/'))}
@@ -330,7 +373,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       <Link to="/">{t('home')}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
-                  {/* Learn TRIZ Dropdown */}
+                </NavigationMenuList>
+              </NavigationMenu>
+
+              {/* Learn TRIZ Dropdown */}
+              <NavigationMenu>
+                <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger
                       className={cn(
@@ -366,7 +414,57 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                       </ul>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
-                  {/* Other Navigation Links (excluding Home) */}
+                </NavigationMenuList>
+              </NavigationMenu>
+
+              {/* Tools Dropdown */}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger
+                      className={cn(
+                        hoverLinkClass,
+                        isToolsActive() && activeLinkClass,
+                      )}
+                    >
+                      {t('tools')}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[280px] gap-3 p-4">
+                        {toolsNavLinks.map((link, index) => {
+                          const Icon = link.icon;
+                          return (
+                            <li key={index}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  to={link.href}
+                                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                >
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <Icon className="h-4 w-4" />
+                                    <div className="text-sm font-medium leading-none">
+                                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                      {t(link.labelKey as any)}
+                                    </div>
+                                  </div>
+                                  <p className="text-xs leading-snug text-muted-foreground">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {t(`${link.labelKey}_desc` as any)}
+                                  </p>
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+
+              {/* Other Navigation Links */}
+              <NavigationMenu>
+                <NavigationMenuList>
                   {navLinks.slice(1).map((link, index) => (
                     <NavigationMenuItem key={index}>
                       <NavigationMenuLink

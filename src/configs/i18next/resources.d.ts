@@ -150,7 +150,10 @@ interface Resources {
     "logo_title": "Center for Scientific and Technical Creativity (CSTC)",
     "packages": "Packages",
     "sign_in": "Sign In",
-    "sign_up": "Sign Up"
+    "sign_up": "Sign Up",
+    "tools": "Tools",
+    "tools.six_steps": "6 Steps Problem Solving",
+    "tools.six_steps_desc": "Systematic approach to creative problem solving"
   },
   "pages.chat_triz": {
     "page_meta_title": "Chat TRIZ"

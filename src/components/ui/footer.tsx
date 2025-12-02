@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router';
 
+import CTAImage from '@/assets/images/Frame 1410086255.png';
+
 const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
   return (
     <div className="relative bg-slate-800 sm:20 md:mt-32">
@@ -58,7 +60,7 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
           </div>
           <div className="mt-6 md:mt-0">
             <img
-              src="src/assets/images/Frame 1410086255.png"
+              src={CTAImage}
               alt="Frame 1410086255"
               className="mx-auto rounded-2xl pb-3 w-full max-w-xs"
             />
