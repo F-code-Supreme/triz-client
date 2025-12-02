@@ -14,6 +14,7 @@ import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -84,6 +85,11 @@ const LearnTrizRoute = LearnTrizRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForumRoute = ForumRouteImport.update({
+  id: '/forum',
+  path: '/forum',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
@@ -304,7 +310,7 @@ const appBooksMeRouteRoute = appBooksMeRouteRouteImport.update({
 } as any)
 const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   id: '/',
-  path: '',
+  path: '/',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
 const appCourseQuizSlugRouteRoute = appCourseQuizSlugRouteRouteImport.update({
@@ -319,8 +325,9 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof appRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -334,7 +341,7 @@ export interface FileRoutesByFullPath {
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
-  '/admin/courses': typeof AdminCoursesIndexRouteRoute
+  '/admin/courses': typeof AdminCoursesRouteRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
@@ -352,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
   '/course/my-course': typeof appCourseMyCourseRouteRoute
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
@@ -370,8 +378,9 @@ export interface FileRoutesByFullPath {
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof appRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -385,7 +394,6 @@ export interface FileRoutesByTo {
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
-  '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/admin/dashboard': typeof AdminDashboardRouteRoute
   '/admin/flashcards': typeof AdminFlashcardsRouteRoute
   '/admin/packages': typeof AdminPackagesRouteRoute
@@ -403,6 +411,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
+  '/admin/courses': typeof AdminCoursesIndexRouteRoute
   '/books/me': typeof appBooksMeRouteRoute
   '/course/my-course': typeof appCourseMyCourseRouteRoute
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
@@ -425,6 +434,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -479,6 +489,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -510,6 +521,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/packages'
     | '/register'
+    | '/admin/courses/'
     | '/books/me'
     | '/course/my-course'
     | '/quiz/$quizId'
@@ -530,6 +542,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -543,7 +556,6 @@ export interface FileRouteTypes {
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
-    | '/admin/courses'
     | '/admin/dashboard'
     | '/admin/flashcards'
     | '/admin/packages'
@@ -561,6 +573,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/packages'
     | '/register'
+    | '/admin/courses'
     | '/books/me'
     | '/course/my-course'
     | '/quiz/$quizId'
@@ -582,6 +595,7 @@ export interface FileRouteTypes {
     | '/'
     | '/(app)'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -636,6 +650,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
   FlashcardDeckRoute: typeof FlashcardDeckRoute
+  ForumRoute: typeof ForumRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
@@ -704,6 +719,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forum': {
+      id: '/forum'
+      path: '/forum'
+      fullPath: '/forum'
+      preLoaderRoute: typeof ForumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/flashcard-deck': {
       id: '/flashcard-deck'
       path: '/flashcard-deck'
@@ -713,8 +735,8 @@ declare module '@tanstack/react-router' {
     }
     '/(app)': {
       id: '/(app)'
-      path: ''
-      fullPath: ''
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -1007,8 +1029,8 @@ declare module '@tanstack/react-router' {
     }
     '/admin/courses/': {
       id: '/admin/courses/'
-      path: ''
-      fullPath: '/admin/courses'
+      path: '/'
+      fullPath: '/admin/courses/'
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
@@ -1090,6 +1112,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
   FlashcardDeckRoute: FlashcardDeckRoute,
+  ForumRoute: ForumRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
