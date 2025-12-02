@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
+import { Route as R6StepsRouteRouteImport } from './routes/6-steps/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
@@ -89,6 +90,11 @@ const HomeRoute = HomeRouteImport.update({
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   id: '/flashcard-deck',
   path: '/flashcard-deck',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R6StepsRouteRoute = R6StepsRouteRouteImport.update({
+  id: '/6-steps',
+  path: '/6-steps',
   getParentRoute: () => rootRouteImport,
 } as any)
 const appRouteRoute = appRouteRouteImport.update({
@@ -320,6 +326,7 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/6-steps': typeof R6StepsRouteRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -371,6 +378,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/6-steps': typeof R6StepsRouteRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -424,6 +432,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRouteRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
@@ -478,6 +487,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
@@ -529,6 +539,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
@@ -581,6 +592,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(app)'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
@@ -635,6 +647,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
+  R6StepsRouteRoute: typeof R6StepsRouteRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
@@ -709,6 +722,13 @@ declare module '@tanstack/react-router' {
       path: '/flashcard-deck'
       fullPath: '/flashcard-deck'
       preLoaderRoute: typeof FlashcardDeckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/6-steps': {
+      id: '/6-steps'
+      path: '/6-steps'
+      fullPath: '/6-steps'
+      preLoaderRoute: typeof R6StepsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(app)': {
@@ -1089,6 +1109,7 @@ const AdminCoursesRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
+  R6StepsRouteRoute: R6StepsRouteRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
