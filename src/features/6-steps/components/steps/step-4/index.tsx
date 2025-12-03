@@ -9,11 +9,18 @@ import {
   type Edge,
   Panel,
 } from '@xyflow/react';
-import { useCallback, useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import '@xyflow/react/dist/style.css';
 
 import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
+import {
+  EdgeColors,
+  horizontalSpacing,
+  NodeColors,
+  ParameterColors,
+  verticalSpacing,
+} from './configs';
 import {
   MOCK_PHYSICAL_CONTRADICTIONS,
   MOCK_TECHNICAL_CONTRADICTIONS,
@@ -22,6 +29,7 @@ import { ElementNode } from './nodes/ElementNode';
 import { ParameterNode } from './nodes/ParameterNode';
 import { PhysicalContradictionNode } from './nodes/PhysicalContradictionNode';
 import { TechnicalContradictionNode } from './nodes/TechnicalContradictionNode';
+import { NodeType, ParameterType, TechnicalContradictionKey } from './types';
 import ActionButtons from '../../ActionButtons';
 
 interface Step4Props {
@@ -31,18 +39,11 @@ interface Step4Props {
 }
 
 const nodeTypes = {
-  element: ElementNode,
-  physicalContradiction: PhysicalContradictionNode,
-  technicalContradiction: TechnicalContradictionNode,
-  parameter: ParameterNode,
+  [NodeType.ELEMENT]: ElementNode,
+  [NodeType.PHYSICAL_CONTRADICTION]: PhysicalContradictionNode,
+  [NodeType.TECHNICAL_CONTRADICTION]: TechnicalContradictionNode,
+  [NodeType.PARAMETER]: ParameterNode,
 };
-
-const elements = [
-  'Vật liệu điện cực',
-  'Dung dịch điện phân',
-  'Màng ngăn (separator)',
-  'Cell pin',
-];
 
 export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   const { stepData } = useSixStepDataStore();
@@ -62,18 +63,24 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
     }
   }, []);
 
+  const elements = useMemo(
+    () =>
+      MOCK_PHYSICAL_CONTRADICTIONS.physicalContradictions.map(
+        (pc) => pc.element,
+      ),
+    [],
+  );
+
   // Initialize nodes and edges
   useEffect(() => {
     const initialNodes: Node[] = [];
     const initialEdges: Edge[] = [];
-    const horizontalSpacing = 400;
-    const verticalSpacing = 200;
 
     // Level 1: Elements (top)
     elements.forEach((element, index) => {
       initialNodes.push({
         id: `element-${index}`,
-        type: 'element',
+        type: NodeType.ELEMENT,
         position: { x: index * horizontalSpacing + 100, y: 50 },
         data: { label: element, element },
       });
@@ -93,7 +100,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
       initialNodes.push({
         id: `pc-${index}`,
-        type: 'physicalContradiction',
+        type: NodeType.PHYSICAL_CONTRADICTION,
         position: { x: xPosition, y: 50 + verticalSpacing },
         data: {
           ...pc,
@@ -109,7 +116,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
           source: `element-${elementIndex}`,
           target: `pc-${index}`,
           animated: false,
-          style: { stroke: '#94a3b8' },
+          style: { stroke: EdgeColors.elementToPC },
         });
       }
     });
@@ -126,7 +133,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       // Update nodes to show selection
       setNodes((nds) =>
         nds.map((node) => {
-          if (node.type === 'physicalContradiction') {
+          if (node.type === NodeType.PHYSICAL_CONTRADICTION) {
             return {
               ...node,
               data: {
@@ -151,82 +158,84 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       const baseY = pcNode?.position.y || 250;
 
       // Level 3: Technical Contradictions (MK1 and MK2)
-      ['MK1', 'MK2'].forEach((mk, mkIndex) => {
-        const tcId = `tc-${pcIndex}-${mk}`;
-        const mkData = tc[mk as 'MK1' | 'MK2'];
+      [TechnicalContradictionKey.MK1, TechnicalContradictionKey.MK2].forEach(
+        (mk, mkIndex) => {
+          const tcId = `tc-${pcIndex}-${mk}`;
+          const mkData = tc[mk as 'MK1' | 'MK2'];
 
-        newNodes.push({
-          id: tcId,
-          type: 'technicalContradiction',
-          position: {
-            x: baseX + (mkIndex - 0.5) * 350,
-            y: baseY + 200,
-          },
-          data: {
-            direction: mkData.direction,
-            contradictionStatement: mkData.contradictionStatement,
-            mk,
-          },
-        });
+          newNodes.push({
+            id: tcId,
+            type: NodeType.TECHNICAL_CONTRADICTION,
+            position: {
+              x: baseX + (mkIndex - 0.5) * 700,
+              y: baseY + 300,
+            },
+            data: {
+              direction: mkData.direction,
+              contradictionStatement: mkData.contradictionStatement,
+              mk,
+            },
+          });
 
-        // Connect PC to TC
-        newEdges.push({
-          id: `edge-${pcId}-${tcId}`,
-          source: pcId,
-          target: tcId,
-          animated: true,
-          style: { stroke: '#3b82f6', strokeWidth: 2 },
-        });
+          // Connect PC to TC
+          newEdges.push({
+            id: `edge-${pcId}-${tcId}`,
+            source: pcId,
+            target: tcId,
+            animated: true,
+            style: { stroke: EdgeColors.pcToTC, strokeWidth: 2 },
+          });
 
-        // Level 4: Parameters (improving and worsening)
-        const improvingParamId = `param-${tcId}-improving`;
-        const worseningParamId = `param-${tcId}-worsening`;
+          // Level 4: Parameters (improving and worsening)
+          const improvingParamId = `param-${tcId}-improving`;
+          const worseningParamId = `param-${tcId}-worsening`;
 
-        newNodes.push({
-          id: improvingParamId,
-          type: 'parameter',
-          position: {
-            x: baseX + (mkIndex - 0.5) * 350 - 150,
-            y: baseY + 400,
-          },
-          data: {
-            ...mkData.improvingParameter,
-            type: 'improving',
-          },
-        });
+          newNodes.push({
+            id: improvingParamId,
+            type: NodeType.PARAMETER,
+            position: {
+              x: baseX + (mkIndex - 0.5) * 700 - 150,
+              y: baseY + 600,
+            },
+            data: {
+              ...mkData.improvingParameter,
+              type: ParameterType.IMPROVING,
+            },
+          });
 
-        newNodes.push({
-          id: worseningParamId,
-          type: 'parameter',
-          position: {
-            x: baseX + (mkIndex - 0.5) * 350 + 150,
-            y: baseY + 400,
-          },
-          data: {
-            ...mkData.worseningParameter,
-            type: 'worsening',
-          },
-        });
+          newNodes.push({
+            id: worseningParamId,
+            type: NodeType.PARAMETER,
+            position: {
+              x: baseX + (mkIndex - 0.5) * 700 + 150,
+              y: baseY + 600,
+            },
+            data: {
+              ...mkData.worseningParameter,
+              type: ParameterType.WORSENING,
+            },
+          });
 
-        // Connect TC to Parameters
-        newEdges.push({
-          id: `edge-${tcId}-${improvingParamId}`,
-          source: tcId,
-          target: improvingParamId,
-          animated: false,
-          style: { stroke: '#10b981', strokeWidth: 2 },
-          label: 'Cải thiện',
-        });
+          // Connect TC to Parameters
+          newEdges.push({
+            id: `edge-${tcId}-${improvingParamId}`,
+            source: tcId,
+            target: improvingParamId,
+            animated: false,
+            style: { stroke: EdgeColors.tcToImproving, strokeWidth: 2 },
+            label: 'Cải thiện',
+          });
 
-        newEdges.push({
-          id: `edge-${tcId}-${worseningParamId}`,
-          source: tcId,
-          target: worseningParamId,
-          animated: false,
-          style: { stroke: '#ef4444', strokeWidth: 2 },
-          label: 'Xấu đi',
-        });
-      });
+          newEdges.push({
+            id: `edge-${tcId}-${worseningParamId}`,
+            source: tcId,
+            target: worseningParamId,
+            animated: false,
+            style: { stroke: EdgeColors.tcToWorsening, strokeWidth: 2 },
+            label: 'Xấu đi',
+          });
+        },
+      );
 
       // Remove old TC and Parameter nodes
       setNodes((nds) => [
@@ -289,39 +298,58 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
           <MiniMap
             nodeColor={(node) => {
               switch (node.type) {
-                case 'element':
-                  return '#3b82f6';
-                case 'physicalContradiction':
-                  return node.data.isSelected ? '#f59e0b' : '#8b5cf6';
-                case 'technicalContradiction':
-                  return '#06b6d4';
-                case 'parameter':
-                  return node.data.type === 'improving' ? '#10b981' : '#ef4444';
+                case NodeType.ELEMENT:
+                  return NodeColors.element;
+                case NodeType.PHYSICAL_CONTRADICTION:
+                  return node.data.isSelected
+                    ? NodeColors.physicalContradictionSelected
+                    : NodeColors.physicalContradiction;
+                case NodeType.TECHNICAL_CONTRADICTION:
+                  return NodeColors.technicalContradiction;
+                case NodeType.PARAMETER:
+                  return node.data.type === ParameterType.IMPROVING
+                    ? ParameterColors.improving
+                    : ParameterColors.worsening;
                 default:
-                  return '#94a3b8';
+                  return NodeColors.default;
               }
             }}
           />
           <Panel position="top-right" className="bg-background/80 p-2 rounded">
             <div className="text-xs space-y-1">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-blue-500 rounded" />
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: NodeColors.element }}
+                />
                 <span>Phần tử</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-purple-500 rounded" />
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: NodeColors.physicalContradiction }}
+                />
                 <span>Mâu thuẫn Lý học (ML)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-cyan-500 rounded" />
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: NodeColors.technicalContradiction }}
+                />
                 <span>Mâu thuẫn Kỹ thuật (MK)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded" />
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: ParameterColors.improving }}
+                />
                 <span>Thông số cải thiện</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-red-500 rounded" />
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: ParameterColors.worsening }}
+                />
                 <span>Thông số xấu đi</span>
               </div>
             </div>
@@ -329,7 +357,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         </ReactFlow>
       </div>
 
-      <div className="max-w-4xl w-full mx-auto">
+      <div className="max-w-4xl w-full mx-auto pb-4">
         <ActionButtons
           onBack={onBack}
           onNext={handleNext}

@@ -50,18 +50,6 @@ export const PhysicalContradictionNode = memo((props: NodeProps) => {
           <span className="font-semibold">Thuộc tính: </span>
           {data.propertyDimension}
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white/10 p-2 rounded">
-            <div className="font-semibold mb-1">Trạng thái A:</div>
-            <div>{data.stateA}</div>
-            <div className="text-green-200 mt-1">✓ {data.benefitA}</div>
-          </div>
-          <div className="bg-white/10 p-2 rounded">
-            <div className="font-semibold mb-1">Trạng thái B:</div>
-            <div>{data.stateB}</div>
-            <div className="text-green-200 mt-1">✓ {data.benefitB}</div>
-          </div>
-        </div>
         <div className="bg-white/20 p-2 rounded text-white font-medium">
           {data.contradictionStatement}
         </div>
