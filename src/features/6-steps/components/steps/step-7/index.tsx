@@ -137,10 +137,87 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
               <h3 className="font-semibold text-lg">
                 Bước 4: Phát biểu mâu thuẫn
               </h3>
-              <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm whitespace-pre-wrap">
-                  {stepData.step4.contradiction}
-                </p>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-4">
+                {/* Physical Contradictions */}
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Mâu thuẫn Lý học (ML):
+                  </p>
+                  {stepData.step4.physicalContradictions.map((pc, index) => (
+                    <div
+                      key={index}
+                      className={`p-3 rounded-lg ${
+                        stepData.step4?.selectedPhysicalContradictionIndex ===
+                        index
+                          ? 'bg-primary/10 border border-primary'
+                          : 'bg-background'
+                      }`}
+                    >
+                      <p className="text-xs font-semibold text-primary mb-1">
+                        {pc.element}
+                      </p>
+                      <p className="text-sm">{pc.contradictionStatement}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Technical Contradictions */}
+                {stepData.step4.technicalContradictions &&
+                  stepData.step4.technicalContradictions.length > 0 && (
+                    <div className="space-y-2 pt-2 border-t">
+                      <p className="text-xs font-medium text-muted-foreground">
+                        Mâu thuẫn Kỹ thuật (MK):
+                      </p>
+                      {stepData.step4.technicalContradictions.map(
+                        (tc, index) => (
+                          <div
+                            key={index}
+                            className="space-y-3 p-3 bg-background rounded-lg"
+                          >
+                            <p className="text-xs font-semibold text-primary">
+                              {tc.element}
+                            </p>
+
+                            {/* MK1 */}
+                            <div className="space-y-1">
+                              <p className="text-xs font-medium">MK1:</p>
+                              <p className="text-sm">
+                                {tc.MK1.contradictionStatement}
+                              </p>
+                              <div className="flex gap-4 text-xs mt-2">
+                                <span className="text-green-600">
+                                  ↑ #{tc.MK1.improvingParameter.number}{' '}
+                                  {tc.MK1.improvingParameter.name}
+                                </span>
+                                <span className="text-red-600">
+                                  ↓ #{tc.MK1.worseningParameter.number}{' '}
+                                  {tc.MK1.worseningParameter.name}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* MK2 */}
+                            <div className="space-y-1 pt-2 border-t">
+                              <p className="text-xs font-medium">MK2:</p>
+                              <p className="text-sm">
+                                {tc.MK2.contradictionStatement}
+                              </p>
+                              <div className="flex gap-4 text-xs mt-2">
+                                <span className="text-green-600">
+                                  ↑ #{tc.MK2.improvingParameter.number}{' '}
+                                  {tc.MK2.improvingParameter.name}
+                                </span>
+                                <span className="text-red-600">
+                                  ↓ #{tc.MK2.worseningParameter.number}{' '}
+                                  {tc.MK2.worseningParameter.name}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  )}
               </div>
             </div>
           )}
