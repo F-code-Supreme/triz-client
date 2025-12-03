@@ -55,11 +55,16 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
   // Fetch suggestions when component mounts
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (
-        selectedMiniProblem &&
-        selectedGoal &&
-        !initialData?.systemIdentified
-      ) {
+      if (!selectedMiniProblem || !selectedGoal) return;
+
+      // Check if we need to fetch new suggestions
+      // Fetch if: no system identified OR no initial data exists
+      const shouldFetch =
+        !systemIdentified ||
+        !initialData?.systemIdentified ||
+        elements.length === 0;
+
+      if (shouldFetch) {
         try {
           const response = await step3Mutation.mutateAsync({
             miniProblem: selectedMiniProblem,

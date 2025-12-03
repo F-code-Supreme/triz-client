@@ -44,7 +44,16 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
   // Fetch goal suggestions when component mounts or mini problem changes
   useEffect(() => {
     const fetchGoalSuggestions = async () => {
-      if (selectedMiniProblem && goals.length === 0) {
+      if (!selectedMiniProblem) return;
+
+      // Check if we need to fetch new suggestions
+      // Fetch if: no goals exist OR the existing goals don't match the current mini problem
+      const shouldFetch =
+        goals.length === 0 ||
+        !initialData?.goals ||
+        initialData?.goals.length === 0;
+
+      if (shouldFetch) {
         try {
           const response = await step2Mutation.mutateAsync({
             miniProblem: selectedMiniProblem,
@@ -72,6 +81,10 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
           }
 
           setGoals(suggestedGoals);
+          // Auto-select the first goal
+          if (suggestedGoals.length > 0) {
+            setSelectedGoalId(suggestedGoals[0].id);
+          }
         } catch (error) {
           console.error('Failed to get goal suggestions:', error);
           setGoals([]);

@@ -36,7 +36,48 @@ export interface SixStepData {
   };
   // Step 4: Formulate Contradiction
   step4?: {
-    contradiction: string;
+    physicalContradictions: {
+      element: string;
+      propertyDimension: string;
+      stateA: string;
+      stateB: string;
+      benefitA: string;
+      benefitB: string;
+      contradictionStatement: string;
+    }[];
+    selectedPhysicalContradictionIndex?: number;
+    technicalContradictions?: {
+      element: string;
+      sourceML: string;
+      MK1: {
+        direction: string;
+        improvingParameter: {
+          name: string;
+          number: string;
+          reasoning: string;
+        };
+        worseningParameter: {
+          name: string;
+          number: string;
+          reasoning: string;
+        };
+        contradictionStatement: string;
+      };
+      MK2: {
+        direction: string;
+        improvingParameter: {
+          name: string;
+          number: string;
+          reasoning: string;
+        };
+        worseningParameter: {
+          name: string;
+          number: string;
+          reasoning: string;
+        };
+        contradictionStatement: string;
+      };
+    }[];
   };
   // Step 5: Generate Ideas
   step5?: {

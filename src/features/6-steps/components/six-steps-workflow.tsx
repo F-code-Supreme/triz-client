@@ -27,8 +27,10 @@ const STEPS = [
 export const SixStepsWorkflow = () => {
   const {
     stepData,
+    currentStep,
     nextStep,
     previousStep,
+    hasStarted,
     setHasStarted,
     updateStep1,
     updateStep2,
@@ -38,27 +40,47 @@ export const SixStepsWorkflow = () => {
     updateStep6,
   } = useSixStepDataStore();
 
-  // TODO: Remove this development override - currently set to step 3 for development
-  const devCurrentStep: number = 4;
-  const devHasStarted = true;
+  // Use actual store values instead of hardcoded dev values
+  // const devCurrentStep = 3;
+  // const devHasStarted = hasStarted;
 
   const handleStepNext = (step: number, data: unknown) => {
     // Update the appropriate step data based on step number
     switch (step) {
       case 1:
         updateStep1(data as typeof stepData.step1);
+        // Clear subsequent steps when step 1 is updated
+        updateStep2(undefined);
+        updateStep3(undefined);
+        updateStep4(undefined);
+        updateStep5(undefined);
+        updateStep6(undefined);
         break;
       case 2:
         updateStep2(data as typeof stepData.step2);
+        // Clear subsequent steps when step 2 is updated
+        updateStep3(undefined);
+        updateStep4(undefined);
+        updateStep5(undefined);
+        updateStep6(undefined);
         break;
       case 3:
         updateStep3(data as typeof stepData.step3);
+        // Clear subsequent steps when step 3 is updated
+        updateStep4(undefined);
+        updateStep5(undefined);
+        updateStep6(undefined);
         break;
       case 4:
         updateStep4(data as typeof stepData.step4);
+        // Clear subsequent steps when step 4 is updated
+        updateStep5(undefined);
+        updateStep6(undefined);
         break;
       case 5:
         updateStep5(data as typeof stepData.step5);
+        // Clear subsequent steps when step 5 is updated
+        updateStep6(undefined);
         break;
       case 6:
         updateStep6(data as typeof stepData.step6);
@@ -76,36 +98,36 @@ export const SixStepsWorkflow = () => {
   };
 
   // Show intro screen (Step 0) before starting
-  if (!devHasStarted) {
+  if (!hasStarted) {
     return <Step0Introduction onStart={handleStart} />;
   }
 
   return (
     <div className="space-y-8">
       {/* Stepper - Only show when started */}
-      <HorizontalStepper steps={STEPS} currentStep={devCurrentStep} />
+      <HorizontalStepper steps={STEPS} currentStep={currentStep} />
 
       {/* Step Content */}
       <div className="h-[calc(100vh-230px)]">
-        {devCurrentStep === 1 && (
+        {currentStep === 1 && (
           <Step1UnderstandProblem onNext={(data) => handleStepNext(1, data)} />
         )}
 
-        {devCurrentStep === 2 && (
+        {currentStep === 2 && (
           <Step2DefineObjective
             onNext={(data) => handleStepNext(2, data)}
             onBack={handleStepBack}
           />
         )}
 
-        {devCurrentStep === 3 && (
+        {currentStep === 3 && (
           <Step3AnswerQuestions
             onNext={(data) => handleStepNext(3, data)}
             onBack={handleStepBack}
           />
         )}
 
-        {devCurrentStep === 4 && (
+        {currentStep === 4 && (
           <Step4FormulateContradiction
             onNext={(data: Record<string, unknown>) => handleStepNext(4, data)}
             onBack={handleStepBack}
@@ -113,7 +135,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {devCurrentStep === 5 && (
+        {currentStep === 5 && (
           <Step5GenerateIdeas
             onNext={(data: Record<string, unknown>) => handleStepNext(5, data)}
             onBack={handleStepBack}
@@ -121,7 +143,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {devCurrentStep === 6 && (
+        {currentStep === 6 && (
           <Step6MakeDecision
             onNext={(data: Record<string, unknown>) => handleStepNext(6, data)}
             onBack={handleStepBack}
@@ -129,7 +151,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {devCurrentStep === 7 && <Step7Summary onBack={handleStepBack} />}
+        {currentStep === 7 && <Step7Summary onBack={handleStepBack} />}
       </div>
     </div>
   );
