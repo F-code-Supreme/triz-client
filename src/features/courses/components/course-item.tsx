@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Edit, Eye, Loader2, Trash2 } from 'lucide-react';
+import { Edit, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -68,7 +68,7 @@ const CourseItem = ({ course }: { course: Course }) => {
         key={course.id}
         className="shadow-md hover:shadow-lg transition-shadow"
       >
-        <CardContent className="p-0 ">
+        <CardContent className="p-0">
           <div className="overflow-hidden rounded-tr-md rounded-tl-md bg-gray-100">
             {thumbnail ? (
               <img
@@ -124,14 +124,12 @@ const CourseItem = ({ course }: { course: Course }) => {
               </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between mt-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1"
                 onClick={() => setIsDetailOpen(true)}
               >
-                <Eye className="mr-2 h-4 w-4" />
                 Xem chi tiết
               </Button>
               <Button
