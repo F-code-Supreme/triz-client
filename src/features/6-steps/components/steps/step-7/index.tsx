@@ -82,10 +82,51 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
               <h3 className="font-semibold text-lg">
                 Bước 3: Trả lời các câu hỏi
               </h3>
-              <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm whitespace-pre-wrap">
-                  {stepData.step3.questions}
-                </p>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-4">
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Hệ thống xác định:
+                  </p>
+                  <p className="text-sm font-semibold">
+                    {stepData.step3.systemIdentified}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Các phần tử:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {stepData.step3.elements.map((element) => (
+                      <span
+                        key={element}
+                        className="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-medium"
+                      >
+                        {element}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    Trạng thái yêu cầu:
+                  </p>
+                  {Object.entries(stepData.step3.requiredStates).map(
+                    ([element, states]) => (
+                      <div key={element} className="space-y-1">
+                        <p className="text-xs font-semibold text-primary">
+                          {element}:
+                        </p>
+                        <ul className="list-disc list-inside space-y-1 ml-2">
+                          {states.map((state) => (
+                            <li key={state.id} className="text-sm">
+                              {state.text}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
             </div>
           )}
