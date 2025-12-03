@@ -231,7 +231,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
-            Mục tiêu: Đề ra các câu hỏi cần trả lời để đạt được mục tiêu
+            Mục tiêu: {stepData.step2?.selectedGoal?.text}
           </div>
         </div>
 
