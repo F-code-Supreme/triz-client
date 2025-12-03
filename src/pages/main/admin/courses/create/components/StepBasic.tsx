@@ -241,7 +241,7 @@ const StepBasic: React.FC<Props> = ({
   // react-query mutation result typing may vary across versions; access isLoading defensively
   const loading = Boolean(
     (createCourse as unknown as { isLoading?: boolean }).isLoading ||
-      (updateCourse as unknown as { isLoading?: boolean }).isLoading,
+    (updateCourse as unknown as { isLoading?: boolean }).isLoading,
   );
 
   return (
