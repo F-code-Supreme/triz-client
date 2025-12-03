@@ -26,8 +26,6 @@ const STEPS = [
 
 export const SixStepsWorkflow = () => {
   const {
-    currentStep,
-    hasStarted,
     stepData,
     nextStep,
     previousStep,
@@ -39,6 +37,10 @@ export const SixStepsWorkflow = () => {
     updateStep5,
     updateStep6,
   } = useSixStepDataStore();
+
+  // TODO: Remove this development override - currently set to step 3 for development
+  const devCurrentStep: number = 4;
+  const devHasStarted = true;
 
   const handleStepNext = (step: number, data: unknown) => {
     // Update the appropriate step data based on step number
@@ -74,37 +76,36 @@ export const SixStepsWorkflow = () => {
   };
 
   // Show intro screen (Step 0) before starting
-  if (!hasStarted) {
+  if (!devHasStarted) {
     return <Step0Introduction onStart={handleStart} />;
   }
 
   return (
     <div className="space-y-8">
       {/* Stepper - Only show when started */}
-      <HorizontalStepper steps={STEPS} currentStep={currentStep} />
+      <HorizontalStepper steps={STEPS} currentStep={devCurrentStep} />
 
       {/* Step Content */}
       <div className="h-[calc(100vh-230px)]">
-        {currentStep === 1 && (
+        {devCurrentStep === 1 && (
           <Step1UnderstandProblem onNext={(data) => handleStepNext(1, data)} />
         )}
 
-        {currentStep === 2 && (
+        {devCurrentStep === 2 && (
           <Step2DefineObjective
             onNext={(data) => handleStepNext(2, data)}
             onBack={handleStepBack}
           />
         )}
 
-        {currentStep === 3 && (
+        {devCurrentStep === 3 && (
           <Step3AnswerQuestions
             onNext={(data) => handleStepNext(3, data)}
             onBack={handleStepBack}
-            initialData={stepData.step3}
           />
         )}
 
-        {currentStep === 4 && (
+        {devCurrentStep === 4 && (
           <Step4FormulateContradiction
             onNext={(data: Record<string, unknown>) => handleStepNext(4, data)}
             onBack={handleStepBack}
@@ -112,7 +113,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {currentStep === 5 && (
+        {devCurrentStep === 5 && (
           <Step5GenerateIdeas
             onNext={(data: Record<string, unknown>) => handleStepNext(5, data)}
             onBack={handleStepBack}
@@ -120,7 +121,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {currentStep === 6 && (
+        {devCurrentStep === 6 && (
           <Step6MakeDecision
             onNext={(data: Record<string, unknown>) => handleStepNext(6, data)}
             onBack={handleStepBack}
@@ -128,7 +129,7 @@ export const SixStepsWorkflow = () => {
           />
         )}
 
-        {currentStep === 7 && <Step7Summary onBack={handleStepBack} />}
+        {devCurrentStep === 7 && <Step7Summary onBack={handleStepBack} />}
       </div>
     </div>
   );

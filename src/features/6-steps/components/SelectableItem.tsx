@@ -1,12 +1,16 @@
-import { Check, Pencil } from 'lucide-react';
+import { Check, Pencil, Trash2 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+
+import { capitalize } from '@/utils/string/string';
 
 interface SelectableItemProps {
   id: string;
   text: string;
   isSelected?: boolean;
   isEditable?: boolean;
+  isDeletable?: boolean;
   onEdit?: (id: string, newText: string) => void;
+  onDelete?: (id: string) => void;
   onSelect?: (id: string) => void;
 }
 
@@ -15,7 +19,9 @@ export const SelectableItem = ({
   text,
   isSelected = false,
   isEditable = false,
+  isDeletable = false,
   onEdit,
+  onDelete,
   onSelect,
 }: SelectableItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -91,20 +97,34 @@ export const SelectableItem = ({
       ) : (
         <>
           <div className="flex-1 text-sm font-normal leading-5 text-primary dark:text-foreground">
-            {text}
+            {capitalize(text)}
           </div>
-          {isEditable && onEdit && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsEditing(true);
-              }}
-              className="flex-shrink-0 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
-              aria-label="Edit"
-            >
-              <Pencil className="w-4 h-4 text-primary dark:text-foreground" />
-            </button>
-          )}
+          <div className="flex items-center gap-1">
+            {isEditable && onEdit && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                }}
+                className="flex-shrink-0 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
+                aria-label="Edit"
+              >
+                <Pencil className="w-4 h-4 text-primary dark:text-foreground" />
+              </button>
+            )}
+            {isDeletable && onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(id);
+                }}
+                className="flex-shrink-0 p-1 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors"
+                aria-label="Delete"
+              >
+                <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+              </button>
+            )}
+          </div>
         </>
       )}
     </div>

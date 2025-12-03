@@ -11,6 +11,11 @@ export interface GoalItem {
   text: string;
 }
 
+export interface RequiredStateItem {
+  id: string;
+  text: string;
+}
+
 export interface SixStepData {
   // Step 1: Understand the Problem
   step1?: {
@@ -25,7 +30,9 @@ export interface SixStepData {
   };
   // Step 3: Answer Questions
   step3?: {
-    questions: string;
+    systemIdentified: string;
+    elements: string[];
+    requiredStates: Record<string, RequiredStateItem[]>;
   };
   // Step 4: Formulate Contradiction
   step4?: {
