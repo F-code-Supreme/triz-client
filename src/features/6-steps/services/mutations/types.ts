@@ -55,14 +55,48 @@ export interface IStep4SuggestionPayload {
   requiredStates: Record<string, string[]>;
 }
 
+export interface PhysicalContradiction {
+  element: string;
+  propertyDimension: string;
+  stateA: string;
+  stateB: string;
+  benefitA: string;
+  benefitB: string;
+  contradictionStatement: string;
+}
+
 export interface IStep4SuggestionResponse {
-  physicalContradictions: Array<{
-    element: string;
-    propertyDimension: string;
-    stateA: string;
-    stateB: string;
-    benefitA: string;
-    benefitB: string;
-    contradictionStatement: string;
-  }>;
+  physicalContradictions: PhysicalContradiction[];
+}
+
+export interface IConvertMLtoMKPayload {
+  physicalContradictions: PhysicalContradiction[];
+}
+
+export interface TRIZParameter {
+  name: string;
+  number: string;
+  reasoning: string;
+}
+
+export interface TechnicalContradictionDirection {
+  direction: string;
+  improvingParameter: TRIZParameter;
+  worseningParameter: TRIZParameter;
+  contradictionStatement: string;
+}
+
+export interface TechnicalContradiction {
+  element: string;
+  sourceML: string;
+  MK1: TechnicalContradictionDirection;
+  MK2: TechnicalContradictionDirection;
+  matrixUsage: {
+    MK1_lookup: string;
+    MK2_lookup: string;
+  };
+}
+
+export interface IConvertMLtoMKResponse {
+  technicalContradictions: TechnicalContradiction[];
 }

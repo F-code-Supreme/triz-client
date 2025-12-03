@@ -11,6 +11,8 @@ import type {
   IStep3SuggestionResponse,
   IStep4SuggestionPayload,
   IStep4SuggestionResponse,
+  IConvertMLtoMKPayload,
+  IConvertMLtoMKResponse,
 } from './types';
 
 export const useStep1SuggestionMutation = () => {
@@ -65,6 +67,21 @@ export const useStep4SuggestionMutation = () => {
     mutationFn: async (payload: IStep4SuggestionPayload) => {
       const response = await _request.post<IStep4SuggestionResponse>(
         '/step4/suggestions',
+        payload,
+      );
+
+      return response.data;
+    },
+  });
+};
+
+export const useConvertMLtoMKMutation = () => {
+  const _request = useAxios();
+
+  return useMutation({
+    mutationFn: async (payload: IConvertMLtoMKPayload) => {
+      const response = await _request.post<IConvertMLtoMKResponse>(
+        '/ml-to-mk/suggestions',
         payload,
       );
 
