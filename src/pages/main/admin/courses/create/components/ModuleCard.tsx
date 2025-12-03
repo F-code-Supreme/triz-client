@@ -197,7 +197,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           } else {
             queryClient.invalidateQueries({ queryKey: lessonQueryKey });
           }
-          let msg = 'Failed to reorder lessons';
+          let msg = 'Săp xếp lại thứ tự bài học thất bại';
           if (err instanceof Error) msg = err.message;
           else if (typeof err === 'string') msg = err;
           toast.error(msg);
@@ -258,7 +258,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           } else {
             queryClient.invalidateQueries({ queryKey: assignmentQueryKey });
           }
-          let msg = 'Failed to reorder assignments';
+          let msg = 'Sắp xếp lại thứ tự bài tập thất bại';
           if (err instanceof Error) msg = err.message;
           else if (typeof err === 'string') msg = err;
           toast.error(msg);

@@ -176,7 +176,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     if (file) {
       const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
       if (!validVideoTypes.includes(file.type)) {
-        toast.error('Please select a valid video file (MP4, WebM, or OGG)');
+        toast.error('Định dạng video không hợp lệ (MP4, WebM hoặc OGG)');
         return;
       }
       setVideoFile(file);
@@ -206,7 +206,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
         'Failed to extract video URL from response:',
         uploadResponse,
       );
-      toast.error('Failed to get video URL from upload');
+      toast.error('Không thể lấy URL video từ quá trình tải lên');
       throw new Error('Failed to get video URL');
     }
 
@@ -215,7 +215,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
   const createVideoLesson = async () => {
     if (!videoFile) {
-      toast.error('Please select a video file');
+      toast.error('Vui lòng chọn một tệp video để tải lên');
       return;
     }
 
@@ -281,20 +281,20 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error('Lesson title is required');
+      toast.error('Tiêu đề bài học là bắt buộc');
       return;
     }
     if (!description.trim()) {
-      toast.error('Lesson description is required');
+      toast.error('Mô tả bài học là bắt buộc');
       return;
     }
 
     if (lessonType === 'TEXT' && isEditorEmpty(content)) {
-      toast.error('Content is required');
+      toast.error('Nội dung là bắt buộc');
       return;
     }
     if (lessonType === 'VIDEO' && !videoFile && !lessonId) {
-      toast.error('Please select a video file');
+      toast.error('Vui lòng chọn một tệp video để tải lên');
       return;
     }
 

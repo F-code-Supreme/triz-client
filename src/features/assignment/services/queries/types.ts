@@ -5,6 +5,7 @@ export interface Assignment {
   title: string;
   description: string;
   durationInMinutes: number;
+  criteria: string[];
   maxAttempts: number;
   status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
