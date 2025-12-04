@@ -1,4 +1,5 @@
-import type { Principle } from '../../types';
+import type { Principle, Problem } from '../../types';
+import type { DataTimestamp, PaginatedResponse } from '@/types';
 
 export interface IGetPrinciplesLookupDataItem {
   priority: number;
@@ -6,3 +7,9 @@ export interface IGetPrinciplesLookupDataItem {
 }
 
 export type IGetPrinciplesLookupDataResponse = IGetPrinciplesLookupDataItem[];
+
+export type IGetJournalsByUserDataResponse = PaginatedResponse<
+  Problem & DataTimestamp
+>;
+
+export type IGetJournalByIdDataResponse = Problem & DataTimestamp;

@@ -1,4 +1,11 @@
-import type { PhysicalContradiction } from '../../types';
+import type {
+  PhysicalContradiction,
+  Step1Understand,
+  Step2Objectives,
+  Step3Analysis,
+  Step4Contradiction,
+  Step6Decision,
+} from '../../types';
 import type { IGetPrinciplesLookupDataResponse } from '../queries/types';
 
 // Step 1
@@ -160,4 +167,16 @@ export interface IStep6SuggestionResponse {
   suggestion: string | null;
   assumption: string | null;
   note: string | null;
+}
+
+// Journal
+export interface ICreateSixStepJournalPayload {
+  step1Understand: Step1Understand;
+  step2Objectives: Step2Objectives;
+  step3Analysis: Step3Analysis;
+  step4Contradiction: Step4Contradiction;
+  step5Ideas: {
+    selectedIdeas: Idea[];
+  };
+  step6Decision: Step6Decision;
 }

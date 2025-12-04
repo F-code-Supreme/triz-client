@@ -17,7 +17,9 @@ import type {
   IStep5SuggestionResponse,
   IStep6SuggestionPayload,
   IStep6SuggestionResponse,
+  ICreateSixStepJournalPayload,
 } from './types';
+import type { Problem } from '../../types';
 
 export const useStep1SuggestionMutation = () => {
   const _request = useAxios();
@@ -116,6 +118,21 @@ export const useStep6SuggestionMutation = () => {
     mutationFn: async (payload: IStep6SuggestionPayload) => {
       const response = await _request.post<IStep6SuggestionResponse>(
         '/step6/suggestions',
+        payload,
+      );
+
+      return response.data;
+    },
+  });
+};
+
+export const useCreateSixStepJournalMutation = () => {
+  const _request = useAxios();
+
+  return useMutation({
+    mutationFn: async (payload: ICreateSixStepJournalPayload) => {
+      const response = await _request.post<Problem>(
+        '/problems/steps/all',
         payload,
       );
 
