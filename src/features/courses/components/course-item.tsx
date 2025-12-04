@@ -1,4 +1,5 @@
-import { Eye, Loader2, Trash2 } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
+import { Edit, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -21,7 +22,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useDeleteCourseMutation } from '@/features/courses/services/mutations';
+import {
+  useDeleteCourseMutation,
+  usePublishCourseMutation,
+} from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { formatTrizilium, formatTriziliumShort } from '@/utils';
 
@@ -34,12 +38,14 @@ import type { Course } from '@/features/courses/types';
 const CourseItem = ({ course }: { course: Course }) => {
   const thumbnail = course.thumbnailUrl ?? course.thumbnail ?? undefined;
   const deleteCourse = useDeleteCourseMutation();
+  const navigate = useNavigate();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const { data: courseDetail, isLoading } = useGetCourseByIdQuery(
     isDetailOpen ? course.id : undefined,
   );
+  const publishCourse = usePublishCourseMutation(course.id);
 
   const dealPrice = course.dealPrice ?? course.price ?? null;
   const originalPrice = course.price ?? null;
@@ -62,7 +68,7 @@ const CourseItem = ({ course }: { course: Course }) => {
         key={course.id}
         className="shadow-md hover:shadow-lg transition-shadow"
       >
-        <CardContent className="p-0 ">
+        <CardContent className="p-0">
           <div className="overflow-hidden rounded-tr-md rounded-tl-md bg-gray-100">
             {thumbnail ? (
               <img
@@ -118,15 +124,45 @@ const CourseItem = ({ course }: { course: Course }) => {
               </div>
             </div>
 
-            <div className="mt-3 flex gap-2">
+            <div className="flex items-center justify-between mt-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1"
                 onClick={() => setIsDetailOpen(true)}
               >
-                <Eye className="mr-2 h-4 w-4" />
                 Xem chi tiết
+              </Button>
+              <Button
+                variant={course.status === 'ACTIVE' ? 'secondary' : 'default'}
+                size="sm"
+                onClick={() => {
+                  const newStatus =
+                    course.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+                  publishCourse.mutate(
+                    { status: newStatus },
+                    {
+                      onSuccess: () => {
+                        toast.success(
+                          newStatus === 'ACTIVE'
+                            ? 'Kích hoạt khóa học thành công'
+                            : 'Đã hủy kích hoạt khóa học',
+                        );
+                      },
+                      onError: () => {
+                        toast.error(
+                          'Cập nhật trạng thái thất bại. Vui lòng thử lại.',
+                        );
+                      },
+                    },
+                  );
+                }}
+                disabled={publishCourse.isPending}
+                className="flex items-center"
+              >
+                {publishCourse.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {course.status === 'ACTIVE' ? 'Hủy kích hoạt' : 'Kích hoạt'}
               </Button>
               <Button
                 variant="destructive"
@@ -142,9 +178,23 @@ const CourseItem = ({ course }: { course: Course }) => {
 
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{course.title}</DialogTitle>
-            <DialogDescription>Chi tiết khóa học</DialogDescription>
+          <DialogHeader className="flex items-start justify-between">
+            <div>
+              <DialogTitle>{course.title}</DialogTitle>
+              <DialogDescription>Chi tiết khóa học</DialogDescription>
+            </div>
+            <div className="flex items-center gap-2  w-full justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigate({ to: `/admin/courses/edit/${course.id}` })
+                }
+              >
+                Chỉnh sửa
+                <Edit className=" h-4 w-4" />
+              </Button>
+            </div>
           </DialogHeader>
           {isLoading ? (
             <div className="py-8 flex items-center justify-center gap-4 text-muted-foreground">

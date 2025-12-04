@@ -14,6 +14,7 @@ import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -61,6 +62,7 @@ import { Route as appJournalsJournalIdRouteRouteImport } from './routes/(app)/jo
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
+import { Route as AdminCoursesEditCourseIdRouteImport } from './routes/admin/courses/edit/$courseId'
 import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
 
@@ -87,6 +89,11 @@ const LearnTrizRoute = LearnTrizRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForumRoute = ForumRouteImport.update({
+  id: '/forum',
+  path: '/forum',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
@@ -326,6 +333,12 @@ const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   path: '',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
+const AdminCoursesEditCourseIdRoute =
+  AdminCoursesEditCourseIdRouteImport.update({
+    id: '/edit/$courseId',
+    path: '/edit/$courseId',
+    getParentRoute: () => AdminCoursesRouteRoute,
+  } as any)
 const appCourseQuizSlugRouteRoute = appCourseQuizSlugRouteRouteImport.update({
   id: '/course/quiz/$slug',
   path: '/course/quiz/$slug',
@@ -340,6 +353,7 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -390,10 +404,12 @@ export interface FileRoutesByFullPath {
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
+  '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -444,12 +460,14 @@ export interface FileRoutesByTo {
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
+  '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -501,12 +519,14 @@ export interface FileRoutesById {
   '/books/$bookId/': typeof BooksBookIdIndexRoute
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
+  '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -557,10 +577,12 @@ export interface FileRouteTypes {
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
+    | '/admin/courses/edit/$courseId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -611,11 +633,13 @@ export interface FileRouteTypes {
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
+    | '/admin/courses/edit/$courseId'
   id:
     | '__root__'
     | '/'
     | '/(app)'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -667,12 +691,14 @@ export interface FileRouteTypes {
     | '/books/$bookId/'
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
+    | '/admin/courses/edit/$courseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
   FlashcardDeckRoute: typeof FlashcardDeckRoute
+  ForumRoute: typeof ForumRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
@@ -739,6 +765,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forum': {
+      id: '/forum'
+      path: '/forum'
+      fullPath: '/forum'
+      preLoaderRoute: typeof ForumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/flashcard-deck': {
@@ -1070,6 +1103,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
+    '/admin/courses/edit/$courseId': {
+      id: '/admin/courses/edit/$courseId'
+      path: '/edit/$courseId'
+      fullPath: '/admin/courses/edit/$courseId'
+      preLoaderRoute: typeof AdminCoursesEditCourseIdRouteImport
+      parentRoute: typeof AdminCoursesRouteRoute
+    }
     '/(app)/course/quiz/$slug': {
       id: '/(app)/course/quiz/$slug'
       path: '/course/quiz/$slug'
@@ -1140,11 +1180,13 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 interface AdminCoursesRouteRouteChildren {
   AdminCoursesIndexRouteRoute: typeof AdminCoursesIndexRouteRoute
   AdminCoursesCreateRouteRoute: typeof AdminCoursesCreateRouteRoute
+  AdminCoursesEditCourseIdRoute: typeof AdminCoursesEditCourseIdRoute
 }
 
 const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
   AdminCoursesIndexRouteRoute: AdminCoursesIndexRouteRoute,
   AdminCoursesCreateRouteRoute: AdminCoursesCreateRouteRoute,
+  AdminCoursesEditCourseIdRoute: AdminCoursesEditCourseIdRoute,
 }
 
 const AdminCoursesRouteRouteWithChildren =
@@ -1154,6 +1196,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
   FlashcardDeckRoute: FlashcardDeckRoute,
+  ForumRoute: ForumRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,

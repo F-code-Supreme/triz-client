@@ -32,6 +32,22 @@ const AdminManageCoursePage = () => {
   const isBusy = isFetching || isLoading;
 
   const coursesData = data?.content ?? [];
+  const STATUS_ORDER = ['ACTIVE', 'INACTIVE'];
+  const sortedCourses = [...coursesData].sort((a, b) => {
+    const sa = String(a.status ?? '').toUpperCase();
+    const sb = String(b.status ?? '').toUpperCase();
+    const ia = STATUS_ORDER.indexOf(sa);
+    const ib = STATUS_ORDER.indexOf(sb);
+
+    if (ia === -1 && ib === -1) {
+      return String(a.title ?? '').localeCompare(String(b.title ?? ''));
+    }
+    if (ia === -1) return 1; // b has priority
+    if (ib === -1) return -1; // a has priority
+    if (ia === ib)
+      return String(a.title ?? '').localeCompare(String(b.title ?? ''));
+    return ia - ib;
+  });
   const apiPage = data?.page;
 
   const totalPages = apiPage ? Math.max(1, apiPage.totalPages) : 1;
@@ -74,7 +90,7 @@ const AdminManageCoursePage = () => {
                   </div>
                 ),
               )
-            : coursesData.map((course) => (
+            : sortedCourses.map((course) => (
                 <CourseItem key={course.id} course={course} />
               ))}
         </div>

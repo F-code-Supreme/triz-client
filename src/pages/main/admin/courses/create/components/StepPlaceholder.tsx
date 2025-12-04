@@ -84,7 +84,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
 
   const handlePublish = async () => {
     if (totalModules === 0) {
-      toast.error('Please add at least one module before publishing.');
+      toast.error('Khóa học phải có ít nhất một chương để xuất bản');
       return;
     }
 
@@ -93,7 +93,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
       // TODO: Implement the actual API call to publish the course
       // await publishCourse(courseId);
       await publishCourseMutation.mutateAsync(
-        { status: 'ACTIVE' },
+        { status: 'INACTIVE' },
         {
           onSuccess: () => {
             toast.success('Xuất bản khóa học thành công!');
@@ -103,7 +103,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
         },
       );
     } catch (error) {
-      let msg = 'Failed to publish course';
+      let msg = 'Xuất bản khóa học thất bại';
       if (error instanceof Error) msg = error.message;
       else if (typeof error === 'string') msg = error;
       toast.error(msg);

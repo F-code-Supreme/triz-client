@@ -87,7 +87,7 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
 // Configuration for navigation links
 const MAIN_NAV_LINKS = (t: (key: string) => string): Navbar03NavItem[] => [
   { href: '/', label: t('home'), active: true },
-  { href: '#', label: t('forum') },
+  { href: '/forum', label: t('forum') },
   { href: '/chat-triz', label: t('chat_ai') },
   { href: '/packages', label: t('packages') },
 ];

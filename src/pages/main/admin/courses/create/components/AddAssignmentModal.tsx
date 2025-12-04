@@ -40,6 +40,7 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
   const [description, setDescription] = React.useState('');
   const [durationInMinutes, setDurationInMinutes] = React.useState<number>(60);
   const [maxAttempts, setMaxAttempts] = React.useState<number>(3);
+  const [criteria, setCriteria] = React.useState<string[]>(['']);
 
   const createAssignment = useCreateAssignmentMutation(moduleId);
   const updateAssignment = useUpdateAssignmentMutation(assignmentId || '');
@@ -58,28 +59,33 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
     setDescription(data.description ?? '');
     setDurationInMinutes(data.durationInMinutes ?? 60);
     setMaxAttempts(data.maxAttempts ?? 3);
+    setCriteria(data.criteria ?? []);
   }, [assignmentQuery.data]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error('Assignment title is required');
+      toast.error('Tiêu đề bài tập là bắt buộc');
       return;
     }
 
     if (!description.trim()) {
-      toast.error('Assignment description is required');
+      toast.error('Mô tả bài tập là bắt buộc');
       return;
     }
 
     if (durationInMinutes <= 0) {
-      toast.error('Duration must be greater than 0');
+      toast.error('Thời lượng phải lớn hơn 0');
       return;
     }
 
     if (maxAttempts <= 0) {
-      toast.error('Max attempts must be greater than 0');
+      toast.error('Số lần thử tối đa phải lớn hơn 0');
+      return;
+    }
+    if (criteria.length === 0 || criteria.some((c) => !c.trim())) {
+      toast.error('Phải có ít nhất một tiêu chí hợp lệ');
       return;
     }
 
@@ -88,6 +94,7 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
       description: description.trim(),
       durationInMinutes,
       maxAttempts,
+      criteria,
     };
 
     const mutation = assignmentId ? updateAssignment : createAssignment;
@@ -104,15 +111,15 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
         },
         onError: (error) => {
           let msg = assignmentId
-            ? 'Failed to update assignment'
-            : 'Failed to create assignment';
+            ? 'Tải cập nhật bài tập thất bại'
+            : 'Tạo bài tập thất bại';
           if (error instanceof Error) msg = error.message;
           else if (typeof error === 'string') msg = error;
           toast.error(msg);
         },
       });
     } catch (error) {
-      let msg = 'Failed to save assignment';
+      let msg = 'Lưu bài tập thất bại';
       if (error instanceof Error) msg = error.message;
       else if (typeof error === 'string') msg = error;
       toast.error(msg);
@@ -124,6 +131,7 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
     setDescription('');
     setDurationInMinutes(60);
     setMaxAttempts(3);
+    setCriteria([]);
     onOpenChange(false);
   };
 
@@ -162,6 +170,58 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                 disabled={isDisabled}
                 readOnly={viewMode}
               />
+            </div>
+
+            <div className="grid gap-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>
+                    Tiêu chí{' '}
+                    {!viewMode && <span className="text-red-500">*</span>}
+                  </Label>
+                </div>
+                {!viewMode && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setCriteria([...criteria, ''])}
+                    disabled={isDisabled}
+                  >
+                    + Thêm
+                  </Button>
+                )}
+              </div>
+
+              <div className="space-y-2 overflow-y-auto max-h-40 p-2">
+                {criteria.map((c, idx) => (
+                  <div key={idx} className="flex items-center gap-2">
+                    <Input
+                      id={`criteria-${idx}`}
+                      value={c}
+                      onChange={(e) => {
+                        const next = [...criteria];
+                        next[idx] = e.target.value;
+                        setCriteria(next);
+                      }}
+                      placeholder={`Nhập tiêu chí ${idx + 1}`}
+                      disabled={isDisabled}
+                      readOnly={viewMode}
+                    />
+                    {!viewMode && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          setCriteria(criteria.filter((_, i) => i !== idx))
+                        }
+                        disabled={isDisabled}
+                      >
+                        X
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="grid gap-2">

@@ -68,23 +68,59 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
   const parseTextContent = (rawContent: unknown): Content => {
     try {
-      const parsedContent =
-        typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent;
+      // If it's a string, try to detect JSON / HTML / plain text
+      if (typeof rawContent === 'string') {
+        const trimmed = rawContent.trim();
 
-      if (!parsedContent || typeof parsedContent !== 'object') {
-        return '';
+        // JSON (tiptap document or nodes)
+        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+          return JSON.parse(rawContent);
+        }
+
+        // HTML string (e.g. "<p class=...>...</p>") — return raw HTML so the editor can accept it
+        if (trimmed.startsWith('<')) {
+          return rawContent;
+        }
+
+        // plain text — wrap into a minimal doc
+        return {
+          type: 'doc',
+          content: [
+            {
+              type: 'paragraph',
+              content: [{ type: 'text', text: rawContent }],
+            },
+          ],
+        };
       }
 
-      if (
-        parsedContent.type === 'doc' &&
-        Array.isArray(parsedContent.content)
-      ) {
-        return parsedContent;
+      const parsedContent = rawContent as unknown;
+      if (!parsedContent || typeof parsedContent !== 'object') return '';
+      const asObj = parsedContent as Record<string, unknown>;
+      if (asObj.type === 'doc' && Array.isArray(asObj.content)) {
+        return asObj as unknown as Content;
       }
 
-      return { type: 'doc', content: [parsedContent] };
+      // Fallback: wrap the object as a single paragraph containing its JSON string
+      return {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', text: JSON.stringify(asObj) }],
+          },
+        ],
+      };
     } catch (error) {
       console.error('Failed to parse lesson content:', error);
+      // If the raw content looks like HTML, return it as-is so the editor can render it
+      if (
+        typeof rawContent === 'string' &&
+        String(rawContent).trim().startsWith('<')
+      ) {
+        return rawContent;
+      }
+
       return {
         type: 'doc',
         content: [
@@ -119,12 +155,28 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonQuery.data]);
 
+  // When opening the modal for creating a new lesson (no lessonId),
+  // ensure the editor/content are reset (avoid showing previous content).
+  useEffect(() => {
+    if (open && !lessonId) {
+      setContent('');
+      setTitle('');
+      setDescription('');
+      setLessonType('TEXT');
+      setVideoFile(null);
+      setExistingVideoUrl('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+    // Only run when `open` or `lessonId` changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, lessonId]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
       if (!validVideoTypes.includes(file.type)) {
-        toast.error('Please select a valid video file (MP4, WebM, or OGG)');
+        toast.error('Định dạng video không hợp lệ (MP4, WebM hoặc OGG)');
         return;
       }
       setVideoFile(file);
@@ -154,7 +206,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
         'Failed to extract video URL from response:',
         uploadResponse,
       );
-      toast.error('Failed to get video URL from upload');
+      toast.error('Không thể lấy URL video từ quá trình tải lên');
       throw new Error('Failed to get video URL');
     }
 
@@ -163,7 +215,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
   const createVideoLesson = async () => {
     if (!videoFile) {
-      toast.error('Please select a video file');
+      toast.error('Vui lòng chọn một tệp video để tải lên');
       return;
     }
 
@@ -206,14 +258,14 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
     if (videoFile) {
       const videoUrl = await uploadVideoAndGetUrl(videoFile);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateLessonMutation.mutateAsync({
+      const payload = {
         ...basePayload,
         videoUrl,
-      } as any);
+      } as unknown as CreateLessonPayload;
+      await updateLessonMutation.mutateAsync(payload);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await updateLessonMutation.mutateAsync(basePayload as any);
+      const payload = basePayload as unknown as CreateLessonPayload;
+      await updateLessonMutation.mutateAsync(payload);
     }
   };
 
@@ -229,20 +281,20 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
     e.preventDefault();
 
     if (!title.trim()) {
-      toast.error('Lesson title is required');
+      toast.error('Tiêu đề bài học là bắt buộc');
       return;
     }
     if (!description.trim()) {
-      toast.error('Lesson description is required');
+      toast.error('Mô tả bài học là bắt buộc');
       return;
     }
 
     if (lessonType === 'TEXT' && isEditorEmpty(content)) {
-      toast.error('Content is required');
+      toast.error('Nội dung là bắt buộc');
       return;
     }
     if (lessonType === 'VIDEO' && !videoFile && !lessonId) {
-      toast.error('Please select a video file');
+      toast.error('Vui lòng chọn một tệp video để tải lên');
       return;
     }
 
