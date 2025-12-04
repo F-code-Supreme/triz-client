@@ -198,6 +198,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
             assignmentDescription={assignmentData.description}
             durationInMinutes={assignmentData.durationInMinutes}
             maxAttempts={assignmentData.maxAttempts}
+            criteria={assignmentData.criteria || []}
           />
         );
 
