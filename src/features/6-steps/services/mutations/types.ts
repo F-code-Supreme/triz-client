@@ -1,3 +1,4 @@
+import type { PhysicalContradiction } from '../../types';
 import type { IGetPrinciplesLookupDataResponse } from '../queries/types';
 
 // Step 1
@@ -55,16 +56,6 @@ export interface IStep4SuggestionPayload {
   systemIdentified: string;
   elements: string[];
   requiredStates: Record<string, string[]>;
-}
-
-export interface PhysicalContradiction {
-  element: string;
-  propertyDimension: string;
-  stateA: string;
-  stateB: string;
-  benefitA: string;
-  benefitB: string;
-  contradictionStatement: string;
 }
 
 export interface IStep4SuggestionResponse {
@@ -155,11 +146,18 @@ export interface IStep6SuggestionResponse {
       total: number;
     };
     category: 'excellent' | 'good' | 'average' | 'poor';
+    keyStrengths: string[];
+    keyWeaknesses: string[];
     explanation: {
       mlResolution: string;
       feasibility: string;
       systemImpact: string;
     };
-  };
+  } | null;
   message: string;
+  rejectionReason: string | null;
+  category: 'constraint_violation' | 'not_solving_ml' | 'not_feasible' | null;
+  suggestion: string | null;
+  assumption: string | null;
+  note: string | null;
 }

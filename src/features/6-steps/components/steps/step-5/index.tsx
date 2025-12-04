@@ -141,13 +141,39 @@ export const Step5GenerateIdeas = ({
     setIdeas((prev) => [...prev, newIdea]);
   };
 
+  const [selectedIdeaIds, setSelectedIdeaIds] = useState<Set<number>>(
+    new Set(),
+  );
+
+  const handleSelectIdea = (ideaId: number) => {
+    setSelectedIdeaIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(ideaId)) {
+        newSet.delete(ideaId);
+      } else {
+        if (newSet.size >= 3) {
+          toast.error('Chỉ được chọn tối đa 3 ý tưởng');
+          return prev;
+        }
+        newSet.add(ideaId);
+      }
+      return newSet;
+    });
+  };
+
   const handleNext = () => {
     if (ideas.length === 0) {
       toast.error('Vui lòng có ít nhất một ý tưởng để tiếp tục');
       return;
     }
 
-    onNext({ ideas });
+    if (selectedIdeaIds.size !== 3) {
+      toast.error('Vui lòng chọn đúng 3 ý tưởng để tiếp tục');
+      return;
+    }
+
+    const selectedIdeas = ideas.filter((idea) => selectedIdeaIds.has(idea.id));
+    onNext({ ideas, selectedIdeas });
   };
 
   if (step5Mutation.isPending) {
@@ -208,8 +234,17 @@ export const Step5GenerateIdeas = ({
         </div>
 
         <div className="self-stretch justify-start text-sm font-semibold leading-6 text-slate-600">
-          Xem lại và chỉnh sửa các ý tưởng được tạo từ các nguyên tắc TRIZ:
+          Xem lại và chỉnh sửa các ý tưởng được tạo từ các nguyên tắc TRIZ. Chọn
+          3 ý tưởng tốt nhất để đánh giá:
         </div>
+
+        {selectedIdeaIds.size > 0 && (
+          <div className="bg-blue-50 dark:bg-blue-950 rounded-lg px-4 py-3 border border-blue-200 dark:border-blue-800">
+            <span className="text-sm font-medium text-blue-800 dark:text-blue-200">
+              Đã chọn {selectedIdeaIds.size}/3 ý tưởng
+            </span>
+          </div>
+        )}
 
         <ScrollArea className="h-[50vh] pr-4">
           <div className="flex flex-col gap-6">
@@ -244,8 +279,10 @@ export const Step5GenerateIdeas = ({
                           key={idea.id}
                           id={idea.id.toString()}
                           text={idea.ideaStatement}
+                          isSelected={selectedIdeaIds.has(idea.id)}
                           isEditable
                           isDeletable
+                          onSelect={(id) => handleSelectIdea(Number(id))}
                           onEdit={(id, newText) =>
                             handleEditIdea(Number(id), newText)
                           }
@@ -270,7 +307,8 @@ export const Step5GenerateIdeas = ({
       <ActionButtons
         onBack={onBack}
         onNext={handleNext}
-        disableNext={ideas.length === 0}
+        disableNext={ideas.length === 0 || selectedIdeaIds.size !== 3}
+        nextLabel="Đánh giá ý tưởng"
       />
     </div>
   );

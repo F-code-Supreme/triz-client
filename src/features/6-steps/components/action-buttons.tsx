@@ -8,6 +8,7 @@ interface ActionButtonsProps {
   onNext: () => void;
   disableNext?: boolean;
   hideBack?: boolean;
+  nextLabel?: string;
 }
 
 const ActionButtons = ({
@@ -15,6 +16,7 @@ const ActionButtons = ({
   onNext,
   disableNext,
   hideBack,
+  nextLabel = 'Tiếp theo',
 }: ActionButtonsProps) => {
   return (
     <div className={cn('flex justify-between mt-4', hideBack && 'justify-end')}>
@@ -25,7 +27,7 @@ const ActionButtons = ({
         </Button>
       )}
       <Button onClick={onNext} disabled={disableNext} size="lg">
-        Tiếp theo
+        {nextLabel}
         <ArrowRight />
       </Button>
     </div>

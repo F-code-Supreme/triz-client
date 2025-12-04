@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import type { PhysicalContradiction } from '../types';
+
 export interface MiniProblem {
   id: string;
   text: string;
@@ -46,15 +48,7 @@ export interface SixStepData {
       contradictionStatement: string;
     }[];
     selectedPhysicalContradictionIndex?: number;
-    selectedPhysicalContradiction?: {
-      element: string;
-      propertyDimension: string;
-      stateA: string;
-      stateB: string;
-      benefitA: string;
-      benefitB: string;
-      contradictionStatement: string;
-    };
+    selectedPhysicalContradiction?: PhysicalContradiction;
     technicalContradictions?: {
       element: string;
       sourceML: string;
@@ -122,10 +116,49 @@ export interface SixStepData {
       howItAddresses: string;
       abstractionLevel: string;
     }[];
+    selectedIdeas?: {
+      id: number;
+      element: string;
+      sourceType: string;
+      principleUsed: {
+        id: number;
+        name: string;
+        priority: number;
+        subPoint?: string;
+      };
+      ideaStatement: string;
+      howItAddresses: string;
+      abstractionLevel: string;
+    }[];
   };
   // Step 6: Make Decision
   step6?: {
-    decision: string;
+    evaluations: {
+      ideaId: number;
+      status: 'passing' | 'rejected';
+      evaluation: {
+        scores: {
+          mlResolution: number;
+          feasibility: number;
+          systemImpact: number;
+          total: number;
+        };
+        category: 'excellent' | 'good' | 'average' | 'poor';
+        explanation: {
+          mlResolution: string;
+          feasibility: string;
+          systemImpact: string;
+        };
+      } | null;
+      message: string;
+      rejectionReason?: string;
+      category?: 'feasibility' | 'relevance' | 'clarity' | 'completeness';
+      suggestion?: string;
+      assumption?: string;
+      note?: string;
+      userComment?: string;
+      userRating?: number;
+    }[];
   };
 }
 

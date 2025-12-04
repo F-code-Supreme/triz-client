@@ -37,10 +37,8 @@ import { TechnicalContradictionNode } from './nodes/TechnicalContradictionNode';
 import { NodeType, ParameterType, TechnicalContradictionKey } from './types';
 
 import type { NodeStatus } from '@/components/ui/react-flow/node-status-indicator';
-import type {
-  PhysicalContradiction,
-  TechnicalContradiction,
-} from '@/features/6-steps/services/mutations/types';
+import type { TechnicalContradiction } from '@/features/6-steps/services/mutations/types';
+import type { PhysicalContradiction } from '@/features/6-steps/types';
 // import type { IGetPrinciplesLookupDataItem } from '@/features/6-steps/services/queries/types';
 
 interface Step4Props {
@@ -1070,7 +1068,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
                   className="w-3 h-3 rounded"
                   style={{ backgroundColor: NodeColors.physicalContradiction }}
                 />
-                <span>Mâu thuẫn Lý học (ML)</span>
+                <span>Mâu thuẫn Vật lý (ML)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
