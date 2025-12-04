@@ -467,12 +467,12 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
       >
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Không có giải pháp</DialogTitle>
+            <DialogTitle>Chưa có giải pháp</DialogTitle>
           </DialogHeader>
           <div className="flex">
             <div>
               <p className="text-slate-700 leading-relaxed text-base">
-                Mâu thuẫn này không có giải pháp được đề xuất bởi các Nguyên tắc
+                Mâu thuẫn này chưa có giải pháp được đề xuất bởi các Nguyên tắc
                 TRIZ.
               </p>
               <p className="text-slate-600 text-sm mt-2">

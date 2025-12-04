@@ -49,6 +49,7 @@ const ForumPage: React.FC = () => {
 
   if (!data?.pages) return [];
   const forumPosts = data.pages.flatMap((page) => page.content || []);
+  console.log('forumPosts', forumPosts);
 
   const excerpt = (text = '', limit = 400) => {
     const cleaned = text.replace(/\r\n|\n/g, ' ').trim();
@@ -158,7 +159,7 @@ const ForumPage: React.FC = () => {
                   id={p.id}
                   title={p.title}
                   author={{
-                    name: 'Người dùng',
+                    name: p.userName,
                     href: `/users/${p.createdBy}`,
                     avatar:
                       'https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b',
@@ -168,18 +169,18 @@ const ForumPage: React.FC = () => {
                     <div>
                       <p>
                         {expandedId === p.id ? p.content : excerpt(p.content)}
+                        {p.content && p.content.length > 400 && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setExpandedId(expandedId === p.id ? null : p.id)
+                            }
+                            className="text-blue-600 mt-1"
+                          >
+                            {expandedId === p.id ? 'Thu gọn' : 'xem thêm'}
+                          </button>
+                        )}
                       </p>
-                      {p.content && p.content.length > 400 && (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setExpandedId(expandedId === p.id ? null : p.id)
-                          }
-                          className="text-blue-600 mt-1"
-                        >
-                          {expandedId === p.id ? 'Thu gọn' : '...xem thêm'}
-                        </button>
-                      )}
                     </div>
                   }
                   image={undefined}

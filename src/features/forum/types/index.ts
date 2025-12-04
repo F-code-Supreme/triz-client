@@ -17,6 +17,7 @@ export interface ForumPost {
   tagIds: UUID[]; // danh sách tag id
   createdAt: ISODateString; // ISO timestamp, ex: "2025-11-27T09:58:31.544926Z"
   updatedAt: ISODateString;
+  userName: string;
 }
 
 export interface Comment {
