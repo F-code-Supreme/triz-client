@@ -278,7 +278,7 @@ const ForumPage: React.FC = () => {
                             onClick={() =>
                               setExpandedId(expandedId === p.id ? null : p.id)
                             }
-                            className="text-blue-600 mt-1"
+                            className="text-secondary mt-1"
                           >
                             {expandedId === p.id ? 'Thu gọn' : 'xem thêm'}
                           </button>

@@ -203,6 +203,17 @@ const JournalDetailPage = () => {
                         </p>
                       </div>
                     </div>
+                    <Button
+                      onClick={handlePublishToForum}
+                      disabled={publishToForumMutation.isPending}
+                      className="w-full"
+                      variant="default"
+                    >
+                      <Share2 className="mr-2 h-4 w-4" />
+                      {publishToForumMutation.isPending
+                        ? 'Đang xuất bản...'
+                        : 'Xuất bản lên diễn đàn'}
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -269,23 +280,6 @@ const JournalDetailPage = () => {
                     })}
                   </ul>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Action Buttons */}
-            <Card>
-              <CardContent className="p-6 space-y-3">
-                <Button
-                  onClick={handlePublishToForum}
-                  disabled={publishToForumMutation.isPending}
-                  className="w-full"
-                  variant="default"
-                >
-                  <Share2 className="mr-2 h-4 w-4" />
-                  {publishToForumMutation.isPending
-                    ? 'Đang xuất bản...'
-                    : 'Xuất bản lên diễn đàn'}
-                </Button>
               </CardContent>
             </Card>
           </div>

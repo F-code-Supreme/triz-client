@@ -21,6 +21,7 @@ export const useGetForumPostsQuery = (pagination?: PaginationState) => {
         params: {
           page: pageParam,
           size: initialSize,
+          sort: 'createdAt,desc',
         },
       });
       return response.data;
