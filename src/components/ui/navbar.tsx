@@ -12,6 +12,7 @@ import {
   Grid3x3,
   Gamepad2,
   Footprints,
+  Newspaper,
 } from 'lucide-react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -96,14 +97,14 @@ const LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
   { href: '/course', labelKey: 'learn_triz.course', icon: GraduationCap },
   { href: '/games', labelKey: 'learn_triz.games', icon: Gamepad2 },
   { href: '/books', labelKey: 'learn_triz.books', icon: BookOpen },
-  { href: '/learn-triz', labelKey: 'learn_triz.index', icon: Lightbulb },
-  { href: '/matrix-triz', labelKey: 'learn_triz.matrix', icon: Grid3x3 },
   { href: '/quiz', labelKey: 'learn_triz.quiz', icon: BookCheck },
 ];
 
 // Configuration for Tools dropdown links
 const TOOLS_LINKS: ToolsNavItem[] = [
   { href: '/6-steps', labelKey: 'tools.six_steps', icon: Footprints },
+  { href: '/learn-triz', labelKey: 'tools.principles', icon: Lightbulb },
+  { href: '/matrix-triz', labelKey: 'tools.matrix', icon: Grid3x3 },
 ];
 
 // Active link styling
@@ -265,6 +266,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                               >
                                 <BookOpen className="mr-2 h-4 w-4" />
                                 {t('dropdown_menu.my_books')}
+                              </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full">
+                              <Link
+                                to="/journals"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                <Newspaper className="mr-2 h-4 w-4" />
+                                {t('dropdown_menu.journals')}
                               </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
@@ -517,6 +527,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         <Link to="/books/me" className="cursor-pointer">
                           <BookOpen className="mr-2 h-4 w-4" />
                           {t('dropdown_menu.my_books')}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/journals" className="cursor-pointer">
+                          <Newspaper className="mr-2 h-4 w-4" />
+                          {t('dropdown_menu.journals')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>

@@ -1,7 +1,10 @@
+import { useNavigate } from '@tanstack/react-router';
 import { Star } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useCreateSixStepJournalMutation } from '@/features/6-steps/services/mutations';
 import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
 export interface Step7Props {
@@ -9,7 +12,98 @@ export interface Step7Props {
 }
 
 export const Step7Summary = ({ onBack }: Step7Props) => {
-  const { stepData } = useSixStepDataStore();
+  const navigate = useNavigate();
+  const { stepData, resetWorkflow } = useSixStepDataStore();
+
+  const createJournalMutation = useCreateSixStepJournalMutation();
+
+  const handleFinish = async () => {
+    if (
+      !stepData.step1 ||
+      !stepData.step2 ||
+      !stepData.step3 ||
+      !stepData.step4 ||
+      !stepData.step5 ||
+      !stepData.step6
+    ) {
+      toast.error('Vui lòng hoàn thành tất cả các bước trước khi lưu');
+      return;
+    }
+
+    try {
+      // Prepare the payload according to ICreateSixStepJournalPayload
+      const payload = {
+        step1Understand: {
+          rawProblem: stepData.step1.understanding,
+          selectedMiniProblem: stepData.step1.selectedMiniProblem,
+        },
+        step2Objectives: {
+          goal: stepData.step2.selectedGoal?.text || '',
+        },
+        step3Analysis: {
+          systemIdentified: stepData.step3.systemIdentified,
+          elements: stepData.step3.elements,
+          requiredStates: Object.entries(stepData.step3.requiredStates).reduce(
+            (acc, [key, states]) => {
+              acc[key] = states.map((state) => state.text);
+              return acc;
+            },
+            {} as Record<string, string[]>,
+          ),
+        },
+        step4Contradiction: {
+          physicalContradictions: stepData.step4.physicalContradictions,
+        },
+        step5Ideas: {
+          selectedIdeas:
+            stepData.step5.selectedIdeas?.map((idea) => ({
+              id: idea.id,
+              element: idea.element,
+              sourceType: 'TRIZ_Principle' as const,
+              principleUsed: {
+                id: idea.principleUsed.id,
+                name: idea.principleUsed.name,
+                priority: idea.principleUsed.priority,
+                subPoint: idea.principleUsed.subPoint || '',
+              },
+              ideaStatement: idea.ideaStatement,
+              howItAddresses: idea.howItAddresses,
+              abstractionLevel: 'concept' as const,
+            })) || [],
+        },
+        step6Decision: {
+          evaluatedIdeas: stepData.step6.evaluations.map((evaluation) => {
+            const idea = stepData.step5?.selectedIdeas?.find(
+              (i) => i.id === evaluation.ideaId,
+            );
+            return {
+              ideaId: evaluation.ideaId,
+              ideaStatement: idea?.ideaStatement || '',
+              aiComment: evaluation.message || '',
+              userComment: evaluation.userComment || '',
+              userRating: evaluation.userRating || 0,
+            };
+          }),
+        },
+      };
+
+      const result = await createJournalMutation.mutateAsync(payload);
+
+      toast.success('Lưu nhật ký thành công!');
+
+      // Reset the workflow
+      resetWorkflow();
+
+      // Navigate to the journal detail page
+      navigate({
+        to: '/journals/$journalId',
+        params: { journalId: result.id },
+      });
+    } catch (error) {
+      console.error('Failed to create journal:', error);
+      toast.error('Có lỗi xảy ra khi lưu nhật ký. Vui lòng thử lại.');
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <Card>
@@ -475,10 +569,21 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
           )}
 
           <div className="flex justify-between gap-3">
-            <Button onClick={onBack} variant="outline" size="lg">
+            <Button
+              onClick={onBack}
+              variant="outline"
+              size="lg"
+              disabled={createJournalMutation.isPending}
+            >
               Quay lại
             </Button>
-            <Button size="lg">Hoàn thành</Button>
+            <Button
+              onClick={handleFinish}
+              size="lg"
+              disabled={createJournalMutation.isPending}
+            >
+              {createJournalMutation.isPending ? 'Đang lưu...' : 'Hoàn thành'}
+            </Button>
           </div>
         </CardContent>
       </Card>
