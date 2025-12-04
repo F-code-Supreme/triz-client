@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -29,6 +30,7 @@ import { bookStatuses } from '@/features/book/data/data';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminAssignmentsManagementPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<
@@ -83,10 +85,10 @@ const AdminAssignmentsManagementPage = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              Quản lý Bài tập
+              {t('assignments.title')}
             </h1>
             <p className="text-muted-foreground mt-2">
-              Duyệt các bài tập đã được giao cho sinh viên.
+              {t('assignments.description')}
             </p>
           </div>
         </div>
@@ -94,7 +96,7 @@ const AdminAssignmentsManagementPage = () => {
         <div className="space-y-4">
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Search by title, author..."
+            searchPlaceholder={t('assignments.search_placeholder')}
             searchKey="title"
             filters={[
               {
@@ -134,7 +136,7 @@ const AdminAssignmentsManagementPage = () => {
           ) : books.length === 0 ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-muted-foreground">
-                No books found. Create your first book!
+                {t('assignments.no_assignments')}
               </p>
             </div>
           ) : (
@@ -180,7 +182,7 @@ const AdminAssignmentsManagementPage = () => {
                           colSpan={booksColumns.length}
                           className="h-24 text-center"
                         >
-                          No results.
+                          {t('assignments.no_results')}
                         </TableCell>
                       </TableRow>
                     )}

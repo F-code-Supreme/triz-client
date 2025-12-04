@@ -93,7 +93,7 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                 </div>
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground">
-                    Các phần tử:
+                    Các yếu tố:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {stepData.step3.elements.map((element) => (

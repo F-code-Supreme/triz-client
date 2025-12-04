@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { ArrowLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -40,10 +41,9 @@ import { useGetUserByIdQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 import { formatTrizilium } from '@/utils';
 
-const pageTitle = 'User Details';
-
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const AdminUserDetailPage = () => {
+  const { t } = useTranslation('pages.admin');
   const navigate = useNavigate();
   const { userId } = useParams({ from: '/admin/users/$userId' });
 
@@ -128,11 +128,11 @@ const AdminUserDetailPage = () => {
       {
         onSuccess: () => {
           setIsCancelDialogOpen(false);
-          toast.success('Subscription cancelled successfully');
+          toast.success(t('users.detail.cancel_dialog.success'));
         },
         onError: (error) => {
           toast.error(
-            (error as Error).message || 'Failed to cancel subscription',
+            (error as Error).message || t('users.detail.cancel_dialog.error'),
           );
         },
       },
@@ -174,7 +174,7 @@ const AdminUserDetailPage = () => {
 
   if (userLoading) {
     return (
-      <AdminLayout meta={{ title: pageTitle }}>
+      <AdminLayout meta={{ title: t('users.detail.title') }}>
         <div className="flex flex-col gap-8 p-8">
           {/* Back button skeleton */}
           <div className="flex flex-col gap-4">
@@ -185,7 +185,7 @@ const AdminUserDetailPage = () => {
               className="w-fit"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              {t('users.detail.back')}
             </Button>
             <div className="flex flex-col gap-2">
               <Skeleton className="h-8 w-64" />
@@ -196,7 +196,7 @@ const AdminUserDetailPage = () => {
           {/* User Information Card Skeleton */}
           <Card>
             <CardHeader>
-              <CardTitle>User Information</CardTitle>
+              <CardTitle>{t('users.detail.user_information')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-start gap-8">
@@ -238,7 +238,7 @@ const AdminUserDetailPage = () => {
           {/* Subscription History Card Skeleton */}
           <Card>
             <CardHeader>
-              <CardTitle>Subscription History</CardTitle>
+              <CardTitle>{t('users.detail.subscription_history')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Skeleton className="h-96 w-full" />
@@ -261,16 +261,18 @@ const AdminUserDetailPage = () => {
 
   if (!userData) {
     return (
-      <AdminLayout meta={{ title: pageTitle }}>
+      <AdminLayout meta={{ title: t('users.detail.title') }}>
         <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Customer not found</p>
+          <p className="text-muted-foreground">
+            {t('users.detail.customer_not_found')}
+          </p>
         </div>
       </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout meta={{ title: pageTitle }}>
+    <AdminLayout meta={{ title: t('users.detail.title') }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex flex-col gap-4">
           <Button
@@ -280,7 +282,7 @@ const AdminUserDetailPage = () => {
             className="w-fit"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            {t('users.detail.back')}
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
@@ -293,7 +295,7 @@ const AdminUserDetailPage = () => {
         {/* User Information Card */}
         <Card>
           <CardHeader>
-            <CardTitle>User Information</CardTitle>
+            <CardTitle>{t('users.detail.user_information')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-start gap-8">
@@ -402,8 +404,8 @@ const AdminUserDetailPage = () => {
                   disabled={isCancelingSubscription}
                 >
                   {isCancelingSubscription
-                    ? 'Cancelling...'
-                    : 'Cancel Subscription'}
+                    ? t('users.detail.cancel_dialog.canceling')
+                    : t('users.detail.cancel_subscription')}
                 </Button>
               </div>
             </CardHeader>
@@ -446,10 +448,12 @@ const AdminUserDetailPage = () => {
         ) : (
           <Card className="border-2 border-muted">
             <CardHeader>
-              <CardTitle>Active Subscription</CardTitle>
+              <CardTitle>{t('users.detail.active_subscription')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">No active subscription</p>
+              <p className="text-muted-foreground">
+                {t('users.detail.no_active_subscription')}
+              </p>
             </CardContent>
           </Card>
         )}
@@ -457,7 +461,7 @@ const AdminUserDetailPage = () => {
         {/* Subscription History Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Subscription History</CardTitle>
+            <CardTitle>{t('users.detail.subscription_history')}</CardTitle>
           </CardHeader>
           <CardContent>
             <SubscriptionsTable
@@ -471,7 +475,7 @@ const AdminUserDetailPage = () => {
         {/* Transactions Card */}
         <Card>
           <CardHeader>
-            <CardTitle>Transaction History</CardTitle>
+            <CardTitle>{t('users.detail.transaction_history')}</CardTitle>
           </CardHeader>
           <CardContent>
             <TransactionsTable
@@ -491,10 +495,9 @@ const AdminUserDetailPage = () => {
         <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Cancel Subscription</DialogTitle>
+              <DialogTitle>{t('users.detail.cancel_dialog.title')}</DialogTitle>
               <DialogDescription>
-                Are you sure you want to cancel this subscription? This action
-                cannot be undone.
+                {t('users.detail.cancel_dialog.description')}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -503,7 +506,7 @@ const AdminUserDetailPage = () => {
                 onClick={() => setIsCancelDialogOpen(false)}
                 disabled={isCancelingSubscription}
               >
-                No, Keep It
+                {t('common.cancel')}
               </Button>
               <Button
                 variant="destructive"
@@ -511,8 +514,8 @@ const AdminUserDetailPage = () => {
                 disabled={isCancelingSubscription}
               >
                 {isCancelingSubscription
-                  ? 'Cancelling...'
-                  : 'Yes, Cancel Subscription'}
+                  ? t('users.detail.cancel_dialog.canceling')
+                  : t('users.detail.cancel_dialog.confirm')}
               </Button>
             </DialogFooter>
           </DialogContent>

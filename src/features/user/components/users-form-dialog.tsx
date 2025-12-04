@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import AvatarUpload from '@/components/file-upload/avatar-upload';
@@ -63,6 +64,7 @@ export const UsersFormDialog = ({
   onOpenChange,
   initialData,
 }: UsersFormDialogProps) => {
+  const { t } = useTranslation('pages.admin');
   const createMutation = useCreateUserMutation();
   const editMutation = useEditUserMutation();
   const uploadFileMutation = useUploadFileMutation();
@@ -169,7 +171,7 @@ export const UsersFormDialog = ({
       <SheetContent className="w-full max-w-xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle>
-            {initialData ? 'Edit User' : 'Create New User'}
+            {initialData ? t('users.edit_user') : t('users.create_user')}
           </SheetTitle>
         </SheetHeader>
 
@@ -183,7 +185,7 @@ export const UsersFormDialog = ({
               name="avatarUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Avatar</FormLabel>
+                  <FormLabel>{t('users.form.avatar')}</FormLabel>
                   <FormControl>
                     <AvatarUpload
                       defaultAvatar={field.value}
@@ -204,7 +206,9 @@ export const UsersFormDialog = ({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email {!initialData && '*'}</FormLabel>
+                  <FormLabel>
+                    {t('users.form.email')} {!initialData && '*'}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder="user@example.com"
@@ -224,15 +228,16 @@ export const UsersFormDialog = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Password {passwordRequired && '*'}
-                    {initialData && '(Leave empty to keep current)'}
+                    {t('users.form.password')} {passwordRequired && '*'}
+                    {initialData &&
+                      ` (${t('users.form.password_keep_current')})`}
                   </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={
                         initialData
-                          ? 'Leave empty to keep current password'
-                          : 'Password'
+                          ? t('users.form.password_placeholder_edit')
+                          : t('users.form.password_placeholder_create')
                       }
                       type="password"
                       {...field}
@@ -248,7 +253,7 @@ export const UsersFormDialog = ({
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{t('users.form.full_name')}</FormLabel>
                   <FormControl>
                     <Input placeholder="John Doe" {...field} />
                   </FormControl>
@@ -262,7 +267,7 @@ export const UsersFormDialog = ({
               name="roles"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role *</FormLabel>
+                  <FormLabel>{t('users.form.role')} *</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
@@ -270,9 +275,15 @@ export const UsersFormDialog = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={RoleIUser.USER}>User</SelectItem>
-                      <SelectItem value={RoleIUser.ADMIN}>Admin</SelectItem>
-                      <SelectItem value={RoleIUser.EXPERT}>Expert</SelectItem>
+                      <SelectItem value={RoleIUser.USER}>
+                        {t('users.form.role_user')}
+                      </SelectItem>
+                      <SelectItem value={RoleIUser.ADMIN}>
+                        {t('users.form.role_admin')}
+                      </SelectItem>
+                      <SelectItem value={RoleIUser.EXPERT}>
+                        {t('users.form.role_expert')}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -285,7 +296,7 @@ export const UsersFormDialog = ({
               name="enabled"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status *</FormLabel>
+                  <FormLabel>{t('users.form.status')} *</FormLabel>
                   <Select
                     value={field.value ? 'active' : 'inactive'}
                     onValueChange={(value) =>
@@ -298,8 +309,12 @@ export const UsersFormDialog = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
+                      <SelectItem value="active">
+                        {t('users.form.status_active')}
+                      </SelectItem>
+                      <SelectItem value="inactive">
+                        {t('users.form.status_inactive')}
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -310,14 +325,14 @@ export const UsersFormDialog = ({
             <div className="flex gap-3 pt-6">
               <Button type="submit" disabled={isLoading}>
                 {isLoading
-                  ? 'Saving...'
+                  ? t('common.save') + '...'
                   : initialData
-                    ? 'Update User'
-                    : 'Create User'}
+                    ? t('users.form.update_user')
+                    : t('users.form.create_user')}
               </Button>
               <SheetClose asChild>
                 <Button type="button" variant="outline">
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
               </SheetClose>
             </div>

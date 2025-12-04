@@ -26,6 +26,7 @@ i18n
       'pages.packages',
       'pages.learn_triz',
       'pages.matrix_triz',
+      'pages.admin',
     ],
     defaultNS: 'common',
 

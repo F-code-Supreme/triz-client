@@ -1,4 +1,5 @@
 import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -25,6 +26,7 @@ interface NavUserProps {
 }
 
 export const NavUser = ({ user }: NavUserProps) => {
+  const { t } = useTranslation('sidebar');
   const logout = useLogout();
 
   return (
@@ -70,7 +72,7 @@ export const NavUser = ({ user }: NavUserProps) => {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout} className="cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
-              Log out
+              {t('user_menu.logout')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

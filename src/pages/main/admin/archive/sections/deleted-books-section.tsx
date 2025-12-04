@@ -1,5 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -25,6 +26,7 @@ export const DeletedBooksSection = ({
   isLoading,
   onRestore,
 }: DeletedBooksSectionProps) => {
+  const { t } = useTranslation('pages.admin');
   const [selectedBook, setSelectedBook] = useState<AdminBook | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -63,10 +65,10 @@ export const DeletedBooksSection = ({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center border rounded-lg border-dashed">
         <p className="text-lg font-medium text-muted-foreground">
-          No deleted books found
+          {t('archive.books.no_deleted')}
         </p>
         <p className="text-sm text-muted-foreground mt-1">
-          All books are currently active
+          {t('archive.books.all_active')}
         </p>
       </div>
     );
@@ -85,7 +87,7 @@ export const DeletedBooksSection = ({
               variant="ghost"
               onClick={() => handleRestore(book)}
               className="absolute top-4 right-4 h-8 w-8"
-              title="Restore"
+              title={t('common.restore')}
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -99,7 +101,7 @@ export const DeletedBooksSection = ({
             </div>
             {book.deletedAt && (
               <p className="text-xs text-muted-foreground">
-                Deleted on:{' '}
+                {t('archive.books.deleted_at')}:{' '}
                 {new Date(book.deletedAt).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -117,17 +119,16 @@ export const DeletedBooksSection = ({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Restore Book</DialogTitle>
+            <DialogTitle>{t('archive.books.restore_title')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to restore &quot;{selectedBook?.title}
-              &quot;? This will make the book visible again.
+              {t('archive.books.restore_message')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
-            <Button onClick={handleConfirm}>Restore</Button>
+            <Button onClick={handleConfirm}>{t('common.restore')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

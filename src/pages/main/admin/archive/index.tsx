@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +17,7 @@ import type { AdminBook } from '@/features/book/types';
 import type { Package } from '@/features/packages/types';
 
 const AdminArchivePage = () => {
+  const { t } = useTranslation('pages.admin');
   const [activeTab, setActiveTab] = useState('books');
 
   // Books queries and mutations
@@ -41,20 +43,20 @@ const AdminArchivePage = () => {
       await restoreBook.mutateAsync({
         bookId: book.id,
       });
-      toast.success(`Book "${book.title}" restored successfully!`);
+      toast.success(t('archive.books.restore_success', { title: book.title }));
     } catch (error) {
       console.error('Restore error:', error);
-      toast.error('Failed to restore book. Please try again.');
+      toast.error(t('archive.books.restore_error'));
     }
   };
 
   const handleRestorePackage = async (pkg: Package) => {
     try {
       await restorePackage.mutateAsync(pkg.id);
-      toast.success(`Package "${pkg.name}" restored successfully!`);
+      toast.success(t('archive.packages.restore_success', { name: pkg.name }));
     } catch (error) {
       console.error('Restore error:', error);
-      toast.error('Failed to restore package. Please try again.');
+      toast.error(t('archive.packages.restore_error'));
     }
   };
 
@@ -63,10 +65,11 @@ const AdminArchivePage = () => {
       <div className="flex flex-col gap-8 p-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Archive</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t('archive.title')}
+          </h1>
           <p className="text-muted-foreground mt-2">
-            View and manage deleted items. Restore them to make them active
-            again.
+            {t('archive.description')}
           </p>
         </div>
 
@@ -74,7 +77,7 @@ const AdminArchivePage = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger className="gap-2" value="books">
-              Books
+              {t('archive.tabs.books')}
               {deletedBooks.length > 0 && (
                 <Badge variant="secondary" className="ml-1">
                   {deletedBooks.length}
@@ -82,7 +85,7 @@ const AdminArchivePage = () => {
               )}
             </TabsTrigger>
             <TabsTrigger className="gap-2" value="packages">
-              Packages
+              {t('archive.tabs.packages')}
               {deletedPackages.length > 0 && (
                 <Badge variant="secondary" className="ml-1">
                   {deletedPackages.length}

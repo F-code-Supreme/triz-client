@@ -111,7 +111,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
 
     if (hasInvalidElements) {
       toast.error(
-        'Mỗi phần tử phải có ít nhất một trạng thái yêu cầu. Vui lòng thêm trạng thái cho tất cả các phần tử.',
+        'Mỗi yếu tố phải có ít nhất một trạng thái yêu cầu. Vui lòng thêm trạng thái cho tất cả các yếu tố.',
       );
       return;
     }
@@ -286,7 +286,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
                       onChange={(e) => setNewElementText(e.target.value)}
                       onKeyDown={handleElementKeyDown}
                       onBlur={handleAddElement}
-                      placeholder="Tên phần tử..."
+                      placeholder="Tên yếu tố..."
                       className="w-32 text-xs px-2 py-1 bg-transparent border-b border-primary outline-none"
                       autoFocus
                     />
@@ -299,7 +299,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
                     className="h-8 px-2"
                   >
                     <Plus className="w-3 h-3" />
-                    <span className="text-xs ml-1">Thêm phần tử</span>
+                    <span className="text-xs ml-1">Thêm yếu tố</span>
                   </Button>
                 )}
               </TabsList>

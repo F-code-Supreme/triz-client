@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { MoreHorizontal, Eye, Pencil } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -25,6 +26,7 @@ interface UsersDataTableRowActionsProps {
 export const UsersDataTableRowActions = ({
   row,
 }: UsersDataTableRowActionsProps) => {
+  const { t } = useTranslation('pages.admin');
   const user = row.original;
   const navigate = useNavigate();
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -46,15 +48,15 @@ export const UsersDataTableRowActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>{t('common.actions')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleViewDetails}>
             <Eye className="mr-2 h-4 w-4" />
-            View Details
+            {t('users.view_details')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
             <Pencil className="mr-2 h-4 w-4" />
-            Edit
+            {t('common.edit')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

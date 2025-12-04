@@ -51,8 +51,8 @@ const PrincipleSection = () => {
 
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
-      <div className="w-full max-w-8xl px-4 pt-8 mx-auto">
-        <div className="text-center">
+      <div className="w-full h-full max-w-8xl pt-8 mx-auto">
+        <div className="text-center flex flex-col h-full">
           <div className="space-y-6">
             <div className="relative inline-block">
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">

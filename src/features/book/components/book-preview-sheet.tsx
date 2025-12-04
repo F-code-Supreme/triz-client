@@ -1,5 +1,6 @@
 import { BookOpen, Download, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ export const BookPreviewSheet = ({
   onOpenChange,
   book,
 }: BookPreviewSheetProps) => {
+  const { t } = useTranslation('pages.admin');
   const [imageError, setImageError] = useState(false);
 
   if (!book) return null;
@@ -36,10 +38,8 @@ export const BookPreviewSheet = ({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full max-w-2xl overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Book Preview</SheetTitle>
-          <SheetDescription>
-            View details and information about this book
-          </SheetDescription>
+          <SheetTitle>{t('books.preview.title')}</SheetTitle>
+          <SheetDescription>{t('books.preview.description')}</SheetDescription>
         </SheetHeader>
 
         <div className="space-y-6 py-6">
@@ -64,51 +64,51 @@ export const BookPreviewSheet = ({
             {/* Title */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Title
+                {t('books.preview.title_label')}
               </h3>
               <p className="text-lg font-semibold text-foreground">
-                {book.title || 'N/A'}
+                {book.title || t('books.preview.na')}
               </p>
             </div>
 
             {/* Author */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Author
+                {t('books.preview.author_label')}
               </h3>
               <p className="text-base text-foreground">
-                {book.author || 'N/A'}
+                {book.author || t('books.preview.na')}
               </p>
             </div>
 
             {/* Publisher */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Publisher
+                {t('books.preview.publisher_label')}
               </h3>
               <p className="text-base text-foreground">
-                {book.publisher || 'N/A'}
+                {book.publisher || t('books.preview.na')}
               </p>
             </div>
 
             {/* Status */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Status
+                {t('books.preview.status_label')}
               </h3>
               <Badge
                 variant={
                   status?.value === 'PUBLISHED' ? 'default' : 'secondary'
                 }
               >
-                {status?.label || 'Unknown'}
+                {status?.label || t('books.preview.unknown')}
               </Badge>
             </div>
 
             {/* Display Order */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Display Order
+                {t('books.preview.display_order_label')}
               </h3>
               <p className="text-base text-foreground">{book.displayOrder}</p>
             </div>
@@ -116,7 +116,7 @@ export const BookPreviewSheet = ({
             {/* Book ID */}
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Book ID
+                {t('books.preview.book_id_label')}
               </h3>
               <p className="text-sm text-foreground font-mono">{book.id}</p>
             </div>
@@ -135,7 +135,7 @@ export const BookPreviewSheet = ({
                   }}
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  Open Book
+                  {t('books.preview.open_book')}
                 </Button>
               )}
               {book.bUrl && (
@@ -154,7 +154,7 @@ export const BookPreviewSheet = ({
                   }}
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Download
+                  {t('books.preview.download')}
                 </Button>
               )}
             </div>

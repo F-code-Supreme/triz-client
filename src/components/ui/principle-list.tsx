@@ -85,7 +85,7 @@ const PrincipleList: React.FC<CarouselTestProps> = ({ principles }) => {
   };
 
   return (
-    <div className="relative w-full h-[500px] overflow-hidden  flex flex-col items-center justify-center">
+    <div className="relative w-full h-[100%] overflow-hidden  flex flex-col items-center justify-center">
       <div ref={cardsWrapperRef} className="absolute top-10"></div>
 
       <div className="absolute bottom-64 md:bottom-8 flex items-center justify-center gap-4">

@@ -1,5 +1,6 @@
 import { MoreHorizontal, Eye, Pencil, Trash2, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -39,6 +40,7 @@ export const BooksDataTableRowActions = ({
   row,
   isDeleted = false,
 }: BooksDataTableRowActionsProps) => {
+  const { t } = useTranslation('pages.admin');
   const book = row.original;
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -71,16 +73,16 @@ export const BooksDataTableRowActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>{t('books.actions.actions')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
-            Preview
+            {t('books.actions.preview')}
           </DropdownMenuItem>
           {!isDeleted && (
             <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Edit
+              {t('books.actions.edit')}
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
@@ -90,12 +92,12 @@ export const BooksDataTableRowActions = ({
             {isDeleted ? (
               <>
                 <RotateCcw className="mr-2 h-4 w-4" />
-                Restore
+                {t('books.actions.restore')}
               </>
             ) : (
               <>
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                {t('books.actions.delete')}
               </>
             )}
           </DropdownMenuItem>
@@ -118,18 +120,20 @@ export const BooksDataTableRowActions = ({
         <SheetContent>
           <SheetHeader>
             <SheetTitle>
-              {isDeleted ? 'Restore Book' : 'Delete Book'}
+              {isDeleted
+                ? t('books.actions.restore_title')
+                : t('books.actions.delete_title')}
             </SheetTitle>
             <SheetDescription>
               {isDeleted
-                ? `Are you sure you want to restore "${book.title}"? This will make the book visible again.`
-                : `Are you sure you want to delete "${book.title}"? This action cannot be undone.`}
+                ? t('books.actions.restore_message', { title: book.title })
+                : t('books.actions.delete_message', { title: book.title })}
             </SheetDescription>
           </SheetHeader>
           <div className="flex gap-3 justify-end pt-6">
             <SheetClose asChild>
               <Button type="button" variant="outline">
-                Cancel
+                {t('books.form.cancel')}
               </Button>
             </SheetClose>
             <Button
@@ -143,11 +147,11 @@ export const BooksDataTableRowActions = ({
             >
               {isDeleted
                 ? restoreBookMutation.isPending
-                  ? 'Restoring...'
-                  : 'Restore'
+                  ? t('books.actions.restoring') + '...'
+                  : t('books.actions.restore')
                 : deleteBookMutation.isPending
-                  ? 'Deleting...'
-                  : 'Delete'}
+                  ? t('books.actions.deleting') + '...'
+                  : t('books.actions.delete')}
             </Button>
           </div>
         </SheetContent>

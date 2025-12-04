@@ -1,5 +1,6 @@
 import { RotateCcw } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ export const DeletedPackagesSection = ({
   isLoading,
   onRestore,
 }: DeletedPackagesSectionProps) => {
+  const { t } = useTranslation('pages.admin');
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -66,10 +68,10 @@ export const DeletedPackagesSection = ({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center border rounded-lg border-dashed">
         <p className="text-lg font-medium text-muted-foreground">
-          No deleted packages found
+          {t('archive.packages.no_deleted')}
         </p>
         <p className="text-sm text-muted-foreground mt-1">
-          All packages are currently active
+          {t('archive.packages.all_active')}
         </p>
       </div>
     );
@@ -97,7 +99,9 @@ export const DeletedPackagesSection = ({
             {/* Section 2: Features */}
             {pkg.features && pkg.features.length > 0 && (
               <div className="text-xs text-muted-foreground mb-4 flex-1">
-                <p className="font-medium mb-1">Features:</p>
+                <p className="font-medium mb-1">
+                  {t('archive.packages.features')}:
+                </p>
                 <ul className="list-disc list-inside space-y-1">
                   {pkg.features.slice(0, 3).map((feature, idx) => (
                     <li key={idx}>{feature.description}</li>
@@ -112,7 +116,7 @@ export const DeletedPackagesSection = ({
             {/* Section 3: Deleted At */}
             {pkg.deletedAt && (
               <p className="text-xs text-muted-foreground">
-                Deleted on:{' '}
+                {t('archive.packages.deleted_at')}:{' '}
                 {new Date(pkg.deletedAt).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -128,7 +132,7 @@ export const DeletedPackagesSection = ({
               variant="ghost"
               onClick={() => handleRestore(pkg)}
               className="absolute top-4 right-4 h-8 w-8"
-              title="Restore"
+              title={t('common.restore')}
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -140,17 +144,16 @@ export const DeletedPackagesSection = ({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Restore Package</DialogTitle>
+            <DialogTitle>{t('archive.packages.restore_title')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to restore &quot;{selectedPackage?.name}
-              &quot;? This will make the package visible again.
+              {t('archive.packages.restore_message')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
-            <Button onClick={handleConfirm}>Restore</Button>
+            <Button onClick={handleConfirm}>{t('common.restore')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

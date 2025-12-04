@@ -180,6 +180,434 @@ interface Resources {
     "tools.six_steps": "6 Steps Problem Solving",
     "tools.six_steps_desc": "Systematic approach to creative problem solving"
   },
+  "pages.admin": {
+    "archive": {
+      "books": {
+        "all_active": "All books are currently active",
+        "deleted_at": "Deleted at",
+        "no_deleted": "No deleted books found",
+        "restore_error": "Failed to restore book. Please try again.",
+        "restore_message": "Are you sure you want to restore this book?",
+        "restore_success": "Book \"{{title}}\" restored successfully!",
+        "restore_title": "Restore Book"
+      },
+      "description": "View and manage deleted items. Restore them to make them active again.",
+      "packages": {
+        "all_active": "All packages are currently active",
+        "deleted_at": "Deleted at",
+        "features": "Features",
+        "no_deleted": "No deleted packages found",
+        "restore_error": "Failed to restore package. Please try again.",
+        "restore_message": "Are you sure you want to restore this package?",
+        "restore_success": "Package \"{{name}}\" restored successfully!",
+        "restore_title": "Restore Package"
+      },
+      "tabs": {
+        "books": "Books",
+        "packages": "Packages"
+      },
+      "title": "Archive"
+    },
+    "assignments": {
+      "description": "Review assignments that have been assigned to students.",
+      "no_assignments": "No books found. Create your first book!",
+      "no_results": "No results.",
+      "search_placeholder": "Search by title, author...",
+      "title": "Assignments Management"
+    },
+    "books": {
+      "actions": {
+        "actions": "Actions",
+        "delete": "Delete",
+        "delete_message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "delete_title": "Delete Book",
+        "deleting": "Deleting",
+        "edit": "Edit",
+        "preview": "Preview",
+        "restore": "Restore",
+        "restore_message": "Are you sure you want to restore \"{{title}}\"? This will make the book visible again.",
+        "restore_title": "Restore Book",
+        "restoring": "Restoring"
+      },
+      "description": "Manage all books in the system. Create, edit, or delete books.",
+      "form": {
+        "author": "Author",
+        "author_placeholder": "Author name",
+        "book_file": "Book File (EPUB/PDF)",
+        "book_file_required": "Book file is required",
+        "cancel": "Cancel",
+        "cover_image": "Cover Image",
+        "create_book": "Create Book",
+        "create_title": "Create New Book",
+        "display_order": "Display Order",
+        "edit_title": "Edit Book",
+        "publisher": "Publisher",
+        "publisher_placeholder": "Publisher name",
+        "saving": "Saving",
+        "status": "Status",
+        "status_published": "Published",
+        "status_unpublished": "Unpublished",
+        "title": "Title",
+        "title_placeholder": "Book title",
+        "title_required": "Title is required",
+        "update_book": "Update Book"
+      },
+      "new_book": "New Book",
+      "preview": {
+        "author_label": "Author",
+        "book_id_label": "Book ID",
+        "cover": "Book Cover",
+        "description": "View details and information about this book",
+        "details": "Book Details",
+        "display_order_label": "Display Order",
+        "download": "Download",
+        "na": "N/A",
+        "open_book": "Open Book",
+        "publisher_label": "Publisher",
+        "status_label": "Status",
+        "title": "Book Preview",
+        "title_label": "Title",
+        "unknown": "Unknown"
+      },
+      "search_placeholder": "Search by title, author...",
+      "title": "Books"
+    },
+    "common": {
+      "actions": "Actions",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "create": "Create",
+      "delete": "Delete",
+      "edit": "Edit",
+      "filter": "Filter",
+      "loading": "Loading...",
+      "new": "New",
+      "no_data": "No data",
+      "restore": "Restore",
+      "save": "Save",
+      "search": "Search",
+      "status": "Status",
+      "view": "View"
+    },
+    "courses": {
+      "create": {
+        "assignment": {
+          "add_assignment": "Add Assignment",
+          "add_assignment_desc": "Create a new assignment for this module.",
+          "attempts_invalid": "Max attempts must be greater than 0",
+          "create_success": "Assignment created successfully",
+          "description": "Description",
+          "description_placeholder": "Enter assignment description",
+          "description_required": "Assignment description is required",
+          "duration": "Duration (minutes)",
+          "duration_invalid": "Duration must be greater than 0",
+          "edit_assignment": "Edit Assignment",
+          "edit_assignment_desc": "Edit assignment details.",
+          "max_attempts": "Max Attempts",
+          "title": "Assignment Title",
+          "title_label": "Title:",
+          "title_placeholder": "Enter assignment title",
+          "title_required": "Assignment title is required",
+          "update_success": "Assignment updated successfully",
+          "view_assignment": "View Assignment",
+          "view_assignment_desc": "View assignment details."
+        },
+        "basic": {
+          "choose_file": "Choose File",
+          "deal_price": "Deal Price",
+          "deal_price_invalid": "Invalid deal price",
+          "description": "Short Description",
+          "description_placeholder": "Short description for the course",
+          "description_required": "Description is required",
+          "duration": "Duration (minutes)",
+          "level": "Level",
+          "level_advanced": "Advanced",
+          "level_intermediate": "Intermediate",
+          "level_starter": "Starter",
+          "next": "Next",
+          "price": "Price",
+          "price_invalid": "Invalid price",
+          "thumbnail": "Thumbnail",
+          "title": "Course Title",
+          "title_placeholder": "Enter course title",
+          "title_required": "Title is required"
+        },
+        "description": "Create a new course with multiple modules and assignments.",
+        "lesson": {
+          "add_lesson": "Add Lesson",
+          "add_lesson_desc": "Create a new lesson for this module.",
+          "choose_file": "Choose File",
+          "content": "Content",
+          "content_placeholder": "Start writing...",
+          "content_required": "Lesson content is required",
+          "create_success": "Lesson created successfully",
+          "delete_error": "Failed to delete lesson",
+          "delete_success": "Lesson deleted successfully",
+          "description": "Description",
+          "description_placeholder": "Enter lesson description",
+          "description_required": "Lesson description is required",
+          "edit_lesson": "Edit Lesson",
+          "edit_lesson_desc": "Edit lesson details.",
+          "lesson_type": "Lesson Type",
+          "save_error": "Failed to save lesson",
+          "text": "Text",
+          "title": "Title",
+          "title_label": "Lesson Content:",
+          "title_placeholder": "Enter lesson title",
+          "title_required": "Lesson title is required",
+          "update_success": "Lesson updated successfully",
+          "video": "Video",
+          "video_change": "Change Video",
+          "video_file": "Video",
+          "video_invalid": "Please select a valid video file (MP4, AVI, MOV)",
+          "video_replace": "Replace Video",
+          "video_required": "Please select a video file",
+          "video_uploading": "Uploading video...",
+          "video_url": "Current Video",
+          "view_lesson": "View Lesson",
+          "view_lesson_desc": "View lesson details."
+        },
+        "module": {
+          "add_module": "Add Module",
+          "create_success": "Module created successfully",
+          "duration": "Duration (minutes)",
+          "easy": "Easy",
+          "hard": "Hard",
+          "level": "Level",
+          "medium": "Medium",
+          "name": "Module Name",
+          "update_success": "Module updated successfully"
+        },
+        "publish": {
+          "no_modules": "Please add at least one module before publishing."
+        },
+        "reorder": {
+          "disabled": "Reordering disabled",
+          "drag": "Drag to reorder"
+        },
+        "steps": {
+          "basic": "Basic Information",
+          "modules": "Module Management",
+          "summary": "Publish & Summary"
+        },
+        "summary": {
+          "assignment_count": "{{count}} Assignments",
+          "assignment_number": "Assignment {{number}}",
+          "assignments": "Assignments",
+          "back": "Back",
+          "course_description": "Course Description",
+          "deal_price": "Deal Price",
+          "duration": "Duration",
+          "lesson_count": "{{count}} Lessons",
+          "lessons": "Lessons",
+          "level": "Level",
+          "max_attempts": "Max attempts: {{count}}",
+          "minutes": "minutes",
+          "modules": "Modules",
+          "no_content": "This module has no lessons or assignments yet",
+          "no_description": "No description available for this course",
+          "price": "Price",
+          "publish": "Publish Course",
+          "publish_success": "Course published successfully!",
+          "ready": "Ready to Publish",
+          "short_description": "Short Description",
+          "title": "Review and Publish"
+        },
+        "title": "Create Course"
+      },
+      "create_course": "Create Course",
+      "description": "Manage courses provided on the platform. You can add, edit, or delete courses as needed.",
+      "title": "Course Management"
+    },
+    "dashboard": {
+      "description": "Welcome to the admin panel.",
+      "tabs": {
+        "chat": "Chat",
+        "games": "Games",
+        "revenue": "Revenue"
+      },
+      "title": "Dashboard"
+    },
+    "flashcards": {
+      "card_form": {
+        "cancel": "Cancel",
+        "create_card": "Create Card",
+        "definition": "Definition",
+        "definition_image_placeholder": "https://example.com/image.jpg",
+        "definition_image_url": "Definition Image URL (Optional)",
+        "definition_placeholder": "Enter the definition or answer",
+        "definition_required": "Definition is required",
+        "term": "Term",
+        "term_image_placeholder": "https://example.com/image.jpg",
+        "term_image_url": "Term Image URL (Optional)",
+        "term_placeholder": "Enter the term or question",
+        "term_required": "Term is required",
+        "update_card": "Update Card",
+        "url_invalid": "Must be a valid URL"
+      },
+      "deck_actions": {
+        "actions": "Actions",
+        "delete": "Delete",
+        "delete_message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "delete_title": "Delete Deck",
+        "deleting": "Deleting",
+        "edit": "Edit",
+        "manage_cards": "Manage Cards",
+        "preview": "Preview",
+        "restore_message": "Are you sure you want to restore \"{{title}}\"? This will make the deck visible again.",
+        "restore_title": "Restore Deck"
+      },
+      "deck_form": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "create_title": "Create New Deck",
+        "creating": "Creating",
+        "description": "Description",
+        "description_placeholder": "Enter deck description",
+        "description_required": "Description is required",
+        "edit_title": "Edit Deck",
+        "title": "Title",
+        "title_placeholder": "Enter deck title",
+        "title_required": "Title is required",
+        "update": "Update",
+        "updating": "Updating"
+      },
+      "deck_preview": {
+        "cards": "cards",
+        "created_at": "Created At",
+        "deck_title": "Title",
+        "description": "Description",
+        "id": "ID",
+        "number_of_flashcards": "Number of Flashcards",
+        "title": "Deck Preview",
+        "updated_at": "Updated At"
+      },
+      "description": "Manage all flashcard decks in the system. Create, edit, or delete decks.",
+      "manage_cards": {
+        "card_created": "Card created successfully",
+        "card_deleted": "Card deleted successfully",
+        "card_updated": "Card updated successfully",
+        "create_failed": "Failed to create card",
+        "create_title": "Create New Card",
+        "deck_id_label": "Deck ID",
+        "definition_label": "Definition",
+        "delete_failed": "Failed to delete card",
+        "delete_message": "Are you sure you want to delete this card? This action cannot be undone.",
+        "delete_title": "Delete Card",
+        "edit_title": "Edit Card",
+        "new_card": "New Card",
+        "no_cards": "No cards found. Create your first card!",
+        "no_image": "No image",
+        "no_img": "No img",
+        "no_results": "No results.",
+        "preview_title": "Card Preview",
+        "search_placeholder": "Search by term, definition...",
+        "table": {
+          "actions": "Actions",
+          "definition": "Definition",
+          "id": "ID",
+          "image": "Image",
+          "select": "Select",
+          "term": "Term"
+        },
+        "term_label": "Term",
+        "title": "Manage Cards",
+        "update_failed": "Failed to update card"
+      },
+      "new_deck": "New Deck",
+      "no_decks": "No decks found. Create your first deck!",
+      "search_placeholder": "Search by title, description...",
+      "title": "Flashcards"
+    },
+    "packages": {
+      "create_package": "Create Package",
+      "description": "Manage subscription packages offered on the platform. You can add, edit, or remove packages as needed.",
+      "no_packages": "No packages found",
+      "status_filter": {
+        "active": "Active",
+        "all": "All Status",
+        "inactive": "Inactive"
+      },
+      "status_label": "Status:",
+      "title": "Package Management",
+      "total_one": "Total: {{count}} package",
+      "total_other": "Total: {{count}} packages",
+      "try_adjusting": "Try adjusting your filters or create a new package"
+    },
+    "quizzes": {
+      "delete_error": "Failed to delete quiz. Please try again.",
+      "delete_message": "Are you sure you want to delete this quiz?",
+      "delete_success": "Quiz deleted successfully!",
+      "delete_title": "Delete Quiz",
+      "description": "Manage all quizzes in the system.",
+      "new_quiz": "New Quiz",
+      "title": "Quizzes"
+    },
+    "subscriptions": {
+      "auto_renewal": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "dialog_description_disable": "Are you sure you want to disable auto-renewal for this subscription?",
+        "dialog_description_enable": "Are you sure you want to enable auto-renewal for this subscription?",
+        "dialog_title": "Confirm Auto Renewal Change",
+        "saving": "Saving..."
+      },
+      "description": "Manage all subscriptions in the system",
+      "no_results": "No results.",
+      "no_subscriptions": "No subscriptions found",
+      "title": "Subscriptions"
+    },
+    "transactions": {
+      "description": "View and manage all system transactions",
+      "title": "Transactions"
+    },
+    "users": {
+      "create_user": "Create New User",
+      "description": "Manage system users and view their details",
+      "detail": {
+        "active_subscription": "Active Subscription",
+        "back": "Back",
+        "cancel_dialog": {
+          "canceling": "Canceling...",
+          "confirm": "Yes, Cancel Subscription",
+          "description": "Are you sure you want to cancel this subscription?",
+          "error": "Failed to cancel subscription",
+          "success": "Subscription cancelled successfully",
+          "title": "Cancel Subscription"
+        },
+        "cancel_subscription": "Cancel Subscription",
+        "customer_not_found": "Customer not found",
+        "no_active_subscription": "No Active Subscription",
+        "subscription_history": "Subscription History",
+        "title": "User Details",
+        "transaction_history": "Transaction History",
+        "user_information": "User Information"
+      },
+      "edit_user": "Edit User",
+      "form": {
+        "avatar": "Avatar",
+        "create_user": "Create User",
+        "email": "Email",
+        "full_name": "Full Name",
+        "password": "Password",
+        "password_keep_current": "Leave empty to keep current",
+        "password_placeholder_create": "Password",
+        "password_placeholder_edit": "Leave empty to keep current password",
+        "role": "Role",
+        "role_admin": "Admin",
+        "role_expert": "Expert",
+        "role_user": "User",
+        "status": "Status",
+        "status_active": "Active",
+        "status_inactive": "Inactive",
+        "update_user": "Update User"
+      },
+      "new_user": "New User",
+      "no_users": "No users found",
+      "title": "Users",
+      "view_details": "View Details"
+    }
+  },
   "pages.books": {
     "description": "Explore our collection of educational books about TRIZ principles and innovation",
     "empty": {
@@ -425,6 +853,25 @@ interface Resources {
     "unauthorized": "Access Denied"
   },
   "sidebar": {
+    "admin": {
+      "archive": "Archive",
+      "assignments": "Assignments",
+      "books": "Books",
+      "courses": "Courses",
+      "dashboard": "Dashboard",
+      "flashcards": "Flashcards",
+      "main": "Main",
+      "management": "Management",
+      "others": "Others",
+      "packages": "Packages",
+      "payment": "Payment",
+      "quizzes": "Quizzes",
+      "subscriptions": "Subscriptions",
+      "subtitle": "Management",
+      "title": "TRIZ Admin",
+      "transactions": "Transactions",
+      "users": "Users"
+    },
     "app_integrations": "App integrations",
     "app_integrations.authentications": "Authentications",
     "app_integrations.payment_gateway": "Payment gateway",
@@ -440,6 +887,14 @@ interface Resources {
     "branding.email_templates": "Email templates",
     "branding.phone_templates": "Phone templates",
     "brands": "Brands",
+    "command_menu": {
+      "dark": "Dark",
+      "light": "Light",
+      "no_results": "No results found.",
+      "placeholder": "Type a command or search...",
+      "system": "System",
+      "theme": "Theme"
+    },
     "coupons": "Coupons",
     "dashboard": "Dashboard",
     "devices": "Devices",
@@ -468,6 +923,9 @@ interface Resources {
     "user_management.permissions": "Permissions",
     "user_management.roles": "Roles",
     "user_management.users": "Users",
+    "user_menu": {
+      "logout": "Log out"
+    },
     "wallet": "Wallet"
   }
 }

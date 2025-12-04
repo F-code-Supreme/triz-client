@@ -6,6 +6,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
@@ -14,6 +15,7 @@ import { transactionsColumns } from '@/features/payment/wallet/components/transa
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminTransactionsPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -73,9 +75,11 @@ const AdminTransactionsPage = () => {
     <AdminLayout meta={{ title: 'Transactions' }}>
       <div className="flex flex-col gap-8 p-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Transactions</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t('transactions.title')}
+          </h1>
           <p className="text-muted-foreground mt-2">
-            View and manage all system transactions
+            {t('transactions.description')}
           </p>
         </div>
 

@@ -7,8 +7,10 @@ import {
   useReactTable,
   type ColumnDef,
 } from '@tanstack/react-table';
+import i18next from 'i18next';
 import { Plus, MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { DataTableToolbar, DataTablePagination } from '@/components/data-table';
@@ -72,6 +74,7 @@ interface CardRowActionsProps {
 }
 
 const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
+  const { t } = useTranslation('pages.admin');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -96,11 +99,11 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
           defImgUrl: values.defImgUrl || null,
         },
       });
-      toast.success('Card updated successfully');
+      toast.success(t('flashcards.manage_cards.card_updated'));
       setIsEditOpen(false);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Failed to update card');
+      toast.error(t('flashcards.manage_cards.update_failed'));
     }
   };
 
@@ -110,11 +113,11 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
         flashcardId: card.id,
         deckId,
       });
-      toast.success('Card deleted successfully');
+      toast.success(t('flashcards.manage_cards.card_deleted'));
       setIsDeleteOpen(false);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Failed to delete card');
+      toast.error(t('flashcards.manage_cards.delete_failed'));
     }
   };
 
@@ -128,22 +131,24 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {t('flashcards.deck_actions.actions')}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
-            Preview
+            {t('flashcards.deck_actions.preview')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
             <Pencil className="mr-2 h-4 w-4" />
-            Edit
+            {t('flashcards.deck_actions.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive"
             onClick={() => setIsDeleteOpen(true)}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete
+            {t('flashcards.deck_actions.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -152,7 +157,9 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
-            <DialogTitle>Card Preview</DialogTitle>
+            <DialogTitle>
+              {t('flashcards.manage_cards.preview_title')}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
             {/* Term Section - Front of Card */}
@@ -163,14 +170,14 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
                   <div className="relative w-48 h-48 rounded-lg overflow-hidden shadow-lg border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
                     <img
                       src={card.termImgUrl}
-                      alt="Term"
+                      alt={t('flashcards.manage_cards.term_label')}
                       className="w-full h-full object-cover"
                     />
                   </div>
                 ) : (
                   <div className="w-48 h-48 rounded-lg shadow-lg border-2 border-dashed border-muted-foreground/30 bg-gradient-to-br from-muted/30 to-muted/50 flex items-center justify-center">
                     <p className="text-xs text-muted-foreground text-center px-4">
-                      No image
+                      {t('flashcards.manage_cards.no_image')}
                     </p>
                   </div>
                 )}
@@ -180,7 +187,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
               <div className="flex-1 space-y-2">
                 <div>
                   <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-                    Term
+                    {t('flashcards.manage_cards.term_label')}
                   </h3>
                   <p className="text-lg font-semibold leading-tight">
                     {card.term}
@@ -200,14 +207,14 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
                   <div className="relative w-48 h-48 rounded-lg overflow-hidden shadow-lg border-2 border-secondary/20 bg-gradient-to-br from-secondary/5 to-secondary/10">
                     <img
                       src={card.defImgUrl}
-                      alt="Definition"
+                      alt={t('flashcards.manage_cards.definition_label')}
                       className="w-full h-full object-cover"
                     />
                   </div>
                 ) : (
                   <div className="w-48 h-48 rounded-lg shadow-lg border-2 border-dashed border-muted-foreground/30 bg-gradient-to-br from-muted/30 to-muted/50 flex items-center justify-center">
                     <p className="text-xs text-muted-foreground text-center px-4">
-                      No image
+                      {t('flashcards.manage_cards.no_image')}
                     </p>
                   </div>
                 )}
@@ -217,7 +224,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
               <div className="flex-1 space-y-2">
                 <div>
                   <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-                    Definition
+                    {t('flashcards.manage_cards.definition_label')}
                   </h3>
                   <p className="text-base leading-relaxed">{card.definition}</p>
                 </div>
@@ -231,7 +238,7 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Edit Card</DialogTitle>
+            <DialogTitle>{t('flashcards.manage_cards.edit_title')}</DialogTitle>
           </DialogHeader>
           <FlashcardCardForm
             card={card}
@@ -246,19 +253,22 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Card</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t('flashcards.manage_cards.delete_title')}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this card? This action cannot be
-              undone.
+              {t('flashcards.manage_cards.delete_message')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>
+              {t('flashcards.card_form.cancel')}
+            </AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDelete}
             >
-              Delete
+              {t('flashcards.deck_actions.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -296,7 +306,10 @@ const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
   {
     accessorKey: 'id',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
+      <DataTableColumnHeader
+        column={column}
+        title={i18next.t('pages.admin:flashcards.manage_cards.table.id')}
+      />
     ),
     cell: ({ row }) => {
       const id = row.getValue('id') as string;
@@ -320,7 +333,12 @@ const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
   },
   {
     accessorKey: 'termImgUrl',
-    header: 'Image',
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title={i18next.t('pages.admin:flashcards.manage_cards.table.image')}
+      />
+    ),
     cell: ({ row }) => {
       const termImg = row.original.termImgUrl;
       const defImg = row.original.defImgUrl;
@@ -336,7 +354,7 @@ const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
             />
           ) : (
             <div className="w-12 h-12 bg-muted rounded border flex items-center justify-center text-xs text-muted-foreground">
-              No img
+              {i18next.t('pages.admin:flashcards.manage_cards.no_img')}
             </div>
           )}
         </div>
@@ -347,7 +365,10 @@ const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
   {
     accessorKey: 'term',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Term" />
+      <DataTableColumnHeader
+        column={column}
+        title={i18next.t('pages.admin:flashcards.manage_cards.table.term')}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -362,7 +383,12 @@ const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
   {
     accessorKey: 'definition',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Definition" />
+      <DataTableColumnHeader
+        column={column}
+        title={i18next.t(
+          'pages.admin:flashcards.manage_cards.table.definition',
+        )}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -389,6 +415,7 @@ export const FlashcardManageCardsDialog = ({
   onOpenChange,
   deckId,
 }: FlashcardManageCardsDialogProps) => {
+  const { t } = useTranslation('pages.admin');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<Array<{ id: string; desc: boolean }>>(
@@ -428,11 +455,11 @@ export const FlashcardManageCardsDialog = ({
           ],
         },
       });
-      toast.success('Card created successfully');
+      toast.success(t('flashcards.manage_cards.card_created'));
       setIsCreateOpen(false);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error('Failed to create card');
+      toast.error(t('flashcards.manage_cards.create_failed'));
     }
   };
 
@@ -463,21 +490,23 @@ export const FlashcardManageCardsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[1200px] w-[95vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Manage Cards</DialogTitle>
+          <DialogTitle>{t('flashcards.manage_cards.title')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">Deck ID: {deckId}</p>
+            <p className="text-sm text-muted-foreground">
+              {t('flashcards.manage_cards.deck_id_label')}: {deckId}
+            </p>
             <Button size="sm" onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              New Card
+              {t('flashcards.manage_cards.new_card')}
             </Button>
           </div>
 
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Search by term, definition..."
+            searchPlaceholder={t('flashcards.manage_cards.search_placeholder')}
             searchKey="term"
           />
 
@@ -486,12 +515,24 @@ export const FlashcardManageCardsDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Select</TableHead>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Image</TableHead>
-                    <TableHead>Term</TableHead>
-                    <TableHead>Definition</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>
+                      {t('flashcards.manage_cards.table.select')}
+                    </TableHead>
+                    <TableHead>
+                      {t('flashcards.manage_cards.table.id')}
+                    </TableHead>
+                    <TableHead>
+                      {t('flashcards.manage_cards.table.image')}
+                    </TableHead>
+                    <TableHead>
+                      {t('flashcards.manage_cards.table.term')}
+                    </TableHead>
+                    <TableHead>
+                      {t('flashcards.manage_cards.table.definition')}
+                    </TableHead>
+                    <TableHead>
+                      {t('flashcards.manage_cards.table.actions')}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -510,7 +551,7 @@ export const FlashcardManageCardsDialog = ({
           ) : cards.length === 0 ? (
             <div className="flex justify-center items-center h-32">
               <p className="text-muted-foreground">
-                No cards found. Create your first card!
+                {t('flashcards.manage_cards.no_cards')}
               </p>
             </div>
           ) : (
@@ -556,7 +597,7 @@ export const FlashcardManageCardsDialog = ({
                           colSpan={cardColumns.length}
                           className="h-24 text-center"
                         >
-                          No results.
+                          {t('flashcards.manage_cards.no_results')}
                         </TableCell>
                       </TableRow>
                     )}
@@ -573,7 +614,9 @@ export const FlashcardManageCardsDialog = ({
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Create New Card</DialogTitle>
+              <DialogTitle>
+                {t('flashcards.manage_cards.create_title')}
+              </DialogTitle>
             </DialogHeader>
             <FlashcardCardForm
               isLoading={createMutation.isPending}
