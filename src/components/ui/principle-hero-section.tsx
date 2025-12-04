@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import * as principlesImages from '@/assets/images/principles';
 import { PrincipleList } from '@/components/ui/principle-list';
 
@@ -45,6 +47,8 @@ export const principles = [
 ];
 
 const PrincipleSection = () => {
+  const { t } = useTranslation('pages.learn_triz');
+
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
       <div className="w-full max-w-8xl px-4 pt-8 mx-auto">
@@ -52,7 +56,7 @@ const PrincipleSection = () => {
           <div className="space-y-6">
             <div className="relative inline-block">
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
-                Khám Phá
+                {t('title')}
                 <br />
                 <span className="relative ">
                   <svg
@@ -75,12 +79,12 @@ const PrincipleSection = () => {
                   </svg>
                 </span>
                 <span className=" text-slate-900 dark:text-white">
-                  40 Nguyên Tắc Sáng Tạo
+                  {t('title_highlight')}
                 </span>
               </h1>
               <div>
                 <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
-                  Mở khóa tư duy đột phá từ nền tảng khoa học sáng tạo
+                  {t('description')}
                 </p>
               </div>
             </div>

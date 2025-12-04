@@ -1,0 +1,16 @@
+{
+  "page_meta_title": "Thư viện sách",
+  "title": "Thư viện sách",
+  "description": "Khám phá bộ sưu tập sách giáo dục về các nguyên tắc TRIZ và đổi mới sáng tạo",
+  "my_books": "Sách của tôi",
+  "loading": "Đang tải sách...",
+  "error": {
+    "title": "Không thể tải sách",
+    "description": "Đã xảy ra lỗi khi tải thư viện sách. Vui lòng thử lại sau.",
+    "retry": "Thử lại"
+  },
+  "empty": {
+    "title": "Không có sách",
+    "description": "Thư viện sách hiện đang trống. Vui lòng quay lại sau để xem sách mới."
+  }
+}

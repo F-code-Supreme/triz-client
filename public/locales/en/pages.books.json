@@ -1,0 +1,16 @@
+{
+  "page_meta_title": "Book Library",
+  "title": "Book Library",
+  "description": "Explore our collection of educational books about TRIZ principles and innovation",
+  "my_books": "My Books",
+  "loading": "Loading books...",
+  "error": {
+    "title": "Failed to Load Books",
+    "description": "An error occurred while loading the book library. Please try again later.",
+    "retry": "Retry"
+  },
+  "empty": {
+    "title": "No Books Available",
+    "description": "The book library is currently empty. Please check back later for new additions."
+  }
+}

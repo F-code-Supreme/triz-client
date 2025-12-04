@@ -122,6 +122,15 @@ interface Resources {
     "warning": "Warning",
     "yes": "Yes"
   },
+  "components": {
+    "hero_section": {
+      "description": "TRIZ is a toolset to help you solve problems scientifically, effectively and creatively - no inspiration or innate talent required.",
+      "register": "Sign up",
+      "start_learning": "Start learning now",
+      "subtitle": "Systematic Creative Problem Solving",
+      "title": "Discover TRIZ"
+    }
+  },
   "datetime": {
     "date": "Date",
     "day_left_one": "{{count}} day left",
@@ -130,6 +139,22 @@ interface Resources {
     "day_other": "Days",
     "seconds_left_one": "{{count}} second",
     "seconds_left_other": "{{count}} seconds"
+  },
+  "footer": {
+    "company_name": "Creative Science & Technology Center (TSK)",
+    "copyright": "© 2025 TRIZ Learning Hub",
+    "cta": {
+      "register": "Sign up",
+      "start_learning": "Start learning now",
+      "title": "Join TRIZ to turn ideas into real solutions"
+    },
+    "nav": {
+      "chat_ai": "Chat AI",
+      "forum": "Forum",
+      "home": "Home",
+      "learn_triz": "Learn TRIZ",
+      "packages": "Packages"
+    }
   },
   "header": {
     "chat_ai": "Chat AI",
@@ -154,6 +179,22 @@ interface Resources {
     "tools": "Tools",
     "tools.six_steps": "6 Steps Problem Solving",
     "tools.six_steps_desc": "Systematic approach to creative problem solving"
+  },
+  "pages.books": {
+    "description": "Explore our collection of educational books about TRIZ principles and innovation",
+    "empty": {
+      "description": "The book library is currently empty. Please check back later for new additions.",
+      "title": "No Books Available"
+    },
+    "error": {
+      "description": "An error occurred while loading the book library. Please try again later.",
+      "retry": "Retry",
+      "title": "Failed to Load Books"
+    },
+    "loading": "Loading books...",
+    "my_books": "My Books",
+    "page_meta_title": "Book Library",
+    "title": "Book Library"
   },
   "pages.chat_triz": {
     "page_meta_title": "Chat TRIZ"
@@ -182,12 +223,149 @@ interface Resources {
     "form.title": "Verify OTP",
     "page_meta_title": "Verify OTP for Password Reset"
   },
+  "pages.home": {
+    "comprehensive_platform": {
+      "chat_ai": {
+        "description": "Smart assistant supporting you to learn and apply TRIZ in real time.",
+        "learn_more": "Learn more",
+        "title": "Chat AI"
+      },
+      "description": "Discover an integrated learning system from theory to practice, connecting community, developing thinking through quizzes and receiving support from AI assistant. All the tools you need to learn and apply TRIZ are here.",
+      "forum": {
+        "description": "Community for exchanging, Q&A on practical issues applying TRIZ.",
+        "learn_more": "Learn more",
+        "title": "Forum (Discussion)"
+      },
+      "learn_triz": {
+        "description": "Courses with theory, practice, exercises and real-life situations.",
+        "learn_more": "Learn more",
+        "title": "Learn TRIZ"
+      },
+      "quiz": {
+        "description": "Multiple-choice tests to check knowledge, assess progress, and review.",
+        "learn_more": "Learn more",
+        "title": "Take Quiz"
+      },
+      "title": "Comprehensive TRIZ",
+      "title_highlight": "learning platform"
+    },
+    "core_content": {
+      "contradictions": {
+        "description": "The key to creativity is overcoming contradictions in design or solutions. TRIZ provides powerful tools such as: contradiction matrix, 40 creative principles, ARIZ - algorithm for solving inventive problems.",
+        "title": "Solving Contradictions"
+      },
+      "laws": {
+        "description": "Systems, products or solutions always evolve according to certain trends (increasing flexibility, increasing ideality, automation, reducing human intervention...).",
+        "title": "Laws of Technical System Evolution"
+      },
+      "principles": {
+        "description": "TRIZ synthesizes 40 principles to help find new, creative and effective ideas (Segmentation - Inversion - Color change - Merging - Blessing in disguise - Replace mechanics with optics...).",
+        "title": "Creative Principles"
+      },
+      "resources": {
+        "description": "Learn to effectively exploit available resources such as: energy, materials, information, space, time... to optimize solutions without additional costs or new resources.",
+        "title": "Resource Analysis"
+      },
+      "start_learning": "Start learning now",
+      "title": "Core",
+      "title_end": "of TRIZ",
+      "title_highlight": "content"
+    },
+    "hero": {
+      "subtitle": "Systematic Creative Problem Solving",
+      "title": "Discover TRIZ"
+    },
+    "methodology": {
+      "description": "Creative and Innovation Methodologies is a system of methods and skills that help improve thinking productivity, leading to the control of creative thinking processes.",
+      "impact": "To date, tens of thousands of students from all professions and regions have participated in Creative and Innovation Methodology courses, with a structured curriculum of up to 120 lessons.",
+      "professor_contribution": "Professor Phan Dũng was the first to systematize, translate and disseminate TRIZ in Vietnam since the 1980s, through training courses and books such as: Creative Scientific Methodology.",
+      "title": "Introduction to",
+      "title_end": "methodologies",
+      "title_highlight": "creative and innovative",
+      "vietnam_application": "Application in Vietnam:"
+    },
+    "page_meta_title": "Discover TRIZ - Systematic Creative Problem Solving",
+    "triz_overview": {
+      "description": "TRIZ (Theory of Inventive Problem Solving) is a systematic creative methodology developed by Genrich Altshuller since 1946, based on analyzing hundreds of thousands of patents to extract problem-solving patterns.",
+      "reasons": ["Transform creativity from 'innate talent' to 'learnable skill'", "Provide scientific tools and processes for problem solving", "Shorten solution discovery time", "Multi-disciplinary applications: engineering, education, arts..."],
+      "title": "Introduction",
+      "title_highlight": "to TRIZ overview",
+      "why_learn": "Why learn TRIZ?"
+    },
+    "why_important": {
+      "contradictions": {
+        "description": "Most creative problems stem from",
+        "description_end": "40 creative principles and contradiction matrix",
+        "description_highlight": "contradictions",
+        "description_mid": "(e.g., phone design both thin and light, yet long battery life). TRIZ helps you overcome contradictions without compromise, thanks to",
+        "title": "Solving contradictions - the core of creativity"
+      },
+      "multi_field": {
+        "description": "Not limited to engineering, TRIZ is also powerfully applied in",
+        "description_end": "(e.g., redesigning business models, improving work processes, solving personal problems...).",
+        "description_highlight": "business, management, education, arts and daily life",
+        "title": "Multi-disciplinary applications"
+      },
+      "speed": {
+        "description": "When practicing TRIZ, learners develop habits of",
+        "description_end": "helping them become increasingly creative.",
+        "description_highlight": "systematic thinking, resource recognition, finding ideal solutions,",
+        "title": "Accelerate problem-solving speed"
+      },
+      "systematic": {
+        "description": "Instead of waiting for inspiration or relying on 'innate talent', TRIZ provides",
+        "description_end": "to analyze problems and find solutions. This helps anyone learn and develop creative abilities.",
+        "description_highlight": "clear tools and processes",
+        "title": "Transform creativity from 'impromptu' to 'systematic'"
+      },
+      "thinking": {
+        "description": "When practicing TRIZ, learners develop habits of",
+        "description_end": "helping them become increasingly creative.",
+        "description_highlight": "systematic thinking, resource recognition, finding ideal solutions,",
+        "title": "Enhance creative thinking capacity"
+      },
+      "title": "Why is TRIZ",
+      "title_highlight": "important?"
+    }
+  },
+  "pages.learn_triz": {
+    "description": "Unlock breakthrough thinking from the foundation of creative science",
+    "page_meta_title": "40 Creative Principles",
+    "title": "Discover",
+    "title_highlight": "40 Creative Principles"
+  },
+  "pages.matrix_triz": {
+    "description": "Discover how to apply the TRIZ matrix to solve technical contradictions and promote creativity in product design.",
+    "page_meta_title": "TRIZ Matrix",
+    "title": "Discover",
+    "title_highlight": "TRIZ Creative Matrix"
+  },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",
     "message": "We're sorry the page you requested could not be found. Please go back to the homepage!",
     "not_found": "Page not found",
     "page_meta_title": "Not found",
     "under_construction": "This feature is under maintenance, we will comeback soon!"
+  },
+  "pages.packages": {
+    "active_subscription_alert": "You already have an active subscription. Visit your",
+    "contact_sales": {
+      "button": "Contact Sales",
+      "description": "Need a custom solution? We offer enterprise plans with advanced features."
+    },
+    "description": "Compare our plans and find the perfect fit for your needs and budget.",
+    "detailed_comparison": "Detailed Comparison",
+    "duration_days": "{{count}} days access",
+    "features": "Features",
+    "get_started": "Get Started",
+    "most_popular": "Most Popular",
+    "no_packages": "No packages available at the moment.",
+    "page_meta_title": "Packages Pricing",
+    "subscription_page": "subscription page",
+    "title": "Choose the Right Plan for You",
+    "to_manage": "to manage it.",
+    "trizilium": "Trizilium",
+    "view_subscription": "View Subscription"
   },
   "pages.profile": {
     "achievements": "Achievements",

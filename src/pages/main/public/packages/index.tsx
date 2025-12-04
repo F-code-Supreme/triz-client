@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { CheckCircle, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -78,6 +79,7 @@ const PackageCardSkeleton = () => (
 );
 
 const PackagesPricingPage = () => {
+  const { t } = useTranslation('pages.packages');
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const { data: packages = [], isLoading } = useGetActivePackagesQuery();
@@ -147,7 +149,7 @@ const PackagesPricingPage = () => {
   }, [sortedPackages]);
 
   return (
-    <DefaultLayout meta={{ title: 'Packages Pricing Page' }}>
+    <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <BackgroundBeams className="absolute inset-0" />
       <div className="relative z-10">
         <section className="w-full py-20 md:py-32">
@@ -155,11 +157,10 @@ const PackagesPricingPage = () => {
             {/* Header */}
             <div className="text-center space-y-4 mb-16">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Choose the Right Plan for You
+                {t('title')}
               </h2>
               <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                Compare our plans and find the perfect fit for your needs and
-                budget.
+                {t('description')}
               </p>
             </div>
 
@@ -168,14 +169,14 @@ const PackagesPricingPage = () => {
               <Alert className="mb-8 bg-blue-50 border-blue-200 dark:bg-blue-950/20 dark:border-blue-800">
                 <CheckCircle className="h-4 w-4 text-blue-600 dark:text-blue-500" />
                 <AlertDescription className="text-blue-800 dark:text-blue-400">
-                  You already have an active subscription. Visit your{' '}
+                  {t('active_subscription_alert')}{' '}
                   <button
                     onClick={() => navigate({ to: '/subscription' })}
                     className="font-semibold underline hover:opacity-80"
                   >
-                    subscription page
+                    {t('subscription_page')}
                   </button>{' '}
-                  to manage it.
+                  {t('to_manage')}
                 </AlertDescription>
               </Alert>
             )}
@@ -190,7 +191,7 @@ const PackagesPricingPage = () => {
             ) : sortedPackages.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground">
-                  No packages available at the moment.
+                  {t('no_packages')}
                 </p>
               </div>
             ) : (
@@ -219,7 +220,9 @@ const PackagesPricingPage = () => {
                         {/* Popular Badge */}
                         {isPopular && sortedPackages.length > 1 && (
                           <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                            <Badge className="px-4 py-1">Most Popular</Badge>
+                            <Badge className="px-4 py-1">
+                              {t('most_popular')}
+                            </Badge>
                           </div>
                         )}
 
@@ -230,7 +233,9 @@ const PackagesPricingPage = () => {
                               {pkg.name}
                             </CardTitle>
                             <p className="text-muted-foreground">
-                              {pkg.durationInDays} days access
+                              {t('duration_days', {
+                                count: pkg.durationInDays,
+                              })}
                             </p>
                           </div>
                           <div className="space-y-2">
@@ -240,7 +245,7 @@ const PackagesPricingPage = () => {
                               })}
                             </div>
                             <div className="text-muted-foreground">
-                              Trizilium
+                              {t('trizilium')}
                             </div>
                           </div>
                           <div className="text-sm text-muted-foreground">
@@ -257,8 +262,8 @@ const PackagesPricingPage = () => {
                             disabled={isAuthenticated && hasActiveSubscription}
                           >
                             {isAuthenticated && hasActiveSubscription
-                              ? 'View Subscription'
-                              : 'Get Started'}
+                              ? t('view_subscription')
+                              : t('get_started')}
                           </Button>
                         </CardHeader>
 
@@ -297,14 +302,14 @@ const PackagesPricingPage = () => {
                 {sortedPackages.length > 1 && allFeatures.length > 0 && (
                   <div className="mt-20 max-w-6xl mx-auto">
                     <h3 className="text-2xl font-bold text-center mb-8">
-                      Detailed Comparison
+                      {t('detailed_comparison')}
                     </h3>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="border-b">
                             <th className="text-left py-4 px-4 font-semibold">
-                              Features
+                              {t('features')}
                             </th>
                             {sortedPackages.map((pkg) => (
                               <th
@@ -350,11 +355,10 @@ const PackagesPricingPage = () => {
                 {/* CTA Section */}
                 <div className="text-center mt-12">
                   <p className="text-muted-foreground mb-4">
-                    Need a custom solution? We offer enterprise plans with
-                    advanced features.
+                    {t('contact_sales.description')}
                   </p>
                   <Button variant="outline" size="lg">
-                    Contact Sales
+                    {t('contact_sales.button')}
                   </Button>
                 </div>
               </>
