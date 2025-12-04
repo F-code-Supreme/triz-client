@@ -15,7 +15,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
-import { Route as R6StepsRouteRouteImport } from './routes/6-steps/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
@@ -44,6 +43,7 @@ import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscri
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
+import { Route as app6StepsRouteRouteImport } from './routes/(app)/6-steps/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
@@ -90,11 +90,6 @@ const HomeRoute = HomeRouteImport.update({
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   id: '/flashcard-deck',
   path: '/flashcard-deck',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const R6StepsRouteRoute = R6StepsRouteRouteImport.update({
-  id: '/6-steps',
-  path: '/6-steps',
   getParentRoute: () => rootRouteImport,
 } as any)
 const appRouteRoute = appRouteRouteImport.update({
@@ -237,6 +232,11 @@ const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
+const app6StepsRouteRoute = app6StepsRouteRouteImport.update({
+  id: '/6-steps',
+  path: '/6-steps',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
@@ -326,13 +326,13 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/6-steps': typeof R6StepsRouteRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
@@ -378,13 +378,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/6-steps': typeof R6StepsRouteRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
@@ -432,13 +432,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
-  '/6-steps': typeof R6StepsRouteRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/(app)/6-steps': typeof app6StepsRouteRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
   '/(app)/refund': typeof appRefundRouteRoute
@@ -487,13 +487,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/6-steps'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
+    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
@@ -539,13 +539,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/6-steps'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
+    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
@@ -592,13 +592,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(app)'
-    | '/6-steps'
     | '/flashcard-deck'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
+    | '/(app)/6-steps'
     | '/(app)/chat-triz'
     | '/(app)/profile'
     | '/(app)/refund'
@@ -647,7 +647,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
-  R6StepsRouteRoute: typeof R6StepsRouteRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
@@ -722,13 +721,6 @@ declare module '@tanstack/react-router' {
       path: '/flashcard-deck'
       fullPath: '/flashcard-deck'
       preLoaderRoute: typeof FlashcardDeckRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/6-steps': {
-      id: '/6-steps'
-      path: '/6-steps'
-      fullPath: '/6-steps'
-      preLoaderRoute: typeof R6StepsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(app)': {
@@ -927,6 +919,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/6-steps': {
+      id: '/(app)/6-steps'
+      path: '/6-steps'
+      fullPath: '/6-steps'
+      preLoaderRoute: typeof app6StepsRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -1050,6 +1049,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
+  app6StepsRouteRoute: typeof app6StepsRouteRoute
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
   appRefundRouteRoute: typeof appRefundRouteRoute
@@ -1070,6 +1070,7 @@ interface appRouteRouteChildren {
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  app6StepsRouteRoute: app6StepsRouteRoute,
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
   appRefundRouteRoute: appRefundRouteRoute,
@@ -1109,7 +1110,6 @@ const AdminCoursesRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
-  R6StepsRouteRoute: R6StepsRouteRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
