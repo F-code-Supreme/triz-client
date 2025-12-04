@@ -1,3 +1,5 @@
+import type { Principle } from '../../types';
+
 // Step 1
 export interface IStep1SuggestionPayload {
   rawProblem: string;
@@ -99,4 +101,38 @@ export interface TechnicalContradiction {
 
 export interface IConvertMLtoMKResponse {
   technicalContradictions: TechnicalContradiction[];
+}
+
+// Step 5
+export interface IStep5SuggestionPayload {
+  miniProblem: string;
+  goal: string;
+  systemIdentified: string;
+  physicalContradictions: PhysicalContradiction[];
+  principles: Principle[];
+}
+
+export interface PrincipleUsed {
+  id: number;
+  name: string;
+  priority: number;
+  subPoint: string;
+}
+
+export interface Idea {
+  id: number;
+  element: string;
+  sourceType: 'TRIZ_Principle';
+  principleUsed: PrincipleUsed;
+  ideaStatement: string;
+  howItAddresses: string;
+  abstractionLevel: 'concept';
+}
+
+export interface IStep5SuggestionResponse {
+  ideaGenerationSession: {
+    targetML: string;
+    totalIdeasGenerated: number;
+    ideas: Idea[];
+  };
 }
