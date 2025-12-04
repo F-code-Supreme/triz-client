@@ -46,6 +46,15 @@ export interface SixStepData {
       contradictionStatement: string;
     }[];
     selectedPhysicalContradictionIndex?: number;
+    selectedPhysicalContradiction?: {
+      element: string;
+      propertyDimension: string;
+      stateA: string;
+      stateB: string;
+      benefitA: string;
+      benefitB: string;
+      contradictionStatement: string;
+    };
     technicalContradictions?: {
       element: string;
       sourceML: string;
@@ -77,11 +86,42 @@ export interface SixStepData {
         };
         contradictionStatement: string;
       };
+      matrixUsage: {
+        MK1_lookup: string;
+        MK2_lookup: string;
+      };
     }[];
+    selectedPrinciples?: {
+      id: number;
+      name: string;
+      priority: number;
+      description: string;
+      examples: string[];
+    }[];
+    selectedTechnicalContradictionId?: string;
+    matrixParams?: {
+      improving: number;
+      worsening: number;
+      improvingName: string;
+      worseningName: string;
+    };
   };
   // Step 5: Generate Ideas
   step5?: {
-    ideas: string;
+    ideas: {
+      id: number;
+      element: string;
+      sourceType: string;
+      principleUsed: {
+        id: number;
+        name: string;
+        priority: number;
+        subPoint?: string;
+      };
+      ideaStatement: string;
+      howItAddresses: string;
+      abstractionLevel: string;
+    }[];
   };
   // Step 6: Make Decision
   step6?: {

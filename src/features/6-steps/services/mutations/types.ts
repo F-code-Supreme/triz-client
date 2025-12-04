@@ -1,4 +1,4 @@
-import type { Principle } from '../../types';
+import type { IGetPrinciplesLookupDataResponse } from '../queries/types';
 
 // Step 1
 export interface IStep1SuggestionPayload {
@@ -109,7 +109,7 @@ export interface IStep5SuggestionPayload {
   goal: string;
   systemIdentified: string;
   physicalContradictions: PhysicalContradiction[];
-  principles: Principle[];
+  trizPrinciples: IGetPrinciplesLookupDataResponse;
 }
 
 export interface PrincipleUsed {

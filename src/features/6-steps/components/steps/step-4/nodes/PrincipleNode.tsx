@@ -22,6 +22,8 @@ interface PrincipleNodeData {
   name: string;
   priority: number;
   status?: NodeStatus;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 export const PrincipleNode = memo((props: NodeProps) => {
@@ -36,7 +38,14 @@ export const PrincipleNode = memo((props: NodeProps) => {
     <NodeStatusIndicator status={data.status} variant="border">
       <NodeTooltip>
         <NodeTooltipTrigger>
-          <BaseNode className="shadow-md rounded-md bg-yellow-500 border-2 border-yellow-600 min-w-[220px] max-w-[280px] cursor-help">
+          <BaseNode
+            className={`shadow-md rounded-md border-2 min-w-[220px] max-w-[280px] cursor-help transition-all ${
+              data.isSelected
+                ? 'bg-yellow-600 border-yellow-700 ring-2 ring-yellow-400'
+                : 'bg-yellow-500 border-yellow-600'
+            } ${data.onSelect ? 'cursor-pointer' : ''}`}
+            onClick={data.onSelect}
+          >
             <BaseNodeContent>
               <Handle
                 type="target"

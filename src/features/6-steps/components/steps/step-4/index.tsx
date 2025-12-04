@@ -74,15 +74,13 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   const [technicalContradictions, setTechnicalContradictions] = useState<
     TechnicalContradiction[]
   >([]);
+  const [selectedPrinciples, setSelectedPrinciples] = useState<number[]>([]);
   const [matrixParams, setMatrixParams] = useState<{
     improving: number;
     worsening: number;
     improvingName: string;
     worseningName: string;
   } | null>(null);
-  // const [principles, setPrinciples] = useState<IGetPrinciplesLookupDataItem[]>(
-  //   [],
-  // );
   const [loadingStates, setLoadingStates] = useState<{
     elements: NodeStatus;
     physicalContradictions: NodeStatus;
@@ -123,6 +121,46 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   useEffect(() => {
     const fetchPhysicalContradictions = async () => {
       const step3Data = stepData.step3;
+      const step4Data = stepData.step4;
+
+      // If we have step4 data from store (coming back from step 5), restore it
+      if (step4Data?.physicalContradictions) {
+        setPhysicalContradictions(step4Data.physicalContradictions);
+
+        if (step4Data.technicalContradictions) {
+          setTechnicalContradictions(step4Data.technicalContradictions);
+        }
+
+        if (step4Data.selectedPrinciples) {
+          setSelectedPrinciples(step4Data.selectedPrinciples.map((p) => p.id));
+        }
+
+        if (step4Data.selectedTechnicalContradictionId) {
+          setSelectedTechnicalContradiction(
+            step4Data.selectedTechnicalContradictionId,
+          );
+        }
+
+        if (step4Data.matrixParams) {
+          setMatrixParams(step4Data.matrixParams);
+        }
+
+        // Set success state since data is already loaded
+        setLoadingStates((prev) => ({
+          ...prev,
+          elements: 'success',
+          physicalContradictions: 'success',
+          technicalContradictions: step4Data.technicalContradictions
+            ? 'success'
+            : 'initial',
+          parameters: step4Data.technicalContradictions ? 'success' : 'initial',
+          matrix: step4Data.matrixParams ? 'success' : 'initial',
+          principles: step4Data.selectedPrinciples ? 'success' : 'initial',
+        }));
+
+        return;
+      }
+
       if (!step3Data) {
         toast.error('Step 3 data is missing');
         return;
@@ -282,15 +320,39 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
     loadingStates.physicalContradictions,
   ]);
 
+  // Restore selected PC when coming back from step 5
+  useEffect(() => {
+    const step4Data = stepData.step4;
+    if (
+      step4Data?.selectedPhysicalContradictionIndex !== undefined &&
+      physicalContradictions.length > 0 &&
+      !selectedPhysicalContradiction
+    ) {
+      const pcIndex = step4Data.selectedPhysicalContradictionIndex;
+      const pcId = `pc-${pcIndex}`;
+
+      // Only trigger if we haven't already selected this PC
+      handleSelectPC(pcId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    physicalContradictions,
+    stepData.step4?.selectedPhysicalContradictionIndex,
+  ]);
+
   const handleSelectPC = useCallback(
     async (pcId: string) => {
       setSelectedPhysicalContradiction(pcId);
+      setSelectedTechnicalContradiction(null);
+      setMatrixParams(null);
+      setSelectedPrinciples([]);
 
       // Get the position of the selected PC for placeholder positioning
       let baseX = 100;
       let baseY = 250;
 
       // Update nodes to show selection and capture PC position
+      // Also remove TC, Parameters, Matrix, and Principle nodes
       setNodes((nds) => {
         const pcNode = nds.find((n) => n.id === pcId);
         if (pcNode) {
@@ -298,19 +360,46 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
           baseY = pcNode.position.y;
         }
 
-        return nds.map((node) => {
-          if (node.type === NodeType.PHYSICAL_CONTRADICTION) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                isSelected: node.id === pcId,
-              },
-            };
-          }
-          return node;
-        });
+        return nds
+          .filter(
+            (n) =>
+              !n.id.startsWith('tc-') &&
+              !n.id.startsWith('param-') &&
+              !n.id.startsWith('matrix-') &&
+              !n.id.startsWith('principle-'),
+          )
+          .map((node) => {
+            if (node.type === NodeType.PHYSICAL_CONTRADICTION) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  isSelected: node.id === pcId,
+                },
+              };
+            }
+            return node;
+          });
       });
+
+      // Remove edges connected to TC, Parameters, Matrix, and Principles
+      setEdges((eds) =>
+        eds.filter(
+          (e) =>
+            !e.id.includes('tc-') &&
+            !e.source.startsWith('tc-') &&
+            !e.target.startsWith('tc-') &&
+            !e.id.includes('param-') &&
+            !e.source.startsWith('param-') &&
+            !e.target.startsWith('param-') &&
+            !e.id.includes('matrix-') &&
+            !e.source.startsWith('matrix-') &&
+            !e.target.startsWith('matrix-') &&
+            !e.id.includes('principle-') &&
+            !e.source.startsWith('principle-') &&
+            !e.target.startsWith('principle-'),
+        ),
+      );
 
       // Set loading state for TC and Parameters
       setLoadingStates((prev) => ({
@@ -582,6 +671,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   const handleSelectTC = useCallback(
     async (tcId: string, mkData: TechnicalContradiction['MK1']) => {
       setSelectedTechnicalContradiction(tcId);
+      setSelectedPrinciples([]);
 
       // Variables to capture positions
       let baseX = 100;
@@ -594,6 +684,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       const worseningParamId = `param-${tcId}-worsening`;
 
       // Update nodes to show TC selection and capture positions
+      // Also remove existing Matrix and Principle nodes
       setNodes((nds) => {
         const tcNode = nds.find((n) => n.id === tcId);
         if (tcNode) {
@@ -605,19 +696,37 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         improvingParamNode = nds.find((n) => n.id === improvingParamId);
         worseningParamNode = nds.find((n) => n.id === worseningParamId);
 
-        return nds.map((node) => {
-          if (node.type === NodeType.TECHNICAL_CONTRADICTION) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                isSelected: node.id === tcId,
-              },
-            };
-          }
-          return node;
-        });
+        return nds
+          .filter(
+            (n) =>
+              !n.id.startsWith('matrix-') && !n.id.startsWith('principle-'),
+          )
+          .map((node) => {
+            if (node.type === NodeType.TECHNICAL_CONTRADICTION) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  isSelected: node.id === tcId,
+                },
+              };
+            }
+            return node;
+          });
       });
+
+      // Remove edges connected to Matrix and Principles
+      setEdges((eds) =>
+        eds.filter(
+          (e) =>
+            !e.id.includes('matrix-') &&
+            !e.source.startsWith('matrix-') &&
+            !e.target.startsWith('matrix-') &&
+            !e.id.includes('principle-') &&
+            !e.source.startsWith('principle-') &&
+            !e.target.startsWith('principle-'),
+        ),
+      );
 
       // Set loading state for Matrix and Principles
       setLoadingStates((prev) => ({
@@ -714,25 +823,12 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
       // Add placeholder nodes immediately
       setNodes((nds) => [
-        ...nds.filter(
-          (n) => !n.id.startsWith('matrix-') && !n.id.startsWith('principle-'),
-        ),
+        ...nds,
         placeholderMatrixNode,
         ...placeholderPrinciples,
       ]);
 
-      setEdges((eds) => [
-        ...eds.filter(
-          (e) =>
-            !e.id.includes('matrix-') &&
-            !e.source.startsWith('matrix-') &&
-            !e.target.startsWith('matrix-') &&
-            !e.id.includes('principle-') &&
-            !e.source.startsWith('principle-') &&
-            !e.target.startsWith('principle-'),
-        ),
-        ...matrixEdges,
-      ]);
+      setEdges((eds) => [...eds, ...matrixEdges]);
 
       try {
         // Matrix params have been set, principles query will auto-fetch
@@ -764,8 +860,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       return;
     }
 
-    // setPrinciples(principlesQuery.data);
-
     // Find the matrix node and TC node
     const matrixNode = nodes.find((n) => n.type === NodeType.MATRIX);
     const tcNode = nodes.find((n) => n.id === selectedTechnicalContradiction);
@@ -791,6 +885,14 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         name: item.principle.name,
         priority: item.priority,
         status: 'success' as NodeStatus,
+        isSelected: selectedPrinciples.includes(item.principle.id),
+        onSelect: () => {
+          setSelectedPrinciples((prev) =>
+            prev.includes(item.principle.id)
+              ? prev.filter((id) => id !== item.principle.id)
+              : [...prev, item.principle.id],
+          );
+        },
       },
     }));
 
@@ -844,6 +946,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
     principlesQuery.data,
     selectedTechnicalContradiction,
     matrixParams,
+    selectedPrinciples,
     setNodes,
     setEdges,
   ]);
@@ -865,13 +968,37 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       return;
     }
 
+    if (selectedPrinciples.length === 0) {
+      toast.error('Vui lòng chọn ít nhất một nguyên tắc để tiếp tục');
+      return;
+    }
+
     const pcIndex = parseInt(selectedPhysicalContradiction.split('-')[1]);
+    const selectedPC = physicalContradictions[pcIndex];
 
     // Collect data and proceed
     onNext({
       physicalContradictions,
       selectedPhysicalContradictionIndex: pcIndex,
+      selectedPhysicalContradiction: selectedPC,
       technicalContradictions,
+      selectedTechnicalContradictionId: selectedTechnicalContradiction,
+      matrixParams,
+      selectedPrinciples: selectedPrinciples.map((id) => ({
+        id,
+        name:
+          principlesQuery.data?.find((p) => p.principle.id === id)?.principle
+            .name || '',
+        priority:
+          principlesQuery.data?.find((p) => p.principle.id === id)?.priority ||
+          0,
+        description:
+          principlesQuery.data?.find((p) => p.principle.id === id)?.principle
+            .description || '',
+        examples:
+          principlesQuery.data?.find((p) => p.principle.id === id)?.principle
+            .examples || [],
+      })),
     });
   };
 
@@ -989,7 +1116,9 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         <ActionButtons
           onBack={onBack}
           onNext={handleNext}
-          disableNext={!selectedPhysicalContradiction}
+          disableNext={
+            !selectedPhysicalContradiction || selectedPrinciples.length === 0
+          }
         />
       </div>
     </div>

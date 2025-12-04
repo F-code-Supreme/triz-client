@@ -228,10 +228,37 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
               <h3 className="font-semibold text-lg">
                 Bước 5: Phát các ý tưởng giải quyết ML
               </h3>
-              <div className="bg-muted/50 rounded-lg p-4">
-                <p className="text-sm whitespace-pre-wrap">
-                  {stepData.step5.ideas}
-                </p>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-4">
+                {stepData.step5.ideas.map((idea, index) => (
+                  <div key={idea.id} className="space-y-2">
+                    <div className="flex items-start gap-2">
+                      <span className="text-xs font-semibold text-primary mt-0.5">
+                        #{index + 1}
+                      </span>
+                      <div className="flex-1 space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground">
+                          Nguyên tắc #{idea.principleUsed.id}:{' '}
+                          {idea.principleUsed.name} (Độ ưu tiên:{' '}
+                          {idea.principleUsed.priority})
+                        </p>
+                        <p className="text-sm">{idea.ideaStatement}</p>
+                        {idea.howItAddresses && (
+                          <p className="text-xs text-muted-foreground italic">
+                            {idea.howItAddresses}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    {index < (stepData.step5?.ideas.length ?? 0) - 1 && (
+                      <div className="border-t" />
+                    )}
+                  </div>
+                ))}
+                {stepData.step5.ideas.length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Chưa có ý tưởng nào được tạo.
+                  </p>
+                )}
               </div>
             </div>
           )}
