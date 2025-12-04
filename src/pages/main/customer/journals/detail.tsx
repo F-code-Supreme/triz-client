@@ -6,13 +6,16 @@ import {
   Clock,
   CheckCircle2,
   Star,
+  Share2,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { usePublishSixStepJournalToForumMutation } from '@/features/6-steps/services/mutations';
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { DefaultLayout } from '@/layouts/default-layout';
@@ -31,6 +34,30 @@ const JournalDetailPage = () => {
     isLoading,
     error,
   } = useGetJournalByIdQuery(user?.id, journalId);
+
+  const publishToForumMutation = usePublishSixStepJournalToForumMutation();
+
+  const handlePublishToForum = async () => {
+    if (!user?.id || !journalId) {
+      toast.error('Không thể xuất bản. Vui lòng thử lại.');
+      return;
+    }
+
+    try {
+      await publishToForumMutation.mutateAsync({
+        userId: user.id,
+        problemId: journalId,
+      });
+
+      toast.success('Xuất bản lên diễn đàn thành công!');
+
+      // Navigate to forum page
+      navigate({ to: '/forum' });
+    } catch (error) {
+      console.error('Failed to publish to forum:', error);
+      toast.error('Có lỗi xảy ra khi xuất bản. Vui lòng thử lại.');
+    }
+  };
 
   const getStatusBadge = (status: 'DRAFT' | 'IN_PROGRESS' | 'COMPLETED') => {
     switch (status) {
@@ -242,6 +269,23 @@ const JournalDetailPage = () => {
                     })}
                   </ul>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Action Buttons */}
+            <Card>
+              <CardContent className="p-6 space-y-3">
+                <Button
+                  onClick={handlePublishToForum}
+                  disabled={publishToForumMutation.isPending}
+                  className="w-full"
+                  variant="default"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  {publishToForumMutation.isPending
+                    ? 'Đang xuất bản...'
+                    : 'Xuất bản lên diễn đàn'}
+                </Button>
               </CardContent>
             </Card>
           </div>

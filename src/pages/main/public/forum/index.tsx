@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router';
-import { Search } from 'lucide-react';
+// import { Link } from '@tanstack/react-router';
+// import { Search } from 'lucide-react';
 import React from 'react';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -109,7 +109,7 @@ const ForumPage: React.FC = () => {
             ))}
           </nav>
 
-          <div className="ml-auto flex items-center gap-3">
+          {/* <div className="ml-auto flex items-center gap-3">
             <div className="relative w-64">
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input placeholder="Tìm kiếm trên TRIZ ..." className="pl-10" />
@@ -121,7 +121,7 @@ const ForumPage: React.FC = () => {
             >
               Tạo chủ đề
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
 

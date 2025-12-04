@@ -18,8 +18,10 @@ import type {
   IStep6SuggestionPayload,
   IStep6SuggestionResponse,
   ICreateSixStepJournalPayload,
+  IPublishSixStepJournalToForumPayload,
 } from './types';
 import type { Problem } from '../../types';
+import type { ForumPost } from '@/features/forum/types';
 
 export const useStep1SuggestionMutation = () => {
   const _request = useAxios();
@@ -134,6 +136,20 @@ export const useCreateSixStepJournalMutation = () => {
       const response = await _request.post<Problem>(
         '/problems/steps/all',
         payload,
+      );
+
+      return response.data;
+    },
+  });
+};
+
+export const usePublishSixStepJournalToForumMutation = () => {
+  const _request = useAxios();
+
+  return useMutation({
+    mutationFn: async (payload: IPublishSixStepJournalToForumPayload) => {
+      const response = await _request.post<Omit<ForumPost, 'userName'>>(
+        `/users/${payload.userId}/problems/${payload.problemId}/publish`,
       );
 
       return response.data;
