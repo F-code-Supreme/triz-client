@@ -5,6 +5,8 @@ import React from 'react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import PostCard from '@/features/forum/components/post-card';
+import { useCreateVoteMutation } from '@/features/forum/services/mutations';
+import { useGetForumPostsQuery } from '@/features/forum/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const tabs = [
@@ -14,78 +16,54 @@ const tabs = [
   { id: 'rising', label: 'Đang nổi' },
 ];
 
-// const communities = [
-//   {
-//     id: 'c1',
-//     title: 'Altshuller Institute for TRIZ Studies',
-//     members: '72.2k thành viên',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/07ef6892-d172-4cb6-a2e0-e00bf4485f4b',
-//     href: '/forum',
-//   },
-//   {
-//     id: 'c2',
-//     title: 'International TRIZ Association',
-//     members: '193 thành viên',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/45e91209-ec72-4659-9725-fb96eae13584',
-//     href: '/forum',
-//   },
-//   {
-//     id: 'c3',
-//     title: 'TRIZ Developers Summit',
-//     members: '130k thành viên',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/be2b6509-cd0e-44b0-81ba-eea4b95e665e',
-//     href: '/forum',
-//   },
-// ];
-
-// const recentViews = [
-//   {
-//     id: 'r1',
-//     title: 'Trong quá trình tối ưu hóa một công đoạn lắp ráp',
-//     date: '1 ngày trước',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/34d34500-f7ff-45be-bc1f-6e5024d62a59',
-//     href: '#',
-//   },
-//   {
-//     id: 'r2',
-//     title: 'Mình đang nghiên cứu giảm tiếng ồn của quạt gió',
-//     date: '20/12/2025',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/412a8323-468c-4ef1-ba77-c4d5d4f328c7',
-//     href: '#',
-//   },
-//   {
-//     id: 'r3',
-//     title: 'Trước đây mình rất hay “ép” ARIZ vào bất kỳ',
-//     date: '19/12/2025',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/39626a00-10d0-4894-b019-a917f6519a4f',
-//     href: '#',
-//   },
-//   {
-//     id: 'r4',
-//     title: 'Nguyên tắc 35 thường bị nghĩ là chỉ áp dụng',
-//     date: '18/12/2025',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/0551a89f-bda5-4aca-a046-266b993ef62d',
-//     href: '#',
-//   },
-//   {
-//     id: 'r5',
-//     title: 'Nhiều bạn mới học TRIZ thường gộp hai loại xung',
-//     date: '17/12/2025',
-//     image:
-//       'https://www.figma.com/api/mcp/asset/a9cf56e6-257d-45c4-a5b4-8b175e9dd0c6',
-//     href: '#',
-//   },
-// ];
-
 const ForumPage: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState(tabs[0].id);
+  const [expandedId, setExpandedId] = React.useState<string | null>(null);
+  const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
+
+  // query forum posts
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetForumPostsQuery({
+      pageSize: 2,
+      pageIndex: 0,
+    });
+
+  const createVoteMutation = useCreateVoteMutation();
+
+  React.useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (!data?.pages) return [];
+  const forumPosts = data.pages.flatMap((page) => page.content || []);
+
+  const excerpt = (text = '', limit = 400) => {
+    const cleaned = text.replace(/\r\n|\n/g, ' ').trim();
+    if (cleaned.length <= limit) return cleaned;
+    return cleaned.slice(0, limit) + '...';
+  };
+
+  const formatDate = (iso?: string) => {
+    if (!iso) return '';
+    try {
+      return new Date(iso).toLocaleDateString();
+    } catch {
+      return iso;
+    }
+  };
 
   return (
     <DefaultLayout meta={{ title: 'Cộng đồng TRIZ' }} className="bg-slate-100">
@@ -169,129 +147,57 @@ const ForumPage: React.FC = () => {
             </div>
             {/* Posts list */}
 
-            <PostCard
-              id="post-1"
-              title="Khám phá TRIZ"
-              author={{
-                name: 'Nguyen An',
-                href: '#',
-                avatar:
-                  'https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b',
-              }}
-              time="1 ngày trước"
-              excerpt={
-                <p>
-                  Chào mọi người em có thắc mắc cần giải đáp. Trong quá trình
-                  phát triển sản phẩm tại công ty, mình gặp một vấn đề khá thú
-                  vị và muốn đem lên forum để anh/chị em trong cộng đồng TRIZ{' '}
-                  <Link to={'/forum'} className="text-blue-600">
-                    ...xem thêm
-                  </Link>
-                </p>
-              }
-              image={
-                'https://www.figma.com/api/mcp/asset/d1969f5d-746a-4b73-8ac1-bc7249a559b9'
-              }
-              likes={182}
-              comments={21}
-            />
-
-            <PostCard
-              id="post-2"
-              title="Khám phá TRIZ"
-              author={{
-                name: 'Alex Harper',
-                href: '#',
-                avatar:
-                  'https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b',
-              }}
-              time="3 ngày trước"
-              excerpt={
-                <p>
-                  Chào mọi người em có thắc mắc cần giải đáp. Trong quá trình
-                  phát triển sản phẩm tại công ty, mình gặp một vấn đề khá thú
-                  vị và muốn đem lên forum để anh/chị em trong cộng đồng TRIZ{' '}
-                  <Link to={'/forum'} className="text-blue-600">
-                    ...xem thêm
-                  </Link>
-                </p>
-              }
-              image={
-                'https://www.figma.com/api/mcp/asset/d1969f5d-746a-4b73-8ac1-bc7249a559b9'
-              }
-              likes={182}
-              comments={21}
-            />
-          </div>
-
-          {/* <aside className="hidden lg:block">
-            <div className="bg-white box-border w-full p-4 rounded-lg border border-slate-200">
-              <div className="flex items-center justify-between mb-4">
-                <p className="font-medium text-[16px] text-slate-900">
-                  Cộng đồng của tôi
-                </p>
-                <img
-                  src="https://www.figma.com/api/mcp/asset/15ca3c3d-b096-4c48-8bcc-4f2cac9b8998"
-                  alt="chevron"
-                  className="w-6 h-6"
-                />
+            {forumPosts.length === 0 ? (
+              <div className="p-6 bg-white border border-slate-200 rounded-lg">
+                Chưa có bài viết nào.
               </div>
-
-              <div className="space-y-4">
-                {communities.map((c) => (
-                  <Link
-                    key={c.id}
-                    to={c.href}
-                    className="flex items-center gap-3"
-                  >
-                    <img
-                      src={c.image}
-                      alt={c.title}
-                      className="w-14 h-14 rounded-md object-cover"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-[16px] text-slate-900 truncate ">
-                        {c.title}
+            ) : (
+              forumPosts.map((p) => (
+                <PostCard
+                  key={p.id}
+                  id={p.id}
+                  title={p.title}
+                  author={{
+                    name: 'Người dùng',
+                    href: `/users/${p.createdBy}`,
+                    avatar:
+                      'https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b',
+                  }}
+                  time={formatDate(p.createdAt)}
+                  excerpt={
+                    <div>
+                      <p>
+                        {expandedId === p.id ? p.content : excerpt(p.content)}
                       </p>
-                      <p className="text-sm text-slate-500">{c.members}</p>
+                      {p.content && p.content.length > 400 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedId(expandedId === p.id ? null : p.id)
+                          }
+                          className="text-blue-600 mt-1"
+                        >
+                          {expandedId === p.id ? 'Thu gọn' : '...xem thêm'}
+                        </button>
+                      )}
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 bg-white box-border p-4 rounded-lg border border-slate-200">
-              <div className="flex items-center justify-between mb-4">
-                <p className="font-medium text-[16px] text-slate-900">
-                  Đã xem gần đây
-                </p>
-                <img
-                  src="https://www.figma.com/api/mcp/asset/15ca3c3d-b096-4c48-8bcc-4f2cac9b8998"
-                  alt="chevron"
-                  className="w-6 h-6"
+                  }
+                  image={undefined}
+                  likes={p.upVoteCount}
+                  comments={p.replyCount}
+                  onLike={(postId, isUpvote) =>
+                    createVoteMutation.mutate({ postId, isUpvote })
+                  }
                 />
-              </div>
-
-              <div className="space-y-4">
-                {recentViews.map((r) => (
-                  <Link
-                    key={r.id}
-                    to={r.href}
-                    className="flex items-center gap-3"
-                  >
-                    <img
-                      src={r.image}
-                      alt={r.title}
-                      className="w-14 h-14 rounded-md object-cover"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-slate-500">{r.date}</p>
-                      <p className="font-semibold text-[14px] ">{r.title}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              ))
+            )}
+            <div
+              ref={loadMoreRef}
+              className="py-6 flex justify-center text-slate-500"
+            >
+              {isFetchingNextPage ? 'Đang tải thêm...' : ''}
             </div>
-          </aside> */}
+          </div>
         </div>
       </main>
     </DefaultLayout>
