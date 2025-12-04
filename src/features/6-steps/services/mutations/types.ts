@@ -180,3 +180,8 @@ export interface ICreateSixStepJournalPayload {
   };
   step6Decision: Step6Decision;
 }
+
+export interface IPublishSixStepJournalToForumPayload {
+  problemId: string;
+  userId: string;
+}
