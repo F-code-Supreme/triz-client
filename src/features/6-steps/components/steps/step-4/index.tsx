@@ -184,10 +184,10 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const elements = useMemo(
-    () => physicalContradictions.map((pc) => pc.element),
-    [physicalContradictions],
-  );
+  const uniqueElements = useMemo(() => {
+    const elementSet = new Set(physicalContradictions.map((pc) => pc.element));
+    return Array.from(elementSet);
+  }, [physicalContradictions]);
 
   // Initialize nodes and edges
   useEffect(() => {
@@ -196,8 +196,8 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
     const initialNodes: Node[] = [];
     const initialEdges: Edge[] = [];
 
-    // Level 1: Elements (top)
-    elements.forEach((element, index) => {
+    // Level 1: Elements (top) - Only unique elements
+    uniqueElements.forEach((element, index) => {
       initialNodes.push({
         id: `element-${index}`,
         type: NodeType.ELEMENT,
@@ -212,7 +212,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
     // Level 2: Physical Contradictions
     physicalContradictions.forEach((pc, index) => {
-      const elementIndex = elements.findIndex(
+      const elementIndex = uniqueElements.findIndex(
         (e) =>
           pc.element.includes(e) || e.includes(pc.element.split('(')[0].trim()),
       );
@@ -574,7 +574,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
       <div
         ref={reactFlowContainerRef}
-        className="flex-1 min-h-[700px] border rounded-lg overflow-hidden bg-background mx-4 scroll-mt-20"
+        className="flex-1 min-h-[92vh] border rounded-lg overflow-hidden bg-background mx-4 scroll-mt-[66px]"
       >
         <ReactFlow
           nodes={nodes}

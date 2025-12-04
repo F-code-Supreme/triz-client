@@ -48,7 +48,7 @@ export const PhysicalContradictionNode = memo((props: NodeProps) => {
             <AlertTriangle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
             <div>
               <div className="text-white font-bold text-sm mb-1">
-                Mâu thuẫn Lý học (ML)
+                Mâu thuẫn Vật lý (ML)
               </div>
               <div className="text-white/90 text-xs font-medium mb-1">
                 {data.element}
