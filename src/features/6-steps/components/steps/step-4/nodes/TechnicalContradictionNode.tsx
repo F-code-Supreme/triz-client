@@ -16,6 +16,8 @@ interface TechnicalContradictionNodeData {
   contradictionStatement: string;
   mk: string;
   status?: NodeStatus;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
 export const TechnicalContradictionNode = memo((props: NodeProps) => {
@@ -23,7 +25,14 @@ export const TechnicalContradictionNode = memo((props: NodeProps) => {
 
   return (
     <NodeStatusIndicator status={data.status} variant="border">
-      <BaseNode className="shadow-lg rounded-md bg-cyan-500 border-2 border-cyan-600 min-w-[280px] max-w-[350px]">
+      <BaseNode
+        className={`shadow-lg rounded-md border-2 min-w-[280px] max-w-[350px] cursor-pointer transition-all ${
+          data.isSelected
+            ? 'bg-cyan-600 border-cyan-700'
+            : 'bg-cyan-500 border-cyan-600 hover:bg-cyan-600'
+        }`}
+        onClick={data.onSelect}
+      >
         <BaseNodeContent>
           <Handle
             type="target"

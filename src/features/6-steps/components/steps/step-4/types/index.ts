@@ -3,6 +3,8 @@ export enum NodeType {
   PHYSICAL_CONTRADICTION = 'physicalContradiction',
   TECHNICAL_CONTRADICTION = 'technicalContradiction',
   PARAMETER = 'parameter',
+  MATRIX = 'matrix',
+  PRINCIPLE = 'principle',
 }
 
 export enum ParameterType {

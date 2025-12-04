@@ -4,22 +4,26 @@ import { useAxios } from '@/configs/axios';
 
 import { SixStepKeys } from './keys';
 
-import type { IGetAllBookProgressDataResponse } from '@/features/book/services/queries/types';
+import type { IGetPrinciplesLookupDataResponse } from './types';
 
-export const useGetPrinciplesLookup = (
+export const useGetPrinciplesLookupQuery = (
   improvingParam?: number,
   worseningParam?: number,
 ) => {
   const _request = useAxios();
 
   return useQuery({
-    queryKey: [SixStepKeys.GetPrinciplesLookupQuery],
+    queryKey: [
+      SixStepKeys.GetPrinciplesLookupQuery,
+      improvingParam,
+      worseningParam,
+    ],
 
     queryFn:
       improvingParam && worseningParam
         ? async ({ signal }) => {
             const response =
-              await _request.get<IGetAllBookProgressDataResponse>(
+              await _request.get<IGetPrinciplesLookupDataResponse>(
                 '/triz40/solutions',
                 {
                   params: {

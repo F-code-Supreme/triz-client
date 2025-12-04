@@ -59,6 +59,12 @@ export const ParameterNode = memo((props: NodeProps) => {
           <div className="bg-white/20 p-2 rounded text-white text-xs">
             {data.reasoning}
           </div>
+
+          <Handle
+            type="source"
+            position={Position.Bottom}
+            className={`w-3 h-3 ${isImproving ? '!bg-green-400' : '!bg-red-400'}`}
+          />
         </BaseNodeContent>
       </BaseNode>
     </NodeStatusIndicator>

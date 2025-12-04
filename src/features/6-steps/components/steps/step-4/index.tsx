@@ -17,6 +17,7 @@ import {
   useStep4SuggestionMutation,
   useConvertMLtoMKMutation,
 } from '@/features/6-steps/services/mutations';
+import { useGetPrinciplesLookupQuery } from '@/features/6-steps/services/queries';
 import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
 import {
@@ -28,8 +29,10 @@ import {
 } from './configs';
 import ActionButtons from '../../action-buttons';
 import { ElementNode } from './nodes/ElementNode';
+import { MatrixNode } from './nodes/MatrixNode';
 import { ParameterNode } from './nodes/ParameterNode';
 import { PhysicalContradictionNode } from './nodes/PhysicalContradictionNode';
+import { PrincipleNode } from './nodes/PrincipleNode';
 import { TechnicalContradictionNode } from './nodes/TechnicalContradictionNode';
 import { NodeType, ParameterType, TechnicalContradictionKey } from './types';
 
@@ -38,6 +41,7 @@ import type {
   PhysicalContradiction,
   TechnicalContradiction,
 } from '@/features/6-steps/services/mutations/types';
+// import type { IGetPrinciplesLookupDataItem } from '@/features/6-steps/services/queries/types';
 
 interface Step4Props {
   onNext: (data: Record<string, unknown>) => void;
@@ -50,6 +54,8 @@ const nodeTypes = {
   [NodeType.PHYSICAL_CONTRADICTION]: PhysicalContradictionNode,
   [NodeType.TECHNICAL_CONTRADICTION]: TechnicalContradictionNode,
   [NodeType.PARAMETER]: ParameterNode,
+  [NodeType.MATRIX]: MatrixNode,
+  [NodeType.PRINCIPLE]: PrincipleNode,
 };
 
 const LOADING_TEXT = 'Đang tải...';
@@ -60,27 +66,48 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedPhysicalContradiction, setSelectedPhysicalContradiction] =
     useState<string | null>(null);
+  const [selectedTechnicalContradiction, setSelectedTechnicalContradiction] =
+    useState<string | null>(null);
   const [physicalContradictions, setPhysicalContradictions] = useState<
     PhysicalContradiction[]
   >([]);
   const [technicalContradictions, setTechnicalContradictions] = useState<
     TechnicalContradiction[]
   >([]);
+  const [matrixParams, setMatrixParams] = useState<{
+    improving: number;
+    worsening: number;
+    improvingName: string;
+    worseningName: string;
+  } | null>(null);
+  // const [principles, setPrinciples] = useState<IGetPrinciplesLookupDataItem[]>(
+  //   [],
+  // );
   const [loadingStates, setLoadingStates] = useState<{
     elements: NodeStatus;
     physicalContradictions: NodeStatus;
     technicalContradictions: NodeStatus;
     parameters: NodeStatus;
+    matrix: NodeStatus;
+    principles: NodeStatus;
   }>({
     elements: 'initial',
     physicalContradictions: 'initial',
     technicalContradictions: 'initial',
     parameters: 'initial',
+    matrix: 'initial',
+    principles: 'initial',
   });
   const reactFlowContainerRef = useRef<HTMLDivElement>(null);
 
   const step4Mutation = useStep4SuggestionMutation();
   const convertMLtoMKMutation = useConvertMLtoMKMutation();
+
+  // Use the principles lookup query
+  const principlesQuery = useGetPrinciplesLookupQuery(
+    matrixParams?.improving,
+    matrixParams?.worsening,
+  );
 
   // Auto-scroll to React Flow section on mount
   useEffect(() => {
@@ -259,9 +286,19 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
     async (pcId: string) => {
       setSelectedPhysicalContradiction(pcId);
 
-      // Update nodes to show selection
-      setNodes((nds) =>
-        nds.map((node) => {
+      // Get the position of the selected PC for placeholder positioning
+      let baseX = 100;
+      let baseY = 250;
+
+      // Update nodes to show selection and capture PC position
+      setNodes((nds) => {
+        const pcNode = nds.find((n) => n.id === pcId);
+        if (pcNode) {
+          baseX = pcNode.position.x;
+          baseY = pcNode.position.y;
+        }
+
+        return nds.map((node) => {
           if (node.type === NodeType.PHYSICAL_CONTRADICTION) {
             return {
               ...node,
@@ -272,8 +309,8 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
             };
           }
           return node;
-        }),
-      );
+        });
+      });
 
       // Set loading state for TC and Parameters
       setLoadingStates((prev) => ({
@@ -282,10 +319,8 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         parameters: 'loading',
       }));
 
-      // Get the position of the selected PC for placeholder positioning
-      const pcNode = nodes.find((n) => n.id === pcId);
-      const baseX = pcNode?.position.x || 100;
-      const baseY = pcNode?.position.y || 250;
+      // Wait for next tick to ensure baseX and baseY are captured
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       // Create placeholder nodes for TC and Parameters while loading
       const placeholderNodes: Node[] = [];
@@ -411,9 +446,8 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         const newNodes: Node[] = [];
         const newEdges: Edge[] = [];
 
-        const pcNode = nodes.find((n) => n.id === pcId);
-        const baseX = pcNode?.position.x || 100;
-        const baseY = pcNode?.position.y || 250;
+        // Use the baseX and baseY captured earlier
+        // (these were already calculated from the selected PC node)
 
         // Level 3: Technical Contradictions (MK1 and MK2)
         [TechnicalContradictionKey.MK1, TechnicalContradictionKey.MK2].forEach(
@@ -433,6 +467,8 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
                 contradictionStatement: mkData.contradictionStatement,
                 mk,
                 status: loadingStates.technicalContradictions,
+                isSelected: false,
+                onSelect: () => handleSelectTC(tcId, mkData),
               },
             });
 
@@ -532,8 +568,8 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         }));
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      nodes,
       setNodes,
       setEdges,
       physicalContradictions,
@@ -542,6 +578,286 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       loadingStates.parameters,
     ],
   );
+
+  const handleSelectTC = useCallback(
+    async (tcId: string, mkData: TechnicalContradiction['MK1']) => {
+      setSelectedTechnicalContradiction(tcId);
+
+      // Variables to capture positions
+      let baseX = 100;
+      let baseY = 550;
+      let improvingParamNode: Node | undefined;
+      let worseningParamNode: Node | undefined;
+
+      // Get the related parameter nodes to connect to matrix
+      const improvingParamId = `param-${tcId}-improving`;
+      const worseningParamId = `param-${tcId}-worsening`;
+
+      // Update nodes to show TC selection and capture positions
+      setNodes((nds) => {
+        const tcNode = nds.find((n) => n.id === tcId);
+        if (tcNode) {
+          baseX = tcNode.position.x;
+          baseY = tcNode.position.y;
+        }
+
+        // Find the parameter nodes to position matrix between them
+        improvingParamNode = nds.find((n) => n.id === improvingParamId);
+        worseningParamNode = nds.find((n) => n.id === worseningParamId);
+
+        return nds.map((node) => {
+          if (node.type === NodeType.TECHNICAL_CONTRADICTION) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                isSelected: node.id === tcId,
+              },
+            };
+          }
+          return node;
+        });
+      });
+
+      // Set loading state for Matrix and Principles
+      setLoadingStates((prev) => ({
+        ...prev,
+        matrix: 'loading',
+        principles: 'loading',
+      }));
+
+      // Extract parameters
+      const improvingParam = parseInt(mkData.improvingParameter.number);
+      const worseningParam = parseInt(mkData.worseningParameter.number);
+
+      setMatrixParams({
+        improving: improvingParam,
+        worsening: worseningParam,
+        improvingName: mkData.improvingParameter.name,
+        worseningName: mkData.worseningParameter.name,
+      });
+
+      // Wait for next tick to ensure positions are captured
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      // Calculate matrix position: centered horizontally between the two parameters, below them
+      const matrixX =
+        improvingParamNode && worseningParamNode
+          ? (improvingParamNode.position.x + worseningParamNode.position.x) / 2
+          : baseX;
+      const matrixY = improvingParamNode
+        ? improvingParamNode.position.y + 250
+        : baseY + 850;
+
+      // Create placeholder Matrix node
+      const matrixId = `matrix-${tcId}`;
+      const placeholderMatrixNode: Node = {
+        id: matrixId,
+        type: NodeType.MATRIX,
+        position: {
+          x: matrixX,
+          y: matrixY,
+        },
+        data: {
+          improvingParam: improvingParam,
+          worseningParam: worseningParam,
+          improvingParamName: mkData.improvingParameter.name,
+          worseningParamName: mkData.worseningParameter.name,
+          status: 'loading' as NodeStatus,
+        },
+      };
+
+      // Create edges from parameters to matrix
+      const matrixEdges: Edge[] = [
+        {
+          id: `edge-${improvingParamId}-${matrixId}`,
+          source: improvingParamId,
+          target: matrixId,
+          targetHandle: 'improving',
+          style: { stroke: EdgeColors.tcToImproving, strokeWidth: 2 },
+        },
+        {
+          id: `edge-${worseningParamId}-${matrixId}`,
+          source: worseningParamId,
+          target: matrixId,
+          targetHandle: 'worsening',
+          style: { stroke: EdgeColors.tcToWorsening, strokeWidth: 2 },
+        },
+      ];
+
+      // Create placeholder principle nodes (show 3 placeholders)
+      const placeholderPrinciples: Node[] = [];
+      for (let i = 0; i < 3; i++) {
+        placeholderPrinciples.push({
+          id: `principle-placeholder-${i}`,
+          type: NodeType.PRINCIPLE,
+          position: {
+            x: matrixX - 300 + i * 300,
+            y: matrixY + 300,
+          },
+          data: {
+            id: 0,
+            name: LOADING_TEXT,
+            priority: 0,
+            status: 'loading' as NodeStatus,
+          },
+        });
+
+        // Connect matrix to placeholder principles
+        matrixEdges.push({
+          id: `edge-${matrixId}-principle-placeholder-${i}`,
+          source: matrixId,
+          target: `principle-placeholder-${i}`,
+          style: { stroke: '#94a3b8', strokeWidth: 2 },
+        });
+      }
+
+      // Add placeholder nodes immediately
+      setNodes((nds) => [
+        ...nds.filter(
+          (n) => !n.id.startsWith('matrix-') && !n.id.startsWith('principle-'),
+        ),
+        placeholderMatrixNode,
+        ...placeholderPrinciples,
+      ]);
+
+      setEdges((eds) => [
+        ...eds.filter(
+          (e) =>
+            !e.id.includes('matrix-') &&
+            !e.source.startsWith('matrix-') &&
+            !e.target.startsWith('matrix-') &&
+            !e.id.includes('principle-') &&
+            !e.source.startsWith('principle-') &&
+            !e.target.startsWith('principle-'),
+        ),
+        ...matrixEdges,
+      ]);
+
+      try {
+        // Matrix params have been set, principles query will auto-fetch
+        // The useEffect below will handle the response
+        setLoadingStates((prev) => ({
+          ...prev,
+          matrix: 'success',
+        }));
+      } catch (error) {
+        console.error('Failed to setup matrix:', error);
+        toast.error('Failed to setup TRIZ matrix');
+        setLoadingStates((prev) => ({
+          ...prev,
+          matrix: 'error',
+          principles: 'error',
+        }));
+      }
+    },
+    [setNodes, setEdges],
+  );
+
+  // Handle principles query response
+  useEffect(() => {
+    if (
+      !principlesQuery.data ||
+      !selectedTechnicalContradiction ||
+      !matrixParams
+    ) {
+      return;
+    }
+
+    // setPrinciples(principlesQuery.data);
+
+    // Find the matrix node and TC node
+    const matrixNode = nodes.find((n) => n.type === NodeType.MATRIX);
+    const tcNode = nodes.find((n) => n.id === selectedTechnicalContradiction);
+
+    if (!matrixNode || !tcNode) return;
+
+    const tcId = selectedTechnicalContradiction;
+    const matrixId = matrixNode.id;
+    const matrixX = matrixNode.position.x || 100;
+    const matrixY = matrixNode.position.y || 850;
+
+    // Create actual principle nodes
+    const principleNodes: Node[] = principlesQuery.data.map((item, index) => ({
+      id: `principle-${tcId}-${item.principle.id}`,
+      type: NodeType.PRINCIPLE,
+      position: {
+        x:
+          matrixX - (300 * (principlesQuery.data.length - 1)) / 2 + index * 300,
+        y: matrixY + 300,
+      },
+      data: {
+        id: item.principle.id,
+        name: item.principle.name,
+        priority: item.priority,
+        status: 'success' as NodeStatus,
+      },
+    }));
+
+    // Create edges from matrix to principles
+    const principleEdges: Edge[] = principlesQuery.data.map((item) => ({
+      id: `edge-${matrixId}-principle-${item.principle.id}`,
+      source: matrixId,
+      target: `principle-${tcId}-${item.principle.id}`,
+      style: { stroke: '#94a3b8', strokeWidth: 2 },
+      label: `Ưu tiên ${item.priority}`,
+    }));
+
+    // Remove placeholder principles and add actual ones
+    setNodes((nds) =>
+      [
+        ...nds.filter((n) => !n.id.startsWith('principle-')),
+        ...principleNodes,
+      ].map((node) => {
+        // Update matrix node status to success when principles load
+        if (node.type === NodeType.MATRIX) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              status: 'success' as NodeStatus,
+            },
+          };
+        }
+        return node;
+      }),
+    );
+
+    setEdges((eds) => [
+      ...eds.filter(
+        (e) =>
+          !e.id.includes('principle-') &&
+          !e.source.startsWith('principle-') &&
+          !e.target.startsWith('principle-'),
+      ),
+      ...principleEdges,
+    ]);
+
+    // Set success state
+    setLoadingStates((prev) => ({
+      ...prev,
+      matrix: 'success',
+      principles: 'success',
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    principlesQuery.data,
+    selectedTechnicalContradiction,
+    matrixParams,
+    setNodes,
+    setEdges,
+  ]);
+
+  // Handle principles query error
+  useEffect(() => {
+    if (principlesQuery.error && matrixParams) {
+      toast.error('Failed to fetch principles from TRIZ matrix');
+      setLoadingStates((prev) => ({
+        ...prev,
+        principles: 'error',
+      }));
+    }
+  }, [principlesQuery.error, matrixParams]);
 
   const handleNext = () => {
     if (!selectedPhysicalContradiction) {
@@ -604,6 +920,10 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
                   return node.data.type === ParameterType.IMPROVING
                     ? ParameterColors.improving
                     : ParameterColors.worsening;
+                case NodeType.MATRIX:
+                  return NodeColors.matrix;
+                case NodeType.PRINCIPLE:
+                  return NodeColors.principle;
                 default:
                   return NodeColors.default;
               }
@@ -645,6 +965,20 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
                   style={{ backgroundColor: ParameterColors.worsening }}
                 />
                 <span>Thông số xấu đi</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: NodeColors.matrix }}
+                />
+                <span>Ma trận TRIZ</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded"
+                  style={{ backgroundColor: NodeColors.principle }}
+                />
+                <span>Nguyên tắc giải quyết</span>
               </div>
             </div>
           </Panel>

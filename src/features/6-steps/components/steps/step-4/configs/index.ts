@@ -9,6 +9,8 @@ export const NodeColors: Record<
   physicalContradictionSelected: '#f59e0b', // amber-500
   [NodeType.TECHNICAL_CONTRADICTION]: '#06b6d4', // cyan-500
   [NodeType.PARAMETER]: '#10b981', // green-500 (improving default)
+  [NodeType.MATRIX]: '#6366f1', // indigo-500
+  [NodeType.PRINCIPLE]: '#eab308', // yellow-500
   default: '#94a3b8', // slate-400
 };
 
