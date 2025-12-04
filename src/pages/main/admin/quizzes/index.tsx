@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import {
@@ -42,6 +43,7 @@ import { AdminLayout } from '@/layouts/admin-layout';
 import DetailQuizDialog from '../../../../features/quiz/components/quiz-detail-dialog';
 
 const AdminQuizzesPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState<any>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -136,14 +138,16 @@ const AdminQuizzesPage = () => {
       <div className="flex flex-col gap-8 p-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Quizzes</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t('quizzes.title')}
+            </h1>
             <p className="text-muted-foreground mt-2">
-              Manage all quizzes in the system.
+              {t('quizzes.description')}
             </p>
           </div>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            New Quiz
+            {t('quizzes.new_quiz')}
           </Button>
         </div>
 
@@ -250,22 +254,23 @@ const AdminQuizzesPage = () => {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Quiz</AlertDialogTitle>
+            <AlertDialogTitle>{t('quizzes.delete_title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              `Are you sure you want to delete quiz &quot;${deletingQuiz?.title}
-              &quot;?`
+              {t('quizzes.delete_message')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteQuizMutation.isPending}>
-              Cancel
+              {t('common.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={handleDeleteConfirm}
               disabled={deleteQuizMutation.isPending}
             >
-              {deleteQuizMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteQuizMutation.isPending
+                ? t('common.loading')
+                : t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,6 +1,6 @@
 import {
   MicIcon,
-  PaperclipIcon,
+  // PaperclipIcon,
   RotateCcwIcon,
   CopyIcon,
   CheckIcon,
@@ -302,9 +302,6 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
             />
             <PromptInputToolbar>
               <PromptInputTools>
-                <PromptInputButton disabled={isTyping}>
-                  <PaperclipIcon size={16} />
-                </PromptInputButton>
                 <PromptInputButton
                   disabled={isTyping}
                   onClick={() => startRecording()}

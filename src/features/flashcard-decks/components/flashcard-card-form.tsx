@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,7 @@ export const FlashcardCardForm = ({
   onSubmit,
   onCancel,
 }: FlashcardCardFormProps) => {
+  const { t } = useTranslation('pages.admin');
   const form = useForm<FlashcardFormValues>({
     resolver: zodResolver(flashcardFormSchema),
     defaultValues: {
@@ -61,10 +63,10 @@ export const FlashcardCardForm = ({
           name="term"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Term</FormLabel>
+              <FormLabel>{t('flashcards.card_form.term')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Enter the term or question"
+                  placeholder={t('flashcards.card_form.term_placeholder')}
                   {...field}
                   disabled={isLoading}
                 />
@@ -79,10 +81,10 @@ export const FlashcardCardForm = ({
           name="termImgUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Term Image URL (Optional)</FormLabel>
+              <FormLabel>{t('flashcards.card_form.term_image_url')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="https://example.com/image.jpg"
+                  placeholder={t('flashcards.card_form.term_image_placeholder')}
                   {...field}
                   disabled={isLoading}
                 />
@@ -97,10 +99,10 @@ export const FlashcardCardForm = ({
           name="definition"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Definition</FormLabel>
+              <FormLabel>{t('flashcards.card_form.definition')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Enter the definition or answer"
+                  placeholder={t('flashcards.card_form.definition_placeholder')}
                   className="min-h-[100px] resize-none"
                   {...field}
                   disabled={isLoading}
@@ -116,10 +118,14 @@ export const FlashcardCardForm = ({
           name="defImgUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Definition Image URL (Optional)</FormLabel>
+              <FormLabel>
+                {t('flashcards.card_form.definition_image_url')}
+              </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="https://example.com/image.jpg"
+                  placeholder={t(
+                    'flashcards.card_form.definition_image_placeholder',
+                  )}
                   {...field}
                   disabled={isLoading}
                 />
@@ -136,11 +142,13 @@ export const FlashcardCardForm = ({
             onClick={onCancel}
             disabled={isLoading}
           >
-            Cancel
+            {t('flashcards.card_form.cancel')}
           </Button>
           <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {card ? 'Update Card' : 'Create Card'}
+            {card
+              ? t('flashcards.card_form.update_card')
+              : t('flashcards.card_form.create_card')}
           </Button>
         </div>
       </form>

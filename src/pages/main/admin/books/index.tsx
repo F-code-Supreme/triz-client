@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ import { useGetAllBooksAdminQuery } from '@/features/book/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminBooksManagementPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<
@@ -79,26 +81,28 @@ const AdminBooksManagementPage = () => {
       <div className="flex flex-col gap-8 p-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Books</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t('books.title')}
+            </h1>
             <p className="text-muted-foreground mt-2">
-              Manage all books in the system. Create, edit, or delete books.
+              {t('books.description')}
             </p>
           </div>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            New Book
+            {t('books.new_book')}
           </Button>
         </div>
 
         <div className="space-y-4">
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Search by title, author..."
+            searchPlaceholder={t('books.search_placeholder')}
             searchKey="title"
             filters={[
               {
                 columnId: 'status',
-                title: 'Status',
+                title: t('common.status'),
                 options: bookStatuses,
               },
             ]}

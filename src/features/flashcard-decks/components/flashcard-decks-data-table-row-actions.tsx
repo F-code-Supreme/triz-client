@@ -1,5 +1,6 @@
 import { MoreHorizontal, Eye, Pencil, Trash2, Spade } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   AlertDialog,
@@ -39,6 +40,7 @@ export const FlashcardDecksDataTableRowActions = ({
   row,
   isDeleted = false,
 }: FlashcardDecksDataTableRowActionsProps) => {
+  const { t } = useTranslation('pages.admin');
   const deck = row.original;
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isActionOpen, setIsActionOpen] = useState(false);
@@ -64,16 +66,18 @@ export const FlashcardDecksDataTableRowActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {t('flashcards.deck_actions.actions')}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
-            Preview
+            {t('flashcards.deck_actions.preview')}
           </DropdownMenuItem>
           {!isDeleted && (
             <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
-              Edit
+              {t('flashcards.deck_actions.edit')}
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
@@ -82,12 +86,12 @@ export const FlashcardDecksDataTableRowActions = ({
           >
             <>
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete
+              {t('flashcards.deck_actions.delete')}
             </>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsManageCardsOpen(true)}>
             <Spade className="mr-2 h-4 w-4" />
-            Manage Cards
+            {t('flashcards.deck_actions.manage_cards')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -108,17 +112,23 @@ export const FlashcardDecksDataTableRowActions = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {isDeleted ? 'Restore Deck' : 'Delete Deck'}
+              {isDeleted
+                ? t('flashcards.deck_actions.restore_title')
+                : t('flashcards.deck_actions.delete_title')}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {isDeleted
-                ? `Are you sure you want to restore "${deck.title}"? This will make the deck visible again.`
-                : `Are you sure you want to delete "${deck.title}"? This action cannot be undone.`}
+                ? t('flashcards.deck_actions.restore_message', {
+                    title: deck.title,
+                  })
+                : t('flashcards.deck_actions.delete_message', {
+                    title: deck.title,
+                  })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteDeckMutation.isPending}>
-              Cancel
+              {t('flashcards.deck_form.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               className={
@@ -129,7 +139,9 @@ export const FlashcardDecksDataTableRowActions = ({
               onClick={handleDelete}
               disabled={deleteDeckMutation.isPending}
             >
-              {deleteDeckMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteDeckMutation.isPending
+                ? t('flashcards.deck_actions.deleting') + '...'
+                : t('flashcards.deck_actions.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

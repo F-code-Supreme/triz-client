@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -47,6 +48,7 @@ export const FlashcardDecksFormDialog = ({
   onOpenChange,
   initialData,
 }: FlashcardDecksFormDialogProps) => {
+  const { t } = useTranslation('pages.admin');
   const createMutation = useCreateFlashcardDeckMutation();
   const updateMutation = useUpdateFlashcardDeckMutation();
   const isLoading = createMutation.isPending || updateMutation.isPending;
@@ -95,7 +97,9 @@ export const FlashcardDecksFormDialog = ({
       <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {initialData ? 'Edit Deck' : 'Create New Deck'}
+            {initialData
+              ? t('flashcards.deck_form.edit_title')
+              : t('flashcards.deck_form.create_title')}
           </DialogTitle>
         </DialogHeader>
 
@@ -106,9 +110,12 @@ export const FlashcardDecksFormDialog = ({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t('flashcards.deck_form.title')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter deck title" {...field} />
+                    <Input
+                      placeholder={t('flashcards.deck_form.title_placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -120,10 +127,12 @@ export const FlashcardDecksFormDialog = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('flashcards.deck_form.description')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter deck description"
+                      placeholder={t(
+                        'flashcards.deck_form.description_placeholder',
+                      )}
                       rows={4}
                       {...field}
                     />
@@ -140,16 +149,16 @@ export const FlashcardDecksFormDialog = ({
                 onClick={() => onOpenChange(false)}
                 disabled={isLoading}
               >
-                Cancel
+                {t('flashcards.deck_form.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading
                   ? initialData
-                    ? 'Updating...'
-                    : 'Creating...'
+                    ? t('flashcards.deck_form.updating') + '...'
+                    : t('flashcards.deck_form.creating') + '...'
                   : initialData
-                    ? 'Update'
-                    : 'Create'}
+                    ? t('flashcards.deck_form.update')
+                    : t('flashcards.deck_form.create')}
               </Button>
             </DialogFooter>
           </form>

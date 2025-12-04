@@ -54,5 +54,38 @@
 
   "brands": "Brands",
   "pricing": "Pricing",
-  "wallet": "Wallet"
+  "wallet": "Wallet",
+
+  "admin": {
+    "title": "TRIZ Admin",
+    "subtitle": "Management",
+    "main": "Main",
+    "management": "Management",
+    "payment": "Payment",
+    "others": "Others",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "books": "Books",
+    "flashcards": "Flashcards",
+    "courses": "Courses",
+    "quizzes": "Quizzes",
+    "assignments": "Assignments",
+    "packages": "Packages",
+    "subscriptions": "Subscriptions",
+    "transactions": "Transactions",
+    "archive": "Archive"
+  },
+
+  "command_menu": {
+    "placeholder": "Type a command or search...",
+    "no_results": "No results found.",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+
+  "user_menu": {
+    "logout": "Log out"
+  }
 }

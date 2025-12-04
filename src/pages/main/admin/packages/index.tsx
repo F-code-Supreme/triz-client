@@ -1,5 +1,6 @@
 import { PlusIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,7 @@ import type { CreatePackagePayload } from '@/features/packages/services/mutation
 import type { Package } from '@/features/packages/types';
 
 const AdminManagePackagePage = () => {
+  const { t } = useTranslation('pages.admin');
   // Fetch packages from API
   const { data, isLoading } = useGetPackagesQuery();
 
@@ -144,17 +146,14 @@ const AdminManagePackagePage = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">
-              Manage Packages
+              {t('packages.title')}
             </h1>
-            <p className="text-muted-foreground">
-              Manage subscription packages offered on the platform. You can add,
-              edit, or remove packages as needed.
-            </p>
+            <p className="text-muted-foreground">{t('packages.description')}</p>
           </div>
           <div className="flex gap-2">
             <Button onClick={handleCreate}>
               <PlusIcon className="mr-2 h-4 w-4" />
-              Create Package
+              {t('packages.create_package')}
             </Button>
           </div>
         </div>
@@ -162,20 +161,28 @@ const AdminManagePackagePage = () => {
         {/* Filters */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Status:</label>
+            <label className="text-sm font-medium">
+              {t('packages.status_label')}
+            </label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">All Status</SelectItem>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Inactive</SelectItem>
+                <SelectItem value="ALL">
+                  {t('packages.status_filter.all')}
+                </SelectItem>
+                <SelectItem value="ACTIVE">
+                  {t('packages.status_filter.active')}
+                </SelectItem>
+                <SelectItem value="INACTIVE">
+                  {t('packages.status_filter.inactive')}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="ml-auto text-sm text-muted-foreground">
-            Total: {total} package{total !== 1 ? 's' : ''}
+            {t('packages.total', { count: total })}
           </div>
         </div>
 
@@ -198,10 +205,10 @@ const AdminManagePackagePage = () => {
         ) : (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <p className="text-lg font-medium text-muted-foreground">
-              No packages found
+              {t('packages.no_packages')}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              Try adjusting your filters or create a new package
+              {t('packages.try_adjusting')}
             </p>
           </div>
         )}
