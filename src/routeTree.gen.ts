@@ -44,9 +44,11 @@ import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscri
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
+import { Route as app6StepsRouteRouteImport } from './routes/(app)/6-steps/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
+import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
 import { Route as appGamesIndexRouteImport } from './routes/(app)/games/index'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as appGamesSegmentationGameRouteImport } from './routes/(app)/games/segmentation-game'
@@ -56,6 +58,7 @@ import { Route as appGamesMemoryCardRouteImport } from './routes/(app)/games/mem
 import { Route as AdminCoursesCreateRouteRouteImport } from './routes/admin/courses/create/route'
 import { Route as appQuizHistoryRouteRouteImport } from './routes/(app)/quiz/history/route'
 import { Route as appQuizQuizIdRouteRouteImport } from './routes/(app)/quiz/$quizId/route'
+import { Route as appJournalsJournalIdRouteRouteImport } from './routes/(app)/journals/$journalId/route'
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
@@ -238,6 +241,11 @@ const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
+const app6StepsRouteRoute = app6StepsRouteRouteImport.update({
+  id: '/6-steps',
+  path: '/6-steps',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
@@ -251,6 +259,11 @@ const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
 const appQuizIndexRoute = appQuizIndexRouteImport.update({
   id: '/quiz/',
   path: '/quiz/',
+  getParentRoute: () => appRouteRoute,
+} as any)
+const appJournalsIndexRoute = appJournalsIndexRouteImport.update({
+  id: '/journals/',
+  path: '/journals/',
   getParentRoute: () => appRouteRoute,
 } as any)
 const appGamesIndexRoute = appGamesIndexRouteImport.update({
@@ -299,6 +312,12 @@ const appQuizQuizIdRouteRoute = appQuizQuizIdRouteRouteImport.update({
   path: '/quiz/$quizId',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appJournalsJournalIdRouteRoute =
+  appJournalsJournalIdRouteRouteImport.update({
+    id: '/journals/$journalId',
+    path: '/journals/$journalId',
+    getParentRoute: () => appRouteRoute,
+  } as any)
 const appCourseMyCourseRouteRoute = appCourseMyCourseRouteRouteImport.update({
   id: '/course/my-course',
   path: '/course/my-course',
@@ -340,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
@@ -368,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterIndexRoute
   '/books/me': typeof appBooksMeRouteRoute
   '/course/my-course': typeof appCourseMyCourseRouteRoute
+  '/journals/$journalId': typeof appJournalsJournalIdRouteRoute
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
@@ -377,6 +398,7 @@ export interface FileRoutesByFullPath {
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/games': typeof appGamesIndexRoute
+  '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
@@ -393,6 +415,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
@@ -421,6 +444,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterIndexRoute
   '/books/me': typeof appBooksMeRouteRoute
   '/course/my-course': typeof appCourseMyCourseRouteRoute
+  '/journals/$journalId': typeof appJournalsJournalIdRouteRoute
   '/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
@@ -430,6 +454,7 @@ export interface FileRoutesByTo {
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/games': typeof appGamesIndexRoute
+  '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
@@ -448,6 +473,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
+  '/(app)/6-steps': typeof app6StepsRouteRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
   '/(app)/refund': typeof appRefundRouteRoute
@@ -477,6 +503,7 @@ export interface FileRoutesById {
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
   '/(app)/books/me': typeof appBooksMeRouteRoute
   '/(app)/course/my-course': typeof appCourseMyCourseRouteRoute
+  '/(app)/journals/$journalId': typeof appJournalsJournalIdRouteRoute
   '/(app)/quiz/$quizId': typeof appQuizQuizIdRouteRoute
   '/(app)/quiz/history': typeof appQuizHistoryRouteRoute
   '/admin/courses/create': typeof AdminCoursesCreateRouteRoute
@@ -486,6 +513,7 @@ export interface FileRoutesById {
   '/(app)/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/(app)/games/': typeof appGamesIndexRoute
+  '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
@@ -504,6 +532,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
+    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
@@ -532,6 +561,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/books/me'
     | '/course/my-course'
+    | '/journals/$journalId'
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
@@ -541,6 +571,7 @@ export interface FileRouteTypes {
     | '/games/segmentation-game'
     | '/admin/users/$userId'
     | '/games'
+    | '/journals'
     | '/quiz'
     | '/admin/users'
     | '/books/$bookId'
@@ -557,6 +588,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
+    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
@@ -585,6 +617,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/books/me'
     | '/course/my-course'
+    | '/journals/$journalId'
     | '/quiz/$quizId'
     | '/quiz/history'
     | '/admin/courses/create'
@@ -594,6 +627,7 @@ export interface FileRouteTypes {
     | '/games/segmentation-game'
     | '/admin/users/$userId'
     | '/games'
+    | '/journals'
     | '/quiz'
     | '/admin/users'
     | '/books/$bookId'
@@ -611,6 +645,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
+    | '/(app)/6-steps'
     | '/(app)/chat-triz'
     | '/(app)/profile'
     | '/(app)/refund'
@@ -640,6 +675,7 @@ export interface FileRouteTypes {
     | '/admin/courses/'
     | '/(app)/books/me'
     | '/(app)/course/my-course'
+    | '/(app)/journals/$journalId'
     | '/(app)/quiz/$quizId'
     | '/(app)/quiz/history'
     | '/admin/courses/create'
@@ -649,6 +685,7 @@ export interface FileRouteTypes {
     | '/(app)/games/segmentation-game'
     | '/admin/users/$userId'
     | '/(app)/games/'
+    | '/(app)/journals/'
     | '/(app)/quiz/'
     | '/admin/users/'
     | '/books/$bookId/'
@@ -940,6 +977,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/6-steps': {
+      id: '/(app)/6-steps'
+      path: '/6-steps'
+      fullPath: '/6-steps'
+      preLoaderRoute: typeof app6StepsRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -959,6 +1003,13 @@ declare module '@tanstack/react-router' {
       path: '/quiz'
       fullPath: '/quiz'
       preLoaderRoute: typeof appQuizIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/journals/': {
+      id: '/(app)/journals/'
+      path: '/journals'
+      fullPath: '/journals'
+      preLoaderRoute: typeof appJournalsIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
     '/(app)/games/': {
@@ -1024,6 +1075,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appQuizQuizIdRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/journals/$journalId': {
+      id: '/(app)/journals/$journalId'
+      path: '/journals/$journalId'
+      fullPath: '/journals/$journalId'
+      preLoaderRoute: typeof appJournalsJournalIdRouteRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/course/my-course': {
       id: '/(app)/course/my-course'
       path: '/course/my-course'
@@ -1070,6 +1128,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
+  app6StepsRouteRoute: typeof app6StepsRouteRoute
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
   appRefundRouteRoute: typeof appRefundRouteRoute
@@ -1077,6 +1136,7 @@ interface appRouteRouteChildren {
   appWalletRouteRoute: typeof appWalletRouteRoute
   appBooksMeRouteRoute: typeof appBooksMeRouteRoute
   appCourseMyCourseRouteRoute: typeof appCourseMyCourseRouteRoute
+  appJournalsJournalIdRouteRoute: typeof appJournalsJournalIdRouteRoute
   appQuizQuizIdRouteRoute: typeof appQuizQuizIdRouteRoute
   appQuizHistoryRouteRoute: typeof appQuizHistoryRouteRoute
   appGamesMemoryCardRoute: typeof appGamesMemoryCardRoute
@@ -1084,12 +1144,14 @@ interface appRouteRouteChildren {
   appGamesPreliminaryGameRoute: typeof appGamesPreliminaryGameRoute
   appGamesSegmentationGameRoute: typeof appGamesSegmentationGameRoute
   appGamesIndexRoute: typeof appGamesIndexRoute
+  appJournalsIndexRoute: typeof appJournalsIndexRoute
   appQuizIndexRoute: typeof appQuizIndexRoute
   appCourseLearnSlugRouteRoute: typeof appCourseLearnSlugRouteRoute
   appCourseQuizSlugRouteRoute: typeof appCourseQuizSlugRouteRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
+  app6StepsRouteRoute: app6StepsRouteRoute,
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
   appRefundRouteRoute: appRefundRouteRoute,
@@ -1097,6 +1159,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appWalletRouteRoute: appWalletRouteRoute,
   appBooksMeRouteRoute: appBooksMeRouteRoute,
   appCourseMyCourseRouteRoute: appCourseMyCourseRouteRoute,
+  appJournalsJournalIdRouteRoute: appJournalsJournalIdRouteRoute,
   appQuizQuizIdRouteRoute: appQuizQuizIdRouteRoute,
   appQuizHistoryRouteRoute: appQuizHistoryRouteRoute,
   appGamesMemoryCardRoute: appGamesMemoryCardRoute,
@@ -1104,6 +1167,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appGamesPreliminaryGameRoute: appGamesPreliminaryGameRoute,
   appGamesSegmentationGameRoute: appGamesSegmentationGameRoute,
   appGamesIndexRoute: appGamesIndexRoute,
+  appJournalsIndexRoute: appJournalsIndexRoute,
   appQuizIndexRoute: appQuizIndexRoute,
   appCourseLearnSlugRouteRoute: appCourseLearnSlugRouteRoute,
   appCourseQuizSlugRouteRoute: appCourseQuizSlugRouteRoute,

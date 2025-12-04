@@ -122,6 +122,15 @@ interface Resources {
     "warning": "Warning",
     "yes": "Yes"
   },
+  "components": {
+    "hero_section": {
+      "description": "TRIZ is a toolset to help you solve problems scientifically, effectively and creatively - no inspiration or innate talent required.",
+      "register": "Sign up",
+      "start_learning": "Start learning now",
+      "subtitle": "Systematic Creative Problem Solving",
+      "title": "Discover TRIZ"
+    }
+  },
   "datetime": {
     "date": "Date",
     "day_left_one": "{{count}} day left",
@@ -131,8 +140,25 @@ interface Resources {
     "seconds_left_one": "{{count}} second",
     "seconds_left_other": "{{count}} seconds"
   },
+  "footer": {
+    "company_name": "Creative Science & Technology Center (TSK)",
+    "copyright": "© 2025 TRIZ Learning Hub",
+    "cta": {
+      "register": "Sign up",
+      "start_learning": "Start learning now",
+      "title": "Join TRIZ to turn ideas into real solutions"
+    },
+    "nav": {
+      "chat_ai": "Chat AI",
+      "forum": "Forum",
+      "home": "Home",
+      "learn_triz": "Learn TRIZ",
+      "packages": "Packages"
+    }
+  },
   "header": {
     "chat_ai": "Chat AI",
+    "dropdown_menu.journals": "My Journals",
     "dropdown_menu.my_books": "My Books",
     "dropdown_menu.profile": "Profile",
     "dropdown_menu.sign_out": "Sign Out",
@@ -141,16 +167,466 @@ interface Resources {
     "forum": "Forum",
     "home": "Home",
     "learn_triz": "Learn TRIZ",
-    "learn_triz.books": "Book",
-    "learn_triz.course": "Course",
+    "learn_triz.books": "Books",
+    "learn_triz.course": "Courses",
     "learn_triz.games": "Games",
-    "learn_triz.index": "Principle",
-    "learn_triz.matrix": "Matrix",
+    "learn_triz.journals": "Journals",
     "learn_triz.quiz": "Quiz",
     "logo_title": "Center for Scientific and Technical Creativity (CSTC)",
     "packages": "Packages",
     "sign_in": "Sign In",
-    "sign_up": "Sign Up"
+    "sign_up": "Sign Up",
+    "tools": "Tools",
+    "tools.matrix": "TRIZ Matrix",
+    "tools.matrix_desc": "Contradiction matrix for problem solving",
+    "tools.principles": "TRIZ Principles",
+    "tools.principles_desc": "40 inventive principles for systematic innovation",
+    "tools.six_steps": "6 Steps Problem Solving",
+    "tools.six_steps_desc": "Systematic approach to creative problem solving"
+  },
+  "pages.admin": {
+    "archive": {
+      "books": {
+        "all_active": "All books are currently active",
+        "deleted_at": "Deleted at",
+        "no_deleted": "No deleted books found",
+        "restore_error": "Failed to restore book. Please try again.",
+        "restore_message": "Are you sure you want to restore this book?",
+        "restore_success": "Book \"{{title}}\" restored successfully!",
+        "restore_title": "Restore Book"
+      },
+      "description": "View and manage deleted items. Restore them to make them active again.",
+      "packages": {
+        "all_active": "All packages are currently active",
+        "deleted_at": "Deleted at",
+        "features": "Features",
+        "no_deleted": "No deleted packages found",
+        "restore_error": "Failed to restore package. Please try again.",
+        "restore_message": "Are you sure you want to restore this package?",
+        "restore_success": "Package \"{{name}}\" restored successfully!",
+        "restore_title": "Restore Package"
+      },
+      "tabs": {
+        "books": "Books",
+        "packages": "Packages"
+      },
+      "title": "Archive"
+    },
+    "assignments": {
+      "description": "Review assignments that have been assigned to students.",
+      "no_assignments": "No books found. Create your first book!",
+      "no_results": "No results.",
+      "search_placeholder": "Search by title, author...",
+      "title": "Assignments Management"
+    },
+    "books": {
+      "actions": {
+        "actions": "Actions",
+        "delete": "Delete",
+        "delete_message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "delete_title": "Delete Book",
+        "deleting": "Deleting",
+        "edit": "Edit",
+        "preview": "Preview",
+        "restore": "Restore",
+        "restore_message": "Are you sure you want to restore \"{{title}}\"? This will make the book visible again.",
+        "restore_title": "Restore Book",
+        "restoring": "Restoring"
+      },
+      "description": "Manage all books in the system. Create, edit, or delete books.",
+      "form": {
+        "author": "Author",
+        "author_placeholder": "Author name",
+        "book_file": "Book File (EPUB/PDF)",
+        "book_file_required": "Book file is required",
+        "cancel": "Cancel",
+        "cover_image": "Cover Image",
+        "create_book": "Create Book",
+        "create_title": "Create New Book",
+        "display_order": "Display Order",
+        "edit_title": "Edit Book",
+        "publisher": "Publisher",
+        "publisher_placeholder": "Publisher name",
+        "saving": "Saving",
+        "status": "Status",
+        "status_published": "Published",
+        "status_unpublished": "Unpublished",
+        "title": "Title",
+        "title_placeholder": "Book title",
+        "title_required": "Title is required",
+        "update_book": "Update Book"
+      },
+      "new_book": "New Book",
+      "preview": {
+        "author_label": "Author",
+        "book_id_label": "Book ID",
+        "cover": "Book Cover",
+        "description": "View details and information about this book",
+        "details": "Book Details",
+        "display_order_label": "Display Order",
+        "download": "Download",
+        "na": "N/A",
+        "open_book": "Open Book",
+        "publisher_label": "Publisher",
+        "status_label": "Status",
+        "title": "Book Preview",
+        "title_label": "Title",
+        "unknown": "Unknown"
+      },
+      "search_placeholder": "Search by title, author...",
+      "title": "Books"
+    },
+    "common": {
+      "actions": "Actions",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "create": "Create",
+      "delete": "Delete",
+      "edit": "Edit",
+      "filter": "Filter",
+      "loading": "Loading...",
+      "new": "New",
+      "no_data": "No data",
+      "restore": "Restore",
+      "save": "Save",
+      "search": "Search",
+      "status": "Status",
+      "view": "View"
+    },
+    "courses": {
+      "create": {
+        "assignment": {
+          "add_assignment": "Add Assignment",
+          "add_assignment_desc": "Create a new assignment for this module.",
+          "attempts_invalid": "Max attempts must be greater than 0",
+          "create_success": "Assignment created successfully",
+          "description": "Description",
+          "description_placeholder": "Enter assignment description",
+          "description_required": "Assignment description is required",
+          "duration": "Duration (minutes)",
+          "duration_invalid": "Duration must be greater than 0",
+          "edit_assignment": "Edit Assignment",
+          "edit_assignment_desc": "Edit assignment details.",
+          "max_attempts": "Max Attempts",
+          "title": "Assignment Title",
+          "title_label": "Title:",
+          "title_placeholder": "Enter assignment title",
+          "title_required": "Assignment title is required",
+          "update_success": "Assignment updated successfully",
+          "view_assignment": "View Assignment",
+          "view_assignment_desc": "View assignment details."
+        },
+        "basic": {
+          "choose_file": "Choose File",
+          "deal_price": "Deal Price",
+          "deal_price_invalid": "Invalid deal price",
+          "description": "Short Description",
+          "description_placeholder": "Short description for the course",
+          "description_required": "Description is required",
+          "duration": "Duration (minutes)",
+          "level": "Level",
+          "level_advanced": "Advanced",
+          "level_intermediate": "Intermediate",
+          "level_starter": "Starter",
+          "next": "Next",
+          "price": "Price",
+          "price_invalid": "Invalid price",
+          "thumbnail": "Thumbnail",
+          "title": "Course Title",
+          "title_placeholder": "Enter course title",
+          "title_required": "Title is required"
+        },
+        "description": "Create a new course with multiple modules and assignments.",
+        "lesson": {
+          "add_lesson": "Add Lesson",
+          "add_lesson_desc": "Create a new lesson for this module.",
+          "choose_file": "Choose File",
+          "content": "Content",
+          "content_placeholder": "Start writing...",
+          "content_required": "Lesson content is required",
+          "create_success": "Lesson created successfully",
+          "delete_error": "Failed to delete lesson",
+          "delete_success": "Lesson deleted successfully",
+          "description": "Description",
+          "description_placeholder": "Enter lesson description",
+          "description_required": "Lesson description is required",
+          "edit_lesson": "Edit Lesson",
+          "edit_lesson_desc": "Edit lesson details.",
+          "lesson_type": "Lesson Type",
+          "save_error": "Failed to save lesson",
+          "text": "Text",
+          "title": "Title",
+          "title_label": "Lesson Content:",
+          "title_placeholder": "Enter lesson title",
+          "title_required": "Lesson title is required",
+          "update_success": "Lesson updated successfully",
+          "video": "Video",
+          "video_change": "Change Video",
+          "video_file": "Video",
+          "video_invalid": "Please select a valid video file (MP4, AVI, MOV)",
+          "video_replace": "Replace Video",
+          "video_required": "Please select a video file",
+          "video_uploading": "Uploading video...",
+          "video_url": "Current Video",
+          "view_lesson": "View Lesson",
+          "view_lesson_desc": "View lesson details."
+        },
+        "module": {
+          "add_module": "Add Module",
+          "create_success": "Module created successfully",
+          "duration": "Duration (minutes)",
+          "easy": "Easy",
+          "hard": "Hard",
+          "level": "Level",
+          "medium": "Medium",
+          "name": "Module Name",
+          "update_success": "Module updated successfully"
+        },
+        "publish": {
+          "no_modules": "Please add at least one module before publishing."
+        },
+        "reorder": {
+          "disabled": "Reordering disabled",
+          "drag": "Drag to reorder"
+        },
+        "steps": {
+          "basic": "Basic Information",
+          "modules": "Module Management",
+          "summary": "Publish & Summary"
+        },
+        "summary": {
+          "assignment_count": "{{count}} Assignments",
+          "assignment_number": "Assignment {{number}}",
+          "assignments": "Assignments",
+          "back": "Back",
+          "course_description": "Course Description",
+          "deal_price": "Deal Price",
+          "duration": "Duration",
+          "lesson_count": "{{count}} Lessons",
+          "lessons": "Lessons",
+          "level": "Level",
+          "max_attempts": "Max attempts: {{count}}",
+          "minutes": "minutes",
+          "modules": "Modules",
+          "no_content": "This module has no lessons or assignments yet",
+          "no_description": "No description available for this course",
+          "price": "Price",
+          "publish": "Publish Course",
+          "publish_success": "Course published successfully!",
+          "ready": "Ready to Publish",
+          "short_description": "Short Description",
+          "title": "Review and Publish"
+        },
+        "title": "Create Course"
+      },
+      "create_course": "Create Course",
+      "description": "Manage courses provided on the platform. You can add, edit, or delete courses as needed.",
+      "title": "Course Management"
+    },
+    "dashboard": {
+      "description": "Welcome to the admin panel.",
+      "tabs": {
+        "chat": "Chat",
+        "games": "Games",
+        "revenue": "Revenue"
+      },
+      "title": "Dashboard"
+    },
+    "flashcards": {
+      "card_form": {
+        "cancel": "Cancel",
+        "create_card": "Create Card",
+        "definition": "Definition",
+        "definition_image_placeholder": "https://example.com/image.jpg",
+        "definition_image_url": "Definition Image URL (Optional)",
+        "definition_placeholder": "Enter the definition or answer",
+        "definition_required": "Definition is required",
+        "term": "Term",
+        "term_image_placeholder": "https://example.com/image.jpg",
+        "term_image_url": "Term Image URL (Optional)",
+        "term_placeholder": "Enter the term or question",
+        "term_required": "Term is required",
+        "update_card": "Update Card",
+        "url_invalid": "Must be a valid URL"
+      },
+      "deck_actions": {
+        "actions": "Actions",
+        "delete": "Delete",
+        "delete_message": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone.",
+        "delete_title": "Delete Deck",
+        "deleting": "Deleting",
+        "edit": "Edit",
+        "manage_cards": "Manage Cards",
+        "preview": "Preview",
+        "restore_message": "Are you sure you want to restore \"{{title}}\"? This will make the deck visible again.",
+        "restore_title": "Restore Deck"
+      },
+      "deck_form": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "create_title": "Create New Deck",
+        "creating": "Creating",
+        "description": "Description",
+        "description_placeholder": "Enter deck description",
+        "description_required": "Description is required",
+        "edit_title": "Edit Deck",
+        "title": "Title",
+        "title_placeholder": "Enter deck title",
+        "title_required": "Title is required",
+        "update": "Update",
+        "updating": "Updating"
+      },
+      "deck_preview": {
+        "cards": "cards",
+        "created_at": "Created At",
+        "deck_title": "Title",
+        "description": "Description",
+        "id": "ID",
+        "number_of_flashcards": "Number of Flashcards",
+        "title": "Deck Preview",
+        "updated_at": "Updated At"
+      },
+      "description": "Manage all flashcard decks in the system. Create, edit, or delete decks.",
+      "manage_cards": {
+        "card_created": "Card created successfully",
+        "card_deleted": "Card deleted successfully",
+        "card_updated": "Card updated successfully",
+        "create_failed": "Failed to create card",
+        "create_title": "Create New Card",
+        "deck_id_label": "Deck ID",
+        "definition_label": "Definition",
+        "delete_failed": "Failed to delete card",
+        "delete_message": "Are you sure you want to delete this card? This action cannot be undone.",
+        "delete_title": "Delete Card",
+        "edit_title": "Edit Card",
+        "new_card": "New Card",
+        "no_cards": "No cards found. Create your first card!",
+        "no_image": "No image",
+        "no_img": "No img",
+        "no_results": "No results.",
+        "preview_title": "Card Preview",
+        "search_placeholder": "Search by term, definition...",
+        "table": {
+          "actions": "Actions",
+          "definition": "Definition",
+          "id": "ID",
+          "image": "Image",
+          "select": "Select",
+          "term": "Term"
+        },
+        "term_label": "Term",
+        "title": "Manage Cards",
+        "update_failed": "Failed to update card"
+      },
+      "new_deck": "New Deck",
+      "no_decks": "No decks found. Create your first deck!",
+      "search_placeholder": "Search by title, description...",
+      "title": "Flashcards"
+    },
+    "packages": {
+      "create_package": "Create Package",
+      "description": "Manage subscription packages offered on the platform. You can add, edit, or remove packages as needed.",
+      "no_packages": "No packages found",
+      "status_filter": {
+        "active": "Active",
+        "all": "All Status",
+        "inactive": "Inactive"
+      },
+      "status_label": "Status:",
+      "title": "Package Management",
+      "total_one": "Total: {{count}} package",
+      "total_other": "Total: {{count}} packages",
+      "try_adjusting": "Try adjusting your filters or create a new package"
+    },
+    "quizzes": {
+      "delete_error": "Failed to delete quiz. Please try again.",
+      "delete_message": "Are you sure you want to delete this quiz?",
+      "delete_success": "Quiz deleted successfully!",
+      "delete_title": "Delete Quiz",
+      "description": "Manage all quizzes in the system.",
+      "new_quiz": "New Quiz",
+      "title": "Quizzes"
+    },
+    "subscriptions": {
+      "auto_renewal": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "dialog_description_disable": "Are you sure you want to disable auto-renewal for this subscription?",
+        "dialog_description_enable": "Are you sure you want to enable auto-renewal for this subscription?",
+        "dialog_title": "Confirm Auto Renewal Change",
+        "saving": "Saving..."
+      },
+      "description": "Manage all subscriptions in the system",
+      "no_results": "No results.",
+      "no_subscriptions": "No subscriptions found",
+      "title": "Subscriptions"
+    },
+    "transactions": {
+      "description": "View and manage all system transactions",
+      "title": "Transactions"
+    },
+    "users": {
+      "create_user": "Create New User",
+      "description": "Manage system users and view their details",
+      "detail": {
+        "active_subscription": "Active Subscription",
+        "back": "Back",
+        "cancel_dialog": {
+          "canceling": "Canceling...",
+          "confirm": "Yes, Cancel Subscription",
+          "description": "Are you sure you want to cancel this subscription?",
+          "error": "Failed to cancel subscription",
+          "success": "Subscription cancelled successfully",
+          "title": "Cancel Subscription"
+        },
+        "cancel_subscription": "Cancel Subscription",
+        "customer_not_found": "Customer not found",
+        "no_active_subscription": "No Active Subscription",
+        "subscription_history": "Subscription History",
+        "title": "User Details",
+        "transaction_history": "Transaction History",
+        "user_information": "User Information"
+      },
+      "edit_user": "Edit User",
+      "form": {
+        "avatar": "Avatar",
+        "create_user": "Create User",
+        "email": "Email",
+        "full_name": "Full Name",
+        "password": "Password",
+        "password_keep_current": "Leave empty to keep current",
+        "password_placeholder_create": "Password",
+        "password_placeholder_edit": "Leave empty to keep current password",
+        "role": "Role",
+        "role_admin": "Admin",
+        "role_expert": "Expert",
+        "role_user": "User",
+        "status": "Status",
+        "status_active": "Active",
+        "status_inactive": "Inactive",
+        "update_user": "Update User"
+      },
+      "new_user": "New User",
+      "no_users": "No users found",
+      "title": "Users",
+      "view_details": "View Details"
+    }
+  },
+  "pages.books": {
+    "description": "Explore our collection of educational books about TRIZ principles and innovation",
+    "empty": {
+      "description": "The book library is currently empty. Please check back later for new additions.",
+      "title": "No Books Available"
+    },
+    "error": {
+      "description": "An error occurred while loading the book library. Please try again later.",
+      "retry": "Retry",
+      "title": "Failed to Load Books"
+    },
+    "loading": "Loading books...",
+    "my_books": "My Books",
+    "page_meta_title": "Book Library",
+    "title": "Book Library"
   },
   "pages.chat_triz": {
     "page_meta_title": "Chat TRIZ"
@@ -179,12 +655,173 @@ interface Resources {
     "form.title": "Verify OTP",
     "page_meta_title": "Verify OTP for Password Reset"
   },
+  "pages.home": {
+    "comprehensive_platform": {
+      "chat_ai": {
+        "description": "Smart assistant supporting you to learn and apply TRIZ in real time.",
+        "learn_more": "Learn more",
+        "title": "Chat AI"
+      },
+      "description": "Discover an integrated learning system from theory to practice, connecting community, developing thinking through quizzes and receiving support from AI assistant. All the tools you need to learn and apply TRIZ are here.",
+      "forum": {
+        "description": "Community for exchanging, Q&A on practical issues applying TRIZ.",
+        "learn_more": "Learn more",
+        "title": "Forum (Discussion)"
+      },
+      "learn_triz": {
+        "description": "Courses with theory, practice, exercises and real-life situations.",
+        "learn_more": "Learn more",
+        "title": "Learn TRIZ"
+      },
+      "quiz": {
+        "description": "Multiple-choice tests to check knowledge, assess progress, and review.",
+        "learn_more": "Learn more",
+        "title": "Take Quiz"
+      },
+      "title": "Comprehensive TRIZ",
+      "title_highlight": "learning platform"
+    },
+    "core_content": {
+      "contradictions": {
+        "description": "The key to creativity is overcoming contradictions in design or solutions. TRIZ provides powerful tools such as: contradiction matrix, 40 creative principles, ARIZ - algorithm for solving inventive problems.",
+        "title": "Solving Contradictions"
+      },
+      "laws": {
+        "description": "Systems, products or solutions always evolve according to certain trends (increasing flexibility, increasing ideality, automation, reducing human intervention...).",
+        "title": "Laws of Technical System Evolution"
+      },
+      "principles": {
+        "description": "TRIZ synthesizes 40 principles to help find new, creative and effective ideas (Segmentation - Inversion - Color change - Merging - Blessing in disguise - Replace mechanics with optics...).",
+        "title": "Creative Principles"
+      },
+      "resources": {
+        "description": "Learn to effectively exploit available resources such as: energy, materials, information, space, time... to optimize solutions without additional costs or new resources.",
+        "title": "Resource Analysis"
+      },
+      "start_learning": "Start learning now",
+      "title": "Core",
+      "title_end": "of TRIZ",
+      "title_highlight": "content"
+    },
+    "hero": {
+      "subtitle": "Systematic Creative Problem Solving",
+      "title": "Discover TRIZ"
+    },
+    "methodology": {
+      "description": "Creative and Innovation Methodologies is a system of methods and skills that help improve thinking productivity, leading to the control of creative thinking processes.",
+      "impact": "To date, tens of thousands of students from all professions and regions have participated in Creative and Innovation Methodology courses, with a structured curriculum of up to 120 lessons.",
+      "professor_contribution": "Professor Phan Dũng was the first to systematize, translate and disseminate TRIZ in Vietnam since the 1980s, through training courses and books such as: Creative Scientific Methodology.",
+      "title": "Introduction to",
+      "title_end": "methodologies",
+      "title_highlight": "creative and innovative",
+      "vietnam_application": "Application in Vietnam:"
+    },
+    "page_meta_title": "Discover TRIZ - Systematic Creative Problem Solving",
+    "triz_overview": {
+      "description": "TRIZ (Theory of Inventive Problem Solving) is a systematic creative methodology developed by Genrich Altshuller since 1946, based on analyzing hundreds of thousands of patents to extract problem-solving patterns.",
+      "reasons": ["Transform creativity from 'innate talent' to 'learnable skill'", "Provide scientific tools and processes for problem solving", "Shorten solution discovery time", "Multi-disciplinary applications: engineering, education, arts..."],
+      "title": "Introduction",
+      "title_highlight": "to TRIZ overview",
+      "why_learn": "Why learn TRIZ?"
+    },
+    "why_important": {
+      "contradictions": {
+        "description": "Most creative problems stem from",
+        "description_end": "40 creative principles and contradiction matrix",
+        "description_highlight": "contradictions",
+        "description_mid": "(e.g., phone design both thin and light, yet long battery life). TRIZ helps you overcome contradictions without compromise, thanks to",
+        "title": "Solving contradictions - the core of creativity"
+      },
+      "multi_field": {
+        "description": "Not limited to engineering, TRIZ is also powerfully applied in",
+        "description_end": "(e.g., redesigning business models, improving work processes, solving personal problems...).",
+        "description_highlight": "business, management, education, arts and daily life",
+        "title": "Multi-disciplinary applications"
+      },
+      "speed": {
+        "description": "When practicing TRIZ, learners develop habits of",
+        "description_end": "helping them become increasingly creative.",
+        "description_highlight": "systematic thinking, resource recognition, finding ideal solutions,",
+        "title": "Accelerate problem-solving speed"
+      },
+      "systematic": {
+        "description": "Instead of waiting for inspiration or relying on 'innate talent', TRIZ provides",
+        "description_end": "to analyze problems and find solutions. This helps anyone learn and develop creative abilities.",
+        "description_highlight": "clear tools and processes",
+        "title": "Transform creativity from 'impromptu' to 'systematic'"
+      },
+      "thinking": {
+        "description": "When practicing TRIZ, learners develop habits of",
+        "description_end": "helping them become increasingly creative.",
+        "description_highlight": "systematic thinking, resource recognition, finding ideal solutions,",
+        "title": "Enhance creative thinking capacity"
+      },
+      "title": "Why is TRIZ",
+      "title_highlight": "important?"
+    }
+  },
+  "pages.journals": {
+    "author": "Author",
+    "category": "Category",
+    "created_date": "Created",
+    "description": "View and manage your TRIZ problem-solving journals",
+    "error_description": "An error occurred while loading your journals. Please try again later.",
+    "error_title": "Failed to Load Journals",
+    "loading": "Loading journals...",
+    "no_journals": "No Journals Yet",
+    "no_journals_description": "You haven't created any problem-solving journals yet. Start solving a problem to create your first journal.",
+    "page_meta_title": "My TRIZ Journals",
+    "progress": "Progress",
+    "published_date": "Published Date",
+    "read_more": "View Details",
+    "retry": "Retry",
+    "search_placeholder": "Search journals...",
+    "status": "Status",
+    "status_completed": "Completed",
+    "status_draft": "Draft",
+    "status_in_progress": "In Progress",
+    "steps_completed": "steps completed",
+    "title": "My TRIZ Journals",
+    "updated_date": "Last Updated"
+  },
+  "pages.learn_triz": {
+    "description": "Unlock breakthrough thinking from the foundation of creative science",
+    "page_meta_title": "40 Creative Principles",
+    "title": "Discover",
+    "title_highlight": "40 Creative Principles"
+  },
+  "pages.matrix_triz": {
+    "description": "Discover how to apply the TRIZ matrix to solve technical contradictions and promote creativity in product design.",
+    "page_meta_title": "TRIZ Matrix",
+    "title": "Discover",
+    "title_highlight": "TRIZ Creative Matrix"
+  },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",
     "message": "We're sorry the page you requested could not be found. Please go back to the homepage!",
     "not_found": "Page not found",
     "page_meta_title": "Not found",
     "under_construction": "This feature is under maintenance, we will comeback soon!"
+  },
+  "pages.packages": {
+    "active_subscription_alert": "You already have an active subscription. Visit your",
+    "contact_sales": {
+      "button": "Contact Sales",
+      "description": "Need a custom solution? We offer enterprise plans with advanced features."
+    },
+    "description": "Compare our plans and find the perfect fit for your needs and budget.",
+    "detailed_comparison": "Detailed Comparison",
+    "duration_days": "{{count}} days access",
+    "features": "Features",
+    "get_started": "Get Started",
+    "most_popular": "Most Popular",
+    "no_packages": "No packages available at the moment.",
+    "page_meta_title": "Packages Pricing",
+    "subscription_page": "subscription page",
+    "title": "Choose the Right Plan for You",
+    "to_manage": "to manage it.",
+    "trizilium": "Trizilium",
+    "view_subscription": "View Subscription"
   },
   "pages.profile": {
     "achievements": "Achievements",
@@ -244,6 +881,25 @@ interface Resources {
     "unauthorized": "Access Denied"
   },
   "sidebar": {
+    "admin": {
+      "archive": "Archive",
+      "assignments": "Assignments",
+      "books": "Books",
+      "courses": "Courses",
+      "dashboard": "Dashboard",
+      "flashcards": "Flashcards",
+      "main": "Main",
+      "management": "Management",
+      "others": "Others",
+      "packages": "Packages",
+      "payment": "Payment",
+      "quizzes": "Quizzes",
+      "subscriptions": "Subscriptions",
+      "subtitle": "Management",
+      "title": "TRIZ Admin",
+      "transactions": "Transactions",
+      "users": "Users"
+    },
     "app_integrations": "App integrations",
     "app_integrations.authentications": "Authentications",
     "app_integrations.payment_gateway": "Payment gateway",
@@ -259,6 +915,14 @@ interface Resources {
     "branding.email_templates": "Email templates",
     "branding.phone_templates": "Phone templates",
     "brands": "Brands",
+    "command_menu": {
+      "dark": "Dark",
+      "light": "Light",
+      "no_results": "No results found.",
+      "placeholder": "Type a command or search...",
+      "system": "System",
+      "theme": "Theme"
+    },
     "coupons": "Coupons",
     "dashboard": "Dashboard",
     "devices": "Devices",
@@ -287,6 +951,9 @@ interface Resources {
     "user_management.permissions": "Permissions",
     "user_management.roles": "Roles",
     "user_management.users": "Users",
+    "user_menu": {
+      "logout": "Log out"
+    },
     "wallet": "Wallet"
   }
 }

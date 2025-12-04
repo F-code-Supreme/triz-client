@@ -13,7 +13,21 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    ns: ['action', 'common', 'datetime', 'sidebar'],
+    ns: [
+      'action',
+      'common',
+      'datetime',
+      'sidebar',
+      'header',
+      'footer',
+      'components',
+      'pages.home',
+      'pages.books',
+      'pages.packages',
+      'pages.learn_triz',
+      'pages.matrix_triz',
+      'pages.admin',
+    ],
     defaultNS: 'common',
 
     // Namespaces to lookup key if not found in given namespace.

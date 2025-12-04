@@ -7,6 +7,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table';
 import { useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,7 @@ import type { Subscription } from '@/features/subscription/types';
 import type { DataTimestamp } from '@/types';
 
 const AdminSubscriptionsPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -122,9 +124,11 @@ const AdminSubscriptionsPage = () => {
       <div className="flex flex-col gap-8 p-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Subscriptions</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t('subscriptions.title')}
+          </h1>
           <p className="text-muted-foreground mt-2">
-            View and manage all user subscriptions
+            {t('subscriptions.description')}
           </p>
         </div>
 
@@ -166,7 +170,9 @@ const AdminSubscriptionsPage = () => {
             </div>
           ) : subscriptions.length === 0 ? (
             <div className="flex justify-center items-center h-64">
-              <p className="text-muted-foreground">No subscriptions found</p>
+              <p className="text-muted-foreground">
+                {t('subscriptions.no_subscriptions')}
+              </p>
             </div>
           ) : (
             <div className="border rounded-md overflow-hidden">
@@ -210,7 +216,7 @@ const AdminSubscriptionsPage = () => {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        No results.
+                        {t('subscriptions.no_results')}
                       </TableCell>
                     </TableRow>
                   )}
@@ -230,11 +236,13 @@ const AdminSubscriptionsPage = () => {
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Confirm Auto Renewal Change</DialogTitle>
+              <DialogTitle>
+                {t('subscriptions.auto_renewal.dialog_title')}
+              </DialogTitle>
               <DialogDescription>
-                {`Are you sure you want to ${
-                  selectedSubscription?.autoRenew ? 'disable' : 'enable'
-                } auto-renewal for this subscription?`}
+                {selectedSubscription?.autoRenew
+                  ? t('subscriptions.auto_renewal.dialog_description_disable')
+                  : t('subscriptions.auto_renewal.dialog_description_enable')}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -243,14 +251,16 @@ const AdminSubscriptionsPage = () => {
                 variant="outline"
                 onClick={() => setIsAutoRenewalDialogOpen(false)}
               >
-                Cancel
+                {t('subscriptions.auto_renewal.cancel')}
               </Button>
               <Button
                 type="button"
                 onClick={confirmAutoRenewalToggle}
                 disabled={isEditingAutoRenewal}
               >
-                {isEditingAutoRenewal ? 'Saving...' : 'Confirm'}
+                {isEditingAutoRenewal
+                  ? t('subscriptions.auto_renewal.saving')
+                  : t('subscriptions.auto_renewal.confirm')}
               </Button>
             </DialogFooter>
           </DialogContent>

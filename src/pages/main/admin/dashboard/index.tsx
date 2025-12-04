@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
@@ -10,6 +11,7 @@ import {
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminDashboardPage = () => {
+  const { t } = useTranslation('pages.admin');
   const dashboardData = mockDashboardData;
   const [activeTab, setActiveTab] = useState('revenue');
 
@@ -19,15 +21,21 @@ const AdminDashboardPage = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="flex justify-between items-center">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+              <h1 className="text-3xl font-bold tracking-tight">
+                {t('dashboard.title')}
+              </h1>
               <p className="text-muted-foreground">
-                Welcome to the admin panel.
+                {t('dashboard.description')}
               </p>
             </div>
             <TabsList>
-              <TabsTrigger value="revenue">Revenue</TabsTrigger>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="games">Games</TabsTrigger>
+              <TabsTrigger value="revenue">
+                {t('dashboard.tabs.revenue')}
+              </TabsTrigger>
+              <TabsTrigger value="chat">{t('dashboard.tabs.chat')}</TabsTrigger>
+              <TabsTrigger value="games">
+                {t('dashboard.tabs.games')}
+              </TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="revenue" className="mt-6">

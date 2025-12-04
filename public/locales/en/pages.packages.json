@@ -1,0 +1,20 @@
+{
+  "page_meta_title": "Packages Pricing",
+  "title": "Choose the Right Plan for You",
+  "description": "Compare our plans and find the perfect fit for your needs and budget.",
+  "most_popular": "Most Popular",
+  "get_started": "Get Started",
+  "view_subscription": "View Subscription",
+  "duration_days": "{{count}} days access",
+  "trizilium": "Trizilium",
+  "features": "Features",
+  "detailed_comparison": "Detailed Comparison",
+  "active_subscription_alert": "You already have an active subscription. Visit your",
+  "subscription_page": "subscription page",
+  "to_manage": "to manage it.",
+  "no_packages": "No packages available at the moment.",
+  "contact_sales": {
+    "description": "Need a custom solution? We offer enterprise plans with advanced features.",
+    "button": "Contact Sales"
+  }
+}

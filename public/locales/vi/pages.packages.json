@@ -1,0 +1,20 @@
+{
+  "page_meta_title": "Bảng giá gói dịch vụ",
+  "title": "Chọn gói phù hợp với bạn",
+  "description": "So sánh các gói của chúng tôi và tìm gói phù hợp nhất với nhu cầu và ngân sách của bạn.",
+  "most_popular": "Phổ biến nhất",
+  "get_started": "Bắt đầu",
+  "view_subscription": "Xem gói đăng ký",
+  "duration_days": "Truy cập {{count}} ngày",
+  "trizilium": "Trizilium",
+  "features": "Tính năng",
+  "detailed_comparison": "So sánh chi tiết",
+  "active_subscription_alert": "Bạn đã có gói đăng ký đang hoạt động. Truy cập",
+  "subscription_page": "trang đăng ký",
+  "to_manage": "để quản lý.",
+  "no_packages": "Hiện tại không có gói nào.",
+  "contact_sales": {
+    "description": "Cần giải pháp tùy chỉnh? Chúng tôi cung cấp các gói doanh nghiệp với các tính năng nâng cao.",
+    "button": "Liên hệ bán hàng"
+  }
+}

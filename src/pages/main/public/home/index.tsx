@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import trizComprehensive3 from '@/assets/images/Frame 1410086247.png';
 import trizComprehensive4 from '@/assets/images/Frame 1410086248.png';
@@ -30,6 +31,7 @@ interface TrizItem {
 }
 
 const CustomMobileCarousel = ({ items }: { items: TrizItem[] }) => {
+  const { t } = useTranslation('pages.home');
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const apiRef = React.useRef<CarouselApi | null>(null);
 
@@ -60,7 +62,9 @@ const CustomMobileCarousel = ({ items }: { items: TrizItem[] }) => {
                   {item.des}
                 </p>
                 <div className="text-blue-600 dark:text-blue-400 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
-                  <Link to={`/`}>Tìm hiểu thêm</Link>
+                  <Link to={`/`}>
+                    {t('comprehensive_platform.learn_triz.learn_more')}
+                  </Link>
                   <svg
                     width="21"
                     height="20"
@@ -96,7 +100,7 @@ const CustomMobileCarousel = ({ items }: { items: TrizItem[] }) => {
           <button
             key={idx}
             className={`w-2 h-2 rounded-full transition-all duration-200 ${selectedIndex === idx ? 'bg-blue-600 scale-125' : 'bg-slate-300 dark:bg-slate-600'}`}
-            aria-label={`Chuyển đến slide ${idx + 1}`}
+            aria-label={`Go to slide ${idx + 1}`}
             onClick={() => {
               if (
                 apiRef.current &&
@@ -113,60 +117,58 @@ const CustomMobileCarousel = ({ items }: { items: TrizItem[] }) => {
 };
 
 const HomePage = () => {
+  const { t } = useTranslation('pages.home');
+
   const coreValues = [
     {
       iconUrl: coreValueIcon1,
-      tile: 'Nguyên tắc sáng tạo',
-      description:
-        'TRIZ tổng hợp 40 nguyên tắc giúp tìm ra các ý tưởng mới mẻ, sáng tạo và hiệu quả (Phân nhỏ – Đảo ngược – Thay đổi màu sắc – Kết hợp – Biến hại thành lợi – Thay thế cơ học bằng quang học…).',
+      tile: t('core_content.principles.title'),
+      description: t('core_content.principles.description'),
     },
     {
       iconUrl: coreValueIcon2,
-      tile: 'Các quy luật phát triển hệ thống kỹ thuật',
-      description:
-        'Hệ thống, sản phẩm hay giải pháp luôn phát triển theo những xu hướng nhất định (tăng tính linh hoạt, tăng mức độ lý tưởng, tự động hóa,giảm sự can thiệp của con người…).',
+      tile: t('core_content.laws.title'),
+      description: t('core_content.laws.description'),
     },
     {
       iconUrl: coreValueIcon3,
-      tile: 'Phân tích tài nguyên',
-      description:
-        'Học cách khai thác hiệu quả những tài nguyên sẵn có như: năng lượng,vật liệu, thông tin, không gian, thời gian… giúp tối ưu giải pháp mà không cần thêm chi phí hay nguồn lực mới.',
+      tile: t('core_content.resources.title'),
+      description: t('core_content.resources.description'),
     },
     {
       iconUrl: coreValueIcon4,
-      tile: 'Giải quyết mâu thuẫn',
-      description:
-        'Mấu chốt của sáng tạo là vượt qua các mâu thuẫn trong thiết kế hoặc giải pháp. TRIZ cung cấp công cụ mạnh mẽ như: ma trận mâu thuẫn, 40 nguyên tắc sáng tạo, ARIZ – thuật toán giải bài toán sáng chế.',
+      tile: t('core_content.contradictions.title'),
+      description: t('core_content.contradictions.description'),
     },
   ];
 
   const trizComprehensive = [
     {
       imageUrl: trizComprehensive1,
-      title: 'Học TRIZ',
-      des: 'Khóa học lý thuyết, thực hành, bài tập và tình huống thực tế.',
+      title: t('comprehensive_platform.learn_triz.title'),
+      des: t('comprehensive_platform.learn_triz.description'),
     },
     {
       imageUrl: trizComprehensive2,
-      title: 'Làm Quiz',
-      des: 'Trắc nghiệm kiểm tra kiến thức, đánh giá tiến độ, ôn tập.',
+      title: t('comprehensive_platform.quiz.title'),
+      des: t('comprehensive_platform.quiz.description'),
     },
     {
       imageUrl: trizComprehensive3,
-      title: 'Forum (Thảo luận)',
-      des: 'Cộng đồng trao đổi, hỏi – đáp các vấn đề thực tiễn áp dụng TRIZ.',
+      title: t('comprehensive_platform.forum.title'),
+      des: t('comprehensive_platform.forum.description'),
     },
     {
       imageUrl: trizComprehensive4,
-      title: 'Chat AI',
-      des: 'Trợ lý thông minh hỗ trợ bạn học và áp dụng TRIZ theo thời gian thực.',
+      title: t('comprehensive_platform.chat_ai.title'),
+      des: t('comprehensive_platform.chat_ai.description'),
     },
   ];
 
   return (
     <DefaultLayout
       meta={{
-        title: 'Khám Phá TRIZ - Phương Pháp Sáng Tạo Có Hệ Thống',
+        title: t('page_meta_title'),
       }}
       showFooter={true}
       showFooterCTA={true}
@@ -180,36 +182,32 @@ const HomePage = () => {
               <div className="space-y-6">
                 <div className="space-y-8">
                   <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
-                    Giới thiệu
+                    {t('triz_overview.title')}
                     <br />
-                    <span className="text-blue-600">tổng quan về TRIZ</span>
+                    <span className="text-blue-600">
+                      {t('triz_overview.title_highlight')}
+                    </span>
                   </h2>
                   <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-                    TRIZ (Theory of Inventive Problem Solving) là phương pháp
-                    luận sáng tạo có hệ thống do Genrich Altshuller phát triển
-                    từ năm 1946, dựa trên phân tích hàng trăm nghìn bằng sáng
-                    chế để rút ra các quy luật giải quyết vấn đề.
+                    {t('triz_overview.description')}
                   </p>
                 </div>
 
                 <div className="space-y-8">
                   <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
-                    Tại sao cần học TRIZ?
+                    {t('triz_overview.why_learn')}
                   </h3>
                   <div className="space-y-6">
-                    {[
-                      'Biến sáng tạo từ "bẩm sinh" thành "kỹ năng có thể học được"',
-                      'Cung cấp công cụ và quy trình khoa học để giải quyết vấn đề',
-                      'Rút ngắn thời gian tìm giải pháp',
-                      'Ứng dụng đa lĩnh vực: kỹ thuật, giáo dục, nghệ thuật…',
-                    ].map((item, index) => (
-                      <div key={index} className="flex items-start gap-4">
-                        <div className="w-3 h-3 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
-                        <p className="text-lg text-slate-600 dark:text-slate-300">
-                          {item}
-                        </p>
-                      </div>
-                    ))}
+                    {t('triz_overview.reasons', { returnObjects: true }).map(
+                      (item: string, index: number) => (
+                        <div key={index} className="flex items-start gap-4">
+                          <div className="w-3 h-3 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                          <p className="text-lg text-slate-600 dark:text-slate-300">
+                            {item}
+                          </p>
+                        </div>
+                      ),
+                    )}
                   </div>
                 </div>
               </div>
@@ -246,36 +244,28 @@ const HomePage = () => {
               <div className="space-y-2 order-1 md:order-2">
                 <div className="space-y-6">
                   <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
-                    Giới thiệu về
+                    {t('methodology.title')}
                     <br />
-                    <span className="text-blue-600">phương pháp luận</span>
+                    <span className="text-blue-600">
+                      {t('methodology.title_highlight')}
+                    </span>
                     <br />
-                    sáng tạo và đổi mới
+                    {t('methodology.title_end')}
                   </h2>
                   <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-                    PPLSTVĐM (Creativity and Innovation Methodologies) là hệ
-                    thống phương pháp và kỹ năng giúp nâng cao năng suất tư duy,
-                    tiến tới điều khiển quá trình suy nghĩ sáng tạo.
+                    {t('methodology.description')}
                   </p>
                 </div>
 
                 <div>
                   <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
-                    Ứng dụng tại Việt Nam:
+                    {t('methodology.vietnam_application')}
                   </h2>
                 </div>
 
                 <div className="space-y-4 text-lg text-slate-400 dark:text-slate-300 leading-relaxed">
-                  <p>
-                    GS Phan Dũng là người đầu tiên hệ thống hóa, dịch và phổ
-                    biến TRIZ tại Việt Nam từ thập niên 1980, thông qua các khóa
-                    đào tạo và sách như: Phương pháp luận sáng tạo khoa học.
-                  </p>
-                  <p>
-                    Tính đến nay, hàng chục nghìn học viên từ mọi ngành nghề và
-                    vùng miền đã tham gia các khóa học PPLSTVĐM, với chương
-                    trình đào tạo bài bản lên đến 120 tiết.
-                  </p>
+                  <p>{t('methodology.professor_contribution')}</p>
+                  <p>{t('methodology.impact')}</p>
                 </div>
               </div>
             </div>
@@ -285,8 +275,11 @@ const HomePage = () => {
         <div className="py-14 ">
           <div className="item-center text-center">
             <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
-              Các nội dung <span className="text-blue-600">cốt lỗi</span> của
-              TRIZ
+              {t('core_content.title')}{' '}
+              <span className="text-blue-600">
+                {t('core_content.title_highlight')}
+              </span>{' '}
+              {t('core_content.title_end')}
             </h2>
           </div>
 
@@ -351,7 +344,7 @@ const HomePage = () => {
                   </svg>
                 </span>
                 <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  Bắt đầu học ngay
+                  {t('core_content.start_learning')}
                 </h4>
               </div>
             </button>
@@ -361,7 +354,8 @@ const HomePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl  py-14 ">
           <div className="md:row-start-1 md:col-span-2">
             <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
-              <span className="text-blue-600">Tại sao TRIZ</span> quan trọng?
+              <span className="text-blue-600">{t('why_important.title')}</span>{' '}
+              {t('why_important.title_highlight')}
             </h2>
           </div>
 
@@ -390,34 +384,32 @@ const HomePage = () => {
           <div className="row-span-4 md:row-start-2 space-y-10">
             <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl dark:bg-slate-800">
               <h4 className=" pb-20 text-2xl font-semibold text-slate-900 dark:text-white ">
-                Nâng cao năng lực tư duy sáng tạo
+                {t('why_important.thinking.title')}
               </h4>
               <div>
                 <p className="dark:text-slate-300">
-                  Khi luyện tập TRIZ, người học phát triển thói quen{' '}
+                  {t('why_important.thinking.description')}{' '}
                   <span className="font-bold text-black dark:text-white">
-                    tư duy hệ thống, nhìn nhận tài nguyên, tìm giải pháp lý
-                    tưởng,
+                    {t('why_important.thinking.description_highlight')}
                   </span>{' '}
-                  giúp họ ngày càng sáng tạo hơn.
+                  {t('why_important.thinking.description_end')}
                 </p>
               </div>
             </div>
 
             <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl dark:bg-slate-800">
               <h4 className=" pb-36 text-2xl font-semibold text-slate-900 dark:text-white ">
-                Giải quyết mâu thuẫn – cốt lõi của sáng tạo
+                {t('why_important.contradictions.title')}
               </h4>
               <div>
                 <p className="dark:text-slate-300">
-                  Hầu hết các vấn đề sáng tạo đều bắt nguồn từ{' '}
+                  {t('why_important.contradictions.description')}{' '}
                   <span className="font-bold text-black dark:text-white">
-                    mâu thuẫn
+                    {t('why_important.contradictions.description_highlight')}
                   </span>{' '}
-                  (ví dụ: thiết kế điện thoại vừa mỏng nhẹ, vừa pin lâu). TRIZ
-                  giúp bạn vượt qua mâu thuẫn mà không cần đánh đổi, nhờ{' '}
+                  {t('why_important.contradictions.description_mid')}{' '}
                   <span className="font-bold text-black dark:text-white">
-                    40 bộ nguyên tắc sáng tạo và ma trận mâu thuẫn
+                    {t('why_important.contradictions.description_end')}
                   </span>
                   .
                 </p>
@@ -428,23 +420,22 @@ const HomePage = () => {
           <div className=" md:row-start-1 row-span-4 space-y-6">
             <div className="max-w-md mx-auto text-start space-y-6 p-6 border rounded-xl shadow-2xl dark:bg-slate-800">
               <h4 className="pb-6 text-2xl font-semibold text-slate-900 dark:text-white">
-                Tăng tốc độ giải quyết vấn đề
+                {t('why_important.speed.title')}
               </h4>
               <div>
                 <p className="dark:text-slate-300">
-                  Khi luyện tập TRIZ, người học phát triển thói quen{' '}
+                  {t('why_important.speed.description')}{' '}
                   <span className="font-bold text-black dark:text-white">
-                    tư duy hệ thống, nhìn nhận tài nguyên, tìm giải pháp lý
-                    tưởng,
+                    {t('why_important.speed.description_highlight')}
                   </span>{' '}
-                  giúp họ ngày càng sáng tạo hơn.
+                  {t('why_important.speed.description_end')}
                 </p>
               </div>
             </div>
 
             <div className="max-w-md mx-auto text-start border space-y-6 p-4 rounded-xl shadow-2xl bg-gradient-to-b from-blue-200 via-white to-white dark:bg-gradient-to-b dark:from-slate-800 dark:via-slate-900 dark:to-slate-900">
               <h4 className=" py-2 text-2xl font-semibold text-slate-900 dark:text-white mt-4">
-                Ứng dụng đa lĩnh vực
+                {t('why_important.multi_field.title')}
               </h4>
               {/* <img
               src="./src/assets/images/Frame 1410086252.png"
@@ -452,13 +443,11 @@ const HomePage = () => {
             /> */}
               <MultiDisciplinary />
               <p className=" text-slate-600 dark:text-slate-300 leading-relaxed">
-                Không chỉ giới hạn trong kỹ thuật, TRIZ còn ứng dụng mạnh mẽ
-                trong
-                <span className="font-bold text-black">
-                  kinh doanh, quản lý, giáo dục, nghệ thuật và đời sống
+                {t('why_important.multi_field.description')}{' '}
+                <span className="font-bold text-black dark:text-white">
+                  {t('why_important.multi_field.description_highlight')}
                 </span>{' '}
-                (ví dụ: tái thiết kế mô hình kinh doanh, cải tiến quy trình làm
-                việc, giải quyết vấn đề cá nhân…).
+                {t('why_important.multi_field.description_end')}
               </p>
             </div>
           </div>
@@ -466,13 +455,14 @@ const HomePage = () => {
 
         <div className="flex flex-col items-center justify-center py-14 text-center ">
           <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
-            Nền tảng học TRIZ <span className="text-blue-600">toàn diện</span>
+            {t('comprehensive_platform.title')}{' '}
+            <span className="text-blue-600">
+              {t('comprehensive_platform.title_highlight')}
+            </span>
           </h2>
 
           <p className=" text-slate-600 dark:text-slate-300 leading-relaxed mt-6 max-w-3xl">
-            Khám phá hệ thống học tập tích hợp từ lý thuyết đến thực hành, kết
-            nối cộng đồng, luyện tư duy qua quiz và nhận hỗ trợ từ trợ lý AI.
-            Mọi công cụ bạn cần để học và áp dụng TRIZ đều có mặt tại đây.
+            {t('comprehensive_platform.description')}
           </p>
 
           {/* Grid for desktop */}
@@ -494,7 +484,9 @@ const HomePage = () => {
                   {item.des}
                 </p>
                 <div className="text-blue-600 dark:text-blue-400 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
-                  <Link to={`/`}>Tìm hiểu thêm</Link>
+                  <Link to={`/`}>
+                    {t('comprehensive_platform.learn_triz.learn_more')}
+                  </Link>
                   <svg
                     width="21"
                     height="20"

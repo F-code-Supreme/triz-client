@@ -17,6 +17,11 @@ export const router = createRouter({
   context: {
     auth: undefined!,
   },
+  defaultPreload: 'intent',
+  defaultHashScrollIntoView: {
+    behavior: 'smooth',
+    block: 'start',
+  },
 });
 
 // Register the router instance for type safety

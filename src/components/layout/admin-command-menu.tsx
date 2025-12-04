@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowRight, ChevronRight, Laptop, Moon, Sun } from 'lucide-react';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useTheme } from '@/components/theme/theme-provider';
 import {
@@ -22,6 +23,7 @@ type AdminCommandMenuProps = {
 };
 
 export const AdminCommandMenu = ({ open, setOpen }: AdminCommandMenuProps) => {
+  const { t } = useTranslation('sidebar');
   const navigate = useNavigate();
   const { setTheme } = useTheme();
 
@@ -35,10 +37,10 @@ export const AdminCommandMenu = ({ open, setOpen }: AdminCommandMenuProps) => {
 
   return (
     <CommandDialog modal open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder={t('command_menu.placeholder')} />
       <CommandList>
         <ScrollArea type="hover" className="h-72 pe-1">
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{t('command_menu.no_results')}</CommandEmpty>
           {adminSidebarData.navGroups.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((navItem, i) => {
@@ -77,15 +79,16 @@ export const AdminCommandMenu = ({ open, setOpen }: AdminCommandMenuProps) => {
             </CommandGroup>
           ))}
           <CommandSeparator />
-          <CommandGroup heading="Theme">
+          <CommandGroup heading={t('command_menu.theme')}>
             <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
-              <Sun /> <span>Light</span>
+              <Sun /> <span>{t('command_menu.light')}</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => setTheme('dark'))}>
-              <Moon className="scale-90" /> <span>Dark</span>
+              <Moon className="scale-90" />{' '}
+              <span>{t('command_menu.dark')}</span>
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => setTheme('system'))}>
-              <Laptop /> <span>System</span>
+              <Laptop /> <span>{t('command_menu.system')}</span>
             </CommandItem>
           </CommandGroup>
         </ScrollArea>

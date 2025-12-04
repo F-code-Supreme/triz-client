@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   SidebarMenu,
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 export const AdminAppTitle = () => {
+  const { t } = useTranslation('sidebar');
   const { setOpenMobile } = useSidebar();
 
   return (
@@ -34,9 +36,11 @@ export const AdminAppTitle = () => {
                 className="h-8 w-8 shrink-0"
               />
               <div className="min-w-0">
-                <span className="truncate font-bold block">TRIZ Admin</span>
+                <span className="truncate font-bold block">
+                  {t('admin.title')}
+                </span>
                 <span className="truncate text-xs text-muted-foreground block">
-                  Management
+                  {t('admin.subtitle')}
                 </span>
               </div>
             </Link>

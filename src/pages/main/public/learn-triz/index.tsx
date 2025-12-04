@@ -5,10 +5,14 @@ import { TRIZPrinciplesList } from './components/triz-principles-list';
 
 const LearnTRIZPage = () => {
   return (
-    <DefaultLayout meta={{ title: '40 Nguyên Tắc Sáng Tạo' }} className="">
+    <DefaultLayout
+      meta={{ title: '40 Nguyên Tắc Sáng Tạo' }}
+      className="scroll-smooth"
+    >
       <PrincipleSection />
       <TRIZPrinciplesList />
     </DefaultLayout>
   );
 };
+
 export default LearnTRIZPage;
