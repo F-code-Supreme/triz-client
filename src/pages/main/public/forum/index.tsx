@@ -3,9 +3,25 @@ import { Search } from 'lucide-react';
 import React from 'react';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import MinimalTiptapEditor from '@/components/ui/minimal-tiptap/minimal-tiptap';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+} from '@/components/ui/tooltip';
 import PostCard from '@/features/forum/components/post-card';
-import { useCreateVoteMutation } from '@/features/forum/services/mutations';
+import {
+  useCreateForumPostMutation,
+  useCreateVoteMutation,
+} from '@/features/forum/services/mutations';
 import { useGetForumPostsQuery } from '@/features/forum/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
@@ -29,6 +45,11 @@ const ForumPage: React.FC = () => {
     });
 
   const createVoteMutation = useCreateVoteMutation();
+  const createForumPostMutation = useCreateForumPostMutation();
+  const [showCreateDialog, setShowCreateDialog] = React.useState(false);
+  const [postTitle, setPostTitle] = React.useState('');
+  const [answer, setAnswer] = React.useState<string>('');
+  const canSubmit = true;
 
   React.useEffect(() => {
     if (!loadMoreRef.current) return;
@@ -49,7 +70,6 @@ const ForumPage: React.FC = () => {
 
   if (!data?.pages) return [];
   const forumPosts = data.pages.flatMap((page) => page.content || []);
-  console.log('forumPosts', forumPosts);
 
   const excerpt = (text = '', limit = 400) => {
     const cleaned = text.replace(/\r\n|\n/g, ' ').trim();
@@ -120,31 +140,105 @@ const ForumPage: React.FC = () => {
                 </Avatar>
               </div>
 
-              <div className="flex flex-1 items-center gap-4 rounded-lg bg-slate-100 border border-slate-200 px-4 py-4">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => setShowCreateDialog(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ')
+                    setShowCreateDialog(true);
+                }}
+                className="flex flex-1 items-center gap-4 rounded-lg bg-slate-100 border border-slate-200 px-4 py-4 cursor-text"
+              >
                 <div className="flex-1">
                   <div className="text-[18px] font-medium text-slate-400">
                     Chia sẻ suy nghĩ hoặc bài viết của bạn
                   </div>
                 </div>
-
-                <div className="flex items-center gap-2">
-                  <img
-                    src="https://www.figma.com/api/mcp/asset/b3309bca-23d8-48ea-bc40-0f78277ef90b"
-                    alt="images"
-                    className="h-7 w-7"
-                  />
-                  <img
-                    src="https://www.figma.com/api/mcp/asset/a2188b43-1bb6-4b8d-ba3d-2cb0d03c694f"
-                    alt="gif"
-                    className="h-7 w-7"
-                  />
-                  <img
-                    src="https://www.figma.com/api/mcp/asset/3a2bf552-86ef-40e4-97b5-0059406520a6"
-                    alt="sentiment"
-                    className="h-7 w-7"
-                  />
-                </div>
               </div>
+
+              {/* Create post dialog */}
+              <Dialog
+                open={showCreateDialog}
+                onOpenChange={(open) => !open && setShowCreateDialog(false)}
+              >
+                <DialogContent className="max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle>Tạo bài viết mới</DialogTitle>
+                  </DialogHeader>
+
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <label className="text-sm text-slate-600">Tiêu đề</label>
+                      <Input
+                        value={postTitle}
+                        onChange={(e) => setPostTitle(e.target.value)}
+                        placeholder="Tiêu đề bài viết"
+                      />
+                    </div>
+
+                    <div>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <div>
+                            <MinimalTiptapEditor
+                              value={answer}
+                              onChange={(v) =>
+                                setAnswer(
+                                  typeof v === 'string' ? v : JSON.stringify(v),
+                                )
+                              }
+                              output="html"
+                              placeholder="Nhập nội dung bài viết..."
+                              editorContentClassName="min-h-[200px] p-4"
+                              editable={canSubmit}
+                            />
+                          </div>
+                          {!answer && (
+                            <TooltipContent side="bottom">
+                              <p>
+                                Nhấp vào đây để bắt đầu nhập câu trả lời của bạn
+                              </p>
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        onClick={() => setShowCreateDialog(false)}
+                      >
+                        Hủy
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          const payload = {
+                            title: postTitle.trim(),
+                            content: answer || '',
+                            tagIds: [],
+                          };
+                          createForumPostMutation.mutate(payload, {
+                            onSuccess: () => {
+                              setShowCreateDialog(false);
+                              setPostTitle('');
+                              setAnswer('');
+                            },
+                          });
+                        }}
+                        disabled={
+                          !postTitle.trim() ||
+                          !(answer && answer.toString().trim()) ||
+                          createForumPostMutation.isPending
+                        }
+                      >
+                        Đăng
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             {/* Posts list */}
 
@@ -166,10 +260,19 @@ const ForumPage: React.FC = () => {
                   }}
                   time={formatDate(p.createdAt)}
                   excerpt={
-                    <div>
-                      <p>
-                        {expandedId === p.id ? p.content : excerpt(p.content)}
-                        {p.content && p.content.length > 400 && (
+                    <>
+                      <div
+                        className="whitespace-pre-line break-words"
+                        // render either full content (when expanded) or the text excerpt
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            expandedId === p.id
+                              ? p.content || ''
+                              : excerpt(p.content),
+                        }}
+                      />
+                      {p.content && p.content.length > 400 && (
+                        <div className="mt-1">
                           <button
                             type="button"
                             onClick={() =>
@@ -179,9 +282,9 @@ const ForumPage: React.FC = () => {
                           >
                             {expandedId === p.id ? 'Thu gọn' : 'xem thêm'}
                           </button>
-                        )}
-                      </p>
-                    </div>
+                        </div>
+                      )}
+                    </>
                   }
                   image={undefined}
                   likes={p.upVoteCount}

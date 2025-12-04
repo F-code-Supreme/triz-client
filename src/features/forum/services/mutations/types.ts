@@ -5,6 +5,13 @@ export interface CreateCommentPayload {
   content: string;
 }
 
+export interface CreateForumPostPayload {
+  title: string;
+  content: string;
+  tagIds: string[];
+}
+
+
 export type UUID = string;
 export type ISODateString = string;
 

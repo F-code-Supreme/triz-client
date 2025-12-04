@@ -6,8 +6,10 @@ import { ForumKeys } from '@/features/forum/services/queries/keys';
 import type {
   CreateCommentPayload,
   CreateCommentResponse,
+  CreateForumPostPayload,
   CreateVotePayload,
 } from '@/features/forum/services/mutations/types';
+import type { ForumPost } from '@/features/forum/types';
 
 export const useCreateVoteMutation = () => {
   const queryClient = useQueryClient();
@@ -19,6 +21,21 @@ export const useCreateVoteMutation = () => {
         `/forumPosts/${postId}/votes`,
         payload,
       );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+    },
+  });
+};
+export const useCreateForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (data: CreateForumPostPayload) => {
+      const response = await _request.post<ForumPost>(`/forumPosts`, data);
       return response.data;
     },
     onSuccess: () => {
