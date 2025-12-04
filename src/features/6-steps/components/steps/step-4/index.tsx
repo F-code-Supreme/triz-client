@@ -26,7 +26,7 @@ import {
   ParameterColors,
   verticalSpacing,
 } from './configs';
-import ActionButtons from '../../ActionButtons';
+import ActionButtons from '../../action-buttons';
 import { ElementNode } from './nodes/ElementNode';
 import { ParameterNode } from './nodes/ParameterNode';
 import { PhysicalContradictionNode } from './nodes/PhysicalContradictionNode';

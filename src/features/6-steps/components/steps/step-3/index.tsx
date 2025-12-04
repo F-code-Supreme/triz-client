@@ -10,8 +10,8 @@ import { useStep3SuggestionMutation } from '@/features/6-steps/services/mutation
 import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 import { truncate } from '@/utils';
 
-import ActionButtons from '../../ActionButtons';
-import { SelectableItem } from '../../SelectableItem';
+import ActionButtons from '../../action-buttons';
+import { SelectableItem } from '../../selectable-item';
 
 import type { SixStepData } from '@/features/6-steps/store/useSixStepDataStore';
 

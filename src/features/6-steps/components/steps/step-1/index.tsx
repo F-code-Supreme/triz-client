@@ -12,9 +12,9 @@ import {
 import { useStep1SuggestionMutation } from '@/features/6-steps/services/mutations';
 import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
-import ActionButtons from '../../ActionButtons';
-import { SelectableItem } from '../../SelectableItem';
-import { SelectableItemSkeletonList } from '../../SelectableItemSkeleton';
+import ActionButtons from '../../action-buttons';
+import { SelectableItem } from '../../selectable-item';
+import { SelectableItemSkeletonList } from '../../selectable-item-skeleton-list';
 
 import type {
   MiniProblem,
