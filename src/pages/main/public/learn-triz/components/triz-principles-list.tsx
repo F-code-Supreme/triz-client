@@ -2,26 +2,27 @@ import { principlesData } from './principles-data';
 
 export const TRIZPrinciplesList = () => {
   return (
-    <section className="py-8 bg-slate-50">
+    <section className="py-8 bg-slate-50 dark:bg-slate-900">
       <div className="container mx-auto px-4 my-10">
         <div className="flex flex-col gap-6">
           {principlesData.map((principle) => (
             <div
+              id={`principle-${principle.number}`}
               key={principle.number}
-              className="relative bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              className="relative bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-lg transition-shadow duration-300 scroll-mt-20"
             >
               {/* The Green Vertical Bar on the Left */}
-              <div className="absolute left-0 top-0 bottom-0 w-2 bg-blue-600" />
+              <div className="absolute left-0 top-0 bottom-0 w-2 bg-blue-600 dark:bg-blue-500" />
 
               <div className="p-6 pl-8 flex flex-col md:flex-row gap-6">
                 {/* Content Column */}
                 <div className="flex-1">
                   {/* Header: Number and Title */}
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold text-xl md:text-xl shadow-sm">
+                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 dark:bg-blue-500 text-white font-bold text-xl md:text-xl shadow-sm">
                       {principle.number}
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-slate-800">
+                    <h3 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100">
                       {principle.title}
                     </h3>
                   </div>
@@ -30,14 +31,14 @@ export const TRIZPrinciplesList = () => {
                   <div className="space-y-6">
                     {principle.content.map((block, idx) => (
                       <div key={idx}>
-                        <p className="text-slate-800 text-md md:text-xl font-medium mb-2 leading-relaxed">
+                        <p className="text-slate-800 dark:text-slate-200 text-md md:text-xl font-medium mb-2 leading-relaxed">
                           {block.text}
                         </p>
                         <ul className="list-disc pl-5 space-y-1">
                           {block.examples.map((example, exIdx) => (
                             <li
                               key={exIdx}
-                              className="text-slate-600 text-md md:text-lg leading-relaxed"
+                              className="text-slate-600 dark:text-slate-400 text-md md:text-lg leading-relaxed"
                             >
                               {example}
                             </li>
@@ -60,11 +61,11 @@ export const TRIZPrinciplesList = () => {
                       <img
                         src={principle.image}
                         alt={principle.title}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded-lg border border-slate-200 dark:border-slate-600"
                       />
                     ) : (
                       /* Fallback visual if no image exists */
-                      <span className="text-4xl text-slate-300 font-bold">
+                      <span className="text-4xl text-slate-300 dark:text-slate-600 font-bold">
                         {principle.number}
                       </span>
                     )}

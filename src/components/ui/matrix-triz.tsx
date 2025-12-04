@@ -1,7 +1,11 @@
+import { useTranslation } from 'react-i18next';
+
 import { fullMatrixData } from '@/pages/main/public/matrix-triz/components/triz-data';
 import { TrizMatrix } from '@/pages/main/public/matrix-triz/components/triz-matrix';
 
 const MatrixSection = () => {
+  const { t } = useTranslation('pages.matrix_triz');
+
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
       <div className="w-full max-w-8xl p-4 mx-auto">
@@ -9,7 +13,7 @@ const MatrixSection = () => {
           <div className="space-y-6">
             <div className="relative inline-block">
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
-                Khám Phá
+                {t('title')}
                 <br />
                 <span className="relative ">
                   <svg
@@ -32,13 +36,12 @@ const MatrixSection = () => {
                   </svg>
                 </span>
                 <span className=" text-slate-900 dark:text-white">
-                  Ma Trận Sáng Tạo TRIZ
+                  {t('title_highlight')}
                 </span>
               </h1>
               <div>
                 <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
-                  Khám phá cách áp dụng ma trận TRIZ để giải quyết các mâu thuẫn
-                  kỹ thuật và thúc đẩy sự sáng tạo trong thiết kế sản phẩm.
+                  {t('description')}
                 </p>
               </div>
             </div>

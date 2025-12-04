@@ -15,6 +15,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { FileUpload, FileUploadTrigger } from '@/components/ui/file-upload';
 import {
   Form,
@@ -34,6 +40,8 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { useGetCourseQuery } from '@/features/courses/services/queries';
+import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
 import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
 
 const questionSchema = z.object({
@@ -56,6 +64,7 @@ const quizCreateFormSchema = z.object({
     .number()
     .min(1, 'Duration must be at least 1 minute')
     .optional(),
+  moduleId: z.string().min(1, 'Module is required'),
   questions: z.array(questionSchema).min(1, 'At least 1 question is required'),
 });
 
@@ -73,6 +82,10 @@ export const QuizCreateDialog = ({
   onSuccess,
 }: QuizCreateDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState<string>('');
+
+  const { data: coursesData } = useGetCourseQuery();
+  const { data: modulesData } = useGetModuleByCourseQuery(selectedCourseId);
 
   const createQuizMutation = useCreateQuizMutation();
   const form = useForm<QuizCreateFormValues>({
@@ -81,6 +94,7 @@ export const QuizCreateDialog = ({
       title: '',
       description: '',
       durationInMinutes: undefined,
+      moduleId: '',
       questions: [
         {
           content: '',
@@ -275,6 +289,7 @@ export const QuizCreateDialog = ({
       onSuccess?.();
       onOpenChange(false);
       form.reset();
+      setSelectedCourseId('');
     } catch (error) {
       console.error('Error creating quiz:', error);
     } finally {
@@ -317,6 +332,7 @@ export const QuizCreateDialog = ({
       onOpenChange={(open) => {
         if (!open) {
           form.reset();
+          setSelectedCourseId('');
         }
         onOpenChange(open);
       }}
@@ -387,6 +403,90 @@ export const QuizCreateDialog = ({
                   </FormItem>
                 )}
               />
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Course & Module Selection</h3>
+
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <FormLabel>Select Course</FormLabel>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
+                        {selectedCourseId
+                          ? coursesData?.content?.find(
+                              (c) => c.id === selectedCourseId,
+                            )?.title || 'Select a course'
+                          : 'Select a course'}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
+                      {coursesData?.content?.map((course) => (
+                        <DropdownMenuItem
+                          key={course.id}
+                          onClick={() => {
+                            setSelectedCourseId(course.id);
+                            form.setValue('moduleId', '');
+                          }}
+                        >
+                          {course.title}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {selectedCourseId && (
+                  <FormField
+                    control={form.control}
+                    name="moduleId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Select Module *</FormLabel>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                className="w-full justify-start"
+                              >
+                                {field.value
+                                  ? modulesData?.find(
+                                      (m) => m.id === field.value,
+                                    )?.name || 'Select a module'
+                                  : 'Select a module'}
+                              </Button>
+                            </FormControl>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
+                            {modulesData?.map((module) => (
+                              <DropdownMenuItem
+                                key={module.id}
+                                onClick={() => field.onChange(module.id)}
+                              >
+                                <div className="flex flex-col">
+                                  <span>{module.name}</span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {module.durationInMinutes} mins · Level:{' '}
+                                    {module.level}
+                                  </span>
+                                </div>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </div>
             </div>
 
             <Separator />

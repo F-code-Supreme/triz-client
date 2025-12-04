@@ -1,4 +1,5 @@
-import { Eye, Loader2, Trash2 } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
+import { Edit, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -21,9 +22,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useDeleteCourseMutation } from '@/features/courses/services/mutations';
+import {
+  useDeleteCourseMutation,
+  usePublishCourseMutation,
+} from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
-import { formatTrizilium } from '@/utils';
+import { formatTrizilium, formatTriziliumShort } from '@/utils';
 
 import CourseLevelBadge from './course-level';
 import CourseStatusBadge from './course-status';
@@ -34,12 +38,14 @@ import type { Course } from '@/features/courses/types';
 const CourseItem = ({ course }: { course: Course }) => {
   const thumbnail = course.thumbnailUrl ?? course.thumbnail ?? undefined;
   const deleteCourse = useDeleteCourseMutation();
+  const navigate = useNavigate();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const { data: courseDetail, isLoading } = useGetCourseByIdQuery(
     isDetailOpen ? course.id : undefined,
   );
+  const publishCourse = usePublishCourseMutation(course.id);
 
   const dealPrice = course.dealPrice ?? course.price ?? null;
   const originalPrice = course.price ?? null;
@@ -62,13 +68,13 @@ const CourseItem = ({ course }: { course: Course }) => {
         key={course.id}
         className="shadow-md hover:shadow-lg transition-shadow"
       >
-        <CardContent className="p-0 ">
+        <CardContent className="p-0">
           <div className="overflow-hidden rounded-tr-md rounded-tl-md bg-gray-100">
             {thumbnail ? (
               <img
                 src={thumbnail}
                 alt={course.title}
-                className="h-40 w-full object-cover"
+                className="h-44 w-full object-cover"
               />
             ) : (
               <div className="flex h-40 w-full items-center justify-center text-sm text-muted-foreground">
@@ -78,15 +84,15 @@ const CourseItem = ({ course }: { course: Course }) => {
           </div>
 
           <div className="p-3">
-            <div className="min-h-40">
+            <div className="h-40 min-h-40">
               <h2 className="text-base font-semibold">{course.title}</h2>
 
-              <p className="mb-2 text-sm text-muted-foreground">
+              <p className="mb-2 text-xs text-muted-foreground">
                 {course.shortDescription ?? course.description}
               </p>
 
-              <div className="flex items-start justify-between gap-4">
-                <div className="text-sm text-muted-foreground w-full space-y-2">
+              <div className="flex items-start justify-between gap-4 w-full">
+                <div className="text-xs text-muted-foreground w-[55%] space-y-2">
                   <div>
                     Thời lượng: {formatDuration(course.durationInMinutes)}
                   </div>
@@ -96,10 +102,10 @@ const CourseItem = ({ course }: { course: Course }) => {
                   <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
                 </div>
 
-                <div className=" text-sm w-full">
+                <div className="text-right text-xs w-[45%] flex flex-col items-end">
                   {dealPrice !== null ? (
                     <div className="text-sm font-semibold text-primary">
-                      Giá tiền: {formatTrizilium(dealPrice)}
+                      Giá tiền: {formatTriziliumShort(dealPrice)}
                     </div>
                   ) : null}
 
@@ -107,26 +113,56 @@ const CourseItem = ({ course }: { course: Course }) => {
                   dealPrice !== null &&
                   originalPrice > dealPrice ? (
                     <div className=" text-muted-foreground line-through">
-                      Giá gốc: {formatTrizilium(originalPrice)}
+                      Giá gốc: {formatTriziliumShort(originalPrice)}
                     </div>
                   ) : null}
 
-                  <div className="text-sm mt-1 text-muted-foreground ">
+                  <div className=" mt-1 text-muted-foreground ">
                     <CourseStatusBadge status={course.status} />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-3 flex gap-2">
+            <div className="flex items-center justify-between mt-3">
               <Button
                 variant="outline"
                 size="sm"
-                className="flex-1"
                 onClick={() => setIsDetailOpen(true)}
               >
-                <Eye className="mr-2 h-4 w-4" />
                 Xem chi tiết
+              </Button>
+              <Button
+                variant={course.status === 'ACTIVE' ? 'secondary' : 'default'}
+                size="sm"
+                onClick={() => {
+                  const newStatus =
+                    course.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+                  publishCourse.mutate(
+                    { status: newStatus },
+                    {
+                      onSuccess: () => {
+                        toast.success(
+                          newStatus === 'ACTIVE'
+                            ? 'Kích hoạt khóa học thành công'
+                            : 'Đã hủy kích hoạt khóa học',
+                        );
+                      },
+                      onError: () => {
+                        toast.error(
+                          'Cập nhật trạng thái thất bại. Vui lòng thử lại.',
+                        );
+                      },
+                    },
+                  );
+                }}
+                disabled={publishCourse.isPending}
+                className="flex items-center"
+              >
+                {publishCourse.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : null}
+                {course.status === 'ACTIVE' ? 'Hủy kích hoạt' : 'Kích hoạt'}
               </Button>
               <Button
                 variant="destructive"
@@ -142,9 +178,23 @@ const CourseItem = ({ course }: { course: Course }) => {
 
       <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{course.title}</DialogTitle>
-            <DialogDescription>Chi tiết khóa học</DialogDescription>
+          <DialogHeader className="flex items-start justify-between">
+            <div>
+              <DialogTitle>{course.title}</DialogTitle>
+              <DialogDescription>Chi tiết khóa học</DialogDescription>
+            </div>
+            <div className="flex items-center gap-2  w-full justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  navigate({ to: `/admin/courses/edit/${course.id}` })
+                }
+              >
+                Chỉnh sửa
+                <Edit className=" h-4 w-4" />
+              </Button>
+            </div>
           </DialogHeader>
           {isLoading ? (
             <div className="py-8 flex items-center justify-center gap-4 text-muted-foreground">

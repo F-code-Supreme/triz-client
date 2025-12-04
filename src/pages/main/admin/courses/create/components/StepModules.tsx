@@ -165,7 +165,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             } else {
               queryClient.invalidateQueries({ queryKey });
             }
-            let msg = 'Failed to reorder modules';
+            let msg = 'Sắp xếp lại thứ tự chương thất bại';
             if (err instanceof Error) msg = err.message;
             else if (typeof err === 'string') msg = err;
             toast.error(msg);
@@ -194,7 +194,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
 
     const handleCreate = () => {
       if (!courseId) {
-        toast.error('Please save the course before adding modules.');
+        toast.error('Vui lòng lưu khóa học trước khi thêm chương.');
         return;
       }
       if (!name.trim()) {
@@ -219,7 +219,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             onClose();
           },
           onError: (err: unknown) => {
-            let msg = 'Failed to create module';
+            let msg = 'Tạo chương thất bại';
             if (err instanceof Error) msg = err.message;
             else if (typeof err === 'string') msg = err;
             else {
@@ -330,7 +330,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             setEditingModuleId(null);
           },
           onError: (err: unknown) => {
-            let msg = 'Failed to update module';
+            let msg = 'Cập nhật chương thất bại';
             if (err instanceof Error) msg = err.message;
             else if (typeof err === 'string') msg = err;
             else {

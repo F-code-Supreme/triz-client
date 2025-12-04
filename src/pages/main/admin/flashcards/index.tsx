@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ import { useGetFlashcardDecksQuery } from '@/features/flashcard-decks/services/q
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminFlashCardsPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<
@@ -78,16 +80,17 @@ const AdminFlashCardsPage = () => {
       <div className="space-y-6 p-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Flashcards</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t('flashcards.title')}
+            </h1>
             <p className="text-muted-foreground mt-2">
-              Manage all flashcard decks in the system. Create, edit, or delete
-              decks.
+              {t('flashcards.description')}
             </p>
           </div>
           <div className="flex items-center justify-end gap-4">
             <Button onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              New Deck
+              {t('flashcards.new_deck')}
             </Button>
           </div>
         </div>
@@ -95,7 +98,7 @@ const AdminFlashCardsPage = () => {
         <div className="space-y-4">
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Search by title, description..."
+            searchPlaceholder={t('flashcards.search_placeholder')}
             searchKey="title"
           />
 
@@ -127,7 +130,7 @@ const AdminFlashCardsPage = () => {
           ) : decks.length === 0 ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-muted-foreground">
-                {'No decks found. Create your first deck!'}
+                {t('flashcards.no_decks')}
               </p>
             </div>
           ) : (

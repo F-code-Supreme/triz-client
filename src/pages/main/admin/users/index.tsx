@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ import { useGetAllUsersQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminUsersPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -60,14 +62,16 @@ const AdminUsersPage = () => {
       <div className="flex flex-col gap-8 p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t('users.title')}
+            </h1>
             <p className="text-muted-foreground mt-2">
-              Manage system users and view their details
+              {t('users.description')}
             </p>
           </div>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            New User
+            {t('users.new_user')}
           </Button>
         </div>
 
@@ -100,7 +104,7 @@ const AdminUsersPage = () => {
             </div>
           ) : users.length === 0 ? (
             <div className="flex justify-center items-center h-64">
-              <p className="text-muted-foreground">No users found</p>
+              <p className="text-muted-foreground">{t('users.no_users')}</p>
             </div>
           ) : (
             <>

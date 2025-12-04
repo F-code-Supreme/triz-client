@@ -45,6 +45,7 @@ interface CourseAssignmentProps {
   assignmentDescription: string;
   durationInMinutes: number;
   maxAttempts: number;
+  criteria: string[];
 }
 
 const CourseAssignment = ({
@@ -54,6 +55,7 @@ const CourseAssignment = ({
   assignmentDescription,
   durationInMinutes,
   maxAttempts,
+  criteria,
 }: CourseAssignmentProps) => {
   const [answer, setAnswer] = useState<Content>('');
   const [showHistory, setShowHistory] = useState(false);
@@ -185,22 +187,20 @@ const CourseAssignment = ({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Instructions</CardTitle>
+          <CardTitle className="text-lg">Tiêu chí</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
               <AlertCircle className="w-4 h-4" />
-              Before you start
+              Các Tiêu chí làm bài
             </h4>
             <ul className="text-sm text-blue-800 space-y-1 ml-5 list-disc">
-              <li>Read the assignment description carefully</li>
-              <li>
-                You have {maxAttempts} attempt{maxAttempts !== 1 && 's'} to
-                complete this assignment
-              </li>
-              <li>Make sure to save your work before submitting</li>
-              <li>You can use the tooltip hints for guidance</li>
+              {criteria && criteria.length > 0 ? (
+                criteria.map((item, idx) => <li key={idx}>{item}</li>)
+              ) : (
+                <li>Không có tiêu chí nào được cung cấp.</li>
+              )}
             </ul>
           </div>
         </CardContent>
@@ -209,7 +209,7 @@ const CourseAssignment = ({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center justify-between">
-            <span>Your Answer</span>
+            <span>Câu trả lời của bạn</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -228,7 +228,7 @@ const CourseAssignment = ({
                 </div>
                 {!answer && (
                   <TooltipContent side="bottom">
-                    <p>Click here to start typing your answer</p>
+                    <p>Nhấp vào đây để bắt đầu nhập câu trả lời của bạn</p>
                   </TooltipContent>
                 )}
               </Tooltip>

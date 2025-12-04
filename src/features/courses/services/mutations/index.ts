@@ -71,7 +71,7 @@ export const usePublishCourseMutation = (courseId: string) => {
   const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
-    mutationFn: async (payload: { status: 'DRAFT' | 'ACTIVE' }) => {
+    mutationFn: async (payload: { status: 'INACTIVE' | 'ACTIVE' }) => {
       const response = await _request.patch<Response<Course>>(
         `/courses/${courseId}/status`,
         payload,

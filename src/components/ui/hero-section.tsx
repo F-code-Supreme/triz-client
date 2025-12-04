@@ -1,10 +1,14 @@
+import { Link } from '@tanstack/react-router';
 import { PlayCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import HeroImg from '@/assets/images/Frame 1410086253.png';
 
 import { Button } from './button';
 
 const HeroSection = () => {
+  const { t } = useTranslation('components');
+
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <div className="w-full max-w-5xl px-4 pt-8 mx-auto">
@@ -12,7 +16,7 @@ const HeroSection = () => {
           <div className="space-y-6">
             <div className="relative inline-block">
               <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
-                Khám Phá TRIZ
+                {t('hero_section.title')}
                 <span className="relative ml-3">
                   <svg
                     className="absolute -top-5 left-0 w-8 h-8 animate-bounce"
@@ -35,17 +39,13 @@ const HeroSection = () => {
                 </span>
                 <br />
                 <span className="text-slate-900 dark:text-white">
-                  Phương Pháp Sáng Tạo Có Hệ Thống
+                  {t('hero_section.subtitle')}
                 </span>
               </h1>
 
               <div>
                 <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
-                  TRIZ là bộ công cụ giúp bạn giải quyết vấn đề một cách khoa
-                  học,
-                  <br />
-                  hiệu quả và sáng tạo – không cần cảm hứng hay năng khiếu thiên
-                  bẩm.
+                  {t('hero_section.description')}
                 </p>
                 <div className="absolute right-1 top-80 sm:right-6 sm:top-40 md:right-20 md:top-60 animate-bounce w-24 h-32">
                   <svg
@@ -69,18 +69,22 @@ const HeroSection = () => {
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
               <Button
+                asChild
                 size="lg"
                 className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 text-lg font-medium rounded-lg"
               >
-                Đăng ký tài khoản
+                <Link to="/register">{t('hero_section.register')}</Link>
               </Button>
               <Button
+                asChild
                 variant="outline"
                 size="lg"
                 className="border-2 border-slate-200 dark:border-slate-700 dark:text-slate-300 text-slate-900 px-8 py-4 text-lg font-medium rounded-lg hover:bg-slate-50 flex items-center gap-3"
               >
-                <PlayCircle className="w-6 h-6" />
-                Bắt đầu học ngay
+                <Link to="/course">
+                  <PlayCircle className="w-6 h-6" />
+                  {t('hero_section.start_learning')}
+                </Link>
               </Button>
             </div>
           </div>

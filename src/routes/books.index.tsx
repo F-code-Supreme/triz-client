@@ -1,11 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { lazy } from 'react';
 
-import { Loadable } from '@/components/loadable';
-
-const BookLibraryPage = Loadable(
-  lazy(() => import('@/pages/main/public/books')),
-);
+import BookLibraryPage from '@/pages/main/public/books';
 
 export const Route = createFileRoute('/books/')({
   component: BookLibraryPage,

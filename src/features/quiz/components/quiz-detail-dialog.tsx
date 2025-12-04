@@ -6,6 +6,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import { useGetModulesById } from '@/features/modules/services/queries';
 
 interface DetailQuizDialogProps {
   open: boolean;
@@ -18,6 +20,14 @@ const DetailQuizDialog = ({
   setOpen,
   selectedQuizData,
 }: DetailQuizDialogProps) => {
+  const { data: moduleData } = useGetModulesById(
+    selectedQuizData?.moduleId || '',
+  );
+
+  const { data: courseData } = useGetCourseByIdQuery(
+    moduleData?.courseId || '',
+  );
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -38,8 +48,35 @@ const DetailQuizDialog = ({
                   Duration: {selectedQuizData.durationInMinutes} minutes
                 </p>
               </div>
-              <div className="w-full h-32 bg-muted flex items-center justify-center rounded text-muted-foreground">
+              {/* <div className="w-full h-32 bg-muted flex items-center justify-center rounded text-muted-foreground">
                 Quiz Image
+              </div> */}
+            </div>
+
+            {/* Course & Module Information */}
+            <div className="border rounded-lg p-4 bg-muted/30">
+              <h4 className="font-semibold mb-3">
+                Course & Module Information
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Course</p>
+                  <p className="font-medium">
+                    {courseData?.title || 'Loading...'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Module</p>
+                  <p className="font-medium">
+                    {moduleData?.name || 'Loading...'}
+                  </p>
+                  {moduleData && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {moduleData.durationInMinutes} mins · Level:{' '}
+                      {moduleData.level}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

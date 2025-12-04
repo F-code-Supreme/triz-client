@@ -1,6 +1,6 @@
 import {
   MicIcon,
-  PaperclipIcon,
+  // PaperclipIcon,
   RotateCcwIcon,
   CopyIcon,
   CheckIcon,
@@ -8,6 +8,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 
 import { AudioRecorderWithVisualizer } from '@/components/ui/audio-recorder-with-visualizer';
@@ -161,6 +162,27 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
     } catch (error) {
       // Remove loading message on error
       setMessages((prev) => prev.filter((msg) => msg.id !== loadingMessageId));
+
+      // Check if it's a subscription error
+      if (
+        error &&
+        typeof error === 'object' &&
+        'type' in error &&
+        error.type === 'SUBSCRIPTION_ERROR'
+      ) {
+        toast.error(
+          'message' in error && typeof error.message === 'string'
+            ? error.message
+            : "You don't have an active subscription or your daily tokens have been exhausted.",
+          {
+            description:
+              'Please upgrade your subscription or wait until tomorrow to continue chatting.',
+            duration: 5000,
+          },
+        );
+      } else {
+        toast.error('Failed to send message. Please try again.');
+      }
       console.error('Failed to send message:', error);
     }
   };
@@ -199,7 +221,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
           </Button>
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
-            <span className="font-medium text-sm">ChatTriz</span>
+            <span className="font-medium text-sm">Chat Triz</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -302,9 +324,6 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
             />
             <PromptInputToolbar>
               <PromptInputTools>
-                <PromptInputButton disabled={isTyping}>
-                  <PaperclipIcon size={16} />
-                </PromptInputButton>
                 <PromptInputButton
                   disabled={isTyping}
                   onClick={() => startRecording()}

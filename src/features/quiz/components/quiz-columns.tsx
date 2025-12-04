@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { MoreHorizontal, Eye, Trash2, Edit } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -53,25 +53,25 @@ export const createQuizColumns = ({
   onDelete,
   onViewDetail,
 }: QuizColumnsProps = {}): ColumnDef<Quiz>[] => [
-  {
-    accessorKey: 'imageSource',
-    header: 'Image',
-    cell: ({ row }) => {
-      const imageSource = row.getValue('imageSource') as string | null;
-      return (
-        <Avatar className="h-10 w-10">
-          <AvatarImage
-            src={imageSource || undefined}
-            alt={row.original.title}
-          />
-          <AvatarFallback>
-            {row.original.title.slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      );
-    },
-    enableSorting: false,
-  },
+  // {
+  //   accessorKey: 'imageSource',
+  //   header: 'Image',
+  //   cell: ({ row }) => {
+  //     const imageSource = row.getValue('imageSource') as string | null;
+  //     return (
+  //       <Avatar className="h-10 w-10">
+  //         <AvatarImage
+  //           src={imageSource || undefined}
+  //           alt={row.original.title}
+  //         />
+  //         <AvatarFallback>
+  //           {row.original.title.slice(0, 2).toUpperCase()}
+  //         </AvatarFallback>
+  //       </Avatar>
+  //     );
+  //   },
+  //   enableSorting: false,
+  // },
   {
     accessorKey: 'title',
     header: 'Title',

@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { PlusIcon } from 'lucide-react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +20,7 @@ import { AdminLayout } from '@/layouts/admin-layout';
 import type { PaginationState } from '@tanstack/react-table';
 
 const AdminManageCoursePage = () => {
+  const { t } = useTranslation('pages.admin');
   const navigate = useNavigate();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -30,6 +32,22 @@ const AdminManageCoursePage = () => {
   const isBusy = isFetching || isLoading;
 
   const coursesData = data?.content ?? [];
+  const STATUS_ORDER = ['ACTIVE', 'INACTIVE'];
+  const sortedCourses = [...coursesData].sort((a, b) => {
+    const sa = String(a.status ?? '').toUpperCase();
+    const sb = String(b.status ?? '').toUpperCase();
+    const ia = STATUS_ORDER.indexOf(sa);
+    const ib = STATUS_ORDER.indexOf(sb);
+
+    if (ia === -1 && ib === -1) {
+      return String(a.title ?? '').localeCompare(String(b.title ?? ''));
+    }
+    if (ia === -1) return 1; // b has priority
+    if (ib === -1) return -1; // a has priority
+    if (ia === ib)
+      return String(a.title ?? '').localeCompare(String(b.title ?? ''));
+    return ia - ib;
+  });
   const apiPage = data?.page;
 
   const totalPages = apiPage ? Math.max(1, apiPage.totalPages) : 1;
@@ -40,12 +58,9 @@ const AdminManageCoursePage = () => {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">
-              Quản lý khóa học
+              {t('courses.title')}
             </h1>
-            <p className="text-muted-foreground">
-              Quản lý các khóa học được cung cấp trên nền tảng. Bạn có thể thêm,
-              chỉnh sửa hoặc xóa các khóa học khi cần thiết.
-            </p>
+            <p className="text-muted-foreground">{t('courses.description')}</p>
           </div>
           <div>
             <Button
@@ -54,7 +69,7 @@ const AdminManageCoursePage = () => {
               }}
             >
               <PlusIcon className="mr-2 h-4 w-4" />
-              Tạo khóa học
+              {t('courses.create_course')}
             </Button>
           </div>
         </div>
@@ -75,7 +90,7 @@ const AdminManageCoursePage = () => {
                   </div>
                 ),
               )
-            : coursesData.map((course) => (
+            : sortedCourses.map((course) => (
                 <CourseItem key={course.id} course={course} />
               ))}
         </div>

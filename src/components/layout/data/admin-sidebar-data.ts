@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import {
   LayoutDashboard,
   Users,
@@ -38,10 +39,10 @@ export interface AdminSidebarData {
 export const adminSidebarData: AdminSidebarData = {
   navGroups: [
     {
-      title: 'Main',
+      title: i18next.t('admin.main', { ns: 'sidebar' }),
       items: [
         {
-          title: 'Dashboard',
+          title: i18next.t('admin.dashboard', { ns: 'sidebar' }),
           url: '/admin',
           icon: LayoutDashboard,
           isActive: true,
@@ -49,20 +50,20 @@ export const adminSidebarData: AdminSidebarData = {
       ],
     },
     {
-      title: 'Management',
+      title: i18next.t('admin.management', { ns: 'sidebar' }),
       items: [
         {
-          title: 'Users',
+          title: i18next.t('admin.users', { ns: 'sidebar' }),
           url: '/admin/users',
           icon: Users,
         },
         {
-          title: 'Books',
+          title: i18next.t('admin.books', { ns: 'sidebar' }),
           url: '/admin/books',
           icon: BookOpen,
         },
         {
-          title: 'Flashcards',
+          title: i18next.t('admin.flashcards', { ns: 'sidebar' }),
           url: '/admin/flashcards',
           icon: Layers2,
           // children: [
@@ -71,47 +72,47 @@ export const adminSidebarData: AdminSidebarData = {
           // ],
         },
         {
-          title: 'Courses',
+          title: i18next.t('admin.courses', { ns: 'sidebar' }),
           url: '/admin/courses',
           icon: GraduationCap,
         },
         {
-          title: 'Quizzes',
+          title: i18next.t('admin.quizzes', { ns: 'sidebar' }),
           url: '/admin/quizzes',
           icon: BookCheck,
         },
         {
-          title: 'Assignments',
+          title: i18next.t('admin.assignments', { ns: 'sidebar' }),
           url: '/admin/assignment',
           icon: BookCheck,
         },
       ],
     },
     {
-      title: 'Payment',
+      title: i18next.t('admin.payment', { ns: 'sidebar' }),
       items: [
         {
-          title: 'Packages',
+          title: i18next.t('admin.packages', { ns: 'sidebar' }),
           url: '/admin/packages',
           icon: Package,
         },
         {
-          title: 'Subscriptions',
+          title: i18next.t('admin.subscriptions', { ns: 'sidebar' }),
           url: '/admin/subscriptions',
           icon: CalendarSync,
         },
         {
-          title: 'Transactions',
+          title: i18next.t('admin.transactions', { ns: 'sidebar' }),
           url: '/admin/transactions',
           icon: Receipt,
         },
       ],
     },
     {
-      title: 'Others',
+      title: i18next.t('admin.others', { ns: 'sidebar' }),
       items: [
         {
-          title: 'Archive',
+          title: i18next.t('admin.archive', { ns: 'sidebar' }),
           url: '/admin/archive',
           icon: Archive,
         },

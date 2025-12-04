@@ -1,0 +1,116 @@
+{
+  "page_meta_title": "Khám Phá TRIZ - Phương Pháp Sáng Tạo Có Hệ Thống",
+
+  "hero": {
+    "title": "Khám Phá TRIZ",
+    "subtitle": "Phương Pháp Sáng Tạo Có Hệ Thống"
+  },
+
+  "triz_overview": {
+    "title": "Giới thiệu",
+    "title_highlight": "tổng quan về TRIZ",
+    "description": "TRIZ (Theory of Inventive Problem Solving) là phương pháp luận sáng tạo có hệ thống do Genrich Altshuller phát triển từ năm 1946, dựa trên phân tích hàng trăm nghìn bằng sáng chế để rút ra các quy luật giải quyết vấn đề.",
+    "why_learn": "Tại sao cần học TRIZ?",
+    "reasons": [
+      "Biến sáng tạo từ \"bẩm sinh\" thành \"kỹ năng có thể học được\"",
+      "Cung cấp công cụ và quy trình khoa học để giải quyết vấn đề",
+      "Rút ngắn thời gian tìm giải pháp",
+      "Ứng dụng đa lĩnh vực: kỹ thuật, giáo dục, nghệ thuật…"
+    ]
+  },
+
+  "methodology": {
+    "title": "Giới thiệu về",
+    "title_highlight": "phương pháp luận",
+    "title_end": "sáng tạo và đổi mới",
+    "description": "PPLSTVĐM (Creativity and Innovation Methodologies) là hệ thống phương pháp và kỹ năng giúp nâng cao năng suất tư duy, tiến tới điều khiển quá trình suy nghĩ sáng tạo.",
+    "vietnam_application": "Ứng dụng tại Việt Nam:",
+    "professor_contribution": "GS Phan Dũng là người đầu tiên hệ thống hóa, dịch và phổ biến TRIZ tại Việt Nam từ thập niên 1980, thông qua các khóa đào tạo và sách như: Phương pháp luận sáng tạo khoa học.",
+    "impact": "Tính đến nay, hàng chục nghìn học viên từ mọi ngành nghề và vùng miền đã tham gia các khóa học PPLSTVĐM, với chương trình đào tạo bài bản lên đến 120 tiết."
+  },
+
+  "core_content": {
+    "title": "Các nội dung",
+    "title_highlight": "cốt lỗi",
+    "title_end": "của TRIZ",
+    "principles": {
+      "title": "Nguyên tắc sáng tạo",
+      "description": "TRIZ tổng hợp 40 nguyên tắc giúp tìm ra các ý tưởng mới mẻ, sáng tạo và hiệu quả (Phân nhỏ – Đảo ngược – Thay đổi màu sắc – Kết hợp – Biến hại thành lợi – Thay thế cơ học bằng quang học…)."
+    },
+    "laws": {
+      "title": "Các quy luật phát triển hệ thống kỹ thuật",
+      "description": "Hệ thống, sản phẩm hay giải pháp luôn phát triển theo những xu hướng nhất định (tăng tính linh hoạt, tăng mức độ lý tưởng, tự động hóa,giảm sự can thiệp của con người…)."
+    },
+    "resources": {
+      "title": "Phân tích tài nguyên",
+      "description": "Học cách khai thác hiệu quả những tài nguyên sẵn có như: năng lượng,vật liệu, thông tin, không gian, thời gian… giúp tối ưu giải pháp mà không cần thêm chi phí hay nguồn lực mới."
+    },
+    "contradictions": {
+      "title": "Giải quyết mâu thuẫn",
+      "description": "Mấu chốt của sáng tạo là vượt qua các mâu thuẫn trong thiết kế hoặc giải pháp. TRIZ cung cấp công cụ mạnh mẽ như: ma trận mâu thuẫn, 40 nguyên tắc sáng tạo, ARIZ – thuật toán giải bài toán sáng chế."
+    },
+    "start_learning": "Bắt đầu học ngay"
+  },
+
+  "why_important": {
+    "title": "Tại sao TRIZ",
+    "title_highlight": "quan trọng?",
+    "systematic": {
+      "title": "Chuyển sáng tạo từ \"ngẫu hứng\" sang \"có hệ thống\"",
+      "description": "Thay vì chờ cảm hứng hoặc dựa vào \"tài năng bẩm sinh\", TRIZ cung cấp",
+      "description_highlight": "công cụ và quy trình rõ ràng",
+      "description_end": "để phân tích vấn đề, tìm giải pháp. Điều này giúp ai cũng có thể học và rèn luyện khả năng sáng tạo."
+    },
+    "thinking": {
+      "title": "Nâng cao năng lực tư duy sáng tạo",
+      "description": "Khi luyện tập TRIZ, người học phát triển thói quen",
+      "description_highlight": "tư duy hệ thống, nhìn nhận tài nguyên, tìm giải pháp lý tưởng,",
+      "description_end": "giúp họ ngày càng sáng tạo hơn."
+    },
+    "speed": {
+      "title": "Tăng tốc độ giải quyết vấn đề",
+      "description": "Khi luyện tập TRIZ, người học phát triển thói quen",
+      "description_highlight": "tư duy hệ thống, nhìn nhận tài nguyên, tìm giải pháp lý tưởng,",
+      "description_end": "giúp họ ngày càng sáng tạo hơn."
+    },
+    "contradictions": {
+      "title": "Giải quyết mâu thuẫn – cốt lõi của sáng tạo",
+      "description": "Hầu hết các vấn đề sáng tạo đều bắt nguồn từ",
+      "description_highlight": "mâu thuẫn",
+      "description_mid": "(ví dụ: thiết kế điện thoại vừa mỏng nhẹ, vừa pin lâu). TRIZ giúp bạn vượt qua mâu thuẫn mà không cần đánh đổi, nhờ",
+      "description_end": "40 bộ nguyên tắc sáng tạo và ma trận mâu thuẫn"
+    },
+    "multi_field": {
+      "title": "Ứng dụng đa lĩnh vực",
+      "description": "Không chỉ giới hạn trong kỹ thuật, TRIZ còn ứng dụng mạnh mẽ trong",
+      "description_highlight": "kinh doanh, quản lý, giáo dục, nghệ thuật và đời sống",
+      "description_end": "(ví dụ: tái thiết kế mô hình kinh doanh, cải tiến quy trình làm việc, giải quyết vấn đề cá nhân…)."
+    }
+  },
+
+  "comprehensive_platform": {
+    "title": "Nền tảng học TRIZ",
+    "title_highlight": "toàn diện",
+    "description": "Khám phá hệ thống học tập tích hợp từ lý thuyết đến thực hành, kết nối cộng đồng, luyện tư duy qua quiz và nhận hỗ trợ từ trợ lý AI. Mọi công cụ bạn cần để học và áp dụng TRIZ đều có mặt tại đây.",
+    "learn_triz": {
+      "title": "Học TRIZ",
+      "description": "Khóa học lý thuyết, thực hành, bài tập và tình huống thực tế.",
+      "learn_more": "Tìm hiểu thêm"
+    },
+    "quiz": {
+      "title": "Làm Quiz",
+      "description": "Trắc nghiệm kiểm tra kiến thức, đánh giá tiến độ, ôn tập.",
+      "learn_more": "Tìm hiểu thêm"
+    },
+    "forum": {
+      "title": "Forum (Thảo luận)",
+      "description": "Cộng đồng trao đổi, hỏi – đáp các vấn đề thực tiễn áp dụng TRIZ.",
+      "learn_more": "Tìm hiểu thêm"
+    },
+    "chat_ai": {
+      "title": "Chat AI",
+      "description": "Trợ lý thông minh hỗ trợ bạn học và áp dụng TRIZ theo thời gian thực.",
+      "learn_more": "Tìm hiểu thêm"
+    }
+  }
+}

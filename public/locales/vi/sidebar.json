@@ -54,5 +54,38 @@
 
   "brands": "Thương hiệu",
   "pricing": "Giá cả",
-  "wallet": "Ví"
+  "wallet": "Ví",
+
+  "admin": {
+    "title": "TRIZ Quản trị",
+    "subtitle": "Quản lý",
+    "main": "Chính",
+    "management": "Quản lý",
+    "payment": "Thanh toán",
+    "others": "Khác",
+    "dashboard": "Bảng điều khiển",
+    "users": "Người dùng",
+    "books": "Sách",
+    "flashcards": "Thẻ ghi nhớ",
+    "courses": "Khóa học",
+    "quizzes": "Bài kiểm tra",
+    "assignments": "Bài tập",
+    "packages": "Gói",
+    "subscriptions": "Đăng ký",
+    "transactions": "Giao dịch",
+    "archive": "Lưu trữ"
+  },
+
+  "command_menu": {
+    "placeholder": "Nhập lệnh hoặc tìm kiếm...",
+    "no_results": "Không tìm thấy kết quả.",
+    "theme": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống"
+  },
+
+  "user_menu": {
+    "logout": "Đăng xuất"
+  }
 }

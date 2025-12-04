@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -71,6 +72,7 @@ export const BooksFormDialog = ({
   onOpenChange,
   initialData,
 }: BooksFormDialogProps) => {
+  const { t } = useTranslation('pages.admin');
   const createMutation = useCreateBookMutation();
   const updateMutation = useUpdateBookMutation();
   const uploadMutation = useUploadFileMutation();
@@ -154,7 +156,9 @@ export const BooksFormDialog = ({
       <SheetContent className="w-full max-w-xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle>
-            {initialData ? 'Edit Book' : 'Create New Book'}
+            {initialData
+              ? t('books.form.edit_title')
+              : t('books.form.create_title')}
           </SheetTitle>
         </SheetHeader>
 
@@ -168,9 +172,12 @@ export const BooksFormDialog = ({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title *</FormLabel>
+                  <FormLabel>{t('books.form.title')} *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Book title" {...field} />
+                    <Input
+                      placeholder={t('books.form.title_placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,9 +189,12 @@ export const BooksFormDialog = ({
               name="author"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Author</FormLabel>
+                  <FormLabel>{t('books.form.author')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Author name" {...field} />
+                    <Input
+                      placeholder={t('books.form.author_placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,9 +206,12 @@ export const BooksFormDialog = ({
               name="publisher"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Publisher</FormLabel>
+                  <FormLabel>{t('books.form.publisher')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Publisher name" {...field} />
+                    <Input
+                      placeholder={t('books.form.publisher_placeholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -210,7 +223,7 @@ export const BooksFormDialog = ({
               name="bUrl"
               render={() => (
                 <FormItem>
-                  <FormLabel>Book File (EPUB/PDF) *</FormLabel>
+                  <FormLabel>{t('books.form.book_file')} *</FormLabel>
                   <FormControl>
                     <FileUpload
                       value={bookFiles}
@@ -292,7 +305,7 @@ export const BooksFormDialog = ({
               name="bCoverUrl"
               render={() => (
                 <FormItem>
-                  <FormLabel>Cover Image</FormLabel>
+                  <FormLabel>{t('books.form.cover_image')}</FormLabel>
                   <FormControl>
                     <FileUpload
                       value={coverFiles}
@@ -374,7 +387,7 @@ export const BooksFormDialog = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t('books.form.status')}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
@@ -383,10 +396,10 @@ export const BooksFormDialog = ({
                     </FormControl>
                     <SelectContent>
                       <SelectItem value={BookStatus.PUBLISHED}>
-                        Published
+                        {t('books.form.status_published')}
                       </SelectItem>
                       <SelectItem value={BookStatus.UNPUBLISHED}>
-                        Unpublished
+                        {t('books.form.status_unpublished')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -400,7 +413,7 @@ export const BooksFormDialog = ({
               name="displayOrder"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Display Order</FormLabel>
+                  <FormLabel>{t('books.form.display_order')}</FormLabel>
                   <FormControl>
                     <Input placeholder="0" type="number" {...field} />
                   </FormControl>
@@ -412,14 +425,14 @@ export const BooksFormDialog = ({
             <div className="flex gap-3 pt-6">
               <Button type="submit" disabled={isLoading}>
                 {isLoading
-                  ? 'Saving...'
+                  ? t('books.form.saving') + '...'
                   : initialData
-                    ? 'Update Book'
-                    : 'Create Book'}
+                    ? t('books.form.update_book')
+                    : t('books.form.create_book')}
               </Button>
               <SheetClose asChild>
                 <Button type="button" variant="outline">
-                  Cancel
+                  {t('books.form.cancel')}
                 </Button>
               </SheetClose>
             </div>

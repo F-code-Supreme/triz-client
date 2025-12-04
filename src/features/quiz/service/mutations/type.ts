@@ -1,6 +1,7 @@
 export type UpdateQuizPayload = {
   title: string;
   description: string;
+  moduleId: string;
   questions: Array<{
     content: string;
     questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
@@ -27,6 +28,7 @@ export type CreateQuizPayload = {
   title: string;
   description: string;
   durationInMinutes: number;
+  moduleId: string;
   questions: Array<{
     content: string;
     questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
@@ -149,6 +151,7 @@ export interface GetQuizByIdResponse {
   title: string;
   description: string;
   durationInMinutes: string;
+  moduleId?: string;
   createdAt: string;
   updatedAt: string;
   createdBy: string | null;
