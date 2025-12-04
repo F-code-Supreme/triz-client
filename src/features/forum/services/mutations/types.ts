@@ -11,7 +11,6 @@ export interface CreateForumPostPayload {
   tagIds: string[];
 }
 
-
 export type UUID = string;
 export type ISODateString = string;
 
