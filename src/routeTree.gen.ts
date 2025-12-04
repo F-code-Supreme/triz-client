@@ -14,6 +14,7 @@ import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -85,6 +86,11 @@ const LearnTrizRoute = LearnTrizRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForumRoute = ForumRouteImport.update({
+  id: '/forum',
+  path: '/forum',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
@@ -328,6 +334,7 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -380,6 +387,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -434,6 +442,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
+  '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -489,6 +498,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -541,6 +551,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -594,6 +605,7 @@ export interface FileRouteTypes {
     | '/'
     | '/(app)'
     | '/flashcard-deck'
+    | '/forum'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -649,6 +661,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
   FlashcardDeckRoute: typeof FlashcardDeckRoute
+  ForumRoute: typeof ForumRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
@@ -715,6 +728,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forum': {
+      id: '/forum'
+      path: '/forum'
+      fullPath: '/forum'
+      preLoaderRoute: typeof ForumRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/flashcard-deck': {
@@ -1112,6 +1132,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
   FlashcardDeckRoute: FlashcardDeckRoute,
+  ForumRoute: ForumRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
