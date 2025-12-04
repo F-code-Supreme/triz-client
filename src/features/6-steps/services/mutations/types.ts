@@ -136,3 +136,30 @@ export interface IStep5SuggestionResponse {
     ideas: Idea[];
   };
 }
+
+// Step 6
+export interface IStep6SuggestionPayload {
+  targetML: string;
+  idea: Idea;
+  physicalContradictions: PhysicalContradiction[];
+}
+
+export interface IStep6SuggestionResponse {
+  ideaId: number;
+  status: 'passing' | 'rejected';
+  evaluation: {
+    scores: {
+      mlResolution: number;
+      feasibility: number;
+      systemImpact: number;
+      total: number;
+    };
+    category: 'excellent' | 'good' | 'average' | 'poor';
+    explanation: {
+      mlResolution: string;
+      feasibility: string;
+      systemImpact: string;
+    };
+  };
+  message: string;
+}
