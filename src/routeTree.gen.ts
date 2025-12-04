@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
 import { Route as PackagesIndexRouteImport } from './routes/packages.index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
+import { Route as ExpertIndexRouteImport } from './routes/expert/index'
 import { Route as CourseIndexRouteImport } from './routes/course.index'
 import { Route as BooksIndexRouteImport } from './routes/books.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -29,6 +30,8 @@ import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-pas
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as CourseSlugRouteImport } from './routes/course.$slug'
+import { Route as ExpertDashboardRouteRouteImport } from './routes/expert/dashboard/route'
+import { Route as ExpertAssignmentRouteRouteImport } from './routes/expert/assignment/route'
 import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/transactions/route'
 import { Route as AdminSubscriptionsRouteRouteImport } from './routes/admin/subscriptions/route'
 import { Route as AdminQuizzesRouteRouteImport } from './routes/admin/quizzes/route'
@@ -122,6 +125,11 @@ const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
   path: '/forgot-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpertIndexRoute = ExpertIndexRouteImport.update({
+  id: '/expert/',
+  path: '/expert/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CourseIndexRoute = CourseIndexRouteImport.update({
   id: '/course/',
   path: '/course/',
@@ -161,6 +169,16 @@ const FlashcardDeckIdRoute = FlashcardDeckIdRouteImport.update({
 const CourseSlugRoute = CourseSlugRouteImport.update({
   id: '/course/$slug',
   path: '/course/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpertDashboardRouteRoute = ExpertDashboardRouteRouteImport.update({
+  id: '/expert/dashboard',
+  path: '/expert/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpertAssignmentRouteRoute = ExpertAssignmentRouteRouteImport.update({
+  id: '/expert/assignment',
+  path: '/expert/assignment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTransactionsRouteRoute = AdminTransactionsRouteRouteImport.update({
@@ -355,6 +373,8 @@ export interface FileRoutesByFullPath {
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
+  '/expert/assignment': typeof ExpertAssignmentRouteRoute
+  '/expert/dashboard': typeof ExpertDashboardRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -363,6 +383,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
+  '/expert': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -408,6 +429,8 @@ export interface FileRoutesByTo {
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
+  '/expert/assignment': typeof ExpertAssignmentRouteRoute
+  '/expert/dashboard': typeof ExpertDashboardRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -416,6 +439,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
+  '/expert': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -463,6 +487,8 @@ export interface FileRoutesById {
   '/admin/quizzes': typeof AdminQuizzesRouteRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRouteRoute
   '/admin/transactions': typeof AdminTransactionsRouteRoute
+  '/expert/assignment': typeof ExpertAssignmentRouteRoute
+  '/expert/dashboard': typeof ExpertDashboardRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -471,6 +497,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/books/': typeof BooksIndexRoute
   '/course/': typeof CourseIndexRoute
+  '/expert/': typeof ExpertIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/packages/': typeof PackagesIndexRoute
   '/register/': typeof RegisterIndexRoute
@@ -519,6 +546,8 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/subscriptions'
     | '/admin/transactions'
+    | '/expert/assignment'
+    | '/expert/dashboard'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -527,6 +556,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/course'
+    | '/expert'
     | '/forgot-password'
     | '/packages'
     | '/register'
@@ -572,6 +602,8 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/subscriptions'
     | '/admin/transactions'
+    | '/expert/assignment'
+    | '/expert/dashboard'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -580,6 +612,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/books'
     | '/course'
+    | '/expert'
     | '/forgot-password'
     | '/packages'
     | '/register'
@@ -626,6 +659,8 @@ export interface FileRouteTypes {
     | '/admin/quizzes'
     | '/admin/subscriptions'
     | '/admin/transactions'
+    | '/expert/assignment'
+    | '/expert/dashboard'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -634,6 +669,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/books/'
     | '/course/'
+    | '/expert/'
     | '/forgot-password/'
     | '/packages/'
     | '/register/'
@@ -677,6 +713,8 @@ export interface RootRouteChildren {
   AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
   AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
   AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
+  ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
+  ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
   CourseSlugRoute: typeof CourseSlugRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
@@ -685,6 +723,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   BooksIndexRoute: typeof BooksIndexRoute
   CourseIndexRoute: typeof CourseIndexRoute
+  ExpertIndexRoute: typeof ExpertIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   PackagesIndexRoute: typeof PackagesIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
@@ -779,6 +818,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expert/': {
+      id: '/expert/'
+      path: '/expert'
+      fullPath: '/expert'
+      preLoaderRoute: typeof ExpertIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/course/': {
       id: '/course/'
       path: '/course'
@@ -833,6 +879,20 @@ declare module '@tanstack/react-router' {
       path: '/course/$slug'
       fullPath: '/course/$slug'
       preLoaderRoute: typeof CourseSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expert/dashboard': {
+      id: '/expert/dashboard'
+      path: '/expert/dashboard'
+      fullPath: '/expert/dashboard'
+      preLoaderRoute: typeof ExpertDashboardRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expert/assignment': {
+      id: '/expert/assignment'
+      path: '/expert/assignment'
+      fullPath: '/expert/assignment'
+      preLoaderRoute: typeof ExpertAssignmentRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/transactions': {
@@ -1148,6 +1208,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   AdminSubscriptionsRouteRoute: AdminSubscriptionsRouteRoute,
   AdminTransactionsRouteRoute: AdminTransactionsRouteRoute,
+  ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
+  ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
   CourseSlugRoute: CourseSlugRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
@@ -1156,6 +1218,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   BooksIndexRoute: BooksIndexRoute,
   CourseIndexRoute: CourseIndexRoute,
+  ExpertIndexRoute: ExpertIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   PackagesIndexRoute: PackagesIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,

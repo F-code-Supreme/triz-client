@@ -27,6 +27,8 @@ export const DefaultLayout = ({
 
   if (hasRole(Role.ADMIN)) {
     return <Navigate to="/admin/dashboard" />;
+  } else if (hasRole(Role.EXPERT)) {
+    return <Navigate to="/expert/dashboard" />;
   }
 
   return (
