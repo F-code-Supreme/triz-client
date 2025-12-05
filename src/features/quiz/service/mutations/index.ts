@@ -43,15 +43,9 @@ export const useGetQuizByIdMutation = (id: string) => {
 export const useStartQuizAttemptMutation = () => {
   const _request = useAxios();
   return useMutation({
-    mutationFn: async ({
-      quizId,
-      userId,
-    }: {
-      quizId: string;
-      userId: string;
-    }) => {
+    mutationFn: async ({ quizId }: { quizId: string }) => {
       const res = await _request.post(
-        `/quiz-attempts/start/quiz/${quizId}/user/${userId}`,
+        `/quiz-attempts/start/quiz/${quizId}`,
         {},
       );
       return res.data;

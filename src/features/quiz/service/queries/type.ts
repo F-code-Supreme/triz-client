@@ -1,6 +1,7 @@
 import type { QuizQuestion } from '../mutations/type';
+import type { PaginatedResponse } from '@/types';
 
-export interface getQuizzByModulesResponse {
+export interface Quiz {
   id: string;
   title: string;
   description: string;
@@ -13,6 +14,8 @@ export interface getQuizzByModulesResponse {
   userId: string | null;
   questions: QuizQuestion[];
 }
+
+export type GetQuizzByModulesResponse = PaginatedResponse<Quiz>;
 
 export interface QuizGetAnswersAttempt {
   id: string;

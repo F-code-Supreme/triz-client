@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 
-import type { getQuizzByModulesResponse, QuizGetAnswersAttempt } from './type';
+import type { GetQuizzByModulesResponse, QuizGetAnswersAttempt } from './type';
 
 export const useGetQuizzByModulesQuery = (moduleId: string) => {
   const _request = useAxios();
   return useQuery({
     queryKey: ['getQuizzByModules', moduleId],
     queryFn: async () => {
-      const response = await _request.get<getQuizzByModulesResponse[]>(
+      const response = await _request.get<GetQuizzByModulesResponse>(
         `/modules/${moduleId}/quizzes`,
       );
       return response.data;
