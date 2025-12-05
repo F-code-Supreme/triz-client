@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAxios } from '@/configs/axios';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { TransactionKeys } from '@/features/payment/transaction/services/queries/keys';
+import { WalletKeys } from '@/features/payment/wallet/services/queries/keys';
 
 import { SubscriptionKeys } from '../queries/keys';
 
@@ -38,6 +39,11 @@ export const usePurchasePackageMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [SubscriptionKeys.GetSubscriptionsByUserQuery, user?.id],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [WalletKeys.GetWalletByUserQuery, user?.id],
+        exact: false,
       });
     },
   });
