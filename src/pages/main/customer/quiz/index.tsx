@@ -51,7 +51,6 @@ const QuizListPage = () => {
     try {
       const attemptResponse = await startQuizAttemptMutation.mutateAsync({
         quizId: pendingQuizId,
-        userId: user.id,
       });
 
       toast.success('Bài quiz đã được bắt đầu!');
