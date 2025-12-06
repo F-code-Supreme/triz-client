@@ -64,22 +64,25 @@ const CourseLearnPage = () => {
 
   useEffect(() => {
     if (currentModule && currentModule.contents.length > 0) {
-      setCurrentItemId(currentModule.contents[0].id);
+      const isCurrentItemInModule = currentModule.contents.some(
+        (item) => item.id === currentItemId,
+      );
+      if (!isCurrentItemInModule) {
+        setCurrentItemId(currentModule.contents[0].id);
+      }
     }
-  }, [currentModule]);
+  }, [currentModule, currentItemId]);
 
   const handleModuleChange = (moduleId: string) => {
     setCurrentModuleId(moduleId);
   };
 
   const handleItemChange = (itemId: string, moduleId: string) => {
-    setCurrentItemId(itemId);
     if (moduleId !== currentModuleId) {
       setCurrentModuleId(moduleId);
     }
+    setCurrentItemId(itemId);
   };
-
-  console.log('enhancedModules:', enhancedModules);
 
   if (!courseData || !sortedModulesData) {
     if (isLoadingCourse || isLoadingModules) {

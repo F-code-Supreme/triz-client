@@ -128,7 +128,6 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
       case 'quiz':
         // eslint-disable-next-line no-case-declarations
         const quizData = item.quizData;
-        console.log('Rendering quiz content for:', quizData);
         return (
           <Card>
             <CardHeader>
