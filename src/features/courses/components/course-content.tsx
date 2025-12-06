@@ -7,6 +7,8 @@ import ReactMarkdown from 'react-markdown';
 import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 import CourseAssignment from './course-assigment';
@@ -96,11 +98,14 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
 
             {/* PDF Viewer */}
             {lessonData?.content && (
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: lessonData.content,
-                }}
-              />
+              <TooltipProvider>
+                <MinimalTiptapEditor
+                  key={item.id}
+                  value={lessonData.content}
+                  showToolbar={false}
+                  editable={false}
+                />
+              </TooltipProvider>
             )}
 
             {/* {!isVideo && !isPDF && (
