@@ -16,13 +16,14 @@ export const useGetForumPostsQuery = (pagination?: PaginationState) => {
 
   return useInfiniteQuery({
     queryKey: [ForumKeys.GetForumQuery, initialSize],
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam = 0, signal }) => {
       const response = await _request.get<ForumPostResponse>(`/forumPosts`, {
         params: {
           page: pageParam,
           size: initialSize,
           sort: 'createdAt,desc',
         },
+        signal,
       });
       return response.data;
     },

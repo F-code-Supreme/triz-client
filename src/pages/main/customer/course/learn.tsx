@@ -79,8 +79,6 @@ const CourseLearnPage = () => {
     }
   };
 
-  console.log('enhancedModules:', enhancedModules);
-
   if (!courseData || !sortedModulesData) {
     if (isLoadingCourse || isLoadingModules) {
       return (

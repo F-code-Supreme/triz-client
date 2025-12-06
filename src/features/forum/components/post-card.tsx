@@ -77,7 +77,6 @@ export const PostCard: React.FC<PostCardProps> = ({
   // fetch replies for this post
   const { data: repliesData } = useGetForumPostReplyByIdQuery(_id);
   const repliesContent = repliesData?.content || [];
-  console.log('repliesContent:', repliesContent);
 
   //mutation
   const createVoteMutation = useCreateVoteForReplyMutation();
