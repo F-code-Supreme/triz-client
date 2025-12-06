@@ -26,7 +26,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -50,12 +49,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import {
   useCreateFlashcardMutation,
   useUpdateFlashcardMutation,
@@ -280,58 +273,6 @@ const CardRowActions = ({ card, deckId }: CardRowActionsProps) => {
 // Define columns
 const createCardColumns = (deckId: string): ColumnDef<Flashcard>[] => [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'id',
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={i18next.t('pages.admin:flashcards.manage_cards.table.id')}
-      />
-    ),
-    cell: ({ row }) => {
-      const id = row.getValue('id') as string;
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="w-[100px] truncate font-mono text-sm cursor-help">
-                {id}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="font-mono text-xs">
-              {id}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: 'termImgUrl',
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -408,12 +349,14 @@ interface FlashcardManageCardsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   deckId: string;
+  deckTitle?: string;
 }
 
 export const FlashcardManageCardsDialog = ({
   open,
   onOpenChange,
   deckId,
+  deckTitle,
 }: FlashcardManageCardsDialogProps) => {
   const { t } = useTranslation('pages.admin');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -496,7 +439,7 @@ export const FlashcardManageCardsDialog = ({
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">
-              {t('flashcards.manage_cards.deck_id_label')}: {deckId}
+              {t('flashcards.manage_cards.deck_label', { deckTitle })}
             </p>
             <Button size="sm" onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
@@ -515,12 +458,6 @@ export const FlashcardManageCardsDialog = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>
-                      {t('flashcards.manage_cards.table.select')}
-                    </TableHead>
-                    <TableHead>
-                      {t('flashcards.manage_cards.table.id')}
-                    </TableHead>
                     <TableHead>
                       {t('flashcards.manage_cards.table.image')}
                     </TableHead>

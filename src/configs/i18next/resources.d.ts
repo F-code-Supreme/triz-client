@@ -493,7 +493,7 @@ interface Resources {
         "card_updated": "Card updated successfully",
         "create_failed": "Failed to create card",
         "create_title": "Create New Card",
-        "deck_id_label": "Deck ID",
+        "deck_label": "Manage cards for deck {{deckTitle}}",
         "definition_label": "Definition",
         "delete_failed": "Failed to delete card",
         "delete_message": "Are you sure you want to delete this card? This action cannot be undone.",
@@ -509,9 +509,7 @@ interface Resources {
         "table": {
           "actions": "Actions",
           "definition": "Definition",
-          "id": "ID",
           "image": "Image",
-          "select": "Select",
           "term": "Term"
         },
         "term_label": "Term",
