@@ -10,7 +10,7 @@ export const Route = createFileRoute('/register/')({
   }),
   beforeLoad: ({ context, search }) => {
     if (context.auth.isAuthenticated) {
-      throw redirect({ to: search.redirect });
+      throw redirect({ to: search.redirect || '/' });
     }
   },
   component: RegisterPage,

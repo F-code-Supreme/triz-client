@@ -10,17 +10,7 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
     <div className="relative bg-slate-800 sm:20 md:mt-32">
       {/* CTA Section */}
       {showCTA && (
-        <div
-          className="
-        w-[90%] max-w-5xl mx-auto 
-        bg-gradient-to-br from-blue-500 to-blue-800
-        rounded-2xl shadow-xl
-        px-4 py-8
-        flex flex-col items-center
-        md:absolute md:-top-32 md:left-1/2 md:-translate-x-1/2 md:px-10 md:py-8 md:flex-row md:justify-between md:items-center md:gap-8
-        z-10
-      "
-        >
+        <div className="w-[90%] max-w-5xl mx-auto bg-blue-600 rounded-2xl shadow-xl px-4 py-8 flex flex-col items-center md:absolute md:-top-32 md:left-1/2 md:-translate-x-1/2 md:px-10 md:py-8 md:flex-row md:justify-between md:items-center md:gap-8 z-10">
           <div className="text-center md:text-start md:px-10">
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 md:mb-8 max-w-2xl mx-auto">
               {t('cta.title')}
@@ -70,8 +60,9 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
           <div className="mt-6 md:mt-0">
             <img
               src={CTAImage}
-              alt="Frame 1410086255"
+              alt="CTA"
               className="mx-auto rounded-2xl pb-3 w-full max-w-xs"
+              loading="lazy"
             />
           </div>
         </div>
