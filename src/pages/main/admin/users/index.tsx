@@ -81,7 +81,6 @@ const AdminUsersPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Full Name</TableHead>
                     <TableHead>Roles</TableHead>

@@ -45,8 +45,6 @@ const CourseQuizPage = () => {
   const { id: moduleId } = search as { id: string };
   const { user } = useAuth();
 
-  console.log('🧩 CourseQuizPage loaded with moduleId:', moduleId);
-
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -68,9 +66,6 @@ const CourseQuizPage = () => {
   const { data: timeRemainingData } = useGetQuizAttemptRemainingTimeQuery(
     attemptId || '',
   );
-
-  console.log('🧩 quizDataArray:', quizDataArray);
-  console.log('🧩 Quiz Data:', quizData);
 
   useEffect(() => {
     if (quizData?.durationInMinutes && !hasInProgressAttempt) {

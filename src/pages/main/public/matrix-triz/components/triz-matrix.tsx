@@ -481,7 +481,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              Principle #{selectedPrincipleData?.number}:{' '}
+              Nguyên tắc {selectedPrincipleData?.number}:{' '}
               {selectedPrincipleData?.title}
             </DialogTitle>
           </DialogHeader>

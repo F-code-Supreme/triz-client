@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
@@ -7,7 +6,6 @@ import { useLogoutMutation } from '../services/mutations';
 
 const useLogout = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { logout: clientLogout } = useAuth();
   const { mutate: logoutMutate } = useLogoutMutation();
 
@@ -15,11 +13,11 @@ const useLogout = () => {
     logoutMutate(undefined, {
       onSettled: async () => {
         clientLogout();
-        await queryClient.invalidateQueries();
+        await new Promise((resolve) => setTimeout(resolve, 0));
         navigate({ to: '/' });
       },
     });
-  }, [logoutMutate, clientLogout, queryClient, navigate]);
+  }, [logoutMutate, clientLogout, navigate]);
 
   return logout;
 };

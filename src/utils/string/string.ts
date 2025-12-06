@@ -66,3 +66,38 @@ export function kebabCase(string_: string): string {
 export function formatNumber(value: number, separator = ','): string {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 }
+
+/**
+ * Cleans HTML content by removing newlines and extra whitespace
+ * @param html - The HTML string to clean
+ * @returns Cleaned HTML string with normalized whitespace
+ */
+export function cleanHtml(html = ''): string {
+  return html.replace(/\r\n|\n/g, ' ').trim();
+}
+
+/**
+ * Creates an excerpt from HTML content
+ * @param html - The HTML string to excerpt
+ * @param limit - Maximum character length (default: 400)
+ * @returns Truncated and cleaned HTML excerpt
+ */
+export function htmlExcerpt(html = '', limit = 400): string {
+  const cleaned = cleanHtml(html);
+  if (cleaned.length <= limit) return cleaned;
+  return cleaned.slice(0, limit) + '...';
+}
+
+/**
+ * Formats an ISO date string to locale date string
+ * @param isoDate - ISO date string
+ * @returns Formatted date string or original value if invalid
+ */
+export function formatISODate(isoDate?: string): string {
+  if (!isoDate) return '';
+  try {
+    return new Date(isoDate).toLocaleDateString();
+  } catch {
+    return isoDate;
+  }
+}

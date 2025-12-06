@@ -307,7 +307,7 @@
     },
     "manage_cards": {
       "title": "Quản lý thẻ",
-      "deck_id_label": "ID bộ thẻ",
+      "deck_label": "Quản lý thẻ cho bộ thẻ {{deckTitle}}",
       "new_card": "Thẻ mới",
       "search_placeholder": "Tìm kiếm theo thuật ngữ, định nghĩa...",
       "no_cards": "Không tìm thấy thẻ nào. Hãy tạo thẻ đầu tiên của bạn!",
@@ -328,8 +328,6 @@
       "no_image": "Không có hình ảnh",
       "no_img": "Không có ảnh",
       "table": {
-        "select": "Chọn",
-        "id": "ID",
         "image": "Hình ảnh",
         "term": "Thuật ngữ",
         "definition": "Định nghĩa",

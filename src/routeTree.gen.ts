@@ -16,6 +16,8 @@ import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
+import { Route as ExpertRouteRouteImport } from './routes/expert/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
@@ -104,6 +106,16 @@ const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   path: '/flashcard-deck',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpertRouteRoute = ExpertRouteRouteImport.update({
+  id: '/expert',
+  path: '/expert',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
   getParentRoute: () => rootRouteImport,
@@ -129,9 +141,9 @@ const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExpertIndexRoute = ExpertIndexRouteImport.update({
-  id: '/expert/',
-  path: '/expert/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ExpertRouteRoute,
 } as any)
 const CourseIndexRoute = CourseIndexRouteImport.update({
   id: '/course/',
@@ -144,9 +156,9 @@ const BooksIndexRoute = BooksIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
   id: '/register/verify-otp',
@@ -175,64 +187,64 @@ const CourseSlugRoute = CourseSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExpertDashboardRouteRoute = ExpertDashboardRouteRouteImport.update({
-  id: '/expert/dashboard',
-  path: '/expert/dashboard',
-  getParentRoute: () => rootRouteImport,
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ExpertRouteRoute,
 } as any)
 const ExpertAssignmentRouteRoute = ExpertAssignmentRouteRouteImport.update({
-  id: '/expert/assignment',
-  path: '/expert/assignment',
-  getParentRoute: () => rootRouteImport,
+  id: '/assignment',
+  path: '/assignment',
+  getParentRoute: () => ExpertRouteRoute,
 } as any)
 const AdminTransactionsRouteRoute = AdminTransactionsRouteRouteImport.update({
-  id: '/admin/transactions',
-  path: '/admin/transactions',
-  getParentRoute: () => rootRouteImport,
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminSubscriptionsRouteRoute = AdminSubscriptionsRouteRouteImport.update({
-  id: '/admin/subscriptions',
-  path: '/admin/subscriptions',
-  getParentRoute: () => rootRouteImport,
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminQuizzesRouteRoute = AdminQuizzesRouteRouteImport.update({
-  id: '/admin/quizzes',
-  path: '/admin/quizzes',
-  getParentRoute: () => rootRouteImport,
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminPackagesRouteRoute = AdminPackagesRouteRouteImport.update({
-  id: '/admin/packages',
-  path: '/admin/packages',
-  getParentRoute: () => rootRouteImport,
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminFlashcardsRouteRoute = AdminFlashcardsRouteRouteImport.update({
-  id: '/admin/flashcards',
-  path: '/admin/flashcards',
-  getParentRoute: () => rootRouteImport,
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
-  getParentRoute: () => rootRouteImport,
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminCoursesRouteRoute = AdminCoursesRouteRouteImport.update({
-  id: '/admin/courses',
-  path: '/admin/courses',
-  getParentRoute: () => rootRouteImport,
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
-  id: '/admin/books',
-  path: '/admin/books',
-  getParentRoute: () => rootRouteImport,
+  id: '/books',
+  path: '/books',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminAssignmentRouteRoute = AdminAssignmentRouteRouteImport.update({
-  id: '/admin/assignment',
-  path: '/admin/assignment',
-  getParentRoute: () => rootRouteImport,
+  id: '/assignment',
+  path: '/assignment',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminArchiveRouteRoute = AdminArchiveRouteRouteImport.update({
-  id: '/admin/archive',
-  path: '/admin/archive',
-  getParentRoute: () => rootRouteImport,
+  id: '/archive',
+  path: '/archive',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const appWalletRouteRoute = appWalletRouteRouteImport.update({
   id: '/wallet',
@@ -270,9 +282,9 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
-  id: '/admin/users/',
-  path: '/admin/users/',
-  getParentRoute: () => rootRouteImport,
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const appQuizIndexRoute = appQuizIndexRouteImport.update({
   id: '/quiz/',
@@ -290,9 +302,9 @@ const appGamesIndexRoute = appGamesIndexRouteImport.update({
   getParentRoute: () => appRouteRoute,
 } as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
-  id: '/admin/users/$userId',
-  path: '/admin/users/$userId',
-  getParentRoute: () => rootRouteImport,
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const appGamesSegmentationGameRoute =
   appGamesSegmentationGameRouteImport.update({
@@ -370,6 +382,8 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/expert': typeof ExpertRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -400,10 +414,10 @@ export interface FileRoutesByFullPath {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
-  '/admin': typeof AdminIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
-  '/expert': typeof ExpertIndexRoute
+  '/expert/': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
@@ -490,6 +504,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/expert': typeof ExpertRouteRouteWithChildren
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -552,6 +568,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/expert'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -582,10 +600,10 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
-    | '/admin'
+    | '/admin/'
     | '/books'
     | '/course'
-    | '/expert'
+    | '/expert/'
     | '/forgot-password'
     | '/packages'
     | '/register'
@@ -671,6 +689,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(app)'
+    | '/admin'
+    | '/expert'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -733,6 +753,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  ExpertRouteRoute: typeof ExpertRouteRouteWithChildren
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   ForumRoute: typeof ForumRoute
   HomeRoute: typeof HomeRoute
@@ -740,32 +762,16 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MatrixTrizRoute: typeof MatrixTrizRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
-  AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
-  AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
-  AdminBooksRouteRoute: typeof AdminBooksRouteRoute
-  AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
-  AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
-  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRoute
-  AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
-  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
-  AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
-  AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
-  ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
-  ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
   CourseSlugRoute: typeof CourseSlugRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   BooksIndexRoute: typeof BooksIndexRoute
   CourseIndexRoute: typeof CourseIndexRoute
-  ExpertIndexRoute: typeof ExpertIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   PackagesIndexRoute: typeof PackagesIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
-  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
-  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
 }
 
@@ -820,6 +826,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardDeckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expert': {
+      id: '/expert'
+      path: '/expert'
+      fullPath: '/expert'
+      preLoaderRoute: typeof ExpertRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(app)': {
       id: '/(app)'
       path: ''
@@ -857,10 +877,10 @@ declare module '@tanstack/react-router' {
     }
     '/expert/': {
       id: '/expert/'
-      path: '/expert'
-      fullPath: '/expert'
+      path: '/'
+      fullPath: '/expert/'
       preLoaderRoute: typeof ExpertIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/course/': {
       id: '/course/'
@@ -878,10 +898,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin'
+      path: '/'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/register/verify-otp': {
       id: '/register/verify-otp'
@@ -920,87 +940,87 @@ declare module '@tanstack/react-router' {
     }
     '/expert/dashboard': {
       id: '/expert/dashboard'
-      path: '/expert/dashboard'
+      path: '/dashboard'
       fullPath: '/expert/dashboard'
       preLoaderRoute: typeof ExpertDashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/expert/assignment': {
       id: '/expert/assignment'
-      path: '/expert/assignment'
+      path: '/assignment'
       fullPath: '/expert/assignment'
       preLoaderRoute: typeof ExpertAssignmentRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/admin/transactions': {
       id: '/admin/transactions'
-      path: '/admin/transactions'
+      path: '/transactions'
       fullPath: '/admin/transactions'
       preLoaderRoute: typeof AdminTransactionsRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/subscriptions': {
       id: '/admin/subscriptions'
-      path: '/admin/subscriptions'
+      path: '/subscriptions'
       fullPath: '/admin/subscriptions'
       preLoaderRoute: typeof AdminSubscriptionsRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/quizzes': {
       id: '/admin/quizzes'
-      path: '/admin/quizzes'
+      path: '/quizzes'
       fullPath: '/admin/quizzes'
       preLoaderRoute: typeof AdminQuizzesRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/packages': {
       id: '/admin/packages'
-      path: '/admin/packages'
+      path: '/packages'
       fullPath: '/admin/packages'
       preLoaderRoute: typeof AdminPackagesRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/flashcards': {
       id: '/admin/flashcards'
-      path: '/admin/flashcards'
+      path: '/flashcards'
       fullPath: '/admin/flashcards'
       preLoaderRoute: typeof AdminFlashcardsRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/dashboard': {
       id: '/admin/dashboard'
-      path: '/admin/dashboard'
+      path: '/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/courses': {
       id: '/admin/courses'
-      path: '/admin/courses'
+      path: '/courses'
       fullPath: '/admin/courses'
       preLoaderRoute: typeof AdminCoursesRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/books': {
       id: '/admin/books'
-      path: '/admin/books'
+      path: '/books'
       fullPath: '/admin/books'
       preLoaderRoute: typeof AdminBooksRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/assignment': {
       id: '/admin/assignment'
-      path: '/admin/assignment'
+      path: '/assignment'
       fullPath: '/admin/assignment'
       preLoaderRoute: typeof AdminAssignmentRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/archive': {
       id: '/admin/archive'
-      path: '/admin/archive'
+      path: '/archive'
       fullPath: '/admin/archive'
       preLoaderRoute: typeof AdminArchiveRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(app)/wallet': {
       id: '/(app)/wallet'
@@ -1053,10 +1073,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/users/': {
       id: '/admin/users/'
-      path: '/admin/users'
+      path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(app)/quiz/': {
       id: '/(app)/quiz/'
@@ -1081,10 +1101,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
-      path: '/admin/users/$userId'
+      path: '/users/$userId'
       fullPath: '/admin/users/$userId'
       preLoaderRoute: typeof AdminUsersUserIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(app)/games/segmentation-game': {
       id: '/(app)/games/segmentation-game'
@@ -1252,16 +1272,23 @@ const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
 const AdminCoursesRouteRouteWithChildren =
   AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  appRouteRoute: appRouteRouteWithChildren,
-  FlashcardDeckRoute: FlashcardDeckRoute,
-  ForumRoute: ForumRoute,
-  HomeRoute: HomeRoute,
-  LearnTrizRoute: LearnTrizRoute,
-  LoginRoute: LoginRoute,
-  MatrixTrizRoute: MatrixTrizRoute,
-  UnauthorizedRoute: UnauthorizedRoute,
+interface AdminRouteRouteChildren {
+  AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
+  AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
+  AdminBooksRouteRoute: typeof AdminBooksRouteRoute
+  AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
+  AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRoute
+  AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
+  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
+  AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
+  AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
   AdminAssignmentRouteRoute: AdminAssignmentRouteRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
@@ -1272,22 +1299,53 @@ const rootRouteChildren: RootRouteChildren = {
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   AdminSubscriptionsRouteRoute: AdminSubscriptionsRouteRoute,
   AdminTransactionsRouteRoute: AdminTransactionsRouteRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
+interface ExpertRouteRouteChildren {
+  ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
+  ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
+  ExpertIndexRoute: typeof ExpertIndexRoute
+}
+
+const ExpertRouteRouteChildren: ExpertRouteRouteChildren = {
   ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
   ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
+  ExpertIndexRoute: ExpertIndexRoute,
+}
+
+const ExpertRouteRouteWithChildren = ExpertRouteRoute._addFileChildren(
+  ExpertRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
+  ExpertRouteRoute: ExpertRouteRouteWithChildren,
+  FlashcardDeckRoute: FlashcardDeckRoute,
+  ForumRoute: ForumRoute,
+  HomeRoute: HomeRoute,
+  LearnTrizRoute: LearnTrizRoute,
+  LoginRoute: LoginRoute,
+  MatrixTrizRoute: MatrixTrizRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
   CourseSlugRoute: CourseSlugRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
-  AdminIndexRoute: AdminIndexRoute,
   BooksIndexRoute: BooksIndexRoute,
   CourseIndexRoute: CourseIndexRoute,
-  ExpertIndexRoute: ExpertIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   PackagesIndexRoute: PackagesIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
-  AdminUsersIndexRoute: AdminUsersIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
 }
 export const routeTree = rootRouteImport

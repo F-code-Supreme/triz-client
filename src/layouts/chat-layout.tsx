@@ -1,9 +1,6 @@
-import { Navigate } from '@tanstack/react-router';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { Navbar03 } from '@/components/ui/navbar';
-import useAuth from '@/features/auth/hooks/use-auth';
-import { Role } from '@/features/auth/types';
 
 import type { Meta } from '@/types';
 
@@ -13,12 +10,6 @@ interface ChatLayoutProps {
 }
 
 export const ChatLayout = ({ children, meta }: ChatLayoutProps) => {
-  const { hasRole } = useAuth();
-
-  if (hasRole(Role.ADMIN)) {
-    return <Navigate to="/admin/dashboard" />;
-  }
-
   return (
     <HelmetProvider>
       <Helmet>

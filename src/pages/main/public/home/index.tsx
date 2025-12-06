@@ -147,21 +147,25 @@ const HomePage = () => {
       imageUrl: trizComprehensive1,
       title: t('comprehensive_platform.learn_triz.title'),
       des: t('comprehensive_platform.learn_triz.description'),
+      link: '/learn-triz',
     },
     {
       imageUrl: trizComprehensive2,
       title: t('comprehensive_platform.quiz.title'),
       des: t('comprehensive_platform.quiz.description'),
+      link: '/quiz',
     },
     {
       imageUrl: trizComprehensive3,
       title: t('comprehensive_platform.forum.title'),
       des: t('comprehensive_platform.forum.description'),
+      link: '/forum',
     },
     {
       imageUrl: trizComprehensive4,
       title: t('comprehensive_platform.chat_ai.title'),
       des: t('comprehensive_platform.chat_ai.description'),
+      link: '/chat-triz',
     },
   ];
 
@@ -302,52 +306,54 @@ const HomePage = () => {
           </div>
 
           <div className="flex justify-center">
-            <button className="border rounded-md px-6 py-3 flex items-center gap-3 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 transition-colors">
-              <div className="flex justify-content-center items-center gap-4">
-                <span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-slate-900 dark:text-slate-50"
-                  >
-                    <path
-                      d="M8 8H2"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M10.6667 4H2"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M8 12H2"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M10.6667 8L14 10L10.6667 12V8Z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  {t('core_content.start_learning')}
-                </h4>
-              </div>
-            </button>
+            <Link to="/course">
+              <button className="border rounded-md px-6 py-3 flex items-center gap-3 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-500 transition-colors">
+                <div className="flex justify-content-center items-center gap-4">
+                  <span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-slate-900 dark:text-slate-50"
+                    >
+                      <path
+                        d="M8 8H2"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M10.6667 4H2"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M8 12H2"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M10.6667 8L14 10L10.6667 12V8Z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    {t('core_content.start_learning')}
+                  </h4>
+                </div>
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -484,7 +490,7 @@ const HomePage = () => {
                   {item.des}
                 </p>
                 <div className="text-blue-600 dark:text-blue-400 font-semibold py-3 flex flex-row justify-center items-center gap-2 hover:underline hover:underline-offset-4">
-                  <Link to={`/`}>
+                  <Link to={item.link}>
                     {t('comprehensive_platform.learn_triz.learn_more')}
                   </Link>
                   <svg
