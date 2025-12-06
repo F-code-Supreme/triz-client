@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Edit, Loader2, Trash2 } from 'lucide-react';
+import { Loader2, MoreHorizontal, Power, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -16,18 +16,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   useDeleteCourseMutation,
   usePublishCourseMutation,
 } from '@/features/courses/services/mutations';
-import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
-import { formatTrizilium, formatTriziliumShort } from '@/utils';
+import { formatTriziliumShort } from '@/utils';
 
 import CourseLevelBadge from './course-level';
 import CourseStatusBadge from './course-status';
@@ -39,12 +37,8 @@ const CourseItem = ({ course }: { course: Course }) => {
   const thumbnail = course.thumbnailUrl ?? course.thumbnail ?? undefined;
   const deleteCourse = useDeleteCourseMutation();
   const navigate = useNavigate();
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const { data: courseDetail, isLoading } = useGetCourseByIdQuery(
-    isDetailOpen ? course.id : undefined,
-  );
   const publishCourse = usePublishCourseMutation(course.id);
 
   const dealPrice = course.dealPrice ?? course.price ?? null;
@@ -68,8 +62,77 @@ const CourseItem = ({ course }: { course: Course }) => {
         key={course.id}
         className="shadow-md hover:shadow-lg transition-shadow"
       >
-        <CardContent className="p-0">
-          <div className="overflow-hidden rounded-tr-md rounded-tl-md bg-gray-100">
+        <CardContent className="h-full p-0 relative flex flex-col">
+          <div className="absolute top-2 right-2 z-10">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon" className="h-8 w-8">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => {
+                    const newStatus =
+                      course.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+                    publishCourse.mutate(
+                      { status: newStatus },
+                      {
+                        onSuccess: () => {
+                          toast.success(
+                            newStatus === 'ACTIVE'
+                              ? 'Kích hoạt khóa học thành công'
+                              : 'Đã hủy kích hoạt khóa học',
+                          );
+                        },
+                        onError: () => {
+                          toast.error(
+                            'Cập nhật trạng thái thất bại. Vui lòng thử lại.',
+                          );
+                        },
+                      },
+                    );
+                  }}
+                  disabled={publishCourse.isPending}
+                >
+                  {publishCourse.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Power className="mr-2 h-4 w-4" />
+                  )}
+                  {course.status === 'ACTIVE' ? 'Hủy kích hoạt' : 'Kích hoạt'}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setIsDeleteOpen(true)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Xóa
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <div className="absolute top-2 left-2 z-10">
+            <CourseStatusBadge status={course.status} />
+          </div>
+
+          <div className="absolute top-10 left-2 z-10">
+            <CourseLevelBadge level={course.level} />
+          </div>
+
+          <div
+            className="overflow-hidden rounded-tr-md rounded-tl-md bg-gray-100 cursor-pointer flex-shrink-0"
+            onClick={() => navigate({ to: `/admin/courses/edit/${course.id}` })}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate({ to: `/admin/courses/edit/${course.id}` });
+              }
+            }}
+            role="button"
+            tabIndex={0}
+          >
             {thumbnail ? (
               <img
                 src={thumbnail}
@@ -77,201 +140,50 @@ const CourseItem = ({ course }: { course: Course }) => {
                 className="h-44 w-full object-cover"
               />
             ) : (
-              <div className="flex h-40 w-full items-center justify-center text-sm text-muted-foreground">
+              <div className="flex h-44 w-full items-center justify-center text-sm text-muted-foreground">
                 No image
               </div>
             )}
           </div>
 
-          <div className="p-3">
-            <div className="h-40 min-h-40">
-              <h2 className="text-base font-semibold">{course.title}</h2>
+          <div className="flex-1 flex flex-col p-3 min-h-0">
+            <div className="flex-1 min-h-0 mb-2">
+              <h2 className="text-base font-semibold truncate">
+                {course.title}
+              </h2>
 
-              <p className="mb-2 text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground line-clamp-2 overflow-hidden">
                 {course.shortDescription ?? course.description}
               </p>
-
-              <div className="flex items-start justify-between gap-4 w-full">
-                <div className="text-xs text-muted-foreground w-[55%] space-y-2">
-                  <div>
-                    Thời lượng: {formatDuration(course.durationInMinutes)}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    Cấp độ: <CourseLevelBadge level={course.level} />
-                  </div>
-                  <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
-                </div>
-
-                <div className="text-right text-xs w-[45%] flex flex-col items-end">
-                  {dealPrice !== null ? (
-                    <div className="text-sm font-semibold text-primary">
-                      Giá tiền: {formatTriziliumShort(dealPrice)}
-                    </div>
-                  ) : null}
-
-                  {originalPrice !== null &&
-                  dealPrice !== null &&
-                  originalPrice > dealPrice ? (
-                    <div className=" text-muted-foreground line-through">
-                      Giá gốc: {formatTriziliumShort(originalPrice)}
-                    </div>
-                  ) : null}
-
-                  <div className=" mt-1 text-muted-foreground ">
-                    <CourseStatusBadge status={course.status} />
-                  </div>
-                </div>
-              </div>
             </div>
 
-            <div className="flex items-center justify-between mt-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsDetailOpen(true)}
-              >
-                Xem chi tiết
-              </Button>
-              <Button
-                variant={course.status === 'ACTIVE' ? 'secondary' : 'default'}
-                size="sm"
-                onClick={() => {
-                  const newStatus =
-                    course.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-                  publishCourse.mutate(
-                    { status: newStatus },
-                    {
-                      onSuccess: () => {
-                        toast.success(
-                          newStatus === 'ACTIVE'
-                            ? 'Kích hoạt khóa học thành công'
-                            : 'Đã hủy kích hoạt khóa học',
-                        );
-                      },
-                      onError: () => {
-                        toast.error(
-                          'Cập nhật trạng thái thất bại. Vui lòng thử lại.',
-                        );
-                      },
-                    },
-                  );
-                }}
-                disabled={publishCourse.isPending}
-                className="flex items-center"
-              >
-                {publishCourse.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <div className="flex items-end gap-4 w-full">
+              <div className="text-xs text-muted-foreground w-[55%] space-y-1">
+                <div>
+                  Thời lượng: {formatDuration(course.durationInMinutes)}
+                </div>
+                <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
+              </div>
+
+              <div className="text-right text-xs w-[45%] flex flex-col items-end space-y-1">
+                {dealPrice !== null ? (
+                  <div className="text-sm font-semibold text-primary">
+                    {formatTriziliumShort(dealPrice)}
+                  </div>
                 ) : null}
-                {course.status === 'ACTIVE' ? 'Hủy kích hoạt' : 'Kích hoạt'}
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setIsDeleteOpen(true)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+
+                {originalPrice !== null &&
+                dealPrice !== null &&
+                originalPrice > dealPrice ? (
+                  <div className="text-muted-foreground line-through">
+                    {formatTriziliumShort(originalPrice)}
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader className="flex items-start justify-between">
-            <div>
-              <DialogTitle>{course.title}</DialogTitle>
-              <DialogDescription>Chi tiết khóa học</DialogDescription>
-            </div>
-            <div className="flex items-center gap-2  w-full justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  navigate({ to: `/admin/courses/edit/${course.id}` })
-                }
-              >
-                Chỉnh sửa
-                <Edit className=" h-4 w-4" />
-              </Button>
-            </div>
-          </DialogHeader>
-          {isLoading ? (
-            <div className="py-8 flex items-center justify-center gap-4 text-muted-foreground">
-              <Loader2 className=" animate-spin" />
-              Đang tải...
-            </div>
-          ) : courseDetail ? (
-            <div className="space-y-4">
-              {(courseDetail.thumbnailUrl ?? courseDetail.thumbnail) && (
-                <img
-                  src={courseDetail.thumbnailUrl ?? courseDetail.thumbnail}
-                  alt={courseDetail.title}
-                  className="w-full rounded-md object-cover"
-                />
-              )}
-              <div>
-                <h3 className="font-semibold mb-2">Mô tả</h3>
-                <p className="text-sm text-muted-foreground">
-                  {courseDetail.description}
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-semibold">Thời lượng:</span>{' '}
-                  {formatDuration(courseDetail.durationInMinutes)}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">Cấp độ:</span>
-                  <CourseLevelBadge level={courseDetail.level} />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">Trạng thái:</span>
-                  <CourseStatusBadge status={courseDetail.status} />
-                </div>
-                <div>
-                  <span className="font-semibold">Người học:</span>{' '}
-                  {courseDetail.learnerCount ?? 0}
-                </div>
-                {courseDetail.price !== null && (
-                  <div>
-                    <span className="font-semibold">Giá tiền:</span>{' '}
-                    {formatTrizilium(courseDetail.price)}
-                  </div>
-                )}
-                {courseDetail.dealPrice !== null && (
-                  <div>
-                    <span className="font-semibold">Giá ưu đãi:</span>{' '}
-                    {formatTrizilium(courseDetail.dealPrice)}
-                  </div>
-                )}
-              </div>
-              {courseDetail.modules && courseDetail.modules.length > 0 && (
-                <div>
-                  <h3 className="font-semibold mb-2">
-                    Chương ({courseDetail.totalModules})
-                  </h3>
-                  <div className="space-y-2">
-                    {courseDetail.modules.map((module) => (
-                      <div
-                        key={module.id}
-                        className="border rounded-md p-3 text-sm"
-                      >
-                        <div className="font-medium">{module.name}</div>
-                        <div className="text-muted-foreground mt-1">
-                          Thời lượng: {formatDuration(module.durationInMinutes)}{' '}
-                          • Cấp độ: {module.level} • Bài học:{' '}
-                          {module.lessonCount}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : null}
-        </DialogContent>
-      </Dialog>
 
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <AlertDialogContent>

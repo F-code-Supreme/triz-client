@@ -17,6 +17,7 @@ export const useGetCourseQuery = (pagination?: PaginationState) => {
         params: {
           page: pagination?.pageIndex,
           size: pagination?.pageSize,
+          sort: 'status,asc',
         },
       });
       return response.data;
