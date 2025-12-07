@@ -18,6 +18,7 @@ export interface ForumPost {
   createdAt: ISODateString; // ISO timestamp, ex: "2025-11-27T09:58:31.544926Z"
   updatedAt: ISODateString;
   userName: string;
+  avtUrl: string;
 }
 
 export interface Comment {

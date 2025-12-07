@@ -17,6 +17,7 @@ import {
   TooltipContent,
   TooltipProvider,
 } from '@/components/ui/tooltip';
+import { useGetMeQuery } from '@/features/auth/services/queries';
 import PostCard from '@/features/forum/components/post-card';
 import {
   useCreateForumPostMutation,
@@ -44,6 +45,7 @@ const ForumPage: React.FC = () => {
       pageSize: 2,
       pageIndex: 0,
     });
+  const { data: meData } = useGetMeQuery();
 
   const createVoteMutation = useCreateVoteMutation();
   const createForumPostMutation = useCreateForumPostMutation();
@@ -94,20 +96,6 @@ const ForumPage: React.FC = () => {
               </button>
             ))}
           </nav>
-
-          {/* <div className="ml-auto flex items-center gap-3">
-            <div className="relative w-64">
-              <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-              <Input placeholder="Tìm kiếm trên TRIZ ..." className="pl-10" />
-            </div>
-
-            <Link
-              to={'/forum'}
-              className="rounded bg-primary px-3 py-1.5 text-sm font-medium text-white"
-            >
-              Tạo chủ đề
-            </Link>
-          </div> */}
         </div>
       </div>
 
@@ -116,116 +104,124 @@ const ForumPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="col-span-4 flex flex-col gap-6">
             {/* Composer (from Figma node 3239:16193) */}
-            <div className=" flex items-center gap-4 p-4 border bg-white border-slate-200 rounded-lg">
-              <div className="shrink-0">
-                <Avatar>
-                  <AvatarImage
-                    src="https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b"
-                    alt="avatar"
-                  />
-                </Avatar>
-              </div>
+            {meData && (
+              <div className=" flex items-center gap-4 p-4 border bg-white border-slate-200 rounded-lg">
+                <div className="shrink-0">
+                  <Avatar>
+                    <AvatarImage src={meData?.avatarUrl} alt="avatar" />
+                  </Avatar>
+                </div>
 
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={() => setShowCreateDialog(true)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ')
-                    setShowCreateDialog(true);
-                }}
-                className="flex flex-1 items-center gap-4 rounded-lg bg-slate-100 border border-slate-200 px-4 py-4 cursor-text"
-              >
-                <div className="flex-1">
-                  <div className="text-[18px] font-medium text-slate-400">
-                    Chia sẻ suy nghĩ hoặc bài viết của bạn
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setShowCreateDialog(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ')
+                      setShowCreateDialog(true);
+                  }}
+                  className="flex flex-1 items-center gap-4 rounded-lg bg-slate-100 border border-slate-200 px-4 py-4 cursor-text"
+                >
+                  <div className="flex-1">
+                    <div className="text-[18px] font-medium text-slate-400">
+                      Chia sẻ suy nghĩ hoặc bài viết của bạn
+                    </div>
                   </div>
                 </div>
+
+                {/* Create post dialog */}
+                <Dialog
+                  open={showCreateDialog}
+                  onOpenChange={(open) => !open && setShowCreateDialog(false)}
+                >
+                  <DialogContent className="max-w-3xl">
+                    <DialogHeader>
+                      <DialogTitle>Tạo bài viết mới</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <label className="text-sm text-slate-600">
+                          Tiêu đề
+                        </label>
+                        <Input
+                          value={postTitle}
+                          onChange={(e) => setPostTitle(e.target.value)}
+                          placeholder="Tiêu đề bài viết"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-sm text-slate-600">
+                          Nội dung
+                        </label>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <div>
+                              <MinimalTiptapEditor
+                                value={answer}
+                                onChange={(v) =>
+                                  setAnswer(
+                                    typeof v === 'string'
+                                      ? v
+                                      : JSON.stringify(v),
+                                  )
+                                }
+                                output="html"
+                                placeholder="Nhập nội dung bài viết..."
+                                editorContentClassName="min-h-[200px] p-4"
+                                editable={canSubmit}
+                              />
+                            </div>
+                            {!answer && (
+                              <TooltipContent side="bottom">
+                                <p>
+                                  Nhấp vào đây để bắt đầu nhập câu trả lời của
+                                  bạn
+                                </p>
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          onClick={() => setShowCreateDialog(false)}
+                        >
+                          Hủy
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            const payload = {
+                              title: postTitle.trim(),
+                              content: answer || '',
+                              tagIds: [],
+                            };
+                            createForumPostMutation.mutate(payload, {
+                              onSuccess: () => {
+                                setShowCreateDialog(false);
+                                setPostTitle('');
+                                setAnswer('');
+                              },
+                            });
+                          }}
+                          disabled={
+                            !postTitle.trim() ||
+                            !(answer && answer.toString().trim()) ||
+                            createForumPostMutation.isPending
+                          }
+                        >
+                          Đăng
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
-
-              {/* Create post dialog */}
-              <Dialog
-                open={showCreateDialog}
-                onOpenChange={(open) => !open && setShowCreateDialog(false)}
-              >
-                <DialogContent className="max-w-3xl">
-                  <DialogHeader>
-                    <DialogTitle>Tạo bài viết mới</DialogTitle>
-                  </DialogHeader>
-
-                  <div className="space-y-4 mt-4">
-                    <div>
-                      <label className="text-sm text-slate-600">Tiêu đề</label>
-                      <Input
-                        value={postTitle}
-                        onChange={(e) => setPostTitle(e.target.value)}
-                        placeholder="Tiêu đề bài viết"
-                      />
-                    </div>
-
-                    <div>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <div>
-                            <MinimalTiptapEditor
-                              value={answer}
-                              onChange={(v) =>
-                                setAnswer(
-                                  typeof v === 'string' ? v : JSON.stringify(v),
-                                )
-                              }
-                              output="html"
-                              placeholder="Nhập nội dung bài viết..."
-                              editorContentClassName="min-h-[200px] p-4"
-                              editable={canSubmit}
-                            />
-                          </div>
-                          {!answer && (
-                            <TooltipContent side="bottom">
-                              <p>
-                                Nhấp vào đây để bắt đầu nhập câu trả lời của bạn
-                              </p>
-                            </TooltipContent>
-                          )}
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-
-                    <div className="flex items-center justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        onClick={() => setShowCreateDialog(false)}
-                      >
-                        Hủy
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          const payload = {
-                            title: postTitle.trim(),
-                            content: answer || '',
-                            tagIds: [],
-                          };
-                          createForumPostMutation.mutate(payload, {
-                            onSuccess: () => {
-                              setShowCreateDialog(false);
-                              setPostTitle('');
-                              setAnswer('');
-                            },
-                          });
-                        }}
-                        disabled={
-                          !postTitle.trim() ||
-                          !(answer && answer.toString().trim()) ||
-                          createForumPostMutation.isPending
-                        }
-                      >
-                        Đăng
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+            )}
             {/* Posts list */}
 
             {forumPosts.length === 0 ? (
@@ -241,8 +237,7 @@ const ForumPage: React.FC = () => {
                   author={{
                     name: p.userName,
                     href: `/users/${p.createdBy}`,
-                    avatar:
-                      'https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b',
+                    avatar: p.avtUrl,
                   }}
                   time={formatISODate(p.createdAt)}
                   excerpt={
