@@ -1,12 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import {
-  ArrowLeft,
-  Bot,
-  RefreshCw,
-  Trophy,
-  Star,
-  ArrowRight,
-} from 'lucide-react';
+import { ArrowLeft, RefreshCw, Trophy, Star, ArrowRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { DefaultLayout } from '@/layouts/default-layout';
