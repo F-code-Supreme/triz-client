@@ -283,11 +283,6 @@ const SegmentationGamePage = () => {
             </div>
 
             {/* Floating Action Button */}
-            <div className="fixed bottom-4 right-4 z-50">
-              <button className="bg-yellow-400 hover:brightness-110 text-white p-4 rounded-full shadow-lg transition-all transform hover:scale-105 border-4 border-white">
-                <Bot size={24} />
-              </button>
-            </div>
           </div>
         </div>
       </section>
