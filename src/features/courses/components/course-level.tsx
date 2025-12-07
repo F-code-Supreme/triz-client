@@ -95,7 +95,7 @@ export const CourseLevelBadge: React.FC<{
 
   return (
     <div
-      className={`flex items-center gap-2  rounded-full px-3 py-1 text-[10px] ${meta.bgClass} ${meta.textClass} ${className}`}
+      className={`flex items-center gap-2 rounded-full px-3 py-1 text-[14px] ${meta.bgClass} ${meta.textClass} ${className}`}
       title={meta.description}
     >
       <Icon className="h-3.5 w-3.5 opacity-90" />

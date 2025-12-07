@@ -3,12 +3,6 @@ import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 import { SubscriptionsDataTableRowActions } from './subscriptions-data-table-row-actions';
 
@@ -35,32 +29,6 @@ export const getSubscriptionStatusColor = (status: string): string => {
 };
 
 export const subscriptionsColumns = [
-  columnHelper.accessor('id', {
-    id: 'id',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
-    ),
-    cell: (info) => {
-      const id = info.getValue();
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="w-[100px] truncate font-mono text-sm cursor-help">
-                {id}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="font-mono text-xs">
-              {id}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  }),
-
   columnHelper.accessor('packageName', {
     id: 'packagePlanId',
     header: ({ column }) => (

@@ -1,21 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import z from 'zod';
+import { createFileRoute } from '@tanstack/react-router';
 
 import ExpertDashboardPage from '@/pages/main/expert/dashboard';
 
 export const Route = createFileRoute('/expert/')({
-  validateSearch: z.object({
-    redirect: z.string().optional().catch(''),
-  }),
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: '/login',
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
   component: ExpertDashboardPage,
 });

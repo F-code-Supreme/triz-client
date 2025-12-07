@@ -89,7 +89,7 @@ const SegmentationGamePage = () => {
 
   return (
     <DefaultLayout meta={{ title: 'Trò Chơi Xây Tháp' }} className="">
-      <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
+      <section className="h-[calc(100svh-4rem-1px)] relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
         <div className="w-full max-w-8xl p-4 sm:p-16 mx-auto">
           <div className="max-w-4xl mx-auto w-full p-4 sm:p-8 relative z-10">
             {/* Header */}

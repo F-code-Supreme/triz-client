@@ -151,6 +151,7 @@ export const FlashcardDecksDataTableRowActions = ({
         open={isManageCardsOpen}
         onOpenChange={setIsManageCardsOpen}
         deckId={deck.id}
+        deckTitle={deck.title}
       />
     </>
   );

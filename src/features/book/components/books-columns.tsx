@@ -2,43 +2,12 @@ import { type ColumnDef } from '@tanstack/react-table';
 
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 import { bookStatuses } from '../data/data';
 import { type AdminBook } from '../types';
 import { BooksDataTableRowActions } from './books-data-table-row-actions';
 
 export const booksColumns: ColumnDef<AdminBook>[] = [
-  {
-    accessorKey: 'id',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
-    ),
-    cell: ({ row }) => {
-      const id = row.getValue('id') as string;
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="w-[100px] truncate font-mono text-sm cursor-help">
-                {id}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="font-mono text-xs">
-              {id}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: 'title',
     header: ({ column }) => (

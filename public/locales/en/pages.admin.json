@@ -307,7 +307,7 @@
     },
     "manage_cards": {
       "title": "Manage Cards",
-      "deck_id_label": "Deck ID",
+      "deck_label": "Manage cards for deck {{deckTitle}}",
       "new_card": "New Card",
       "search_placeholder": "Search by term, definition...",
       "no_cards": "No cards found. Create your first card!",
@@ -328,8 +328,6 @@
       "no_image": "No image",
       "no_img": "No img",
       "table": {
-        "select": "Select",
-        "id": "ID",
         "image": "Image",
         "term": "Term",
         "definition": "Definition",

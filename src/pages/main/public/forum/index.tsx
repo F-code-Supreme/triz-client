@@ -24,6 +24,7 @@ import {
 } from '@/features/forum/services/mutations';
 import { useGetForumPostsQuery } from '@/features/forum/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
+import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils/string/string';
 
 const tabs = [
   { id: 'popular', label: 'Hay nhất' },
@@ -70,21 +71,6 @@ const ForumPage: React.FC = () => {
 
   if (!data?.pages) return [];
   const forumPosts = data.pages.flatMap((page) => page.content || []);
-
-  const excerpt = (text = '', limit = 400) => {
-    const cleaned = text.replace(/\r\n|\n/g, ' ').trim();
-    if (cleaned.length <= limit) return cleaned;
-    return cleaned.slice(0, limit) + '...';
-  };
-
-  const formatDate = (iso?: string) => {
-    if (!iso) return '';
-    try {
-      return new Date(iso).toLocaleDateString();
-    } catch {
-      return iso;
-    }
-  };
 
   return (
     <DefaultLayout meta={{ title: 'Cộng đồng TRIZ' }} className="bg-slate-100">
@@ -258,7 +244,7 @@ const ForumPage: React.FC = () => {
                     avatar:
                       'https://www.figma.com/api/mcp/asset/91674c6e-5dd9-4b53-b75a-2a5856946d5b',
                   }}
-                  time={formatDate(p.createdAt)}
+                  time={formatISODate(p.createdAt)}
                   excerpt={
                     <>
                       <div
@@ -267,8 +253,8 @@ const ForumPage: React.FC = () => {
                         dangerouslySetInnerHTML={{
                           __html:
                             expandedId === p.id
-                              ? p.content || ''
-                              : excerpt(p.content),
+                              ? cleanHtml(p.content)
+                              : htmlExcerpt(p.content),
                         }}
                       />
                       {p.content && p.content.length > 400 && (
