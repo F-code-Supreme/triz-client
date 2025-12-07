@@ -1,5 +1,4 @@
-// import { Link } from '@tanstack/react-router';
-// import { Search } from 'lucide-react';
+import { Users, Sparkles } from 'lucide-react';
 import React from 'react';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -28,10 +27,8 @@ import { DefaultLayout } from '@/layouts/default-layout';
 import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils/string/string';
 
 const tabs = [
-  { id: 'popular', label: 'Hay nhất' },
-  { id: 'latest', label: 'Mới nhất' },
-  { id: 'top', label: 'Hàng đầu' },
-  { id: 'rising', label: 'Đang nổi' },
+  { id: 'latest', label: 'Mới nhất', icon: Sparkles },
+  { id: 'me', label: 'Của tôi', icon: Users },
 ];
 
 const ForumPage: React.FC = () => {
