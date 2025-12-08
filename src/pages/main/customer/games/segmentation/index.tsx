@@ -93,7 +93,7 @@ const SegmentationGamePage = () => {
         <div className="w-full max-w-8xl p-4 sm:p-16 mx-auto">
           <div className="max-w-4xl mx-auto w-full p-4 sm:p-8 relative z-10">
             {/* Header */}
-            <div className="flex justify-between items-center mb-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div className="flex justify-between items-center mb-4 p-4 rounded-2xl ">
               <button
                 className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
                 onClick={() => navigate({ to: '/learn-triz' })}

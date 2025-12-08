@@ -225,7 +225,7 @@ const MergingGamePage = () => {
       className=""
     >
       <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
-        <div className="w-full max-w-8xl p-4 sm:p-16 mx-auto">
+        <div className="container w-full max-w-8xl p-4 sm:p-16 mx-auto">
           {/* Header Navigation & Progress */}
           <div className=" flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <button

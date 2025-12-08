@@ -1,8 +1,14 @@
-import { RotateCcw, Clock } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
+import { Clock, ArrowLeft } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import MemoryMatchStarted from '@/components/ui/memory-match-started';
 import { principles } from '@/components/ui/principle-hero-section';
 
@@ -45,7 +51,7 @@ const MemoryCardItem: React.FC<{
         }}
       >
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-lg border border-white/30 bg-gradient-to-br from-sky-200 to-blue-500 text-white font-extrabold"
+          className="absolute inset-0 flex items-center justify-center rounded-lg  bg-gradient-to-br from-sky-200 to-blue-500 text-white font-extrabold"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
@@ -55,7 +61,7 @@ const MemoryCardItem: React.FC<{
         </div>
 
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-lg border border-white/30 bg-white text-gray-800"
+          className="absolute inset-0 flex items-center justify-center rounded-lg  "
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
@@ -80,6 +86,7 @@ const MemoryCardItem: React.FC<{
 };
 
 const MemoryMatchGame: React.FC = () => {
+  const [showCompleteDialog, setShowCompleteDialog] = useState(false);
   const [currentLap, setCurrentLap] = useState<number>(1);
   const [cards, setCards] = useState<MemoryCard[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
@@ -92,7 +99,7 @@ const MemoryMatchGame: React.FC = () => {
   const [gameComplete, setGameComplete] = useState<boolean>(false);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRunning && lapStartTime) {
@@ -152,6 +159,7 @@ const MemoryMatchGame: React.FC = () => {
     setTotalTime(newTotalTime);
 
     setGameComplete(true);
+    setShowCompleteDialog(true);
   };
 
   const handleCardClick = (cardId: number): void => {
@@ -213,37 +221,79 @@ const MemoryMatchGame: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-700 p-8 flex items-center justify-center">
-      <div className="max-w-3xl w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
-            Memory Match Challenge
-          </h1>
-          <div className="flex justify-center gap-4 text-white text-lg flex-wrap">
-            <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              <span className="font-semibold">{formatTime(lapTime)}</span>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg">
-              <span className="font-semibold">Moves: {moves}</span>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-lg">
-              <span className="font-semibold">
-                Matched: {matched.length / 2}/8
-              </span>
-            </div>
+    <div className="flex items-center justify-center">
+      <div className="max-w-2xl w-full mb-6">
+        <div className="flex items-center justify-between w-full text-white mb-4 ">
+          <div>
+            <button
+              className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
+              onClick={() => navigate({ to: '/learn-triz' })}
+            >
+              <ArrowLeft className="mr-2" size={24} /> Quay lại
+            </button>
+          </div>
+          <div className="bg-blue-500 backdrop-blur-sm px-6 py-3 rounded-lg flex items-center gap-2 mx-2 w-28 justify-center">
+            <Clock className="h-5 w-5" />
+            <span className="font-semibold">{formatTime(lapTime)}</span>
+          </div>
+          <div className="bg-blue-500 backdrop-blur-sm px-2 py-3 rounded-lg mx-2  w-28 justify-center flex">
+            <span className="font-semibold">Bước: {moves}</span>
+          </div>
+          <div className="bg-blue-500 backdrop-blur-sm px-1 py-3 rounded-lg mx-2 w-28 justify-center flex">
+            <span className="font-semibold">
+              Đã ghép: {matched.length / 2}/8
+            </span>
+          </div>
+          <div>
+            <Button
+              onClick={resetGame}
+              size="lg"
+              className=" px-8 py-6 text-lg"
+            >
+              Làm lại
+            </Button>
           </div>
         </div>
 
-        {gameComplete && (
-          <Alert className="mb-6 bg-green-500 border-green-600 text-white">
-            <AlertDescription className="ml-2">
-              <div className="text-lg font-semibold">
-                🎉 Game Complete! Time: {formatTime(totalTime)} - {moves} moves
+        {/* completion dialog */}
+        <Dialog
+          open={showCompleteDialog}
+          onOpenChange={(open) => setShowCompleteDialog(open)}
+        >
+          <DialogContent className="max-w-md ">
+            <DialogHeader>
+              <DialogTitle className="text-green-600">
+                🎉 Hoàn thành!
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="py-4 text-center">
+              <div className="text-lg font-semibold text-slate-700">
+                Thời gian: {formatTime(totalTime)}
               </div>
-            </AlertDescription>
-          </Alert>
-        )}
+              <div className="mt-2 text-sm text-slate-600">Bước: {moves}</div>
+            </div>
+
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <Button
+                variant="ghost"
+                onClick={() => setShowCompleteDialog(false)}
+              >
+                Đóng
+              </Button>
+              <Button
+                onClick={() => {
+                  setShowCompleteDialog(false);
+                  // restart immediately
+                  resetGame();
+                  startGame();
+                }}
+              >
+                Chơi lại
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div
           className="grid gap-4 mb-6 mx-auto"
@@ -262,18 +312,7 @@ const MemoryMatchGame: React.FC = () => {
           ))}
         </div>
 
-        <div className="text-center space-y-3">
-          <div>
-            <Button
-              onClick={resetGame}
-              size="lg"
-              className="bg-white text-sky-600 hover:bg-gray-100 font-semibold px-8 py-6 text-lg"
-            >
-              <RotateCcw className="mr-2 h-5 w-5" />
-              Restart Game
-            </Button>
-          </div>
-        </div>
+        <div className="text-center space-y-3"></div>
       </div>
     </div>
   );
