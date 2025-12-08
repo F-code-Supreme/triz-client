@@ -67,7 +67,7 @@
       "author_placeholder": "Author name",
       "publisher": "Publisher",
       "publisher_placeholder": "Publisher name",
-      "book_file": "Book File (EPUB/PDF)",
+      "book_file": "Book File (EPUB)",
       "book_file_required": "Book file is required",
       "cover_image": "Cover Image",
       "status": "Status",

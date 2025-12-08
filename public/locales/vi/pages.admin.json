@@ -67,7 +67,7 @@
       "author_placeholder": "Tên tác giả",
       "publisher": "Nhà xuất bản",
       "publisher_placeholder": "Tên nhà xuất bản",
-      "book_file": "Tệp sách (EPUB/PDF)",
+      "book_file": "Tệp sách (EPUB)",
       "book_file_required": "Tệp sách là bắt buộc",
       "cover_image": "Ảnh bìa",
       "status": "Trạng thái",

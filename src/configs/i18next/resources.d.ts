@@ -237,7 +237,7 @@ interface Resources {
       "form": {
         "author": "Author",
         "author_placeholder": "Author name",
-        "book_file": "Book File (EPUB/PDF)",
+        "book_file": "Book File (EPUB)",
         "book_file_required": "Book file is required",
         "cancel": "Cancel",
         "cover_image": "Cover Image",
