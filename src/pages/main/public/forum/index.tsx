@@ -1,5 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Users, Sparkles } from 'lucide-react';
 import React from 'react';
+import { toast } from 'sonner';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -21,17 +23,22 @@ import PostCard from '@/features/forum/components/post-card';
 import {
   useCreateForumPostMutation,
   useCreateVoteMutation,
+  useDeleteForumPostMutation,
 } from '@/features/forum/services/mutations';
-import { useGetForumPostsQuery } from '@/features/forum/services/queries';
+import {
+  useGetForumPostAll,
+  useGetForumPostsQuery,
+} from '@/features/forum/services/queries';
+import { ForumKeys } from '@/features/forum/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils/string/string';
 
-const tabs = [
-  { id: 'latest', label: 'Mới nhất', icon: Sparkles },
-  { id: 'me', label: 'Của tôi', icon: Users },
-];
-
 const ForumPage: React.FC = () => {
+  const tabs = [
+    { id: 'latest', label: 'Mới nhất', icon: Sparkles },
+    { id: 'me', label: 'Của tôi', icon: Users },
+  ];
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = React.useState(tabs[0].id);
   const [expandedId, setExpandedId] = React.useState<string | null>(null);
   const loadMoreRef = React.useRef<HTMLDivElement | null>(null);
@@ -39,12 +46,14 @@ const ForumPage: React.FC = () => {
   // query forum posts
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetForumPostsQuery({
-      pageSize: 2,
+      pageSize: 3,
       pageIndex: 0,
     });
+  const { data: allPost } = useGetForumPostAll();
   const { data: meData } = useGetMeQuery();
 
   const createVoteMutation = useCreateVoteMutation();
+  const deleteCommentMutation = useDeleteForumPostMutation();
   const createForumPostMutation = useCreateForumPostMutation();
   const [showCreateDialog, setShowCreateDialog] = React.useState(false);
   const [postTitle, setPostTitle] = React.useState('');
@@ -70,14 +79,24 @@ const ForumPage: React.FC = () => {
 
   if (!data?.pages) return [];
   const forumPosts = data.pages.flatMap((page) => page.content || []);
+  const myPosts = data.pages.flatMap(
+    (page) => page.content.filter((p) => p.userId === meData?.id) || [],
+  );
 
+  const myPostsTab =
+    allPost?.content.filter((p) => p.userId === meData?.id) ?? [];
+
+  const postsToShow = activeTab === 'me' ? myPosts : forumPosts;
   return (
     <DefaultLayout meta={{ title: 'Cộng đồng TRIZ' }} className="bg-slate-100">
       {/* Figma-styled tabs bar */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="container mx-auto flex items-center gap-6 px-4 py-3">
           <nav className="flex items-center gap-6" aria-label="Forum tabs">
-            {tabs.map((t) => (
+            {[
+              { id: 'latest', label: 'Mới nhất', icon: Sparkles },
+              ...(meData ? [{ id: 'me', label: 'Của tôi', icon: Users }] : []),
+            ].map((t) => (
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
@@ -97,9 +116,11 @@ const ForumPage: React.FC = () => {
       </div>
 
       {/* Page content: two-column layout (main feed + right sidebar) */}
-      <main className="container mx-auto px-4 py-6">
+      <main
+        className={`container mx-auto px-4 py-6 ${postsToShow.length > 0 ? 'h-full' : 'h-screen'}`}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="col-span-4 flex flex-col gap-6">
+          <div className="col-span-3 flex flex-col gap-6">
             {/* Composer (from Figma node 3239:16193) */}
             {meData && (
               <div className=" flex items-center gap-4 p-4 border bg-white border-slate-200 rounded-lg">
@@ -221,15 +242,31 @@ const ForumPage: React.FC = () => {
             )}
             {/* Posts list */}
 
-            {forumPosts.length === 0 ? (
+            {postsToShow.length === 0 ? (
               <div className="p-6 bg-white border border-slate-200 rounded-lg">
                 Chưa có bài viết nào.
               </div>
             ) : (
-              forumPosts.map((p) => (
+              postsToShow.map((p) => (
                 <PostCard
+                  userData={meData}
                   key={p.id}
                   id={p.id}
+                  isOwner={meData?.id === p.userId}
+                  onDelete={(postId) => {
+                    deleteCommentMutation.mutate(postId, {
+                      onSuccess: () => {
+                        queryClient.invalidateQueries({
+                          queryKey: [ForumKeys.GetForumAll],
+                        });
+                        toast.success('Đã xóa bài viết thành công.');
+                      },
+                    });
+                  }}
+                  onReport={() => {
+                    // simple report placeholder - replace with actual report flow
+                    // eslint-disable-next-line no-restricted-globals
+                  }}
                   title={p.title}
                   author={{
                     name: p.userName,
@@ -270,16 +307,83 @@ const ForumPage: React.FC = () => {
                   onLike={(postId, isUpvote) =>
                     createVoteMutation.mutate({ postId, isUpvote })
                   }
+                  isAuthenticated={!!meData}
                 />
               ))
             )}
+            {/* only enable infinite loading for the global feed */}
             <div
-              ref={loadMoreRef}
+              ref={activeTab === 'me' ? null : loadMoreRef}
               className="py-6 flex justify-center text-slate-500"
             >
-              {isFetchingNextPage ? 'Đang tải thêm...' : ''}
+              {activeTab !== 'me' &&
+                (isFetchingNextPage ? 'Đang tải thêm...' : '')}
             </div>
           </div>
+          <aside className="hidden lg:block">
+            {meData && myPostsTab.length > 0 && (
+              <div className="bg-white box-border w-full p-4 rounded-lg border border-slate-200">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="font-medium text-[16px] text-slate-900">
+                    Bài viết của tôi
+                  </p>
+                  <img
+                    src="https://www.figma.com/api/mcp/asset/15ca3c3d-b096-4c48-8bcc-4f2cac9b8998"
+                    alt="chevron"
+                    className="w-6 h-6"
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  {myPostsTab.map((r) => (
+                    <div key={r.id} className="flex items-center gap-3">
+                      <img
+                        src={r.avtUrl}
+                        alt={r.title}
+                        className="w-14 h-14 rounded-md object-cover"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-slate-500">
+                          {formatISODate(r.createdAt)}
+                        </p>
+                        <p className="font-semibold text-[14px] ">{r.title}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="mt-4 bg-white box-border p-4 rounded-lg border border-slate-200">
+              <div className="flex items-center justify-between mb-4">
+                <p className="font-medium text-[16px] text-slate-900">
+                  Bài viết mới nhất
+                </p>
+                <img
+                  src="https://www.figma.com/api/mcp/asset/15ca3c3d-b096-4c48-8bcc-4f2cac9b8998"
+                  alt="chevron"
+                  className="w-6 h-6"
+                />
+              </div>
+
+              <div className="space-y-4">
+                {forumPosts.slice(0, 3).map((r) => (
+                  <div key={r.id} className="flex items-center gap-3">
+                    <img
+                      src={r.avtUrl}
+                      alt={r.title}
+                      className="w-14 h-14 rounded-md object-cover"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-slate-500">
+                        {formatISODate(r.createdAt)}
+                      </p>
+                      <p className="font-semibold text-[14px] ">{r.title}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </aside>
         </div>
       </main>
     </DefaultLayout>

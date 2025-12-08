@@ -36,6 +36,23 @@ export const useGetForumPostsQuery = (pagination?: PaginationState) => {
   });
 };
 
+export const useGetForumPostAll = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [ForumKeys.GetForumAll],
+    queryFn: async () => {
+      const response = await _request.get<ForumPostResponse>(`/forumPosts`, {
+        params: {
+          page: 0,
+          size: 1000,
+          sort: 'createdAt,desc',
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
 export const useGetForumPostByIdQuery = (postId: string) => {
   const _request = useAxios();
   return useQuery({
