@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 // --- CẤU HÌNH DỮ LIỆU ---
@@ -119,6 +121,7 @@ const RECIPES: Record<string, string> = {
 
 const MergingGamePage = () => {
   const navigate = useNavigate();
+  const updateScoreMutation = useUpdateGameScoreMutation();
 
   // State
   const [discovered, setDiscovered] = useState<string[]>([
@@ -183,6 +186,10 @@ const MergingGamePage = () => {
         // CÓ CÔNG THỨC
         if (!discovered.includes(result)) {
           // Khám phá mới
+          updateScoreMutation.mutate({
+            gameId: GamesEnumId.Merging,
+            score: discovered.length >= totalElements - 1 ? 20 : 10,
+          });
           setDiscovered((prev) => [...prev, result]);
           showNotify(
             `Tuyệt vời! Bạn đã tạo ra: ${ELEMENTS_DB[result].name}`,

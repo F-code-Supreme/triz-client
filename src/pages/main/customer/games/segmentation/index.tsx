@@ -1,10 +1,14 @@
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, RefreshCw, Trophy, Star, ArrowRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const SegmentationGamePage = () => {
+  const updateScoreMutation = useUpdateGameScoreMutation();
   const navigate = useNavigate();
   // State quản lý danh sách các viên gạch
   const [bricks, setBricks] = useState<number[]>([]);
@@ -46,10 +50,23 @@ const SegmentationGamePage = () => {
   };
 
   const handleWin = () => {
-    // Cộng điểm
-    setScore((prev) => prev + 10);
-    // Hiện màn hình chúc mừng
+    const pointsGained = 10;
+    // optimistic local update
+    const newTotal = score + pointsGained;
+    setScore(newTotal);
     setShowSuccess(true);
+
+    // payload sent to the server
+    const payload = {
+      gameId: GamesEnumId.Segmentation,
+      score: newTotal,
+    };
+
+    updateScoreMutation.mutate(payload, {
+      onSuccess: () => {
+        toast.success('Điểm số đã được cập nhật!');
+      },
+    });
   };
 
   const handleNextLevel = () => {

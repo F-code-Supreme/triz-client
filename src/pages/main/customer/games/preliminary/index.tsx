@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 // --- TYPES & CONFIG ---
@@ -134,6 +136,7 @@ interface Cell {
 
 const PreliminaryGamePage = () => {
   const navigate = useNavigate();
+  const updateScoreMutation = useUpdateGameScoreMutation();
 
   // --- STATE ---
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
@@ -205,8 +208,14 @@ const PreliminaryGamePage = () => {
   };
 
   const handleNextLevel = () => {
-    setScore((s) => s + 10); // Cộng điểm
+    const pointsGained = 10;
+    const newTotal = score + pointsGained;
+    setScore(newTotal); // Cộng điểm
     setCurrentLevelIndex((prev) => prev + 1);
+    updateScoreMutation.mutate({
+      gameId: GamesEnumId.Preliminary,
+      score: newTotal,
+    });
   };
 
   const handleRetry = () => {

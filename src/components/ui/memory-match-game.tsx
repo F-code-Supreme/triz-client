@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/dialog';
 import MemoryMatchStarted from '@/components/ui/memory-match-started';
 import { principles } from '@/components/ui/principle-hero-section';
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
 
 interface MemoryCard {
   id: number;
@@ -87,6 +89,10 @@ const MemoryCardItem: React.FC<{
 
 const MemoryMatchGame: React.FC = () => {
   const [showCompleteDialog, setShowCompleteDialog] = useState(false);
+  // use RTK Query mutation trigger
+  const updateScoreMutation = useUpdateGameScoreMutation();
+  // local score state (increments by 10 on each correct pair)
+  const [score, setScore] = useState<number>(0);
   const [currentLap, setCurrentLap] = useState<number>(1);
   const [cards, setCards] = useState<MemoryCard[]>([]);
   const [flipped, setFlipped] = useState<number[]>([]);
@@ -181,8 +187,19 @@ const MemoryMatchGame: React.FC = () => {
       const secondCard = cards.find((card) => card.id === secondId);
 
       if (firstCard && secondCard && firstCard.image === secondCard.image) {
+        // update local matched state
         setMatched([...matched, firstId, secondId]);
         setFlipped([]);
+
+        // optimistic local score update
+        const pointsGained = 10;
+        const newTotal = score + pointsGained;
+        setScore(newTotal);
+
+        updateScoreMutation.mutate({
+          gameId: GamesEnumId.Preliminary,
+          score: pointsGained,
+        });
       } else {
         setTimeout(() => {
           setFlipped([]);
@@ -222,7 +239,7 @@ const MemoryMatchGame: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="max-w-2xl w-full mb-6">
+      <div className="max-w-3xl w-full mb-6">
         <div className="flex items-center justify-between w-full text-white mb-4 ">
           <div>
             <button
@@ -231,6 +248,10 @@ const MemoryMatchGame: React.FC = () => {
             >
               <ArrowLeft className="mr-2" size={24} /> Quay lại
             </button>
+          </div>
+          {/* Score display */}
+          <div className="bg-yellow-400 text-yellow-900 px-6 py-3 rounded-lg font-bold mx-2">
+            Điểm: {score}
           </div>
           <div className="bg-blue-500 backdrop-blur-sm px-6 py-3 rounded-lg flex items-center gap-2 mx-2 w-28 justify-center">
             <Clock className="h-5 w-5" />
