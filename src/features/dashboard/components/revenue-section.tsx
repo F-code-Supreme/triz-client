@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AreaChart, BarChart, PieChart } from '@/components/ui/chart';
 import {
@@ -21,6 +22,7 @@ interface RevenueSectionProps {
 }
 
 export const RevenueSection = ({ data }: RevenueSectionProps) => {
+  const { t } = useTranslation('pages.admin');
   const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
 
   const formatCurrency = (value: number) => {
@@ -41,38 +43,50 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
     }
   }, [data.byPeriod, period]);
 
+  const getPeriodLabel = () => {
+    if (period === 'day') return t('dashboard.revenue.period_30_days');
+    if (period === 'month') return t('dashboard.revenue.period_12_months');
+    return t('dashboard.revenue.period_4_quarters');
+  };
+
   return (
     <DashboardSection
-      title="Revenue & Course Packages"
-      description="Track revenue trends, package performance, and transaction success rates"
+      title={t('dashboard.revenue.title')}
+      description={t('dashboard.revenue.description')}
     >
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total Revenue"
+          title={t('dashboard.revenue.total_revenue')}
           value={formatCurrency(data.total)}
           trend={{ value: data.growth, isPositive: true }}
         />
         <StatCard
-          title="Total Packages Sold"
+          title={t('dashboard.revenue.total_packages_sold')}
           value={data.transactions.total.toLocaleString()}
-          description="Across all package types"
+          description={t('dashboard.revenue.packages_sold_desc')}
         />
         <StatCard
-          title="Success Rate"
+          title={t('dashboard.revenue.success_rate')}
           value={`${data.transactions.successRate}%`}
-          description={`${data.transactions.success} successful transactions`}
+          description={t('dashboard.revenue.success_transactions', {
+            count: data.transactions.success,
+          })}
         />
         <StatCard
-          title="Failure Rate"
+          title={t('dashboard.revenue.failure_rate')}
           value={`${data.transactions.failureRate}%`}
-          description={`${data.transactions.failed} failed transactions`}
+          description={t('dashboard.revenue.failed_transactions', {
+            count: data.transactions.failed,
+          })}
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <ChartCard
-          title="Revenue Trend"
-          description={`Revenue over the last ${period === 'day' ? '30 days' : period === 'month' ? '12 months' : '4 quarters'}`}
+          title={t('dashboard.revenue.revenue_trend')}
+          description={t('dashboard.revenue.revenue_over_period', {
+            period: getPeriodLabel(),
+          })}
         >
           <div className="space-y-4">
             <div className="flex justify-end">
@@ -81,27 +95,39 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
             <AreaChart
               data={filteredData}
               xKey="period"
-              areas={[{ dataKey: 'revenue', name: 'Revenue', fill: '#8884d8' }]}
+              areas={[
+                {
+                  dataKey: 'revenue',
+                  name: t('dashboard.revenue.total_revenue'),
+                  fill: '#8884d8',
+                },
+              ]}
               height={300}
             />
           </div>
         </ChartCard>
 
         <ChartCard
-          title="Revenue by Package"
-          description="Total revenue generated per package type"
+          title={t('dashboard.revenue.revenue_by_package')}
+          description={t('dashboard.revenue.revenue_by_package_desc')}
         >
           <BarChart
             data={data.byPackage}
             xKey="name"
-            bars={[{ dataKey: 'revenue', name: 'Revenue', fill: '#8884d8' }]}
+            bars={[
+              {
+                dataKey: 'revenue',
+                name: t('dashboard.revenue.total_revenue'),
+                fill: '#8884d8',
+              },
+            ]}
             height={300}
           />
         </ChartCard>
 
         <ChartCard
-          title="Purchases Distribution"
-          description="Number of purchases by package type"
+          title={t('dashboard.revenue.purchases_distribution')}
+          description={t('dashboard.revenue.purchases_distribution_desc')}
         >
           <PieChart
             data={data.byPackage.map((pkg) => ({
@@ -113,8 +139,8 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
         </ChartCard>
 
         <ChartCard
-          title="Success Rate by Package"
-          description="Transaction success rate per package"
+          title={t('dashboard.revenue.success_rate_by_package')}
+          description={t('dashboard.revenue.success_rate_by_package_desc')}
         >
           <BarChart
             data={data.byPackage}
@@ -122,7 +148,7 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
             bars={[
               {
                 dataKey: 'successRate',
-                name: 'Success Rate (%)',
+                name: `${t('dashboard.revenue.success_rate')} (%)`,
                 fill: '#82ca9d',
               },
             ]}
@@ -132,18 +158,24 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
       </div>
 
       <ChartCard
-        title="Top Users by Spending"
-        description="Users with the highest total spending"
+        title={t('dashboard.revenue.top_spenders')}
+        description={t('dashboard.revenue.top_spenders_desc')}
       >
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">Rank</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead className="text-right">Purchases</TableHead>
-                <TableHead className="text-right">Total Spent</TableHead>
+                <TableHead className="w-[50px]">
+                  {t('dashboard.revenue.rank')}
+                </TableHead>
+                <TableHead>{t('dashboard.revenue.name')}</TableHead>
+                <TableHead>{t('dashboard.revenue.email')}</TableHead>
+                <TableHead className="text-right">
+                  {t('dashboard.revenue.purchases')}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t('dashboard.revenue.total_spent')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

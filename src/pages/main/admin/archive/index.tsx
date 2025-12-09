@@ -61,7 +61,7 @@ const AdminArchivePage = () => {
   };
 
   return (
-    <AdminLayout meta={{ title: 'Archive' }}>
+    <AdminLayout meta={{ title: t('archive.title') }}>
       <div className="flex flex-col gap-8 p-8">
         {/* Header */}
         <div>
