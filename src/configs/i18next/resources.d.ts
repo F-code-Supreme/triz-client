@@ -925,6 +925,13 @@ interface Resources {
     "dashboard": "Dashboard",
     "devices": "Devices",
     "events": "Events",
+    "expert": {
+      "assignments": "Assignments",
+      "dashboard": "Dashboard",
+      "main": "Main",
+      "subtitle": "Expert Panel",
+      "title": "TRIZ Expert"
+    },
     "issues": "Issues",
     "licenses": "Licenses",
     "monitoring": "Monitoring",

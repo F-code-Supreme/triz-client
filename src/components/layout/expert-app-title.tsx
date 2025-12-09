@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Menu, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   SidebarMenu,
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 export const ExpertAppTitle = () => {
+  const { t } = useTranslation('sidebar');
   const { setOpenMobile } = useSidebar();
 
   return (
@@ -34,9 +36,11 @@ export const ExpertAppTitle = () => {
                 className="h-8 w-8 shrink-0"
               />
               <div className="min-w-0">
-                <span className="truncate font-bold block">TRIZ Expert</span>
+                <span className="truncate font-bold block">
+                  {t('expert.title')}
+                </span>
                 <span className="truncate text-xs text-muted-foreground block">
-                  Expert Panel
+                  {t('expert.subtitle')}
                 </span>
               </div>
             </Link>
@@ -49,17 +53,28 @@ export const ExpertAppTitle = () => {
 };
 
 // Toggle component for mobile sidebar
-const ToggleSidebar = ({ className }: { className?: string }) => {
-  const { toggleSidebar, openMobile } = useSidebar();
+const ToggleSidebar = ({
+  className,
+  onClick,
+  ...props
+}: React.ComponentProps<typeof Button>) => {
+  const { toggleSidebar } = useSidebar();
 
   return (
     <Button
+      data-sidebar="trigger"
+      data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn('h-7 w-7', className)}
-      onClick={toggleSidebar}
+      className={cn('aspect-square size-8 max-md:scale-125', className)}
+      onClick={(event) => {
+        onClick?.(event);
+        toggleSidebar();
+      }}
+      {...props}
     >
-      {openMobile ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+      <X className="md:hidden" />
+      <Menu className="max-md:hidden" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

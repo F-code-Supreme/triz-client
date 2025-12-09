@@ -9,13 +9,14 @@ import { useLayout } from '@/context/layout-provider';
 import useAuth from '@/features/auth/hooks/use-auth';
 
 import { AdminAppTitle } from './admin-app-title';
-import { adminSidebarData } from './data/admin-sidebar-data';
+import { useAdminSidebarData } from './data/admin-sidebar-data';
 import { NavGroup } from './nav-group';
 import { NavUser } from './nav-user';
 
 export const AdminSidebar = () => {
   const { collapsible, variant } = useLayout();
   const { user } = useAuth();
+  const adminSidebarData = useAdminSidebarData();
 
   const userData = user
     ? {
