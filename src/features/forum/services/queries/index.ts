@@ -41,7 +41,7 @@ export const useGetForumPostAll = () => {
   return useQuery({
     queryKey: [ForumKeys.GetForumAll],
     queryFn: async () => {
-      const response = await _request.get<ForumPostResponse>(`/forumPosts`, {
+      const response = await _request.get<ForumPostResponse>(`/forumPosts/me`, {
         params: {
           page: 0,
           size: 1000,

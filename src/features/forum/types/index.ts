@@ -19,6 +19,7 @@ export interface ForumPost {
   updatedAt: ISODateString;
   userName: string;
   userId: string;
+  imgUrl: string;
   avtUrl: string;
 }
 

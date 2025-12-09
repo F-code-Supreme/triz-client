@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectContent,
@@ -245,14 +246,13 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             onChange={(e) => setName(e.target.value)}
             disabled={isCreateDisabled}
           />
-          <input
-            type="number"
+          <NumberInput
             min={1}
-            className="border p-2 rounded "
             placeholder="Nhập thời lượng (phút)"
             value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
+            onValueChange={setDuration}
             disabled={isCreateDisabled}
+            stepper={1}
           />
 
           <Select
@@ -299,7 +299,9 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
   }> = ({ moduleId, initialName, durationInMinutes, level }) => {
     const updateModule = useUpdateModuleMutation(moduleId);
     const [name, setName] = useState(initialName ?? '');
-    const [duration, setDuration] = useState<number>(durationInMinutes);
+    const [duration, setDuration] = useState<number | undefined>(
+      durationInMinutes,
+    );
     const [levelModule, setLevelModule] = useState<'EASY' | 'MEDIUM' | 'HARD'>(
       level,
     );
@@ -309,7 +311,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
         toast.error('Tên chương là bắt buộc');
         return;
       }
-      if (duration <= 0) {
+      if (duration === undefined || duration <= 0) {
         toast.error('Thời lượng phải lớn hơn 0');
         return;
       }
@@ -354,11 +356,11 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <input
-            type="number"
-            className="border p-2 rounded w-28"
+          <NumberInput
+            min={1}
             value={duration}
-            onChange={(e) => setDuration(Number(e.target.value))}
+            onValueChange={setDuration}
+            stepper={1}
           />
 
           <Select

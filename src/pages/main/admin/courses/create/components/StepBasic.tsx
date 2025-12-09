@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectTrigger,
@@ -58,8 +59,6 @@ const StepBasic: React.FC<Props> = ({
   );
   const [price, setPrice] = useState<number>(0);
   const [dealPrice, setDealPrice] = useState<number>(0);
-  const [priceDisplay, setPriceDisplay] = useState<string>('0');
-  const [dealPriceDisplay, setDealPriceDisplay] = useState<string>('0');
   const [thumbnailUrl, setThumbnailUrl] = useState<string>(
     thumbnailPreview ?? '',
   );
@@ -85,9 +84,7 @@ const StepBasic: React.FC<Props> = ({
     setDurationInMinutes(initialCourse.durationInMinutes ?? 60);
     setLevel((initialCourse.level as any) ?? 'STARTER');
     setPrice(initialCourse.price ?? 0);
-    setPriceDisplay(String(initialCourse.price ?? 0));
     setDealPrice(initialCourse.dealPrice ?? 0);
-    setDealPriceDisplay(String(initialCourse.dealPrice ?? 0));
     setThumbnailUrl(initialCourse.thumbnailUrl ?? '');
 
     try {
@@ -136,12 +133,10 @@ const StepBasic: React.FC<Props> = ({
 
       if (typeof payload.price === 'number') {
         setPrice(payload.price);
-        setPriceDisplay(String(payload.price));
       }
 
       if (typeof payload.dealPrice === 'number') {
         setDealPrice(payload.dealPrice);
-        setDealPriceDisplay(String(payload.dealPrice));
       }
 
       if (typeof payload.thumbnailUrl === 'string' && payload.thumbnailUrl)
@@ -168,9 +163,7 @@ const StepBasic: React.FC<Props> = ({
     setDurationInMinutes(existingCourse.durationInMinutes ?? 60);
     setLevel((existingCourse.level as any) ?? 'STARTER');
     setPrice(existingCourse.price ?? 0);
-    setPriceDisplay(String(existingCourse.price ?? 0));
     setDealPrice(existingCourse.dealPrice ?? 0);
-    setDealPriceDisplay(String(existingCourse.dealPrice ?? 0));
     setThumbnailUrl(existingCourse.thumbnailUrl ?? '');
 
     try {
@@ -302,7 +295,7 @@ const StepBasic: React.FC<Props> = ({
           </div>
 
           {thumbnailUrl && (
-            <div className="mt-2 w-full h-64 overflow-hidden rounded-md border bg-white">
+            <div className="mt-2 w-full  overflow-hidden rounded-md border bg-white">
               <img
                 src={thumbnailUrl}
                 alt="thumbnail preview"
@@ -366,12 +359,13 @@ const StepBasic: React.FC<Props> = ({
               <label className="block text-sm font-semibold text-gray-700">
                 Thời lượng (phút)
               </label>
-              <input
-                type="number"
+              <NumberInput
                 value={durationInMinutes}
-                onChange={(e) => setDurationInMinutes(Number(e.target.value))}
-                className="mt-1 block w-full rounded-md border px-3 py-2"
+                onValueChange={(val) => setDurationInMinutes(val ?? 60)}
                 min={1}
+                stepper={5}
+                thousandSeparator=","
+                placeholder="Nhập thời lượng"
                 disabled={loading}
               />
             </div>
@@ -403,17 +397,14 @@ const StepBasic: React.FC<Props> = ({
               <label className="block text-sm font-semibold text-gray-700">
                 Giá <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                value={priceDisplay}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/[^0-9.]/g, '');
-                  setPriceDisplay(raw);
-                  setPrice(raw ? Number(raw) : 0);
-                }}
-                onBlur={() => setPriceDisplay(price.toLocaleString())}
-                onFocus={() => setPriceDisplay(String(price))}
-                className="mt-1 block w-full rounded-md border px-3 py-2"
+              <NumberInput
+                value={price}
+                onValueChange={(val) => setPrice(val ?? 0)}
+                min={0}
+                stepper={1000}
+                thousandSeparator=","
+                suffix=" Ƶ"
+                placeholder="Nhập giá"
                 disabled={loading}
               />
               {localErrors.price && (
@@ -424,17 +415,14 @@ const StepBasic: React.FC<Props> = ({
               <label className="block text-sm font-semibold text-gray-700">
                 Giá ưu đãi
               </label>
-              <input
-                type="text"
-                value={dealPriceDisplay}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/[^0-9.]/g, '');
-                  setDealPriceDisplay(raw);
-                  setDealPrice(raw ? Number(raw) : 0);
-                }}
-                onBlur={() => setDealPriceDisplay(dealPrice.toLocaleString())}
-                onFocus={() => setDealPriceDisplay(String(dealPrice))}
-                className="mt-1 block w-full rounded-md border px-3 py-2"
+              <NumberInput
+                value={dealPrice}
+                onValueChange={(val) => setDealPrice(val ?? 0)}
+                min={0}
+                stepper={1000}
+                thousandSeparator=","
+                suffix=" Ƶ"
+                placeholder="Nhập giá ưu đãi"
                 disabled={loading}
               />
               {localErrors.dealPrice && (

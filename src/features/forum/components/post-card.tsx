@@ -5,6 +5,7 @@ import {
   Heart,
   MessageSquare,
   MoreHorizontal,
+  Share2,
   Trash2,
 } from 'lucide-react';
 import React from 'react';
@@ -43,6 +44,7 @@ const LIKE_INACTIVE_CLASS = 'text-slate-700';
 
 // New: extracted ReplyChildren component to keep PostCard lean
 const ReplyChildrenExternal: React.FC<{
+  isAuthenticated: boolean;
   parentId: string;
   userData?: (User & DataTimestamp) | undefined;
   isOwner?: boolean;
@@ -58,6 +60,7 @@ const ReplyChildrenExternal: React.FC<{
   canSubmitReply: boolean;
   handleReplyToReply: (id: string) => void;
 }> = ({
+  isAuthenticated,
   parentId,
   userData,
   isOwner,
@@ -104,39 +107,43 @@ const ReplyChildrenExternal: React.FC<{
                           ? new Date(c.createdAt).toLocaleString()
                           : ''}
                       </div>
-                      <div className="mt-1 flex items-center gap-2">
-                        <button
-                          type="button"
-                          aria-label={`Like reply ${c.id}`}
-                          onClick={() => {
-                            const next = !likedReplies[c.id];
-                            setLikedReplies((s) => ({ ...s, [c.id]: next }));
-                            createVoteMutation.mutate({
-                              replyId: c.id,
-                              isUpvote: next,
-                            });
-                          }}
-                          className="flex items-center gap-1 text-sm"
-                        >
-                          <Heart
-                            size={15}
-                            className={`${LIKE_TRANSITION_CLASS} ${likedReplies[c.id] ? LIKE_ACTIVE_CLASS : LIKE_INACTIVE_CLASS}`}
-                            fill={likedReplies[c.id] ? 'currentColor' : 'none'}
-                          />
-                          <span>Thích</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="ml-3 text-sm text-slate-700 flex items-center gap-1"
-                          onClick={() => {
-                            setReplyTargetId(c.id);
-                            setReplyTargetText('');
-                          }}
-                        >
-                          <MessageSquare size={15} />
-                          Trả lời
-                        </button>
-                      </div>
+                      {isAuthenticated && (
+                        <div className="mt-1 flex items-center gap-2">
+                          <button
+                            type="button"
+                            aria-label={`Like reply ${c.id}`}
+                            onClick={() => {
+                              const next = !likedReplies[c.id];
+                              setLikedReplies((s) => ({ ...s, [c.id]: next }));
+                              createVoteMutation.mutate({
+                                replyId: c.id,
+                                isUpvote: next,
+                              });
+                            }}
+                            className="flex items-center gap-1 text-sm"
+                          >
+                            <Heart
+                              size={15}
+                              className={`${LIKE_TRANSITION_CLASS} ${likedReplies[c.id] ? LIKE_ACTIVE_CLASS : LIKE_INACTIVE_CLASS}`}
+                              fill={
+                                likedReplies[c.id] ? 'currentColor' : 'none'
+                              }
+                            />
+                            <span>Thích</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="ml-3 text-sm text-slate-700 flex items-center gap-1"
+                            onClick={() => {
+                              setReplyTargetId(c.id);
+                              setReplyTargetText('');
+                            }}
+                          >
+                            <MessageSquare size={15} />
+                            Trả lời
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -197,7 +204,7 @@ const ReplyChildrenExternal: React.FC<{
                           }, 0);
                         }}
                         rows={1}
-                        className="w-full min-h-[40px] max-h-28 resize-none border-gray-300 border-2 rounded-full bg-white text-black placeholder-slate-400 px-4 py-3 pr-14 focus:outline-none focus:border-slate-500 transition-all text-left"
+                        className="w-full min-h-[40px] max-h-28 resize-none border-gray-300 border-2 rounded-lg bg-white text-black placeholder-slate-400 px-4 py-3 pr-14 focus:outline-none focus:border-slate-500 transition-all text-left"
                         placeholder="Viết trả lời..."
                       />
 
@@ -207,7 +214,7 @@ const ReplyChildrenExternal: React.FC<{
                           onClick={() => handleReplyToReply(c.id)}
                           disabled={!canSubmitReply}
                           aria-disabled={!canSubmitReply}
-                          className={`h-8 w-8 rounded-full flex items-center justify-center ${canSubmitReply ? 'bg-primary text-white' : 'bg-slate-400/30 text-white pointer-events-none'}`}
+                          className={`h-8 w-8 rounded-lg flex items-center justify-center ${canSubmitReply ? ' text-gray-600' : 'text-slate-400 pointer-events-none'}`}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -229,6 +236,7 @@ const ReplyChildrenExternal: React.FC<{
 
             {/* render nested children recursively */}
             <ReplyChildrenExternal
+              isAuthenticated={isAuthenticated}
               parentId={c.id}
               userData={userData}
               isOwner={isOwner}
@@ -395,6 +403,7 @@ export const PostCard: React.FC<PostCardProps> = ({
     setLocalLikes((s) => s + (next ? 1 : -1));
     onLike?.(_id, next);
   };
+  const handleRepost = () => {};
 
   const handleToggleComposer = () => {
     setShowComposer((s) => !s);
@@ -567,6 +576,17 @@ export const PostCard: React.FC<PostCardProps> = ({
                     </div>
                   </button>
                 </div>
+                <div className="flex items-center">
+                  <button
+                    aria-label="Share"
+                    onClick={handleRepost}
+                    type="button"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Share2 /> <span>Đăng lại</span>
+                    </div>
+                  </button>
+                </div>
               </div>
             )}
 
@@ -590,7 +610,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                           }
                         }}
                         rows={1}
-                        className="w-full min-h-[44px] max-h-36 resize-none  border-gray-300 border-2 rounded-full bg-white text-black placeholder-slate-400 px-4 py-3 pr-14 focus:outline-none  focus:border-slate-500 transition-all"
+                        className="w-full min-h-[44px] max-h-36 resize-none  border-gray-300 border-2 rounded-lg bg-white text-black placeholder-slate-400 px-4 py-3 pr-14 focus:outline-none  focus:border-slate-500 transition-all"
                         placeholder="Viết bình luận..."
                       />
 
@@ -600,7 +620,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                           onClick={handleSubmitComment}
                           disabled={!canSubmitComment}
                           aria-disabled={!canSubmitComment}
-                          className={`h-9 w-9 rounded-full flex items-center justify-center ${canSubmitComment ? 'bg-primary text-white' : 'bg-slate-500/30 text-white pointer-events-none'}`}
+                          className={`h-9 w-9 rounded-lg flex items-center justify-center ${canSubmitComment ? ' text-gray-600' : 'text-slate-400 pointer-events-none'}`}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -626,7 +646,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                 {localComments.map((c) => (
                   <div key={c.id}>
                     <div className="flex justify-between items-center">
-                      <div className="flex  gap-3">
+                      <div className="flex gap-3">
                         <Avatar className="w-9 h-9">
                           {c.avatar ? (
                             <AvatarImage
@@ -651,46 +671,48 @@ export const PostCard: React.FC<PostCardProps> = ({
                               <div className="text-xs text-slate-400 mt-1">
                                 {c.time}
                               </div>
-                              <div className="mt-1 flex items-center">
-                                <button
-                                  type="button"
-                                  aria-label={`Like reply ${c.id}`}
-                                  onClick={() => {
-                                    const next = !likedReplies[c.id];
-                                    setLikedReplies((s) => ({
-                                      ...s,
-                                      [c.id]: next,
-                                    }));
-                                    createVoteMutation.mutate({
-                                      replyId: c.id,
-                                      isUpvote: next,
-                                    });
-                                  }}
-                                  className="flex items-center gap-1 text-sm"
-                                >
-                                  <Heart
-                                    size={15}
-                                    className={`${LIKE_TRANSITION_CLASS} ${likedReplies[c.id] ? LIKE_ACTIVE_CLASS : LIKE_INACTIVE_CLASS}`}
-                                    fill={
-                                      likedReplies[c.id]
-                                        ? 'currentColor'
-                                        : 'none'
-                                    }
-                                  />
-                                  <span>Thích</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  className="ml-3 flex items-center gap-1 text-sm text-slate-700"
-                                  onClick={() => {
-                                    setReplyTargetId(c.id);
-                                    setReplyTargetText('');
-                                  }}
-                                >
-                                  <MessageSquare size={15} />
-                                  Trả lời
-                                </button>
-                              </div>
+                              {isAuthenticated && (
+                                <div className="mt-1 flex items-center">
+                                  <button
+                                    type="button"
+                                    aria-label={`Like reply ${c.id}`}
+                                    onClick={() => {
+                                      const next = !likedReplies[c.id];
+                                      setLikedReplies((s) => ({
+                                        ...s,
+                                        [c.id]: next,
+                                      }));
+                                      createVoteMutation.mutate({
+                                        replyId: c.id,
+                                        isUpvote: next,
+                                      });
+                                    }}
+                                    className="flex items-center gap-1 text-sm"
+                                  >
+                                    <Heart
+                                      size={15}
+                                      className={`${LIKE_TRANSITION_CLASS} ${likedReplies[c.id] ? LIKE_ACTIVE_CLASS : LIKE_INACTIVE_CLASS}`}
+                                      fill={
+                                        likedReplies[c.id]
+                                          ? 'currentColor'
+                                          : 'none'
+                                      }
+                                    />
+                                    <span>Thích</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="ml-3 flex items-center gap-1 text-sm text-slate-700"
+                                    onClick={() => {
+                                      setReplyTargetId(c.id);
+                                      setReplyTargetText('');
+                                    }}
+                                  >
+                                    <MessageSquare size={15} />
+                                    Trả lời
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -747,7 +769,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                                   }
                                 }}
                                 rows={1}
-                                className="w-full min-h-[40px] max-h-28 resize-none  border-gray-300 border-2 rounded-full bg-white text-black placeholder-slate-400 px-4 py-3 pr-14 focus:outline-none  focus:border-slate-500 transition-all"
+                                className="w-full min-h-[40px] max-h-28 resize-none  border-gray-300 border-2 rounded-lg bg-white text-black placeholder-slate-400 px-4 py-3 pr-14 focus:outline-none  focus:border-slate-500 transition-all"
                                 placeholder="Viết trả lời..."
                               />
 
@@ -757,7 +779,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                                   onClick={() => handleReplyToReply(c.id)}
                                   disabled={!canSubmitReply}
                                   aria-disabled={!canSubmitReply}
-                                  className={`h-8 w-8 rounded-full flex items-center justify-center ${canSubmitReply ? 'bg-primary text-white' : 'bg-slate-400/30 text-white pointer-events-none'}`}
+                                  className={`h-8 w-8 rounded-lg flex items-center justify-center ${canSubmitReply ? ' text-gray-600' : 'text-slate-400 pointer-events-none'}`}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -777,6 +799,7 @@ export const PostCard: React.FC<PostCardProps> = ({
                       </div>
                     )}
                     <ReplyChildrenExternal
+                      isAuthenticated={isAuthenticated}
                       parentId={c.id}
                       userData={userData}
                       isOwner={isOwner}
