@@ -65,6 +65,38 @@ export const useCreateCommentMutation = () => {
   });
 };
 
+export const useDeleteForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (postId: string) => {
+      const response = await _request.delete(`/forumPosts/${postId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+    },
+  });
+};
+
+export const useDeleteReplyCommentMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (commentId: string) => {
+      const response = await _request.delete(`/replies/${commentId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+    },
+  });
+};
+
 export const useCreateReplyCommentMutation = () => {
   const queryClient = useQueryClient();
   const _request = useAxios();

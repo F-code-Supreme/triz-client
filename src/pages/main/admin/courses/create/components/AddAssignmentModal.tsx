@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NumberInput } from '@/components/ui/number-input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   useCreateAssignmentMutation,
@@ -38,8 +39,10 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
 }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
-  const [durationInMinutes, setDurationInMinutes] = React.useState<number>(60);
-  const [maxAttempts, setMaxAttempts] = React.useState<number>(3);
+  const [durationInMinutes, setDurationInMinutes] = React.useState<
+    number | undefined
+  >(60);
+  const [maxAttempts, setMaxAttempts] = React.useState<number | undefined>(3);
   const [criteria, setCriteria] = React.useState<string[]>(['']);
 
   const createAssignment = useCreateAssignmentMutation(moduleId);
@@ -75,12 +78,12 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
       return;
     }
 
-    if (durationInMinutes <= 0) {
+    if (durationInMinutes === undefined || durationInMinutes <= 0) {
       toast.error('Thời lượng phải lớn hơn 0');
       return;
     }
 
-    if (maxAttempts <= 0) {
+    if (maxAttempts === undefined || maxAttempts <= 0) {
       toast.error('Số lần thử tối đa phải lớn hơn 0');
       return;
     }
@@ -246,15 +249,13 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                   Thời lượng (phút){' '}
                   {!viewMode && <span className="text-red-500">*</span>}
                 </Label>
-                <Input
+                <NumberInput
                   id="duration"
-                  type="number"
-                  min="1"
+                  min={1}
                   value={durationInMinutes}
-                  onChange={(e) => setDurationInMinutes(Number(e.target.value))}
-                  required={!viewMode}
+                  onValueChange={setDurationInMinutes}
                   disabled={isDisabled}
-                  readOnly={viewMode}
+                  stepper={1}
                 />
               </div>
 
@@ -263,15 +264,13 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                   Số lần thử tối đa{' '}
                   {!viewMode && <span className="text-red-500">*</span>}
                 </Label>
-                <Input
+                <NumberInput
                   id="maxAttempts"
-                  type="number"
-                  min="1"
+                  min={1}
                   value={maxAttempts}
-                  onChange={(e) => setMaxAttempts(Number(e.target.value))}
-                  required={!viewMode}
+                  onValueChange={setMaxAttempts}
                   disabled={isDisabled}
-                  readOnly={viewMode}
+                  stepper={1}
                 />
               </div>
             </div>

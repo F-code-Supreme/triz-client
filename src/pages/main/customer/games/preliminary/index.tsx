@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 // --- TYPES & CONFIG ---
@@ -134,6 +136,7 @@ interface Cell {
 
 const PreliminaryGamePage = () => {
   const navigate = useNavigate();
+  const updateScoreMutation = useUpdateGameScoreMutation();
 
   // --- STATE ---
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
@@ -205,8 +208,14 @@ const PreliminaryGamePage = () => {
   };
 
   const handleNextLevel = () => {
-    setScore((s) => s + 10); // Cộng điểm
+    const pointsGained = 10;
+    const newTotal = score + pointsGained;
+    setScore(newTotal); // Cộng điểm
     setCurrentLevelIndex((prev) => prev + 1);
+    updateScoreMutation.mutate({
+      gameId: GamesEnumId.Preliminary,
+      score: newTotal,
+    });
   };
 
   const handleRetry = () => {
@@ -323,153 +332,155 @@ const PreliminaryGamePage = () => {
   return (
     <DefaultLayout meta={{ title: 'Game Thực hiện sơ bộ' }} className="">
       <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
-        <div className="min-h-screen  dark:bg-slate-900 flex flex-col items-center p-4">
-          {/* TOP BAR */}
-          <div className="w-full max-w-md flex justify-between items-center mb-6 mt-2">
-            <button
-              onClick={() => navigate({ to: '/learn-triz' })}
-              className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
-            >
-              <ArrowLeft className="mr-2" size={24} /> Quay lại
-            </button>
-
-            <div className="flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-xl border border-yellow-200 shadow-sm">
-              <Trophy size={18} className="text-yellow-600" />
-              <span className="font-bold text-yellow-800">Điểm: {score}</span>
-            </div>
-          </div>
-
-          {/* LEVEL INFO */}
-          <div className="text-center mb-6">
-            <h2 className="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">
-              LEVEL {currentLevel.id}/5
-            </h2>
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
-              {currentLevel.name}
-            </h1>
-            <p className="text-slate-500 text-sm">{currentLevel.desc}</p>
-          </div>
-
-          {/* GAME AREA */}
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-2xl border-4 border-slate-100 dark:border-slate-700 relative">
-            {/* OVERLAY: WON */}
-            {status === 'WON' && (
-              <div className="absolute inset-0 z-50 bg-green-500/95 backdrop-blur-sm rounded-[1.7rem] flex flex-col items-center justify-center text-white animate-fade-in px-4 text-center">
-                <CheckCircle2 size={60} className="mb-3" />
-                <h2 className="text-3xl font-bold">Làm Tốt Lắm!</h2>
-                <p className="mb-1 opacity-90">Kế hoạch sơ bộ hoàn hảo.</p>
-                <div className="text-xl  bg-white/20 px-4 py-1 rounded-lg mb-6">
-                  +10 Điểm
-                </div>
-                <button
-                  onClick={handleNextLevel}
-                  className="w-full py-3 bg-white text-green-700 font-bold rounded-xl shadow-lg hover:scale-105 transition flex items-center justify-center gap-2"
-                >
-                  Màn tiếp theo <ArrowRight size={20} />
-                </button>
-              </div>
-            )}
-
-            {/* OVERLAY: LOST */}
-            {status === 'LOST' && (
-              <div className="absolute inset-0 z-50 bg-red-500/95 backdrop-blur-sm rounded-[1.7rem] flex flex-col items-center justify-center text-white animate-fade-in px-4 text-center">
-                <AlertOctagon size={60} className="mb-3" />
-                <h2 className="text-3xl font-bold">Thất Bại!</h2>
-                <p className="mb-6 opacity-90 text-sm max-w-[200px] mx-auto">
-                  {failReason}
-                </p>
-                <button
-                  onClick={handleRetry}
-                  className="w-full py-3 bg-white text-red-600 font-bold rounded-xl shadow-lg hover:scale-105 transition flex items-center justify-center gap-2"
-                >
-                  <RotateCcw size={20} /> Sửa lại (Giữ nguyên mũi tên)
-                </button>
-              </div>
-            )}
-
-            {/* GRID MAP */}
-            <div
-              className="grid gap-2 mx-auto"
-              style={{
-                gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                width: '280px',
-              }}
-            >
-              {grid.map((cell) => {
-                const isStart =
-                  cell.x === currentLevel.start.x &&
-                  cell.y === currentLevel.start.y;
-                const isEnd =
-                  cell.x === currentLevel.end.x &&
-                  cell.y === currentLevel.end.y;
-                const isBall = ballPos.x === cell.x && ballPos.y === cell.y;
-
-                return (
-                  <button
-                    key={`${cell.x}-${cell.y}`}
-                    type="button"
-                    onClick={() => handleRotate(cell.x, cell.y)}
-                    disabled={status !== 'PLANNING' || cell.isFixed}
-                    className={`aspect-square rounded-xl flex items-center justify-center relative transition-all duration-200 ${cell.isFixed ? 'bg-slate-100 border border-slate-200' : status === 'PLANNING' ? 'bg-white border-2 border-blue-500 cursor-pointer hover:bg-blue-50 shadow-[0_4px_0_rgba(99,102,241,0.2)] active:shadow-none active:translate-y-1' : 'bg-white border border-slate-200'}`}
-                  >
-                    {/* Arrow */}
-                    <div
-                      className={`transition-transform duration-300 ${cell.isFixed ? 'text-slate-300' : 'text-blue-600 font-bold'}`}
-                    >
-                      {getIcon(cell.direction)}
-                    </div>
-
-                    {/* Start/End Label */}
-                    {isStart && (
-                      <div className="absolute -top-2 -left-2 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
-                        START
-                      </div>
-                    )}
-                    {isEnd && (
-                      <div className="absolute -bottom-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
-                        ĐÍCH
-                      </div>
-                    )}
-
-                    {/* Ball */}
-                    {isBall && status !== 'LOST' && (
-                      <div className="absolute inset-0 flex items-center justify-center z-10">
-                        <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full shadow-lg border-2 border-white animate-bounce"></div>
-                      </div>
-                    )}
-
-                    {/* Explosion Effect */}
-                    {isBall && status === 'LOST' && (
-                      <div className="absolute inset-0 flex items-center justify-center z-20">
-                        <div className="text-4xl animate-ping">💥</div>
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* CONTROLLER */}
-          <div className="w-full max-w-md mt-8">
-            {status === 'PLANNING' ? (
+        <div className="container w-full max-w-8xl p-4 sm:p-16 mx-auto">
+          <div className=" dark:bg-slate-900 flex flex-col items-center p-4">
+            {/* TOP BAR */}
+            <div className="w-full max-w-md flex justify-between items-center mb-6 mt-2">
               <button
-                onClick={handleStart}
-                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-200 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 text-lg"
+                onClick={() => navigate({ to: '/learn-triz' })}
+                className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
               >
-                <Play fill="currentColor" size={24} /> THỰC THI SƠ BỘ
+                <ArrowLeft className="mr-2" size={24} /> Quay lại
               </button>
-            ) : (
-              <div className="w-full py-4 bg-slate-200 text-slate-500 font-bold rounded-2xl flex items-center justify-center gap-2 animate-pulse">
-                <RotateCw className="animate-spin" size={20} /> Đang chạy...
-              </div>
-            )}
 
-            <p className="text-center text-slate-400 text-sm mt-4 px-8">
-              {status === 'PLANNING'
-                ? 'Hãy xoay các mũi tên về đúng hướng TRƯỚC KHI bấm nút.'
-                : 'Bạn không thể thay đổi hướng khi đã bắt đầu.'}
-            </p>
+              <div className="flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-xl border border-yellow-200 shadow-sm">
+                <Trophy size={18} className="text-yellow-600" />
+                <span className="font-bold text-yellow-800">Điểm: {score}</span>
+              </div>
+            </div>
+
+            {/* LEVEL INFO */}
+            <div className="text-center mb-6">
+              <h2 className="text-xs font-bold text-blue-500 uppercase tracking-widest mb-1">
+                LEVEL {currentLevel.id}/5
+              </h2>
+              <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
+                {currentLevel.name}
+              </h1>
+              <p className="text-slate-500 text-sm">{currentLevel.desc}</p>
+            </div>
+
+            {/* GAME AREA */}
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] shadow-2xl border-4 border-slate-100 dark:border-slate-700 relative">
+              {/* OVERLAY: WON */}
+              {status === 'WON' && (
+                <div className="absolute inset-0 z-50 bg-green-500/95 backdrop-blur-sm rounded-[1.7rem] flex flex-col items-center justify-center text-white animate-fade-in px-4 text-center">
+                  <CheckCircle2 size={60} className="mb-3" />
+                  <h2 className="text-3xl font-bold">Làm Tốt Lắm!</h2>
+                  <p className="mb-1 opacity-90">Kế hoạch sơ bộ hoàn hảo.</p>
+                  <div className="text-xl  bg-white/20 px-4 py-1 rounded-lg mb-6">
+                    +10 Điểm
+                  </div>
+                  <button
+                    onClick={handleNextLevel}
+                    className="w-full py-3 bg-white text-green-700 font-bold rounded-xl shadow-lg hover:scale-105 transition flex items-center justify-center gap-2"
+                  >
+                    Màn tiếp theo <ArrowRight size={20} />
+                  </button>
+                </div>
+              )}
+
+              {/* OVERLAY: LOST */}
+              {status === 'LOST' && (
+                <div className="absolute inset-0 z-50 bg-red-500/95 backdrop-blur-sm rounded-[1.7rem] flex flex-col items-center justify-center text-white animate-fade-in px-4 text-center">
+                  <AlertOctagon size={60} className="mb-3" />
+                  <h2 className="text-3xl font-bold">Thất Bại!</h2>
+                  <p className="mb-6 opacity-90 text-sm max-w-[200px] mx-auto">
+                    {failReason}
+                  </p>
+                  <button
+                    onClick={handleRetry}
+                    className="w-full py-3 bg-white text-red-600 font-bold rounded-xl shadow-lg hover:scale-105 transition flex items-center justify-center gap-2"
+                  >
+                    <RotateCcw size={20} /> Sửa lại (Giữ nguyên mũi tên)
+                  </button>
+                </div>
+              )}
+
+              {/* GRID MAP */}
+              <div
+                className="grid gap-2 mx-auto"
+                style={{
+                  gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
+                  width: '280px',
+                }}
+              >
+                {grid.map((cell) => {
+                  const isStart =
+                    cell.x === currentLevel.start.x &&
+                    cell.y === currentLevel.start.y;
+                  const isEnd =
+                    cell.x === currentLevel.end.x &&
+                    cell.y === currentLevel.end.y;
+                  const isBall = ballPos.x === cell.x && ballPos.y === cell.y;
+
+                  return (
+                    <button
+                      key={`${cell.x}-${cell.y}`}
+                      type="button"
+                      onClick={() => handleRotate(cell.x, cell.y)}
+                      disabled={status !== 'PLANNING' || cell.isFixed}
+                      className={`aspect-square rounded-xl flex items-center justify-center relative transition-all duration-200 ${cell.isFixed ? 'bg-slate-100 border border-slate-200' : status === 'PLANNING' ? 'bg-white border-2 border-blue-500 cursor-pointer hover:bg-blue-50 shadow-[0_4px_0_rgba(99,102,241,0.2)] active:shadow-none active:translate-y-1' : 'bg-white border border-slate-200'}`}
+                    >
+                      {/* Arrow */}
+                      <div
+                        className={`transition-transform duration-300 ${cell.isFixed ? 'text-slate-300' : 'text-blue-600 font-bold'}`}
+                      >
+                        {getIcon(cell.direction)}
+                      </div>
+
+                      {/* Start/End Label */}
+                      {isStart && (
+                        <div className="absolute -top-2 -left-2 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
+                          START
+                        </div>
+                      )}
+                      {isEnd && (
+                        <div className="absolute -bottom-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
+                          ĐÍCH
+                        </div>
+                      )}
+
+                      {/* Ball */}
+                      {isBall && status !== 'LOST' && (
+                        <div className="absolute inset-0 flex items-center justify-center z-10">
+                          <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full shadow-lg border-2 border-white animate-bounce"></div>
+                        </div>
+                      )}
+
+                      {/* Explosion Effect */}
+                      {isBall && status === 'LOST' && (
+                        <div className="absolute inset-0 flex items-center justify-center z-20">
+                          <div className="text-4xl animate-ping">💥</div>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CONTROLLER */}
+            <div className="w-full max-w-md mt-8">
+              {status === 'PLANNING' ? (
+                <button
+                  onClick={handleStart}
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-200 transition-transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 text-lg"
+                >
+                  <Play fill="currentColor" size={24} /> THỰC THI SƠ BỘ
+                </button>
+              ) : (
+                <div className="w-full py-4 bg-slate-200 text-slate-500 font-bold rounded-2xl flex items-center justify-center gap-2 animate-pulse">
+                  <RotateCw className="animate-spin" size={20} /> Đang chạy...
+                </div>
+              )}
+
+              <p className="text-center text-slate-400 text-sm mt-4 px-8">
+                {status === 'PLANNING'
+                  ? 'Hãy xoay các mũi tên về đúng hướng TRƯỚC KHI bấm nút.'
+                  : 'Bạn không thể thay đổi hướng khi đã bắt đầu.'}
+              </p>
+            </div>
           </div>
         </div>
 

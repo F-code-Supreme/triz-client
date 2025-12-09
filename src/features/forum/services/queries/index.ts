@@ -36,6 +36,32 @@ export const useGetForumPostsQuery = (pagination?: PaginationState) => {
   });
 };
 
+export const useGetMyForumPostAll = (pagination?: PaginationState) => {
+  const _request = useAxios();
+  const initialSize = pagination?.pageSize ?? 20;
+
+  return useInfiniteQuery({
+    queryKey: [ForumKeys.GetMyForumPostQuery, initialSize],
+    queryFn: async ({ pageParam = 0, signal }) => {
+      const response = await _request.get<ForumPostResponse>(`/forumPosts/me`, {
+        params: {
+          page: pageParam,
+          size: initialSize,
+          sort: 'createdAt,desc',
+        },
+        signal,
+      });
+      return response.data;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.page.number + 1 < lastPage.page.totalPages
+        ? lastPage.page.number + 1
+        : undefined;
+    },
+  });
+};
+
 export const useGetForumPostByIdQuery = (postId: string) => {
   const _request = useAxios();
   return useQuery({

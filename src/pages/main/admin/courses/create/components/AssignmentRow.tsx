@@ -92,7 +92,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
               : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
           }
         >
-          {assignment.status === 'ACTIVE' ? 'Published' : 'Unpublish'}
+          {assignment.status === 'ACTIVE' ? 'Công khai' : 'Chưa công khai'}
         </Badge>
       </div>
 

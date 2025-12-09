@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 // --- CẤU HÌNH DỮ LIỆU ---
@@ -119,6 +121,7 @@ const RECIPES: Record<string, string> = {
 
 const MergingGamePage = () => {
   const navigate = useNavigate();
+  const updateScoreMutation = useUpdateGameScoreMutation();
 
   // State
   const [discovered, setDiscovered] = useState<string[]>([
@@ -183,6 +186,10 @@ const MergingGamePage = () => {
         // CÓ CÔNG THỨC
         if (!discovered.includes(result)) {
           // Khám phá mới
+          updateScoreMutation.mutate({
+            gameId: GamesEnumId.Merging,
+            score: discovered.length >= totalElements - 1 ? 20 : 10,
+          });
           setDiscovered((prev) => [...prev, result]);
           showNotify(
             `Tuyệt vời! Bạn đã tạo ra: ${ELEMENTS_DB[result].name}`,
@@ -225,7 +232,7 @@ const MergingGamePage = () => {
       className=""
     >
       <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
-        <div className="w-full max-w-8xl p-4 sm:p-16 mx-auto">
+        <div className="container w-full max-w-8xl p-4 sm:p-16 mx-auto">
           {/* Header Navigation & Progress */}
           <div className=" flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <button
