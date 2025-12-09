@@ -6,7 +6,6 @@ import {
   GraduationCap,
   BookCheck,
   Receipt,
-  Layers2,
   CalendarSync,
   Archive,
 } from 'lucide-react';
@@ -68,11 +67,6 @@ export const useAdminSidebarData = (): AdminSidebarData => {
               icon: BookOpen,
             },
             {
-              title: t('admin.flashcards'),
-              url: '/admin/flashcards',
-              icon: Layers2,
-            },
-            {
               title: t('admin.courses'),
               url: '/admin/courses',
               icon: GraduationCap,
@@ -80,11 +74,6 @@ export const useAdminSidebarData = (): AdminSidebarData => {
             {
               title: t('admin.quizzes'),
               url: '/admin/quizzes',
-              icon: BookCheck,
-            },
-            {
-              title: t('admin.assignments'),
-              url: '/admin/assignment',
               icon: BookCheck,
             },
           ],
