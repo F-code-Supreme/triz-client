@@ -493,6 +493,10 @@ const AdminUserDetailPage = () => {
               toDate={toDate}
               onFromDateChange={setFromDate}
               onToDateChange={setToDate}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              searchPlaceholder={t('transactions.search_placeholder' as any)}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              noTransactionsMessage={t('transactions.no_transactions' as any)}
             />
           </CardContent>
         </Card>
