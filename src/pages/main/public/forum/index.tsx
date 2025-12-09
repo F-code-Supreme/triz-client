@@ -27,7 +27,7 @@ import {
   useDeleteForumPostMutation,
 } from '@/features/forum/services/mutations';
 import {
-  useGetForumPostAll,
+  useGetMyForumPostAll,
   useGetForumPostsQuery,
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
@@ -52,10 +52,16 @@ const ForumPage: React.FC = () => {
       pageIndex: 0,
     });
   const {
-    data: allPost,
-    isLoading: isLoadingAll,
-    isError: isErrorAll,
-  } = useGetForumPostAll();
+    data: myPosts,
+    fetchNextPage: fetchMyPostsNextPage,
+    hasNextPage: hasMyPostsNextPage,
+    isFetchingNextPage: isFetchingMyPostsNextPage,
+    isLoading: isLoadingMyPosts,
+    isError: isErrorMyPosts,
+  } = useGetMyForumPostAll({
+    pageSize: 3,
+    pageIndex: 0,
+  });
   const { data: meData } = useGetMeQuery();
   const uploadMutation = useUploadFileMutation();
   const createVoteMutation = useCreateVoteMutation();
@@ -71,8 +77,8 @@ const ForumPage: React.FC = () => {
   const [answer, setAnswer] = React.useState<string>('');
   const canSubmit = true;
   const myPostsTab = React.useMemo(
-    () => allPost?.content?.filter((p) => p.userId === meData?.id) ?? [],
-    [allPost, meData?.id],
+    () => myPosts?.pages.flatMap((page) => page?.content || []) ?? [],
+    [myPosts],
   );
   const forumPosts = React.useMemo(
     () => data?.pages.flatMap((page) => page?.content || []) || [],
@@ -105,6 +111,26 @@ const ForumPage: React.FC = () => {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  React.useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          hasMyPostsNextPage &&
+          !isFetchingMyPostsNextPage
+        ) {
+          fetchMyPostsNextPage();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasMyPostsNextPage, isFetchingMyPostsNextPage, fetchMyPostsNextPage]);
   // Handle loading states
   if (isLoading) {
     return (
@@ -138,11 +164,7 @@ const ForumPage: React.FC = () => {
       </DefaultLayout>
     );
 
-  const myPosts = data.pages.flatMap(
-    (page) => page?.content?.filter((p) => p.userId === meData?.id) || [],
-  );
-
-  const postsToShow = activeTab === 'me' ? myPosts : forumPosts;
+  const postsToShow = activeTab === 'me' ? myPostsTab : forumPosts;
 
   // Get selected post details
 
@@ -151,7 +173,6 @@ const ForumPage: React.FC = () => {
     setShowDetailDialog(true);
   };
 
-  console.log('postsToShow', postsToShow);
   return (
     <DefaultLayout meta={{ title: 'Cộng đồng TRIZ' }} className="bg-slate-100">
       {/* Figma-styled tabs bar */}
@@ -538,7 +559,10 @@ const ForumPage: React.FC = () => {
                     deleteCommentMutation.mutate(postId, {
                       onSuccess: () => {
                         queryClient.invalidateQueries({
-                          queryKey: [ForumKeys.GetForumAll],
+                          queryKey: [ForumKeys.GetMyForumPostQuery],
+                        });
+                        queryClient.invalidateQueries({
+                          queryKey: [ForumKeys.GetForumQuery],
                         });
                         toast.success('Đã xóa bài viết thành công.');
                       },
@@ -620,8 +644,8 @@ const ForumPage: React.FC = () => {
           </div>
           <aside className="hidden lg:block">
             {meData &&
-              !isLoadingAll &&
-              !isErrorAll &&
+              !isLoadingMyPosts &&
+              !isErrorMyPosts &&
               myPostsTab.length > 0 && (
                 <div className="bg-white box-border w-full p-4 rounded-lg border border-slate-200 mb-4">
                   <div className="flex items-center justify-between mb-4">
