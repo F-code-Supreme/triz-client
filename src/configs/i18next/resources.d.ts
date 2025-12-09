@@ -790,6 +790,12 @@ interface Resources {
       "title": "Quizzes"
     },
     "subscriptions": {
+      "actions": {
+        "cancel_subscription": "Cancel Subscription",
+        "disable_auto_renewal": "Disable Auto Renewal",
+        "enable_auto_renewal": "Enable Auto Renewal",
+        "view_details": "View Details"
+      },
       "auto_renewal": {
         "cancel": "Cancel",
         "confirm": "Confirm",
@@ -798,14 +804,107 @@ interface Resources {
         "dialog_title": "Confirm Auto Renewal Change",
         "saving": "Saving..."
       },
+      "cancel_dialog": {
+        "cancelling": "Cancelling...",
+        "confirm": "Yes, Cancel Subscription",
+        "keep": "No, Keep It",
+        "message": "Are you sure you want to cancel this subscription? The user will lose access to premium features immediately.",
+        "title": "Cancel Subscription?"
+      },
+      "columns": {
+        "actions": "Actions",
+        "auto_renewal": "Auto Renewal",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status",
+        "trizilium_per_day": "Trizilium/Day",
+        "user_id": "User ID"
+      },
       "description": "Manage all subscriptions in the system",
+      "details": {
+        "auto_renewal": "Auto Renewal",
+        "close": "Close",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status",
+        "title": "Subscription Details",
+        "tokens_per_day_remaining": "Tokens Per Day Remaining",
+        "user_id": "User ID"
+      },
       "no_results": "No results.",
       "no_subscriptions": "No subscriptions found",
-      "title": "Subscriptions"
+      "status": {
+        "disabled": "Disabled",
+        "enabled": "Enabled"
+      },
+      "title": "Subscriptions",
+      "toast": {
+        "cancel_error": "Failed to cancel subscription",
+        "cancel_success": "Subscription cancelled successfully"
+      }
     },
     "transactions": {
+      "actions": {
+        "cancel_transaction": "Cancel Transaction",
+        "view_details": "View Details"
+      },
+      "cancel_dialog": {
+        "cancelling": "Cancelling...",
+        "confirm": "Yes, Cancel Transaction",
+        "keep": "No, Keep It",
+        "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+        "title": "Cancel Transaction"
+      },
+      "columns": {
+        "actions": "Actions",
+        "amount": "Amount",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "status": "Status",
+        "type": "Type"
+      },
       "description": "View and manage all system transactions",
-      "title": "Transactions"
+      "details": {
+        "amount": "Amount",
+        "close": "Close",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
+        "status": "Status",
+        "title": "Transaction Details",
+        "type": "Type"
+      },
+      "filters": {
+        "provider": "Provider",
+        "status": "Status",
+        "transaction_type": "Transaction Type"
+      },
+      "no_transactions": "No transactions found",
+      "providers": {
+        "payos": "PayOS",
+        "stripe": "Stripe",
+        "triz": "TRIZ"
+      },
+      "search_placeholder": "Search transactions...",
+      "status": {
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "pending": "Pending"
+      },
+      "title": "Transactions",
+      "toast": {
+        "cancel_error": "Failed to cancel transaction",
+        "cancel_success": "Transaction cancelled successfully"
+      },
+      "types": {
+        "refund": "Refund",
+        "spend": "Spend",
+        "topup": "Top Up"
+      }
     },
     "users": {
       "create_user": "Create New User",

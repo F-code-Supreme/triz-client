@@ -501,6 +501,44 @@
     "description": "Quản lý tất cả gói đăng ký trong hệ thống",
     "no_subscriptions": "Không tìm thấy gói đăng ký",
     "no_results": "Không có kết quả.",
+    "columns": {
+      "user_id": "ID người dùng",
+      "package": "Gói",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc",
+      "trizilium_per_day": "Token/Ngày",
+      "status": "Trạng thái",
+      "auto_renewal": "Tự động gia hạn",
+      "actions": "Hành động"
+    },
+    "status": {
+      "enabled": "Đã bật",
+      "disabled": "Đã tắt"
+    },
+    "actions": {
+      "view_details": "Xem chi tiết",
+      "enable_auto_renewal": "Bật tự động gia hạn",
+      "disable_auto_renewal": "Tắt tự động gia hạn",
+      "cancel_subscription": "Hủy gói đăng ký"
+    },
+    "details": {
+      "title": "Chi tiết gói đăng ký",
+      "package": "Gói",
+      "user_id": "ID người dùng",
+      "status": "Trạng thái",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc",
+      "tokens_per_day_remaining": "Token còn lại mỗi ngày",
+      "auto_renewal": "Tự động gia hạn",
+      "close": "Đóng"
+    },
+    "cancel_dialog": {
+      "title": "Hủy gói đăng ký?",
+      "message": "Bạn có chắc chắn muốn hủy gói đăng ký này không? Người dùng sẽ mất quyền truy cập các tính năng cao cấp ngay lập tức.",
+      "keep": "Không, Giữ lại",
+      "confirm": "Có, Hủy gói đăng ký",
+      "cancelling": "Đang hủy..."
+    },
     "auto_renewal": {
       "dialog_title": "Xác nhận thay đổi tự động gia hạn",
       "dialog_description_enable": "Bạn có chắc chắn muốn bật tự động gia hạn cho gói đăng ký này không?",
@@ -508,11 +546,72 @@
       "cancel": "Hủy",
       "confirm": "Xác nhận",
       "saving": "Đang lưu..."
+    },
+    "toast": {
+      "cancel_success": "Hủy gói đăng ký thành công",
+      "cancel_error": "Không thể hủy gói đăng ký"
     }
   },
   "transactions": {
     "title": "Giao dịch",
-    "description": "Xem và quản lý tất cả giao dịch hệ thống"
+    "description": "Xem và quản lý tất cả giao dịch hệ thống",
+    "search_placeholder": "Tìm kiếm giao dịch...",
+    "no_transactions": "Không tìm thấy giao dịch",
+    "columns": {
+      "order_code": "Mã đơn hàng",
+      "type": "Loại",
+      "amount": "Số tiền",
+      "provider": "Nhà cung cấp",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "actions": "Hành động"
+    },
+    "types": {
+      "topup": "Nạp tiền",
+      "spend": "Chi tiêu",
+      "refund": "Hoàn tiền"
+    },
+    "status": {
+      "completed": "Hoàn thành",
+      "pending": "Đang chờ",
+      "cancelled": "Đã hủy"
+    },
+    "providers": {
+      "stripe": "Stripe",
+      "payos": "PayOS",
+      "triz": "TRIZ"
+    },
+    "filters": {
+      "transaction_type": "Loại giao dịch",
+      "status": "Trạng thái",
+      "provider": "Nhà cung cấp"
+    },
+    "actions": {
+      "view_details": "Xem chi tiết",
+      "cancel_transaction": "Hủy giao dịch"
+    },
+    "details": {
+      "title": "Chi tiết giao dịch",
+      "order_code": "Mã đơn hàng",
+      "type": "Loại",
+      "amount": "Số tiền",
+      "provider": "Nhà cung cấp",
+      "provider_tx_ref": "Mã tham chiếu NCC",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "close": "Đóng"
+    },
+    "cancel_dialog": {
+      "title": "Hủy giao dịch",
+      "message": "Bạn có chắc chắn muốn hủy giao dịch này? Hành động này không thể hoàn tác.",
+      "keep": "Không, Giữ lại",
+      "confirm": "Có, Hủy giao dịch",
+      "cancelling": "Đang hủy..."
+    },
+    "toast": {
+      "cancel_success": "Hủy giao dịch thành công",
+      "cancel_error": "Không thể hủy giao dịch"
+    }
   },
   "users": {
     "title": "Người dùng",

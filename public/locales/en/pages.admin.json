@@ -607,6 +607,44 @@
     "description": "Manage all subscriptions in the system",
     "no_subscriptions": "No subscriptions found",
     "no_results": "No results.",
+    "columns": {
+      "user_id": "User ID",
+      "package": "Package",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "trizilium_per_day": "Trizilium/Day",
+      "status": "Status",
+      "auto_renewal": "Auto Renewal",
+      "actions": "Actions"
+    },
+    "status": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "enable_auto_renewal": "Enable Auto Renewal",
+      "disable_auto_renewal": "Disable Auto Renewal",
+      "cancel_subscription": "Cancel Subscription"
+    },
+    "details": {
+      "title": "Subscription Details",
+      "package": "Package",
+      "user_id": "User ID",
+      "status": "Status",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "tokens_per_day_remaining": "Tokens Per Day Remaining",
+      "auto_renewal": "Auto Renewal",
+      "close": "Close"
+    },
+    "cancel_dialog": {
+      "title": "Cancel Subscription?",
+      "message": "Are you sure you want to cancel this subscription? The user will lose access to premium features immediately.",
+      "keep": "No, Keep It",
+      "confirm": "Yes, Cancel Subscription",
+      "cancelling": "Cancelling..."
+    },
     "auto_renewal": {
       "dialog_title": "Confirm Auto Renewal Change",
       "dialog_description_enable": "Are you sure you want to enable auto-renewal for this subscription?",
@@ -614,11 +652,72 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "saving": "Saving..."
+    },
+    "toast": {
+      "cancel_success": "Subscription cancelled successfully",
+      "cancel_error": "Failed to cancel subscription"
     }
   },
   "transactions": {
     "title": "Transactions",
-    "description": "View and manage all system transactions"
+    "description": "View and manage all system transactions",
+    "search_placeholder": "Search transactions...",
+    "no_transactions": "No transactions found",
+    "columns": {
+      "order_code": "Order Code",
+      "type": "Type",
+      "amount": "Amount",
+      "provider": "Provider",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "types": {
+      "topup": "Top Up",
+      "spend": "Spend",
+      "refund": "Refund"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "providers": {
+      "stripe": "Stripe",
+      "payos": "PayOS",
+      "triz": "TRIZ"
+    },
+    "filters": {
+      "transaction_type": "Transaction Type",
+      "status": "Status",
+      "provider": "Provider"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "cancel_transaction": "Cancel Transaction"
+    },
+    "details": {
+      "title": "Transaction Details",
+      "order_code": "Order Code",
+      "type": "Type",
+      "amount": "Amount",
+      "provider": "Provider",
+      "provider_tx_ref": "Provider Tx Ref",
+      "status": "Status",
+      "date": "Date",
+      "close": "Close"
+    },
+    "cancel_dialog": {
+      "title": "Cancel Transaction",
+      "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+      "keep": "No, Keep It",
+      "confirm": "Yes, Cancel Transaction",
+      "cancelling": "Cancelling..."
+    },
+    "toast": {
+      "cancel_success": "Transaction cancelled successfully",
+      "cancel_error": "Failed to cancel transaction"
+    }
   },
   "users": {
     "title": "Users",

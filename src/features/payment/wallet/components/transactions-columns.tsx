@@ -10,19 +10,24 @@ import type {
   TransactionType,
 } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
+import type { TFunction } from 'i18next';
 
 type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 const columnHelper = createColumnHelper<TransactionWithTimestamp>();
 
-export const getTransactionTypeLabel = (type: TransactionType): string => {
+export const getTransactionTypeLabel = (
+  type: TransactionType,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: TFunction<'pages.admin', undefined> | ((key: string) => any),
+): string => {
   switch (type) {
     case 'TOPUP':
-      return 'Top Up';
+      return t('transactions.types.topup');
     case 'REFUND':
-      return 'Refund';
+      return t('transactions.types.refund');
     default:
-      return 'Spend';
+      return t('transactions.types.spend');
   }
 };
 
@@ -50,9 +55,12 @@ export const getTransactionStatusColor = (status: string): string => {
   }
 };
 
-export const transactionsColumns = [
+export const transactionsColumns = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: TFunction<'pages.admin', undefined> | ((key: string) => any),
+) => [
   columnHelper.accessor('orderCode', {
-    header: 'Order Code',
+    header: t('transactions.columns.order_code'),
     cell: (info) => (
       <span className="font-mono text-sm">{info.getValue()}</span>
     ),
@@ -60,11 +68,14 @@ export const transactionsColumns = [
 
   columnHelper.accessor('type', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.type')}
+      />
     ),
     cell: (info) => {
       const type = info.getValue();
-      const label = getTransactionTypeLabel(type);
+      const label = getTransactionTypeLabel(type, t);
       const color = getTransactionTypeColor(type);
       return <span className={`font-medium ${color}`}>{label}</span>;
     },
@@ -72,7 +83,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('amount', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.amount')}
+      />
     ),
     cell: (info) => {
       const amount = info.getValue();
@@ -94,7 +108,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('provider', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Provider" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.provider')}
+      />
     ),
     cell: (info) => (
       <Badge variant="outline" className="capitalize">
@@ -105,7 +122,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('status', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.status')}
+      />
     ),
     cell: (info) => {
       const status = info.getValue();
@@ -116,7 +136,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('createdAt', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.date')}
+      />
     ),
     cell: (info) => (
       <span className="text-sm">
@@ -128,7 +151,10 @@ export const transactionsColumns = [
   columnHelper.display({
     id: 'actions',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Actions" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.actions')}
+      />
     ),
     cell: ({ row }) => <TransactionsDataTableRowActions row={row} />,
     enableSorting: false,

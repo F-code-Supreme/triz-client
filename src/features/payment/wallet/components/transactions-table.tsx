@@ -12,8 +12,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { transactionsColumns } from './transactions-columns';
-
 import type { Transaction } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
 
@@ -23,6 +21,8 @@ interface TransactionsTableProps {
   table: Table<TransactionWithTimestamp>;
   isLoading: boolean;
   totalRowCount: number;
+  searchPlaceholder?: string;
+  noTransactionsMessage?: string;
   filters?: Array<{
     columnId: string;
     title: string;
@@ -37,6 +37,8 @@ interface TransactionsTableProps {
 export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   table,
   isLoading,
+  searchPlaceholder = 'Search transactions...',
+  noTransactionsMessage = 'No transactions found',
   filters = [],
   fromDate,
   toDate,
@@ -47,7 +49,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     <div className="flex flex-col gap-2">
       <DataTableToolbar
         table={table}
-        searchPlaceholder="Search transactions..."
+        searchPlaceholder={searchPlaceholder}
         searchKey="orderCode"
         filters={filters}
       />
@@ -84,8 +86,8 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             {Array.from({ length: table.getState().pagination.pageSize }).map(
               (_, idx) => (
                 <TableRow key={idx}>
-                  {transactionsColumns.map((_, cellIdx) => (
-                    <TableCell key={cellIdx}>
+                  {table.getVisibleFlatColumns().map((column) => (
+                    <TableCell key={column.id}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
                   ))}
@@ -97,7 +99,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       </div>
     ) : table.getRowModel().rows?.length === 0 ? (
       <div className="flex justify-center items-center h-64">
-        <p className="text-muted-foreground">No transactions found</p>
+        <p className="text-muted-foreground">{noTransactionsMessage}</p>
       </div>
     ) : (
       <div className="border rounded-md overflow-hidden">
@@ -138,7 +140,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={transactionsColumns.length}
+                  colSpan={table.getVisibleFlatColumns().length}
                   className="h-24 text-center"
                 >
                   No results.

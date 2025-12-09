@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
 
@@ -14,6 +15,7 @@ import { AdminSubscriptionsDataTableRowActions } from './admin-subscriptions-dat
 
 import type { Subscription } from '../types';
 import type { DataTimestamp } from '@/types';
+import type { TFunction } from 'i18next';
 
 type SubscriptionWithTimestamp = Subscription & DataTimestamp;
 
@@ -34,10 +36,16 @@ export const getSubscriptionStatusColor = (status: string): string => {
   }
 };
 
-export const adminSubscriptionsColumns = [
+export const adminSubscriptionsColumns = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: TFunction<'pages.admin', undefined> | ((key: string) => any),
+) => [
   columnHelper.accessor('userId', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="User ID" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.user_id')}
+      />
     ),
     cell: (info) => {
       const id = info.getValue();
@@ -45,9 +53,13 @@ export const adminSubscriptionsColumns = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[100px] truncate font-mono text-sm cursor-help">
+              <Link
+                to="/admin/users/$userId"
+                params={{ userId: id }}
+                className="w-[100px] truncate font-mono text-sm cursor-pointer hover:underline text-secondary block"
+              >
                 {id}
-              </div>
+              </Link>
             </TooltipTrigger>
             <TooltipContent side="right" className="font-mono text-xs">
               {id}
@@ -61,14 +73,20 @@ export const adminSubscriptionsColumns = [
   columnHelper.accessor('packageName', {
     id: 'packagePlanId',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Package" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.package')}
+      />
     ),
     cell: (info) => <span className="font-medium">{info.getValue()}</span>,
   }),
 
   columnHelper.accessor('startDate', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Start Date" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.start_date')}
+      />
     ),
     cell: (info) => {
       const date = info.getValue();
@@ -78,7 +96,10 @@ export const adminSubscriptionsColumns = [
 
   columnHelper.accessor('endDate', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="End Date" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.end_date')}
+      />
     ),
     cell: (info) => {
       const date = info.getValue();
@@ -88,14 +109,20 @@ export const adminSubscriptionsColumns = [
 
   columnHelper.accessor('tokensPerDayRemaining', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Trizilium/Day" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.trizilium_per_day')}
+      />
     ),
     cell: (info) => <span className="font-semibold">{info.getValue()}</span>,
   }),
 
   columnHelper.accessor('status', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.status')}
+      />
     ),
     cell: (info) => {
       const status = info.getValue();
@@ -106,11 +133,16 @@ export const adminSubscriptionsColumns = [
 
   columnHelper.accessor('autoRenew', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Auto Renewal" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.auto_renewal')}
+      />
     ),
     cell: (info) => (
       <Badge variant={info.getValue() ? 'default' : 'outline'}>
-        {info.getValue() ? 'Enabled' : 'Disabled'}
+        {info.getValue()
+          ? t('subscriptions.status.enabled')
+          : t('subscriptions.status.disabled')}
       </Badge>
     ),
   }),
@@ -118,7 +150,10 @@ export const adminSubscriptionsColumns = [
   columnHelper.display({
     id: 'actions',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Actions" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('subscriptions.columns.actions')}
+      />
     ),
     cell: ({ row }) => <AdminSubscriptionsDataTableRowActions row={row} />,
     enableSorting: false,
@@ -127,9 +162,13 @@ export const adminSubscriptionsColumns = [
 ];
 
 export const createAdminSubscriptionsColumns = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  t: TFunction<'pages.admin', undefined> | ((key: string) => any),
   onAutoRenewalToggle?: (subscription: SubscriptionWithTimestamp) => void,
 ) => {
-  return adminSubscriptionsColumns.map((column) => {
+  const columns = adminSubscriptionsColumns(t);
+
+  return columns.map((column) => {
     if (column.id === 'actions') {
       return {
         ...column,

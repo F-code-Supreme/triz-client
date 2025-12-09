@@ -1,5 +1,6 @@
 import { MoreHorizontal, Eye, X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -50,6 +51,7 @@ export const TransactionsDataTableRowActions = ({
   row,
 }: TransactionsDataTableRowActionsProps) => {
   const transaction = row.original;
+  const { t } = useTranslation('pages.admin');
   const { user, hasRole } = useAuth();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
@@ -71,11 +73,14 @@ export const TransactionsDataTableRowActions = ({
         {
           onSuccess: () => {
             setIsCancelDialogOpen(false);
-            toast.success('Transaction cancelled successfully');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            toast.success(t('transactions.toast.cancel_success' as any));
           },
           onError: (error) => {
             toast.error(
-              (error as Error).message || 'Failed to cancel transaction',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (error as Error).message ||
+                t('transactions.toast.cancel_error' as any),
             );
           },
         },
@@ -86,11 +91,14 @@ export const TransactionsDataTableRowActions = ({
         {
           onSuccess: () => {
             setIsCancelDialogOpen(false);
-            toast.success('Transaction cancelled successfully');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            toast.success(t('transactions.toast.cancel_success' as any));
           },
           onError: (error) => {
             toast.error(
-              (error as Error).message || 'Failed to cancel transaction',
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (error as Error).message ||
+                t('transactions.toast.cancel_error' as any),
             );
           },
         },
@@ -108,11 +116,15 @@ export const TransactionsDataTableRowActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <DropdownMenuLabel>
+            {t('transactions.columns.actions' as any)}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
-            View Details
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {t('transactions.actions.view_details' as any)}
           </DropdownMenuItem>
           {canCancel && (
             <DropdownMenuItem
@@ -120,7 +132,8 @@ export const TransactionsDataTableRowActions = ({
               className="text-red-600 dark:text-red-400"
             >
               <X className="mr-2 h-4 w-4" />
-              Cancel Transaction
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {t('transactions.actions.cancel_transaction' as any)}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -129,40 +142,61 @@ export const TransactionsDataTableRowActions = ({
       <Sheet open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Transaction Details</SheetTitle>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <SheetTitle>{t('transactions.details.title' as any)}</SheetTitle>
             <SheetDescription>
-              Order Code: {transaction.orderCode}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {t('transactions.details.order_code' as any)}:{' '}
+              {transaction.orderCode}
             </SheetDescription>
           </SheetHeader>
           <div className="space-y-4 pt-6">
             <div>
-              <p className="text-sm text-muted-foreground">Type</p>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.type' as any)}
+              </p>
               <p className="font-medium">{transaction.type}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Amount</p>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.amount' as any)}
+              </p>
               <p className="font-medium">
                 {transaction.amount.toLocaleString()} VND
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Provider</p>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.provider' as any)}
+              </p>
               <p className="font-medium capitalize">
                 {transaction.provider?.toLowerCase() || 'N/A'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Provider Tx Ref</p>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.provider_tx_ref' as any)}
+              </p>
               <p className="font-medium capitalize">
                 {transaction.providerTxRef?.toLowerCase() || 'N/A'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Status</p>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.status' as any)}
+              </p>
               <p className="font-medium">{transaction.status}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Date</p>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.date' as any)}
+              </p>
               <p className="font-medium">
                 {new Date(transaction.createdAt).toLocaleString()}
               </p>
@@ -171,7 +205,8 @@ export const TransactionsDataTableRowActions = ({
           <div className="flex gap-3 justify-end pt-6">
             <SheetClose asChild>
               <Button type="button" variant="outline">
-                Close
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {t('transactions.details.close' as any)}
               </Button>
             </SheetClose>
           </div>
@@ -182,10 +217,13 @@ export const TransactionsDataTableRowActions = ({
       <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel Transaction</DialogTitle>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <DialogTitle>
+              {t('transactions.cancel_dialog.title' as any)}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to cancel this transaction? This action
-              cannot be undone.
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {t('transactions.cancel_dialog.message' as any)}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -194,14 +232,18 @@ export const TransactionsDataTableRowActions = ({
               onClick={() => setIsCancelDialogOpen(false)}
               disabled={isCanceling}
             >
-              No, Keep It
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {t('transactions.cancel_dialog.keep' as any)}
             </Button>
             <Button
               variant="destructive"
               onClick={handleCancel}
               disabled={isCanceling}
             >
-              {isCanceling ? 'Cancelling...' : 'Yes, Cancel Transaction'}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {isCanceling
+                ? t('transactions.cancel_dialog.cancelling' as any)
+                : t('transactions.cancel_dialog.confirm' as any)}
             </Button>
           </DialogFooter>
         </DialogContent>

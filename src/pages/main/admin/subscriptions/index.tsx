@@ -96,8 +96,8 @@ const AdminSubscriptionsPage = () => {
 
   // Create columns with auto-renewal callback
   const columns = useMemo(
-    () => createAdminSubscriptionsColumns(handleAutoRenewalToggle),
-    [handleAutoRenewalToggle],
+    () => createAdminSubscriptionsColumns(t, handleAutoRenewalToggle),
+    [t, handleAutoRenewalToggle],
   );
 
   // Create table instance with manual pagination
@@ -120,7 +120,7 @@ const AdminSubscriptionsPage = () => {
   });
 
   return (
-    <AdminLayout meta={{ title: 'Subscriptions' }}>
+    <AdminLayout meta={{ title: t('subscriptions.title') }}>
       <div className="flex flex-col gap-8 p-8">
         {/* Header */}
         <div>

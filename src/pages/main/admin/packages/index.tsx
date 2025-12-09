@@ -140,7 +140,7 @@ const AdminManagePackagePage = () => {
   };
 
   return (
-    <AdminLayout meta={{ title: 'Admin Manage Package' }}>
+    <AdminLayout meta={{ title: t('packages.title') }}>
       <div className="space-y-6 p-8">
         {/* Header */}
         <div className="flex items-center justify-between">
