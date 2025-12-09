@@ -6,9 +6,10 @@ import {
   type SortingState,
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import useAuth from '@/features/auth/hooks/use-auth';
-import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
+import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
 import {
   WalletBalanceCard,
@@ -20,6 +21,7 @@ import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/quer
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const WalletPage = () => {
+  const { t } = useTranslation('pages.admin');
   const [topupOpen, setTopupOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -63,10 +65,14 @@ const WalletPage = () => {
 
   const totalRowCount = transactionsData?.page?.totalElements ?? 0;
 
+  // Get translated filters and columns
+  const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
+  const transactionColumns = useMemo(() => transactionsColumns(t), [t]);
+
   // Create table instance with manual pagination
   const table = useReactTable({
     data: transactions,
-    columns: transactionsColumns,
+    columns: transactionColumns,
     state: {
       columnFilters,
       pagination,
