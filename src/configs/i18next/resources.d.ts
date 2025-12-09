@@ -786,6 +786,9 @@ interface Resources {
   "pages.learn_triz": {
     "description": "Unlock breakthrough thinking from the foundation of creative science",
     "page_meta_title": "40 Creative Principles",
+    "search_label": "TRIZ Principles",
+    "search_no_results": "No principles found matching your search",
+    "search_placeholder": "Search principles by number, title, or content...",
     "title": "Discover",
     "title_highlight": "40 Creative Principles"
   },

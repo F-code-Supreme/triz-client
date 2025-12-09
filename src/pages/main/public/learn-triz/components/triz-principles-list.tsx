@@ -1,9 +1,143 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { AsyncSelect } from '@/components/ui/async-select';
+
 import { principlesData } from './principles-data';
 
+interface Principle {
+  number: number;
+  title: string;
+  image?: string;
+  content: Array<{
+    text: string;
+    examples: string[];
+  }>;
+  description?: string;
+}
+
 export const TRIZPrinciplesList = () => {
+  const { t } = useTranslation('pages.learn_triz');
+  const [selectedPrinciple, setSelectedPrinciple] = useState('');
+
+  // Fetcher function for AsyncSelect
+  const fetchPrinciples = async (query?: string): Promise<Principle[]> => {
+    // Simulate async behavior (immediate return since data is local)
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    if (!query) return principlesData;
+
+    const searchQuery = query.toLowerCase();
+    return principlesData.filter((principle) => {
+      // Search by number
+      if (principle.number.toString().includes(searchQuery)) return true;
+
+      // Search by title
+      if (principle.title.toLowerCase().includes(searchQuery)) return true;
+
+      // Search by content text and examples
+      return principle.content.some(
+        (block) =>
+          block.text.toLowerCase().includes(searchQuery) ||
+          block.examples.some((example) =>
+            example.toLowerCase().includes(searchQuery),
+          ),
+      );
+    });
+  };
+
+  // Filter function for local filtering when using preload
+  const filterPrinciple = (principle: Principle, query: string): boolean => {
+    const searchQuery = query.toLowerCase();
+
+    // Search by number
+    if (principle.number.toString().includes(searchQuery)) return true;
+
+    // Search by title
+    if (principle.title.toLowerCase().includes(searchQuery)) return true;
+
+    // Search by content text and examples
+    return principle.content.some(
+      (block) =>
+        block.text.toLowerCase().includes(searchQuery) ||
+        block.examples.some((example) =>
+          example.toLowerCase().includes(searchQuery),
+        ),
+    );
+  };
+
+  // Scroll to principle when selected
+  const handlePrincipleSelect = (value: string) => {
+    setSelectedPrinciple(value);
+    if (value) {
+      // Use setTimeout to ensure the DOM has updated and selection is complete
+      setTimeout(() => {
+        const element = document.getElementById(`principle-${value}`);
+        if (element) {
+          // Calculate offset to account for sticky header
+          const headerOffset = 80; // Adjust this value based on your header height
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }
+      }, 100);
+    }
+  };
   return (
     <section className="py-8 bg-slate-50 dark:bg-slate-900">
-      <div className="container mx-auto px-4 my-10">
+      <div className="container mx-auto px-4 my-4">
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto mb-8">
+          <div className="flex items-center justify-center">
+            <AsyncSelect<Principle>
+              fetcher={fetchPrinciples}
+              preload={true}
+              filterFn={filterPrinciple}
+              value={selectedPrinciple}
+              onChange={handlePrincipleSelect}
+              label={t('search_label')}
+              placeholder={t('search_placeholder')}
+              getOptionValue={(principle) => principle.number.toString()}
+              getDisplayValue={(principle) => (
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white font-bold text-xs flex-shrink-0">
+                    {principle.number}
+                  </span>
+                  <span className="truncate">{principle.title}</span>
+                </div>
+              )}
+              renderOption={(principle) => (
+                <div className="flex items-start gap-3 w-full">
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-sm flex-shrink-0">
+                    {principle.number}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm mb-1">
+                      {principle.title}
+                    </div>
+                    {principle.content[0] && (
+                      <div className="text-xs text-muted-foreground truncate">
+                        {principle.content[0].text}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              width="600px"
+              className="flex-1"
+              triggerClassName="h-12 text-base"
+              noResultsMessage={t('search_no_results')}
+              clearable={false}
+            />
+          </div>
+        </div>
+
+        {/* Principles List */}
         <div className="flex flex-col gap-6">
           {principlesData.map((principle) => (
             <div
