@@ -307,8 +307,13 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           </button>
           <h3 className="font-medium text-base">
             {module.name} - Thời lượng: {module.durationInMinutes} phút - Mức
-            độ: {module.level} ({module.lessonCount} bài học,{' '}
-            {module.assignmentCount} bài tập)
+            độ:{' '}
+            {module.level === 'EASY'
+              ? 'Sơ cấp'
+              : module.level === 'MEDIUM'
+                ? 'Trung cấp'
+                : 'Cao cấp'}{' '}
+            ({module.lessonCount} bài học, {module.assignmentCount} bài tập)
           </h3>
         </div>
         <div className="flex gap-2">

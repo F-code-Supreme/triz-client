@@ -1,9 +1,13 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadTrigger,
+} from '@/components/ui/file-upload';
 import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
@@ -57,12 +61,13 @@ const StepBasic: React.FC<Props> = ({
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
     'STARTER',
   );
-  const [price, setPrice] = useState<number>(0);
-  const [dealPrice, setDealPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>(1000);
+  const [dealPrice, setDealPrice] = useState<number>(1000);
   const [thumbnailUrl, setThumbnailUrl] = useState<string>(
     thumbnailPreview ?? '',
   );
   const uploadFile = useUploadFileMutation();
+  const [coverFiles, setCoverFiles] = useState<File[]>([]);
   const [localErrors, setLocalErrors] = useState<Errors>({});
   const [existingCourseId, setExistingCourseId] = useState<string | null>(null);
   const [draftId, setDraftId] = useState<string | null>(null);
@@ -231,6 +236,11 @@ const StepBasic: React.FC<Props> = ({
     });
   };
 
+  const handleRemoveThumbnail = () => {
+    setThumbnailUrl('');
+    setCoverFiles([]);
+  };
+
   // react-query mutation result typing may vary across versions; access isLoading defensively
   const loading = Boolean(
     (createCourse as unknown as { isLoading?: boolean }).isLoading ||
@@ -255,63 +265,99 @@ const StepBasic: React.FC<Props> = ({
             Ảnh đại diện khóa học <span className="text-red-500">*</span>
           </label>
 
-          <div className="mt-1 flex items-center gap-2">
-            <Input
-              id="picture"
-              type="file"
-              accept="image/*"
-              placeholder="Chọn ảnh cho khóa học"
-              onChange={(e) => {
-                const file = (e.target as HTMLInputElement).files?.[0];
-                if (!file) return;
-                // uploadFile expects an object payload with `file` property
-                uploadFile.mutate(
-                  { file },
-                  {
-                    onSuccess: (res: {
-                      flag: boolean;
-                      code: number;
-                      data: string;
-                    }) => {
-                      if (res.code === 200) {
-                        setThumbnailUrl(res.data);
-                      }
-                      toast.success('Tải ảnh lên thành công');
-                    },
-                    onError: () => {
-                      toast.error('Tải ảnh lên thất bại. Vui lòng thử lại.');
-                    },
-                  },
-                );
+          <div className="mt-1 flex items-center gap-2 ">
+            <FileUpload
+              value={coverFiles}
+              onValueChange={(files) => {
+                setCoverFiles(files);
               }}
-              disabled={loading || uploadFile.isPending}
-            />
+              onUpload={async (files, { onProgress, onSuccess, onError }) => {
+                for (const file of files) {
+                  try {
+                    onProgress(file, 0);
+                    const response = await uploadFile.mutateAsync({
+                      file,
+                    });
+                    if (response.data) {
+                      setThumbnailUrl(response.data);
+                      onProgress(file, 100);
+                      onSuccess(file);
+                    }
+                  } catch (error) {
+                    onError(
+                      file,
+                      error instanceof Error
+                        ? error
+                        : new Error('Upload failed'),
+                    );
+                  }
+                }
+              }}
+              className="w-full "
+              accept="image/*"
+              maxFiles={1}
+            >
+              <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
+                {thumbnailUrl ? (
+                  <div className="relative mt-2 w-full h-60 overflow-hidden rounded-md border bg-white group">
+                    <img
+                      src={thumbnailUrl}
+                      alt="thumbnail preview"
+                      className="object-cover w-full h-60"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveThumbnail();
+                        }}
+                        className="gap-2"
+                      >
+                        <X className="h-4 w-4" />
+                        Xóa ảnh
+                      </Button>
+                      <FileUploadTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => handleRemoveThumbnail()}
+                        >
+                          Chọn ảnh khác
+                        </Button>
+                      </FileUploadTrigger>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <div className="text-sm font-medium text-muted-foreground">
+                      Kéo & thả ảnh vào đây để tải lên
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      hoặc
+                    </div>
+                    <FileUploadTrigger asChild>
+                      <Button type="button" variant="link" size="sm">
+                        Chọn ảnh
+                      </Button>
+                    </FileUploadTrigger>
+                  </div>
+                )}
 
-            {uploadFile.progress > 0 && uploadFile.isPending && (
-              <div className="text-sm text-muted-foreground">
-                {uploadFile.progress}%
-              </div>
-            )}
+                {(errors.thumbnail || localErrors.thumbnail) && (
+                  <p className="text-sm text-red-600 mt-2">
+                    {errors.thumbnail ?? localErrors.thumbnail}
+                  </p>
+                )}
+              </FileUploadDropzone>
+            </FileUpload>
           </div>
-
-          {thumbnailUrl && (
-            <div className="mt-2 w-full  overflow-hidden rounded-md border bg-white">
-              <img
-                src={thumbnailUrl}
-                alt="thumbnail preview"
-                className="object-cover w-full h-full"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '';
-                }}
-              />
-            </div>
-          )}
-
-          {(errors.thumbnail || localErrors.thumbnail) && (
-            <p className="text-sm text-red-600 mt-2">
-              {errors.thumbnail ?? localErrors.thumbnail}
-            </p>
-          )}
         </div>
 
         {/* Title + Description + meta */}
@@ -362,8 +408,8 @@ const StepBasic: React.FC<Props> = ({
               <NumberInput
                 value={durationInMinutes}
                 onValueChange={(val) => setDurationInMinutes(val ?? 60)}
-                min={1}
-                stepper={5}
+                min={5}
+                stepper={1}
                 thousandSeparator=","
                 placeholder="Nhập thời lượng"
                 disabled={loading}
@@ -399,8 +445,11 @@ const StepBasic: React.FC<Props> = ({
               </label>
               <NumberInput
                 value={price}
-                onValueChange={(val) => setPrice(val ?? 0)}
-                min={0}
+                onValueChange={(val) => {
+                  setPrice(val ?? 0);
+                  setDealPrice(val ?? 0);
+                }}
+                min={1000}
                 stepper={1000}
                 thousandSeparator=","
                 suffix=" Ƶ"
@@ -418,7 +467,7 @@ const StepBasic: React.FC<Props> = ({
               <NumberInput
                 value={dealPrice}
                 onValueChange={(val) => setDealPrice(val ?? 0)}
-                min={0}
+                min={1000}
                 stepper={1000}
                 thousandSeparator=","
                 suffix=" Ƶ"

@@ -1,8 +1,9 @@
 export interface CreateAssignmentPayload {
-  title: string;
+  title?: string;
   description?: string;
   durationInMinutes: number;
   maxAttempts?: number;
+  status?: 'ACTIVE' | 'INACTIVE';
 }
 
 export interface ExpertReviewPayload {

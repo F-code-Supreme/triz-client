@@ -2,9 +2,18 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Paperclip, Eye, Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useUpdateLessonMutation } from '@/features/lesson/services/mutations';
 
 import type { Lesson } from '@/features/lesson/types';
 
@@ -32,13 +41,31 @@ export const LessonRow: React.FC<LessonRowProps> = ({
     transition,
     isDragging,
   } = useSortable({ id: String(lesson.id), disabled });
-
+  const updateLessonMutation = useUpdateLessonMutation(lesson.id || '');
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
-
+  const handleStatusChange = (newStatus: string) => {
+    updateLessonMutation.mutate(
+      {
+        status: newStatus as 'ACTIVE' | 'INACTIVE',
+      },
+      {
+        onSuccess: () => {
+          toast.success('Cập nhật trạng thái thành công');
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : 'Không thể cập nhật trạng thái. Vui lòng thử lại.',
+          );
+        },
+      },
+    );
+  };
   return (
     <div
       ref={setNodeRef}
@@ -68,9 +95,9 @@ export const LessonRow: React.FC<LessonRowProps> = ({
       </div>
 
       {/* Lesson number */}
-      <div className="flex items-center w-[200px] h-14 px-4 border-r">
-        <span className="text-blue-600 font-medium text-sm">
-          Nội dung bài học: {lesson.type}
+      <div className="flex items-center w-[200px] h-14 px-4 border-r ">
+        <span className="text-blue-600 font-medium text-sm truncate">
+          Nội dung: {lesson.type === 'VIDEO' ? 'Video' : 'Văn bản'}{' '}
         </span>
       </div>
 
@@ -81,17 +108,45 @@ export const LessonRow: React.FC<LessonRowProps> = ({
       </div>
 
       {/* Status badge */}
-      <div className="flex items-center justify-center w-[157px] h-14 border-r">
-        <Badge
-          variant={lesson.status === 'ACTIVE' ? 'default' : 'secondary'}
-          className={
-            lesson.status === 'ACTIVE'
-              ? 'bg-green-100 text-green-700 hover:bg-green-100'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-          }
+      <div className="flex items-center justify-center w-[180px] h-14 border-r px-2">
+        <Select
+          value={lesson.status || 'INACTIVE'}
+          onValueChange={handleStatusChange}
+          disabled={disabled || updateLessonMutation.isPending}
         >
-          {lesson.status === 'ACTIVE' ? 'Công khai' : 'Chưa công khai'}
-        </Badge>
+          <SelectTrigger className="h-8 w-full">
+            <SelectValue>
+              <Badge
+                variant={lesson.status === 'ACTIVE' ? 'default' : 'secondary'}
+                className={
+                  lesson.status === 'ACTIVE'
+                    ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
+                }
+              >
+                {lesson.status === 'ACTIVE' ? 'Công khai' : 'Chưa công khai'}
+              </Badge>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ACTIVE">
+              <Badge
+                variant={'default'}
+                className={'bg-green-100 text-green-700 hover:bg-green-100'}
+              >
+                Công khai
+              </Badge>
+            </SelectItem>
+            <SelectItem value="INACTIVE">
+              <Badge
+                variant={'secondary'}
+                className={'bg-gray-100 text-gray-700 hover:bg-gray-100'}
+              >
+                Công khai
+              </Badge>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Action buttons */}
