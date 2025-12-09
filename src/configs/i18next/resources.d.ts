@@ -160,6 +160,7 @@ interface Resources {
     "chat_ai": "Chat AI",
     "dropdown_menu.journals": "My Journals",
     "dropdown_menu.my_books": "My Books",
+    "dropdown_menu.my_courses": "My Courses",
     "dropdown_menu.profile": "Profile",
     "dropdown_menu.sign_out": "Sign Out",
     "dropdown_menu.subscriptions": "Subscriptions",

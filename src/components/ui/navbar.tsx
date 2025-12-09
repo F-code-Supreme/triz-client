@@ -270,6 +270,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
                               <Link
+                                to="/course/my-course"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                <GraduationCap className="mr-2 h-4 w-4" />
+                                {t('dropdown_menu.my_courses')}
+                              </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full">
+                              <Link
                                 to="/journals"
                                 className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
                               >
@@ -527,6 +536,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         <Link to="/books/me" className="cursor-pointer">
                           <BookOpen className="mr-2 h-4 w-4" />
                           {t('dropdown_menu.my_books')}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/course/my-course" className="cursor-pointer">
+                          <GraduationCap className="mr-2 h-4 w-4" />
+                          {t('dropdown_menu.my_courses')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
