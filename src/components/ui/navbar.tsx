@@ -527,7 +527,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
               {isAuthenticated ? (
                 <div className="hidden sm:flex items-center space-x-4">
                   {/* Token Count Display */}
-                  <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
+                  <div className="flex items-center space-x-2 px-3 py-2 rounded-md">
                     <CircleDollarSign className="h-4 w-4 text-secondary" />
                     <span className="text-sm font-medium">
                       {formatTriziliumShort(wallet?.balance || 0)}

@@ -141,7 +141,9 @@
       "restore_success": "Package \"{{name}}\" restored successfully!",
       "restore_error": "Failed to restore package. Please try again.",
       "deleted_at": "Deleted at",
-      "features": "Features"
+      "features": "Features",
+      "days": "days",
+      "more_features": "+{{count}} more features"
     }
   },
   "books": {

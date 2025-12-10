@@ -141,7 +141,9 @@
       "restore_success": "Khôi phục gói đăng ký \"{{name}}\" thành công!",
       "restore_error": "Không thể khôi phục gói đăng ký. Vui lòng thử lại.",
       "deleted_at": "Đã xóa lúc",
-      "features": "Tính năng"
+      "features": "Tính năng",
+      "days": "ngày",
+      "more_features": "+{{count}} tính năng khác"
     }
   },
   "books": {

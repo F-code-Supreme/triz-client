@@ -199,8 +199,10 @@ interface Resources {
       "description": "View and manage deleted items. Restore them to make them active again.",
       "packages": {
         "all_active": "All packages are currently active",
+        "days": "days",
         "deleted_at": "Deleted at",
         "features": "Features",
+        "more_features": "+{{count}} more features",
         "no_deleted": "No deleted packages found",
         "restore_error": "Failed to restore package. Please try again.",
         "restore_message": "Are you sure you want to restore this package?",

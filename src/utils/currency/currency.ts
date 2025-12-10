@@ -8,7 +8,7 @@ import i18n from '@/configs/i18next';
  * Gets the current locale for number formatting
  * @returns The locale code (e.g., 'vi-VN' or 'en-US')
  */
-function getLocale(): string {
+export function getLocale(): string {
   const language = i18n.language || 'vi';
   return language === 'vi' ? 'vi-VN' : 'en-US';
 }
@@ -77,12 +77,12 @@ export function formatDailyTrizilium(
   });
 
   if (shortForm) {
-    return `${formattedNumber} Ƶ/${language === 'vi' ? 'ngày' : 'day'}`;
+    return `${formattedNumber}/${language === 'vi' ? 'ngày' : 'day'}`;
   }
 
   return language === 'vi'
-    ? `${formattedNumber} Trizilium/ngày`
-    : `${formattedNumber} Trizilium/day`;
+    ? `${formattedNumber}/ngày`
+    : `${formattedNumber}/day`;
 }
 
 /**

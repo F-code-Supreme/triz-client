@@ -5,7 +5,6 @@ import {
   CopyIcon,
   CheckIcon,
   Menu,
-  Zap,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -35,6 +34,7 @@ import {
   PromptInputTools,
 } from '@/components/ui/shadcn-io/ai/prompt-input';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
+import TokenDisplay from '@/components/ui/token-display';
 import { STRING_EMPTY } from '@/constants';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetMeQuery } from '@/features/auth/services/queries';
@@ -227,12 +227,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
         <div className="flex items-center gap-2">
           {/* Subscription Token Display */}
           {activeSubscription && (
-            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md bg-accent/50">
-              <Zap className="h-4 w-4 text-secondary" />
-              <span className="text-sm font-medium">
-                {activeSubscription.tokensPerDayRemaining.toLocaleString()}
-              </span>
-            </div>
+            <TokenDisplay tokens={activeSubscription.tokensPerDayRemaining} />
           )}
           <Button
             variant="ghost"
