@@ -118,7 +118,43 @@ export const useCreateReplyCommentMutation = () => {
     },
   });
 };
-
+export const useCreateReportForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (data: {
+      forumPostId: string;
+      reason: string;
+      description?: string;
+    }) => {
+      const response = await _request.post(`/reports`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetMyForumPostQuery],
+      });
+    },
+  });
+};
+export const useCreateRepostForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (data: { originalPostId: string }) => {
+      const response = await _request.post(`/reposts`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+    },
+  });
+};
 // Replies to a reply
 export const useCreateVoteForReplyMutation = () => {
   const queryClient = useQueryClient();

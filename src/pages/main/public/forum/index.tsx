@@ -575,10 +575,6 @@ const ForumPage: React.FC = () => {
                       },
                     });
                   }}
-                  onReport={() => {
-                    // simple report placeholder - replace with actual report flow
-                    // eslint-disable-next-line no-restricted-globals
-                  }}
                   title={p.title}
                   author={{
                     name: p.userName || 'Người dùng',

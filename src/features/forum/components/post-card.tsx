@@ -15,15 +15,34 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import {
   useCreateCommentMutation,
   useCreateReplyCommentMutation,
+  useCreateReportForumPostMutation,
+  useCreateRepostForumPostMutation,
   useCreateVoteForReplyMutation,
   useDeleteReplyCommentMutation,
 } from '@/features/forum/services/mutations';
@@ -262,7 +281,6 @@ interface PostCardProps {
   userData?: (User & DataTimestamp) | undefined;
   isOwner?: boolean;
   onDelete?: (postId: string) => void;
-  onReport?: (postId: string) => void;
   title: string;
   author: { name: string; href?: string; avatar?: string };
   time: string;
@@ -280,7 +298,6 @@ export const PostCard: React.FC<PostCardProps> = ({
   userData,
   isOwner = false,
   onDelete,
-  onReport,
   onLike,
   onComment,
   title,
@@ -323,11 +340,18 @@ export const PostCard: React.FC<PostCardProps> = ({
   const replyLength = replyTargetText.trim().length;
   const canSubmitReply = replyLength > 0;
 
+  // Report dialog states
+  const [showReportDialog, setShowReportDialog] = React.useState(false);
+  const [reportReason, setReportReason] = React.useState('');
+  const [reportDescription, setReportDescription] = React.useState('');
+
   React.useEffect(() => {
     setLocalLikes(likes ?? 0);
   }, [likes]);
   // fetch replies for this post
   const { data: repliesData } = useGetForumPostReplyByIdQuery(_id);
+  const reportPostMutation = useCreateReportForumPostMutation();
+  const repostPostMutation = useCreateRepostForumPostMutation();
   const repliesContent = repliesData?.content || [];
 
   //mutation
@@ -403,7 +427,18 @@ export const PostCard: React.FC<PostCardProps> = ({
     setLocalLikes((s) => s + (next ? 1 : -1));
     onLike?.(_id, next);
   };
-  const handleRepost = () => {};
+  const handleRepost = () => {
+    repostPostMutation.mutate(
+      {
+        originalPostId: _id,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Đăng lại bài viết thành công!');
+        },
+      },
+    );
+  };
 
   const handleToggleComposer = () => {
     setShowComposer((s) => !s);
@@ -464,6 +499,41 @@ export const PostCard: React.FC<PostCardProps> = ({
       },
     );
   };
+
+  const handleSubmitReport = () => {
+    if (!reportReason) {
+      toast.error('Vui lòng chọn lý do báo cáo');
+      return;
+    }
+    if (!reportDescription.trim()) {
+      toast.error('Vui lòng nhập mô tả chi tiết');
+      return;
+    }
+
+    // TODO: Replace with actual report mutation
+    reportPostMutation.mutate(
+      {
+        forumPostId: _id,
+        reason: reportReason,
+        description: reportDescription.trim(),
+      },
+      {
+        onSuccess: () => {
+          toast.success('Đã gửi báo cáo thành công');
+          setShowReportDialog(false);
+          setReportReason('');
+          setReportDescription('');
+        },
+      },
+    );
+  };
+
+  const handleCloseReportDialog = () => {
+    setShowReportDialog(false);
+    setReportReason('');
+    setReportDescription('');
+  };
+
   return (
     <Card className="rounded-lg">
       <div className="p-4">
@@ -498,36 +568,37 @@ export const PostCard: React.FC<PostCardProps> = ({
               </div>
               <div>
                 {/* more button for owner */}
-
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" aria-label="Open menu" size="sm">
-                      <MoreHorizontal size={18} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-40" align="end">
-                    <DropdownMenuGroup>
-                      {isOwner && (
+                {isAuthenticated && (
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" aria-label="Open menu" size="sm">
+                        <MoreHorizontal size={18} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-40" align="end">
+                      <DropdownMenuGroup>
+                        {isOwner && (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              onDelete?.(_id);
+                            }}
+                            className="text-red-500 cursor-pointer hover:text-red-600 flex justify-between items-center"
+                          >
+                            Xóa bài viết <Trash2 />
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem
                           onClick={() => {
-                            onDelete?.(_id);
+                            setShowReportDialog(true);
                           }}
-                          className="text-red-500 cursor-pointer hover:text-red-600 flex justify-between items-center"
+                          className="flex justify-between items-center cursor-pointer"
                         >
-                          Xóa bài viết <Trash2 />
+                          Báo cáo <Flag />
                         </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem
-                        onClick={() => {
-                          onReport?.(_id);
-                        }}
-                        className="flex justify-between items-center cursor-pointer"
-                      >
-                        Báo cáo <Flag />
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
             </div>
             <div className="text-lg whitespace-pre-line break-words">
@@ -820,6 +891,95 @@ export const PostCard: React.FC<PostCardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Report Dialog */}
+      <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Báo cáo bài viết</DialogTitle>
+            <DialogDescription>
+              Vui lòng chọn lý do và mô tả chi tiết về vấn đề bạn gặp phải với
+              bài viết này.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="report-reason">
+                Lý do báo cáo <span className="text-red-500">*</span>
+              </Label>
+              <Select value={reportReason} onValueChange={setReportReason}>
+                <SelectTrigger id="report-reason">
+                  <SelectValue placeholder="Chọn lý do báo cáo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="SPAM">Spam hoặc quảng cáo</SelectItem>
+                  <SelectItem value="ADULT_CONTENT">
+                    Nội dung người lớn
+                  </SelectItem>
+                  <SelectItem value="INAPPROPRIATE_CONTENT">
+                    Nội dung không phù hợp
+                  </SelectItem>
+                  <SelectItem value="HARASSMENT">
+                    Quấy rối hoặc bắt nạt
+                  </SelectItem>
+                  <SelectItem value="FALSE_INFORMATION">
+                    Thông tin sai lệch
+                  </SelectItem>
+                  <SelectItem value="HATE_SPEECH">
+                    Ngôn từ kích động thù địch
+                  </SelectItem>
+                  <SelectItem value="VIOLENCE">
+                    Bạo lực hoặc nguy hiểm
+                  </SelectItem>
+                  <SelectItem value="COPYRIGHT_VIOLATION">
+                    Vi phạm bản quyền
+                  </SelectItem>
+                  <SelectItem value="OTHER">Lý do khác</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="report-description">
+                Mô tả chi tiết <span className="text-red-500">*</span>
+              </Label>
+              <Textarea
+                id="report-description"
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                placeholder="Vui lòng mô tả chi tiết vấn đề bạn gặp phải..."
+                rows={4}
+                className="resize-none"
+              />
+              <p className="text-xs text-slate-500">
+                {reportDescription.length}/500 ký tự
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCloseReportDialog}
+            >
+              Hủy
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSubmitReport}
+              disabled={
+                !reportReason ||
+                !reportDescription.trim() ||
+                reportPostMutation.isPending
+              }
+            >
+              {reportPostMutation.isPending ? 'Đang gửi...' : 'Gửi báo cáo'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
