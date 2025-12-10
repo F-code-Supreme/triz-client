@@ -4,7 +4,6 @@ import { useAxios } from '@/configs/axios';
 import { CourseKeys } from '@/features/courses/services/queries/keys';
 
 import type { CourseEnrollResponse, CourseResponse } from './types';
-// import { CourseDetailResponse } from '../../types';
 import type { Course } from '@/features/courses/types';
 import type { PaginationState } from '@tanstack/react-table';
 
@@ -14,6 +13,24 @@ export const useGetCourseQuery = (pagination?: PaginationState) => {
     queryKey: [CourseKeys.GetCourseQuery, pagination],
     queryFn: async () => {
       const response = await _request.get<CourseResponse>(`/courses`, {
+        params: {
+          page: pagination?.pageIndex,
+          size: pagination?.pageSize,
+          sort: 'status,asc',
+        },
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useGetCourseQueryUser = (pagination?: PaginationState) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [CourseKeys.GetCourseQuery, pagination],
+    queryFn: async () => {
+      const response = await _request.post<CourseResponse>(`/courses/search`, {
+        status: 'ACTIVE',
         params: {
           page: pagination?.pageIndex,
           size: pagination?.pageSize,

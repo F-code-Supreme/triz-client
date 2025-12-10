@@ -21,6 +21,7 @@ import {
 } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
 import { Route } from '@/routes/(app)/quiz';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const QuizListPage = () => {
   const { data, isLoading } = useGetQuizzesMutation();
@@ -81,11 +82,90 @@ const QuizListPage = () => {
 
   const featuredData = quizDetail;
 
+  if (quizzes.length === 0) {
+    return (
+      <QuizLayout meta={{ title: 'Quiz' }} showheader={true}>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-muted-foreground">
+            Hiện tại chưa có bài ôn tập nào được tạo. Vui lòng quay lại sau.
+          </div>
+        </div>
+      </QuizLayout>
+    );
+  }
+
   return (
     <QuizLayout meta={{ title: 'Quiz' }} showheader={true}>
       {isLoading ? (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-muted-foreground">Đang tải dữ liệu...</div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Left Skeleton */}
+          <div className="lg:col-span-4">
+            <div className="fixed">
+              <Card className="min-h-[600px] min-w-[420px] shadow-xl border-0 max-w-md mx-auto">
+                <div className="relative p-4 sm:p-6 lg:p-8 pb-4 rounded-t-xl">
+                  <div className="flex items-start gap-3 sm:gap-4 mt-2">
+                    <Skeleton className="w-20 h-28 sm:w-24 sm:h-32 rounded-lg flex-shrink-0" />
+                    <div className="flex-1 space-y-3">
+                      <Skeleton className="h-6 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                      <Skeleton className="h-4 w-4/6" />
+                    </div>
+                  </div>
+                </div>
+
+                <CardContent className="p-4 sm:p-6 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="w-8 h-8 rounded-full" />
+                    <div className="space-y-2 flex-1">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-20" />
+                    </div>
+                  </div>
+
+                  <div className="pt-48">
+                    <Skeleton className="h-12 w-full rounded-lg" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Right Skeleton */}
+          <div className="lg:col-span-8">
+            <div className="space-y-4 lg:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-8 w-48" />
+                  <Skeleton className="h-4 w-64" />
+                </div>
+                <Skeleton className="h-9 w-32 rounded-lg" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Card
+                    key={i}
+                    className="overflow-hidden border-0 shadow-md animate-pulse"
+                  >
+                    <Skeleton className="h-24 sm:h-28 lg:h-32 w-full" />
+                    <CardContent className="p-3 sm:p-4 space-y-3">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                      <div className="flex items-center justify-between pt-2">
+                        <Skeleton className="h-3 w-20" />
+                        <Skeleton className="h-7 w-16 rounded" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">

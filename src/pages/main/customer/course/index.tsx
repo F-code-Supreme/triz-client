@@ -15,7 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import CourseFiltersComponent from '@/features/courses/components/course-filters';
 import CourseList from '@/features/courses/components/course-list';
 import {
-  useGetCourseQuery,
+  useGetCourseQueryUser,
   useGetMyEnrollmentsQuery,
 } from '@/features/courses/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
@@ -29,7 +29,7 @@ const AllCoursePage = () => {
     pageIndex: 0,
     pageSize: 9,
   });
-  const { data, isLoading, isError } = useGetCourseQuery(pagination);
+  const { data, isLoading, isError } = useGetCourseQueryUser(pagination);
   const { data: enrollmentsData } = useGetMyEnrollmentsQuery();
   const courseData = data?.content.filter((c) => c.status === 'ACTIVE') || [];
 

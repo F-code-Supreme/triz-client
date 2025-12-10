@@ -22,7 +22,7 @@ export const useGetQuizzesMutation = () => {
   return useQuery({
     queryKey: ['getQuizzes'],
     queryFn: async () => {
-      const res = await _request.get<GetQuizzesResponse>('');
+      const res = await _request.get<GetQuizzesResponse>('/general-quizzes');
       return res.data;
     },
   });
