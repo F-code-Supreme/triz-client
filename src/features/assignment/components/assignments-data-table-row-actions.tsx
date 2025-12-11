@@ -1,8 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { type Row } from '@tanstack/react-table';
-import { BookDashed, Eye, Pencil } from 'lucide-react';
+import { BookDashed } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 // import {
 //   AlertDialog,
@@ -55,15 +54,6 @@ export const AssignmentsDataTableRowActions = <TData,>({
   //   });
   // };
 
-  const handleView = () => {
-    // TODO: Implement view functionality
-    toast.info(`View assignment: ${assignment.title}`);
-  };
-
-  const handleEdit = () => {
-    toast.info(`Edit assignment: ${assignment.title}`);
-  };
-
   const handleDetailAssignment = () => {
     setIsSubmissionsDialogOpen(true);
   };
@@ -81,14 +71,6 @@ export const AssignmentsDataTableRowActions = <TData,>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem onClick={handleView}>
-            <Eye className="mr-2 h-4 w-4" />
-            Xem
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleEdit}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Chỉnh sửa
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={handleDetailAssignment}>
             <BookDashed className="mr-2 h-4 w-4" />
             Chi tiết các bài

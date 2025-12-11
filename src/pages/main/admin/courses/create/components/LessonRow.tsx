@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUpdateLessonMutation } from '@/features/lesson/services/mutations';
+import { useUpdateStatusLessonMutation } from '@/features/lesson/services/mutations';
 
 import type { Lesson } from '@/features/lesson/types';
 
@@ -41,30 +41,27 @@ export const LessonRow: React.FC<LessonRowProps> = ({
     transition,
     isDragging,
   } = useSortable({ id: String(lesson.id), disabled });
-  const updateLessonMutation = useUpdateLessonMutation(lesson.id || '');
+  const updateStatusLessonMutation = useUpdateStatusLessonMutation(
+    lesson.id || '',
+  );
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
-  const handleStatusChange = (newStatus: string) => {
-    updateLessonMutation.mutate(
-      {
-        status: newStatus as 'ACTIVE' | 'INACTIVE',
+  const handleStatusChange = (newStatus: 'ACTIVE' | 'INACTIVE') => {
+    updateStatusLessonMutation.mutate(newStatus, {
+      onSuccess: () => {
+        toast.success('Cập nhật trạng thái thành công');
       },
-      {
-        onSuccess: () => {
-          toast.success('Cập nhật trạng thái thành công');
-        },
-        onError: (error) => {
-          toast.error(
-            error instanceof Error
-              ? error.message
-              : 'Không thể cập nhật trạng thái. Vui lòng thử lại.',
-          );
-        },
+      onError: (error) => {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Không thể cập nhật trạng thái. Vui lòng thử lại.',
+        );
       },
-    );
+    });
   };
   return (
     <div
@@ -112,7 +109,7 @@ export const LessonRow: React.FC<LessonRowProps> = ({
         <Select
           value={lesson.status || 'INACTIVE'}
           onValueChange={handleStatusChange}
-          disabled={disabled || updateLessonMutation.isPending}
+          disabled={disabled || updateStatusLessonMutation.isPending}
         >
           <SelectTrigger className="h-8 w-full">
             <SelectValue>
@@ -142,7 +139,7 @@ export const LessonRow: React.FC<LessonRowProps> = ({
                 variant={'secondary'}
                 className={'bg-gray-100 text-gray-700 hover:bg-gray-100'}
               >
-                Công khai
+                Không công khai
               </Badge>
             </SelectItem>
           </SelectContent>

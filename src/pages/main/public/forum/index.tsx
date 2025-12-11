@@ -75,7 +75,6 @@ const ForumPage: React.FC = () => {
   const [postTitle, setPostTitle] = React.useState('');
   const [postImage, setPostImage] = React.useState<string>('');
   const [answer, setAnswer] = React.useState<string>('');
-  const canSubmit = true;
   const myPostsTab = React.useMemo(
     () => myPosts?.pages.flatMap((page) => page?.content || []) ?? [],
     [myPosts],
@@ -259,78 +258,7 @@ const ForumPage: React.FC = () => {
                         <label className="text-sm text-slate-600">
                           Ảnh bài viết
                         </label>
-                        {/* <FileUpload
-                          value={postFile}
-                          onValueChange={(files) => {
-                            setPostFile(files);
-                          }}
-                          onUpload={async (
-                            files,
-                            { onProgress, onSuccess, onError },
-                          ) => {
-                            for (const file of files) {
-                              try {
-                                onProgress(file, 0);
-                                const response =
-                                  await uploadMutation.mutateAsync({
-                                    file,
-                                  });
-                                if (response.data) {
-                                  setPostImage(response.data);
-                                  onProgress(file, 100);
-                                  onSuccess(file);
-                                }
-                              } catch (error) {
-                                onError(
-                                  file,
-                                  error instanceof Error
-                                    ? error
-                                    : new Error('Upload failed'),
-                                );
-                              }
-                            }
-                          }}
-                          accept="image/*"
-                          maxFiles={1}
-                          maxSize={10 * 1024 * 1024} // 10MB
-                        >
-                          <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
-                            <div className="text-center">
-                              <div className="text-sm font-medium text-muted-foreground">
-                                Kéo và thả tệp vào đây để tải lên
-                              </div>
-                              <div className="text-xs text-muted-foreground mt-2">
-                                hoặc
-                              </div>
-                              <FileUploadTrigger asChild>
-                                <Button type="button" variant="link" size="sm">
-                                  Click to browse
-                                </Button>
-                              </FileUploadTrigger>
-                            </div>
-                            {uploadMutation.progress > 0 &&
-                              uploadMutation.isPending && (
-                                <div className="text-sm text-muted-foreground">
-                                  {uploadMutation.progress}%
-                                </div>
-                              )}
 
-                            <FileUploadList className="mt-4 space-y-2">
-                              {postImage && (
-                                <div className="mt-2 w-full h-48  overflow-hidden rounded-md border bg-white">
-                                  <img
-                                    src={postImage}
-                                    alt="thumbnail preview"
-                                    className="object-cover w-full h-full"
-                                    onError={(e) => {
-                                      (e.target as HTMLImageElement).src = '';
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </FileUploadList>
-                          </FileUploadDropzone>
-                        </FileUpload> */}
                         <Input
                           id="picture"
                           type="file"
@@ -404,7 +332,6 @@ const ForumPage: React.FC = () => {
                                 output="html"
                                 placeholder="Nhập nội dung bài viết..."
                                 editorContentClassName="min-h-[200px] p-4"
-                                editable={canSubmit}
                               />
                             </div>
                             {!answer && (
