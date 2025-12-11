@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, RefreshCw, Trophy, Star, ArrowRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -5,14 +6,21 @@ import { toast } from 'sonner';
 
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
 import { GamesEnumId } from '@/features/game/services/mutations/enum';
+import { useGetGameLeaderboardByIdQuery } from '@/features/game/services/queries';
+import { GameKeys } from '@/features/game/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
+import Leaderboard from '@/pages/main/customer/games/segmentation/components/Leaderboard';
 
 const SegmentationGamePage = () => {
   const updateScoreMutation = useUpdateGameScoreMutation();
+  const { data } = useGetGameLeaderboardByIdQuery(GamesEnumId.Segmentation);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   // State quản lý danh sách các viên gạch
   const [bricks, setBricks] = useState<number[]>([]);
   const [score, setScore] = useState(0);
+  const [milestone, setMilestone] = useState(0);
+  const [startTime, setStartTime] = useState<number>(() => Date.now());
 
   // State logic game
   const [targetHeight, setTargetHeight] = useState(12); // Đích có thể thay đổi
@@ -53,18 +61,30 @@ const SegmentationGamePage = () => {
     const pointsGained = 10;
     // optimistic local update
     const newTotal = score + pointsGained;
+    const newMilestone = milestone + 1;
+
+    // compute time taken in seconds for this round
+    const timeTaken = Math.round((Date.now() - startTime) / 1000);
+
+    // optimistic local update
     setScore(newTotal);
+    setMilestone(newMilestone);
     setShowSuccess(true);
 
-    // payload sent to the server
+    // payload sent to the server (include timeTaken and milestone)
     const payload = {
       gameId: GamesEnumId.Segmentation,
       score: newTotal,
+      timeTaken,
+      milestone: newMilestone,
     };
 
     updateScoreMutation.mutate(payload, {
       onSuccess: () => {
         toast.success('Điểm số đã được cập nhật!');
+        queryClient.invalidateQueries({
+          queryKey: [GameKeys.GetGameLeaderboardById, GamesEnumId.Segmentation],
+        });
       },
     });
   };
@@ -77,6 +97,8 @@ const SegmentationGamePage = () => {
     // Random đích mới (từ 8 đến 15) để game thú vị hơn
     const newTarget = Math.floor(Math.random() * (15 - 8 + 1)) + 8;
     setTargetHeight(newTarget);
+    // start timing for the next round
+    setStartTime(Date.now());
   };
 
   const removeTopBrick = () => {
@@ -89,6 +111,8 @@ const SegmentationGamePage = () => {
     setBricks([]);
     setShowSuccess(false);
     setIsShaking(false);
+    setMilestone(0);
+    setStartTime(Date.now());
   };
 
   const getBrickStyle = (value: number) => {
@@ -107,8 +131,8 @@ const SegmentationGamePage = () => {
   return (
     <DefaultLayout meta={{ title: 'Trò Chơi Xây Tháp' }} className="">
       <section className="h-[calc(100svh-4rem-1px)] relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
-        <div className="w-full max-w-8xl p-4 sm:p-16 mx-auto">
-          <div className="max-w-4xl mx-auto w-full p-4 sm:p-8 relative z-10">
+        <div className="w-full max-w-8xl grid grid-cols-3 p-4 sm:p-16 mx-auto">
+          <div className=" col-span-2 max-w-4xl mx-auto w-full p-4 sm:p-8 relative z-10">
             {/* Header */}
             <div className="flex justify-between items-center mb-4 p-4 rounded-2xl ">
               <button
@@ -293,6 +317,9 @@ const SegmentationGamePage = () => {
             </div>
 
             {/* Floating Action Button */}
+          </div>
+          <div className="col-span-1 mx-auto w-full p-4 sm:p-16 mt-auto">
+            <Leaderboard entries={data} />
           </div>
         </div>
       </section>

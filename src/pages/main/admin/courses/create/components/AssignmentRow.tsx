@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUpdateAssignmentMutation } from '@/features/assignment/services/mutations';
+import { useUpdateAssignmentStatusMutation } from '@/features/assignment/services/mutations';
 
 import type { Assignment } from '@/features/assignment/services/queries/types';
 
@@ -43,7 +43,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
     transition,
     isDragging,
   } = useSortable({ id: String(assignment.id), disabled });
-  const updateAssignmentMutation = useUpdateAssignmentMutation(
+  const updateStatusAssignmentMutation = useUpdateAssignmentStatusMutation(
     assignment.id || '',
   );
 
@@ -53,24 +53,19 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const handleStatusChange = (newStatus: string) => {
-    updateAssignmentMutation.mutate(
-      {
-        status: newStatus as 'ACTIVE' | 'INACTIVE',
+  const handleStatusChange = (newStatus: 'ACTIVE' | 'INACTIVE') => {
+    updateStatusAssignmentMutation.mutate(newStatus, {
+      onSuccess: () => {
+        toast.success('Cập nhật trạng thái thành công');
       },
-      {
-        onSuccess: () => {
-          toast.success('Cập nhật trạng thái thành công');
-        },
-        onError: (error) => {
-          toast.error(
-            error instanceof Error
-              ? error.message
-              : 'Không thể cập nhật trạng thái. Vui lòng thử lại.',
-          );
-        },
+      onError: (error) => {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Không thể cập nhật trạng thái. Vui lòng thử lại.',
+        );
       },
-    );
+    });
   };
 
   return (
@@ -119,7 +114,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
         <Select
           value={assignment.status || 'INACTIVE'}
           onValueChange={handleStatusChange}
-          disabled={disabled || updateAssignmentMutation.isPending}
+          disabled={disabled || updateStatusAssignmentMutation.isPending}
         >
           <SelectTrigger className="h-8 w-full">
             <SelectValue>
@@ -153,7 +148,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
                 variant={'secondary'}
                 className={'bg-gray-100 text-gray-700 hover:bg-gray-100'}
               >
-                Công khai
+                Chưa công khai
               </Badge>
             </SelectItem>
           </SelectContent>
