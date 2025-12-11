@@ -61,6 +61,7 @@ const getRandomDirection = (): Direction => {
 };
 
 // Hàm tạo màn chơi ngẫu nhiên nhưng ĐẢM BẢO giải được
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const generateRandomLevel = (levelIndex: number): LevelData => {
   const id = levelIndex + 1;
 
