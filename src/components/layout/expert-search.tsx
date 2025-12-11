@@ -1,10 +1,9 @@
 import { Search } from 'lucide-react';
 import * as React from 'react';
 
+import { ExpertCommandMenu } from '@/components/layout/expert-command-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-import { ExpertCommandMenu } from '@/components/layout/expert-command-menu';
 
 type ExpertSearchProps = {
   className?: string;
