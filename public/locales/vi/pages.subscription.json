@@ -1,0 +1,91 @@
+{
+  "page_meta_title": "Gói đăng ký của tôi",
+  "title": "Gói đăng ký của tôi",
+  "description": "Quản lý gói đăng ký và xem lịch sử đăng ký",
+  "request_refund": "Yêu cầu hoàn tiền",
+  "active_subscription": {
+    "title": "Gói đăng ký đang hoạt động",
+    "no_active": "Không có gói đăng ký nào",
+    "no_active_description": "Bạn chưa có gói đăng ký nào. Đăng ký gói để bắt đầu.",
+    "subscribe_now": "Đăng ký ngay",
+    "package": "Gói",
+    "status": "Trạng thái",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "days_remaining": "Số ngày còn lại",
+    "daily_tokens": "Token hàng ngày",
+    "auto_renewal": "Gia hạn tự động",
+    "enabled": "Đã bật",
+    "disabled": "Đã tắt",
+    "cancel_subscription": "Hủy đăng ký",
+    "manage_subscription": "Quản lý đăng ký",
+    "active_until": "Gói đăng ký hoạt động đến",
+    "status_active": "Đang hoạt động",
+    "daily_token_allowance": "Token hàng ngày",
+    "remaining": "còn lại",
+    "duration": "Thời hạn",
+    "days": "ngày",
+    "auto_renew_enabled_desc": "Gói đăng ký của bạn sẽ tự động gia hạn",
+    "auto_renew_disabled_desc": "Gói đăng ký của bạn sẽ không tự động gia hạn",
+    "no_active_visit_packages": "Bạn chưa có gói đăng ký nào. Truy cập",
+    "packages_page": "trang gói dịch vụ",
+    "to_get_started": "để bắt đầu."
+  },
+  "subscription_history": {
+    "title": "Lịch sử đăng ký",
+    "columns": {
+      "package": "Gói",
+      "status": "Trạng thái",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc",
+      "auto_renewal": "Gia hạn tự động",
+      "actions": "Thao tác"
+    },
+    "status": {
+      "ACTIVE": "Đang hoạt động",
+      "EXPIRED": "Hết hạn",
+      "CANCELED": "Đã hủy",
+      "PENDING": "Đang chờ"
+    },
+    "actions": {
+      "view_details": "Xem Chi Tiết",
+      "enable_auto_renewal": "Bật Gia Hạn Tự Động",
+      "disable_auto_renewal": "Tắt Gia Hạn Tự Động",
+      "cancel_subscription": "Hủy Đăng Ký"
+    },
+    "details": {
+      "title": "Chi Tiết Đăng Ký",
+      "package": "Gói",
+      "status": "Trạng Thái",
+      "start_date": "Ngày Bắt Đầu",
+      "end_date": "Ngày Kết Thúc",
+      "tokens_per_day_remaining": "Token Còn Lại Mỗi Ngày",
+      "auto_renewal": "Gia Hạn Tự Động",
+      "close": "Đóng"
+    },
+    "toggle_auto_renewal": "Bật/tắt gia hạn tự động",
+    "empty": "Không tìm thấy đăng ký",
+    "loading": "Đang tải đăng ký...",
+    "no_subscriptions": "Không tìm thấy đăng ký",
+    "no_results": "Không tìm thấy kết quả"
+  },
+  "cancel_dialog": {
+    "title": "Hủy đăng ký?",
+    "description": "Bạn có chắc chắn muốn hủy đăng ký? Quyền truy cập vào các tính năng cao cấp của bạn sẽ kết thúc ngay lập tức.",
+    "cancel": "Không, giữ lại",
+    "confirm": "Có, hủy đăng ký",
+    "canceling": "Đang hủy...",
+    "success": "Hủy đăng ký thành công",
+    "error": "Hủy đăng ký thất bại"
+  },
+  "auto_renewal_dialog": {
+    "title_enable": "Bật gia hạn tự động?",
+    "title_disable": "Tắt gia hạn tự động?",
+    "enable_description": "Đăng ký của bạn sẽ tự động gia hạn khi hết hạn. Ví của bạn sẽ được tính phí tương ứng.",
+    "disable_description": "Đăng ký của bạn sẽ không tự động gia hạn khi hết hạn. Bạn sẽ cần mua gói đăng ký mới thủ công.",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "updating": "Đang cập nhật..."
+  },
+  "loading": "Đang tải đăng ký..."
+}

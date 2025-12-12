@@ -885,6 +885,7 @@ interface Resources {
         "status": "Status",
         "transaction_type": "Transaction Type"
       },
+      "no_results": "No results.",
       "no_transactions": "No transactions found",
       "providers": {
         "payos": "PayOS",
@@ -972,7 +973,129 @@ interface Resources {
     "title": "Book Library"
   },
   "pages.chat_triz": {
-    "page_meta_title": "Chat TRIZ"
+    "chat_interface": {
+      "copied": "Copied!",
+      "copy": "Copy",
+      "new_chat": "New Chat",
+      "placeholder": "Type your message...",
+      "recording": "Recording...",
+      "reset": "Reset Conversation",
+      "send": "Send",
+      "tokens_remaining": "Tokens Remaining",
+      "unlimited": "Unlimited"
+    },
+    "conversation": {
+      "archive": "Archive",
+      "delete": "Delete",
+      "empty": "No conversations yet",
+      "empty_description": "Start a new conversation to get AI assistance",
+      "history": "History",
+      "last_30_days": "Last 30 Days",
+      "last_7_days": "Last 7 Days",
+      "loading": "Loading conversations...",
+      "older": "Older",
+      "rename": "Rename",
+      "search_placeholder": "Search conversations...",
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "description": "Get AI-powered assistance for TRIZ problem solving",
+    "page_meta_title": "Chat TRIZ",
+    "title": "Chat TRIZ"
+  },
+  "pages.courses": {
+    "all_courses": {
+      "description": "Explore and enroll in courses to start your learning journey",
+      "my_courses_button": "My Courses",
+      "title": "All Courses"
+    },
+    "error": "Failed to load courses.",
+    "filters": {
+      "all_levels": "All Levels",
+      "level": "Level",
+      "most_popular": "Most Popular",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "search_placeholder": "Search courses...",
+      "sort_by": "Sort by"
+    },
+    "learn": {
+      "back_to_my_courses": "Back to My Courses",
+      "error": "Failed to load course content.",
+      "loading": "Loading course content..."
+    },
+    "loading": "Loading courses...",
+    "my_courses": {
+      "description": "Continue your learning journey with your enrolled courses",
+      "title": "My Courses"
+    },
+    "overview": {
+      "back_to_courses": "Back to All Courses",
+      "curriculum_title": "Curriculum",
+      "deal_price": "Deal Price",
+      "description_title": "Description",
+      "duration": "Duration",
+      "enroll_error": "Enrollment failed!",
+      "enroll_now": "Enroll Now",
+      "error": "Failed to load course.",
+      "free": "Free",
+      "learners": "Learners",
+      "lessons": "lessons",
+      "level": "Level",
+      "level_advanced": "Advanced",
+      "level_beginner": "Beginner",
+      "level_intermediate": "Intermediate",
+      "minutes": "minutes",
+      "price": "Price",
+      "start_learning": "Start Learning"
+    },
+    "page_meta_title": "Courses",
+    "quiz": {
+      "confirm_start": {
+        "cancel": "Cancel",
+        "description": "Are you ready to start the quiz?",
+        "duration": "Duration",
+        "minutes": "minutes",
+        "questions": "Questions",
+        "start": "Start Quiz",
+        "starting": "Starting...",
+        "title": "Start Quiz"
+      },
+      "errors": {
+        "start_failed": "Failed to start quiz",
+        "submit_failed": "Failed to submit quiz"
+      },
+      "loading": "Loading quiz...",
+      "no_questions": "No Questions Available",
+      "no_questions_description": "This quiz doesn't have any questions yet.",
+      "no_quiz": "No Quiz Available",
+      "no_quiz_description": "This module does not have a quiz yet.",
+      "page_meta_title": "Course Quiz",
+      "questions": {
+        "multiple_answers": "Select all that apply",
+        "single_answer": "Select one answer"
+      },
+      "quiz_header": {
+        "question_progress": "Question",
+        "time_remaining": "Time Remaining"
+      },
+      "results": {
+        "back_to_course": "Back to Course",
+        "correct": "Correct",
+        "correct_answer": "Correct Answer",
+        "correct_answers": "Correct Answers",
+        "failed": "You didn't pass this time. Keep studying!",
+        "incorrect": "Incorrect",
+        "passed": "Congratulations! You passed!",
+        "review": "Review Answers",
+        "score": "Your Score",
+        "title": "Quiz Results",
+        "total_questions": "Total Questions",
+        "your_answer": "Your Answer"
+      },
+      "submit": "Submit Quiz",
+      "submit_confirm": "Are you sure you want to submit? You cannot change your answers after submission."
+    }
   },
   "pages.forgot_password": {
     "form.description": "Enter your email address and we'll send you an OTP to reset your password.",
@@ -997,6 +1120,33 @@ interface Resources {
     "form.submit": "Verify OTP",
     "form.title": "Verify OTP",
     "page_meta_title": "Verify OTP for Password Reset"
+  },
+  "pages.games": {
+    "description": "Explore and learn TRIZ principles through engaging games",
+    "games": {
+      "memory_card": {
+        "description": "Game to train memory and recall abilities",
+        "name": "Memory Card"
+      },
+      "merging_game": {
+        "description": "Combine elements to create new products",
+        "name": "Alchemy"
+      },
+      "preliminary_game": {
+        "description": "Plan and arrange ahead to overcome challenges",
+        "name": "Guided Maze"
+      },
+      "segmentation_game": {
+        "description": "Break down problems into parts to solve them",
+        "name": "Tower Builder"
+      }
+    },
+    "page_meta_title": "TRIZ Games",
+    "play_now": "Play Now",
+    "principle": "Principle",
+    "search_placeholder": "Search for a game...",
+    "select_game": "Select a game to start playing",
+    "title": "TRIZ Games"
   },
   "pages.home": {
     "comprehensive_platform": {
@@ -1184,6 +1334,75 @@ interface Resources {
     "support": "Support",
     "support_desc": "Contact support team"
   },
+  "pages.refund": {
+    "description": "Process a refund for your subscription",
+    "errors": {
+      "missing_info": "Missing required information",
+      "no_transaction": "Cannot find transaction to refund",
+      "refund_failed": "Failed to process refund. Please try again."
+    },
+    "page_meta_title": "Refund Subscription",
+    "refund_types": {
+      "FULL": "Full Refund",
+      "PARTIAL": "Partial Refund",
+      "PRORATED": "Prorated Refund"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "CANCELED": "Canceled",
+      "EXPIRED": "Expired",
+      "PENDING": "Pending"
+    },
+    "step_preview": {
+      "amount": "Amount",
+      "confirm_button": "Confirm Refund",
+      "description": "Review the refund details before confirming",
+      "end_date": "End Date",
+      "go_back": "Go Back",
+      "loading": "Loading refund details...",
+      "original_amount": "Original Amount",
+      "package": "Package",
+      "processing": "Processing Refund...",
+      "refund_amount": "Refund Amount",
+      "refund_details": "Refund Details",
+      "refund_type": "Refund Type",
+      "start_date": "Start Date",
+      "status": "Status",
+      "subscription_details": "Subscription Details",
+      "title": "Preview Refund",
+      "transaction_id": "Transaction ID",
+      "transaction_status": "Transaction Status",
+      "transaction_type": "Transaction Type",
+      "warning": "Please review the refund details carefully. Once confirmed, this action cannot be undone."
+    },
+    "step_result": {
+      "amount_label": "Refund Amount",
+      "description": "Your refund has been processed successfully",
+      "home_button": "Back to Home",
+      "new_refund_button": "Process Another Refund",
+      "title": "Refund Successful!",
+      "wallet_note": "Refunded to your wallet"
+    },
+    "step_select": {
+      "daily_tokens": "Daily Tokens",
+      "description": "Choose which subscription you would like to refund",
+      "end_date": "End Date",
+      "loading": "Loading subscriptions...",
+      "no_eligible": "You do not have any eligible subscriptions available for refund.",
+      "package": "Package",
+      "select_button": "Select & Continue",
+      "start_date": "Start Date",
+      "status": "Status",
+      "subscription_id": "ID",
+      "title": "Select Subscription"
+    },
+    "title": "Refund Subscription",
+    "transaction_status": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "PENDING": "Pending"
+    }
+  },
   "pages.sign_in": {
     "form.description": "Welcome to Triz, please sign in to your account.",
     "form.forgot_password": "Forgot password?",
@@ -1219,12 +1438,217 @@ interface Resources {
     "form.title": "OTP Verification",
     "page_meta_title": "OTP Verification"
   },
+  "pages.six_steps": {
+    "description": "Follow the systematic approach to solve problems using TRIZ methodology",
+    "page_meta_title": "6 Steps to Innovative Problem Solving",
+    "title": "6 Steps to Innovative Problem Solving"
+  },
+  "pages.subscription": {
+    "active_subscription": {
+      "active_until": "Active subscription until",
+      "auto_renew_disabled_desc": "Your subscription will not renew automatically",
+      "auto_renew_enabled_desc": "Your subscription will automatically renew",
+      "auto_renewal": "Auto Renewal",
+      "cancel_subscription": "Cancel Subscription",
+      "daily_token_allowance": "Daily Token Allowance",
+      "daily_tokens": "Daily Tokens",
+      "days": "days",
+      "days_remaining": "Days Remaining",
+      "disabled": "Disabled",
+      "duration": "Duration",
+      "enabled": "Enabled",
+      "end_date": "End Date",
+      "manage_subscription": "Manage Subscription",
+      "no_active": "No Active Subscription",
+      "no_active_description": "You don't have any active subscription. Subscribe to a package to get started.",
+      "no_active_visit_packages": "You don't have an active subscription. Visit the",
+      "package": "Package",
+      "packages_page": "packages page",
+      "remaining": "remaining",
+      "start_date": "Start Date",
+      "status": "Status",
+      "status_active": "Active",
+      "subscribe_now": "Subscribe Now",
+      "title": "Active Subscription",
+      "to_get_started": "to get started."
+    },
+    "auto_renewal_dialog": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "disable_description": "Your subscription will not automatically renew when it expires. You will need to manually purchase a new subscription.",
+      "enable_description": "Your subscription will automatically renew when it expires. Your wallet will be charged accordingly.",
+      "title_disable": "Disable Auto Renewal?",
+      "title_enable": "Enable Auto Renewal?",
+      "updating": "Updating..."
+    },
+    "cancel_dialog": {
+      "cancel": "No, Keep It",
+      "canceling": "Cancelling...",
+      "confirm": "Yes, Cancel Subscription",
+      "description": "Are you sure you want to cancel your subscription? Your access to premium features will end immediately.",
+      "error": "Failed to cancel subscription",
+      "success": "Subscription cancelled successfully",
+      "title": "Cancel Subscription?"
+    },
+    "description": "Manage your subscription and view subscription history",
+    "loading": "Loading subscription...",
+    "page_meta_title": "My Subscription",
+    "request_refund": "Request Refund",
+    "subscription_history": {
+      "actions": {
+        "cancel_subscription": "Cancel Subscription",
+        "disable_auto_renewal": "Disable Auto Renewal",
+        "enable_auto_renewal": "Enable Auto Renewal",
+        "view_details": "View Details"
+      },
+      "columns": {
+        "actions": "Actions",
+        "auto_renewal": "Auto Renewal",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status"
+      },
+      "details": {
+        "auto_renewal": "Auto Renewal",
+        "close": "Close",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status",
+        "title": "Subscription Details",
+        "tokens_per_day_remaining": "Tokens Per Day Remaining"
+      },
+      "empty": "No subscriptions found",
+      "loading": "Loading subscriptions...",
+      "no_results": "No results found",
+      "no_subscriptions": "No subscriptions found",
+      "status": {
+        "ACTIVE": "Active",
+        "CANCELED": "Canceled",
+        "EXPIRED": "Expired",
+        "PENDING": "Pending"
+      },
+      "title": "Subscription History",
+      "toggle_auto_renewal": "Toggle Auto Renewal"
+    },
+    "title": "My Subscription"
+  },
   "pages.unauthorized": {
     "back_to_homepage": "Back to homepage",
     "message": "You don't have permission to access this resource. Please sign in with an authorized account or contact your administrator.",
     "page_meta_title": "Unauthorized",
     "sign_in": "Sign In",
     "unauthorized": "Access Denied"
+  },
+  "pages.wallet": {
+    "balance_card": {
+      "current_balance": "Current Balance",
+      "title": "Wallet Balance",
+      "top_up": "Top Up"
+    },
+    "description": "Manage your wallet balance and view transaction history",
+    "loading": "Loading wallet...",
+    "page_meta_title": "Wallet",
+    "title": "Wallet",
+    "topup_dialog": {
+      "alert_message": "You will be redirected to PayOS based on your selection. Your return URL will be processed securely.",
+      "amount_hint": "Minimum: {{min}} | Maximum: {{max}}",
+      "amount_label": "Amount (VND)",
+      "amount_max": "Maximum amount is {{amount}} Trizilium",
+      "amount_min": "Minimum amount is {{amount}} Trizilium",
+      "amount_placeholder": "100,000",
+      "cancel": "Cancel",
+      "confirm": "Proceed to Payment",
+      "description": "Add funds to your wallet. You will be redirected to the payment provider to complete the transaction.",
+      "error": "Failed to top up wallet",
+      "error_initiate": "Failed to initiate top-up. Please try again.",
+      "error_no_payment_url": "Failed to get payment URL",
+      "processing": "Processing...",
+      "provider_label": "Payment Provider",
+      "provider_payos": "PayOS (Vietnam)",
+      "provider_paypal": "PayPal (International)",
+      "provider_stripe": "Stripe (International)",
+      "quick_amounts": "Quick amounts",
+      "success": "Top up successful!",
+      "title": "Top Up Wallet"
+    },
+    "transactions": {
+      "actions": {
+        "cancel_transaction": "Cancel Transaction",
+        "view_details": "View Details"
+      },
+      "cancel_dialog": {
+        "cancelling": "Cancelling...",
+        "confirm": "Yes, Cancel Transaction",
+        "keep": "No, Keep It",
+        "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+        "title": "Cancel Transaction"
+      },
+      "columns": {
+        "actions": "Actions",
+        "amount": "Amount",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "status": "Status",
+        "type": "Type"
+      },
+      "details": {
+        "amount": "Amount",
+        "close": "Close",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
+        "status": "Status",
+        "title": "Transaction Details",
+        "type": "Type"
+      },
+      "empty": "No transactions found",
+      "filters": {
+        "all_statuses": "All Statuses",
+        "all_types": "All Types",
+        "from_date": "From Date",
+        "provider": "Provider",
+        "status": "Status",
+        "to_date": "To Date",
+        "transaction_type": "Transaction Type",
+        "type": "Type"
+      },
+      "loading": "Loading transactions...",
+      "no_results": "No results.",
+      "no_transactions": "No transactions found",
+      "providers": {
+        "payos": "PayOS",
+        "stripe": "Stripe",
+        "triz": "TRIZ"
+      },
+      "search_placeholder": "Search transactions...",
+      "status": {
+        "CANCELLED": "Cancelled",
+        "COMPLETED": "Completed",
+        "FAILED": "Failed",
+        "PENDING": "Pending",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "pending": "Pending"
+      },
+      "title": "Transaction History",
+      "toast": {
+        "cancel_error": "Failed to cancel transaction",
+        "cancel_success": "Transaction cancelled successfully"
+      },
+      "types": {
+        "PURCHASE": "Purchase",
+        "REFUND": "Refund",
+        "SUBSCRIPTION": "Subscription",
+        "TOP_UP": "Top Up",
+        "refund": "Refund",
+        "spend": "Spend",
+        "topup": "Top Up"
+      }
+    }
   },
   "sidebar": {
     "admin": {

@@ -15,13 +15,13 @@ import {
   WalletBalanceCard,
   TopupDialog,
   TransactionsTable,
+  useTransactionsColumns,
 } from '@/features/payment/wallet/components';
-import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 const WalletPage = () => {
-  const { t } = useTranslation('pages.admin');
+  const { t } = useTranslation('pages.wallet');
   const [topupOpen, setTopupOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -65,9 +65,9 @@ const WalletPage = () => {
 
   const totalRowCount = transactionsData?.page?.totalElements ?? 0;
 
-  // Get translated filters and columns
+  // Get translated filters and columns using hook
   const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
-  const transactionColumns = useMemo(() => transactionsColumns(t), [t]);
+  const transactionColumns = useTransactionsColumns();
 
   // Create table instance with manual pagination
   const table = useReactTable({
@@ -89,13 +89,11 @@ const WalletPage = () => {
   });
 
   return (
-    <DefaultLayout meta={{ title: 'Wallet' }}>
+    <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Wallet</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your wallet balance and view transaction history
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+          <p className="text-muted-foreground mt-2">{t('description')}</p>
         </div>
 
         <WalletBalanceCard
@@ -105,20 +103,19 @@ const WalletPage = () => {
         />
 
         <div>
-          <h2 className="text-2xl font-bold mb-4">Transaction History</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('transactions.title')}</h2>
           <TransactionsTable
             table={table}
             isLoading={transactionsLoading}
             totalRowCount={totalRowCount}
+            t={t}
+            pageSize={pagination.pageSize}
+            columnsLength={transactionColumns.length}
             filters={transactionFilters}
             fromDate={fromDate}
             toDate={toDate}
             onFromDateChange={setFromDate}
             onToDateChange={setToDate}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            searchPlaceholder={t('transactions.search_placeholder' as any)}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            noTransactionsMessage={t('transactions.no_transactions' as any)}
           />
         </div>
 

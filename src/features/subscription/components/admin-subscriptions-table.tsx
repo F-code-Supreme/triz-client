@@ -1,9 +1,9 @@
-import { flexRender, type Table } from '@tanstack/react-table';
+import { flexRender, type Table as ReactTable } from '@tanstack/react-table';
 
 import { DataTablePagination } from '@/components/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Table as UITable,
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -11,35 +11,32 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import type { Subscription } from '../types';
+import type { Subscription } from '@/features/subscription/types';
 import type { DataTimestamp } from '@/types';
 import type { TFunction } from 'i18next';
 
-type SubscriptionWithTimestamp = Subscription & DataTimestamp;
-
-interface SubscriptionsTableProps {
-  table: Table<SubscriptionWithTimestamp>;
+interface AdminSubscriptionsTableProps {
+  table: ReactTable<Subscription & DataTimestamp>;
   isLoading: boolean;
   totalRowCount: number;
-  t: TFunction<'pages.subscription', undefined>;
+  t: TFunction<'pages.admin', undefined>;
   pageSize: number;
   columnsLength: number;
-  onAutoRenewalToggle?: (subscription: Subscription) => void;
 }
 
-export const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
+export const AdminSubscriptionsTable = ({
   table,
   isLoading,
   totalRowCount,
   t,
   pageSize,
   columnsLength,
-}) => {
+}: AdminSubscriptionsTableProps) => {
   return (
     <div className="space-y-4">
       {isLoading ? (
         <div className="border rounded-md overflow-hidden">
-          <UITable>
+          <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -57,29 +54,31 @@ export const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
               ))}
             </TableHeader>
             <TableBody>
-              {Array.from({ length: pageSize }).map((_, idx) => (
-                <TableRow key={idx}>
-                  {Array.from({ length: columnsLength }).map(
-                    (_: unknown, cellIdx: number) => (
-                      <TableCell key={cellIdx}>
-                        <Skeleton className="h-8 w-full" />
-                      </TableCell>
-                    ),
-                  )}
-                </TableRow>
-              ))}
+              {Array.from({ length: pageSize }).map(
+                (_: unknown, cellIdx: number) => (
+                  <TableRow key={cellIdx}>
+                    {Array.from({ length: columnsLength }).map(
+                      (_: unknown, idx: number) => (
+                        <TableCell key={idx}>
+                          <Skeleton className="h-8 w-full" />
+                        </TableCell>
+                      ),
+                    )}
+                  </TableRow>
+                ),
+              )}
             </TableBody>
-          </UITable>
+          </Table>
         </div>
       ) : totalRowCount === 0 ? (
         <div className="flex justify-center items-center h-64">
           <p className="text-muted-foreground">
-            {t('subscription_history.no_subscriptions')}
+            {t('subscriptions.no_subscriptions')}
           </p>
         </div>
       ) : (
         <div className="border rounded-md overflow-hidden">
-          <UITable>
+          <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -119,12 +118,12 @@ export const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
                     colSpan={columnsLength}
                     className="h-24 text-center"
                   >
-                    {t('subscription_history.no_results')}
+                    {t('subscriptions.no_results')}
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
-          </UITable>
+          </Table>
         </div>
       )}
 

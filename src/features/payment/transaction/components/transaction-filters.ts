@@ -1,9 +1,8 @@
 import type { FilterOption } from '@/components/data-table';
 import type { TFunction } from 'i18next';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getTransactionFilters = (
-  t: TFunction<'pages.admin', undefined> | ((key: string) => any),
+  t: TFunction<'pages.admin' | 'pages.wallet', undefined>,
 ): FilterOption[] => [
   {
     columnId: 'type',

@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ export const StepSelectSubscription = ({
   isLoading,
   onSelectSubscription,
 }: StepSelectSubscriptionProps) => {
+  const { t } = useTranslation('pages.refund');
   // Filter for active and expired subscriptions only (can refund these)
   const refundableSubscriptions = subscriptions.filter((sub) => {
     const status = sub.status;
@@ -31,10 +33,8 @@ export const StepSelectSubscription = ({
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold">Select Subscription</h2>
-        <p className="text-muted-foreground">
-          Choose which subscription you would like to refund
-        </p>
+        <h2 className="text-2xl font-semibold">{t('step_select.title')}</h2>
+        <p className="text-muted-foreground">{t('step_select.description')}</p>
       </div>
 
       {isLoading ? (
@@ -46,9 +46,7 @@ export const StepSelectSubscription = ({
       ) : refundableSubscriptions.length === 0 ? (
         <Alert>
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            You do not have any eligible subscriptions available for refund.
-          </AlertDescription>
+          <AlertDescription>{t('step_select.no_eligible')}</AlertDescription>
         </Alert>
       ) : (
         <div className="grid gap-4">
@@ -64,7 +62,7 @@ export const StepSelectSubscription = ({
                       {subscription.packageName}
                     </CardTitle>
                     <p className="text-sm text-muted-foreground mt-1">
-                      ID: {subscription.id}
+                      {t('step_select.subscription_id')}: {subscription.id}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -75,19 +73,25 @@ export const StepSelectSubscription = ({
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Start Date</p>
+                    <p className="text-muted-foreground">
+                      {t('step_select.start_date')}
+                    </p>
                     <p className="font-medium">
                       {new Date(subscription.startDate).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">End Date</p>
+                    <p className="text-muted-foreground">
+                      {t('step_select.end_date')}
+                    </p>
                     <p className="font-medium">
                       {new Date(subscription.endDate).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Status</p>
+                    <p className="text-muted-foreground">
+                      {t('step_select.status')}
+                    </p>
                     <p className="font-medium">
                       <span className={'text-orange-600'}>
                         {subscription.status}
@@ -95,7 +99,9 @@ export const StepSelectSubscription = ({
                     </p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Daily Tokens</p>
+                    <p className="text-muted-foreground">
+                      {t('step_select.daily_tokens')}
+                    </p>
                     <p className="font-medium">
                       {subscription.packageChatTokenPerDay}/day
                     </p>
@@ -106,7 +112,7 @@ export const StepSelectSubscription = ({
                   className="w-full"
                   onClick={() => onSelectSubscription(subscription)}
                 >
-                  Select & Continue
+                  {t('step_select.select_button')}
                 </Button>
               </CardContent>
             </Card>

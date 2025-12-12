@@ -1,7 +1,6 @@
 import {
   getCoreRowModel,
   useReactTable,
-  flexRender,
   type ColumnFiltersState,
   type PaginationState,
   type SortingState,
@@ -9,7 +8,6 @@ import {
 import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DataTablePagination } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,16 +17,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { createAdminSubscriptionsColumns } from '@/features/subscription/components/admin-subscriptions-columns';
+  createAdminSubscriptionsColumns,
+  AdminSubscriptionsTable,
+} from '@/features/subscription/components';
 import { useEditAutoRenewalMutation } from '@/features/subscription/services/mutations';
 import { useGetSubscriptionsQuery } from '@/features/subscription/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
@@ -133,101 +125,14 @@ const AdminSubscriptionsPage = () => {
         </div>
 
         {/* Subscriptions Table */}
-        <div className="space-y-4">
-          {isLoading ? (
-            <div className="border rounded-md overflow-hidden">
-              <Table>
-                <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {Array.from({ length: pagination.pageSize }).map(
-                    (_: unknown, cellIdx: number) => (
-                      <TableRow key={cellIdx}>
-                        {columns.map((_: unknown, idx: number) => (
-                          <TableCell key={idx}>
-                            <Skeleton className="h-8 w-full" />
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ),
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          ) : subscriptions.length === 0 ? (
-            <div className="flex justify-center items-center h-64">
-              <p className="text-muted-foreground">
-                {t('subscriptions.no_subscriptions')}
-              </p>
-            </div>
-          ) : (
-            <div className="border rounded-md overflow-hidden">
-              <Table>
-                <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                        </TableHead>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && 'selected'}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
-                        {t('subscriptions.no_results')}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-
-          {/* Pagination Controls */}
-          <DataTablePagination table={table} />
-        </div>
+        <AdminSubscriptionsTable
+          table={table}
+          isLoading={isLoading}
+          totalRowCount={totalRowCount}
+          t={t}
+          pageSize={pagination.pageSize}
+          columnsLength={columns.length}
+        />
 
         {/* Auto Renewal Toggle Dialog */}
         <Dialog

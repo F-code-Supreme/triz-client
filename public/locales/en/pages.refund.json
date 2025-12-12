@@ -1,0 +1,69 @@
+{
+  "page_meta_title": "Refund Subscription",
+  "title": "Refund Subscription",
+  "description": "Process a refund for your subscription",
+  "step_select": {
+    "title": "Select Subscription",
+    "description": "Choose which subscription you would like to refund",
+    "no_eligible": "You do not have any eligible subscriptions available for refund.",
+    "subscription_id": "ID",
+    "package": "Package",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "status": "Status",
+    "daily_tokens": "Daily Tokens",
+    "select_button": "Select & Continue",
+    "loading": "Loading subscriptions..."
+  },
+  "step_preview": {
+    "title": "Preview Refund",
+    "description": "Review the refund details before confirming",
+    "warning": "Please review the refund details carefully. Once confirmed, this action cannot be undone.",
+    "subscription_details": "Subscription Details",
+    "refund_details": "Refund Details",
+    "package": "Package",
+    "status": "Status",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "transaction_id": "Transaction ID",
+    "transaction_type": "Transaction Type",
+    "amount": "Amount",
+    "original_amount": "Original Amount",
+    "refund_amount": "Refund Amount",
+    "refund_type": "Refund Type",
+    "transaction_status": "Transaction Status",
+    "go_back": "Go Back",
+    "confirm_button": "Confirm Refund",
+    "processing": "Processing Refund...",
+    "loading": "Loading refund details..."
+  },
+  "step_result": {
+    "title": "Refund Successful!",
+    "description": "Your refund has been processed successfully",
+    "amount_label": "Refund Amount",
+    "wallet_note": "Refunded to your wallet",
+    "new_refund_button": "Process Another Refund",
+    "home_button": "Back to Home"
+  },
+  "refund_types": {
+    "FULL": "Full Refund",
+    "PARTIAL": "Partial Refund",
+    "PRORATED": "Prorated Refund"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "EXPIRED": "Expired",
+    "CANCELED": "Canceled",
+    "PENDING": "Pending"
+  },
+  "transaction_status": {
+    "COMPLETED": "Completed",
+    "PENDING": "Pending",
+    "FAILED": "Failed"
+  },
+  "errors": {
+    "missing_info": "Missing required information",
+    "no_transaction": "Cannot find transaction to refund",
+    "refund_failed": "Failed to process refund. Please try again."
+  }
+}

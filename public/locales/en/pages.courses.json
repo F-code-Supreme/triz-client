@@ -1,0 +1,94 @@
+{
+  "page_meta_title": "Courses",
+  "all_courses": {
+    "title": "All Courses",
+    "description": "Explore and enroll in courses to start your learning journey",
+    "my_courses_button": "My Courses"
+  },
+  "my_courses": {
+    "title": "My Courses",
+    "description": "Continue your learning journey with your enrolled courses"
+  },
+  "overview": {
+    "back_to_courses": "Back to All Courses",
+    "enroll_now": "Enroll Now",
+    "start_learning": "Start Learning",
+    "level": "Level",
+    "duration": "Duration",
+    "learners": "Learners",
+    "price": "Price",
+    "deal_price": "Deal Price",
+    "free": "Free",
+    "minutes": "minutes",
+    "description_title": "Description",
+    "curriculum_title": "Curriculum",
+    "lessons": "lessons",
+    "error": "Failed to load course.",
+    "enroll_error": "Enrollment failed!",
+    "level_beginner": "Beginner",
+    "level_intermediate": "Intermediate",
+    "level_advanced": "Advanced"
+  },
+  "learn": {
+    "loading": "Loading course content...",
+    "error": "Failed to load course content.",
+    "back_to_my_courses": "Back to My Courses"
+  },
+  "quiz": {
+    "page_meta_title": "Course Quiz",
+    "loading": "Loading quiz...",
+    "no_quiz": "No Quiz Available",
+    "no_quiz_description": "This module does not have a quiz yet.",
+    "no_questions": "No Questions Available",
+    "no_questions_description": "This quiz doesn't have any questions yet.",
+    "confirm_start": {
+      "title": "Start Quiz",
+      "description": "Are you ready to start the quiz?",
+      "duration": "Duration",
+      "minutes": "minutes",
+      "questions": "Questions",
+      "cancel": "Cancel",
+      "start": "Start Quiz",
+      "starting": "Starting..."
+    },
+    "quiz_header": {
+      "time_remaining": "Time Remaining",
+      "question_progress": "Question"
+    },
+    "questions": {
+      "multiple_answers": "Select all that apply",
+      "single_answer": "Select one answer"
+    },
+    "submit": "Submit Quiz",
+    "submit_confirm": "Are you sure you want to submit? You cannot change your answers after submission.",
+    "results": {
+      "title": "Quiz Results",
+      "score": "Your Score",
+      "passed": "Congratulations! You passed!",
+      "failed": "You didn't pass this time. Keep studying!",
+      "correct_answers": "Correct Answers",
+      "total_questions": "Total Questions",
+      "review": "Review Answers",
+      "back_to_course": "Back to Course",
+      "your_answer": "Your Answer",
+      "correct_answer": "Correct Answer",
+      "correct": "Correct",
+      "incorrect": "Incorrect"
+    },
+    "errors": {
+      "start_failed": "Failed to start quiz",
+      "submit_failed": "Failed to submit quiz"
+    }
+  },
+  "filters": {
+    "search_placeholder": "Search courses...",
+    "level": "Level",
+    "all_levels": "All Levels",
+    "sort_by": "Sort by",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "most_popular": "Most Popular"
+  },
+  "loading": "Loading courses...",
+  "error": "Failed to load courses."
+}

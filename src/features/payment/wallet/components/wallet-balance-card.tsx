@@ -1,4 +1,5 @@
 import { CreditCard, Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { formatTrizilium } from '@/utils';
@@ -16,6 +17,7 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
   isLoading,
   onTopupClick,
 }) => {
+  const { t } = useTranslation('pages.wallet');
   const balanceInTrizilium = wallet?.balance || 0;
 
   return (
@@ -23,7 +25,7 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <CreditCard className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-lg font-semibold">Wallet Balance</h2>
+          <h2 className="text-lg font-semibold">{t('balance_card.title')}</h2>
         </div>
       </div>
 
@@ -46,7 +48,7 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
           disabled={isLoading}
         >
           <Plus className="h-4 w-4" />
-          Top up Wallet
+          {t('balance_card.top_up')}
         </Button>
       </div>
     </div>

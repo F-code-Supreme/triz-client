@@ -665,6 +665,7 @@
     "description": "View and manage all system transactions",
     "search_placeholder": "Search transactions...",
     "no_transactions": "No transactions found",
+    "no_results": "No results.",
     "columns": {
       "order_code": "Order Code",
       "type": "Type",

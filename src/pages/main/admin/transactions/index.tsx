@@ -10,8 +10,10 @@ import { useTranslation } from 'react-i18next';
 
 import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
-import { TransactionsTable } from '@/features/payment/wallet/components';
-import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
+import {
+  AdminTransactionsTable,
+  createAdminTransactionsColumns,
+} from '@/features/payment/wallet/components';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminTransactionsPage = () => {
@@ -52,11 +54,9 @@ const AdminTransactionsPage = () => {
 
   const totalRowCount = transactionsData?.page?.totalElements ?? 0;
 
-  // Get translated filters
+  // Get translated filters and columns
   const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
-
-  // Get translated columns
-  const columns = useMemo(() => transactionsColumns(t), [t]);
+  const columns = useMemo(() => createAdminTransactionsColumns(t), [t]);
 
   // Create table instance with manual pagination
   const table = useReactTable({
@@ -90,14 +90,13 @@ const AdminTransactionsPage = () => {
         </div>
 
         <div>
-          <TransactionsTable
+          <AdminTransactionsTable
             table={table}
             isLoading={transactionsLoading}
             totalRowCount={totalRowCount}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            searchPlaceholder={t('transactions.search_placeholder' as any)}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            noTransactionsMessage={t('transactions.no_transactions' as any)}
+            t={t}
+            pageSize={pagination.pageSize}
+            columnsLength={columns.length}
             filters={transactionFilters}
             fromDate={fromDate}
             toDate={toDate}

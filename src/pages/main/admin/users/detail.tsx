@@ -26,11 +26,15 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
-import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
-import { TransactionsTable } from '@/features/payment/wallet/components/transactions-table';
+import {
+  AdminTransactionsTable,
+  createAdminTransactionsColumns,
+} from '@/features/payment/wallet/components';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
-import { createSubscriptionsColumns } from '@/features/subscription/components';
-import { SubscriptionsTable } from '@/features/subscription/components/subscriptions-table';
+import {
+  createSubscriptionsColumns,
+  AdminSubscriptionsTable,
+} from '@/features/subscription/components';
 import { useCancelSubscriptionMutation } from '@/features/subscription/services/mutations';
 import {
   useGetActiveSubscriptionByUserQuery,
@@ -124,7 +128,10 @@ const AdminUserDetailPage = () => {
 
   // Get translated filters and columns
   const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
-  const transactionColumns = useMemo(() => transactionsColumns(t), [t]);
+  const transactionColumns = useMemo(
+    () => createAdminTransactionsColumns(t),
+    [t],
+  );
 
   const handleCancelSubscription = () => {
     if (!userId || !activeSubscription) return;
@@ -470,10 +477,13 @@ const AdminUserDetailPage = () => {
             <CardTitle>{t('users.detail.subscription_history')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <SubscriptionsTable
+            <AdminSubscriptionsTable
               table={subscriptionTable}
               isLoading={subscriptionsLoading}
               totalRowCount={subscriptionsTotalRowCount}
+              t={t}
+              pageSize={subscriptionPagination.pageSize}
+              columnsLength={createSubscriptionsColumns(() => {}).length}
             />
           </CardContent>
         </Card>
@@ -484,19 +494,18 @@ const AdminUserDetailPage = () => {
             <CardTitle>{t('users.detail.transaction_history')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <TransactionsTable
+            <AdminTransactionsTable
               table={table}
               isLoading={transactionsLoading}
               totalRowCount={totalRowCount}
+              t={t}
+              pageSize={pagination.pageSize}
+              columnsLength={transactionColumns.length}
               filters={transactionFilters}
               fromDate={fromDate}
               toDate={toDate}
               onFromDateChange={setFromDate}
               onToDateChange={setToDate}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              searchPlaceholder={t('transactions.search_placeholder' as any)}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              noTransactionsMessage={t('transactions.no_transactions' as any)}
             />
           </CardContent>
         </Card>
