@@ -1,4 +1,5 @@
 import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -27,21 +28,18 @@ export const StepPreviewRefund = ({
   onRefund,
   onGoBack,
 }: StepPreviewRefundProps) => {
+  const { t } = useTranslation('pages.refund');
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-semibold">Preview Refund</h2>
-        <p className="text-muted-foreground">
-          Review the refund details before confirming
-        </p>
+        <h2 className="text-2xl font-semibold">{t('step_preview.title')}</h2>
+        <p className="text-muted-foreground">{t('step_preview.description')}</p>
       </div>
 
       <Alert>
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
-          Please review the refund details carefully. Once confirmed, this
-          action cannot be undone.
-        </AlertDescription>
+        <AlertDescription>{t('step_preview.warning')}</AlertDescription>
       </Alert>
 
       {isLoading ? (
@@ -53,16 +51,20 @@ export const StepPreviewRefund = ({
           {/* Subscription Details */}
           <Card>
             <CardHeader>
-              <CardTitle>Subscription Details</CardTitle>
+              <CardTitle>{t('step_preview.subscription_details')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Package</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('step_preview.package')}
+                  </p>
                   <p className="font-medium">{subscription.packageName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Status</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('step_preview.status')}
+                  </p>
                   <p className="font-medium">
                     <span className={'text-orange-600'}>
                       {subscription.status}
@@ -70,13 +72,17 @@ export const StepPreviewRefund = ({
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Start Date</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('step_preview.start_date')}
+                  </p>
                   <p className="font-medium">
                     {new Date(subscription.startDate).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">End Date</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('step_preview.end_date')}
+                  </p>
                   <p className="font-medium">
                     {new Date(subscription.endDate).toLocaleDateString()}
                   </p>
@@ -89,13 +95,13 @@ export const StepPreviewRefund = ({
           {previewRefund && (
             <Card>
               <CardHeader>
-                <CardTitle>Refund Details</CardTitle>
+                <CardTitle>{t('step_preview.refund_details')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      Transaction ID
+                      {t('step_preview.transaction_id')}
                     </p>
                     <p className="font-medium text-sm break-all">
                       {previewRefund.id}
@@ -103,7 +109,7 @@ export const StepPreviewRefund = ({
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      Transaction Type
+                      {t('step_preview.transaction_type')}
                     </p>
                     <div className="mt-1">
                       <Badge variant="secondary" className="capitalize">
@@ -112,13 +118,17 @@ export const StepPreviewRefund = ({
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Amount</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('step_preview.amount')}
+                    </p>
                     <p className="font-medium text-green-600">
                       +{previewRefund.amount.toLocaleString()} VND
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Status</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('step_preview.status')}
+                    </p>
                     <div className="mt-1">
                       <Badge
                         variant={
@@ -148,7 +158,7 @@ export const StepPreviewRefund = ({
               className="gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
-              Go Back
+              {t('step_preview.go_back')}
             </Button>
             <Button
               onClick={onRefund}
@@ -156,7 +166,9 @@ export const StepPreviewRefund = ({
               className="flex-1 gap-2"
             >
               {isRefunding && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isRefunding ? 'Processing Refund...' : 'Confirm Refund'}
+              {isRefunding
+                ? t('step_preview.processing')
+                : t('step_preview.confirm_button')}
             </Button>
           </div>
         </div>

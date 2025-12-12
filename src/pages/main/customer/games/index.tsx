@@ -8,6 +8,7 @@ import {
   Target,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AsyncSelect } from '@/components/ui/async-select';
 import { Card } from '@/components/ui/card';
@@ -71,6 +72,7 @@ const GAMES: Game[] = [
 ];
 
 const GamesIndexPage = () => {
+  const { t } = useTranslation('pages.games');
   const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState('');
 
@@ -119,16 +121,15 @@ const GamesIndexPage = () => {
   };
 
   return (
-    <DefaultLayout meta={{ title: 'Trò Chơi TRIZ' }}>
+    <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <div className="py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Trò Chơi TRIZ
+            {t('title')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Khám phá và học hỏi các nguyên tắc TRIZ thông qua các trò chơi thú
-            vị
+            {t('description')}
           </p>
         </div>
 

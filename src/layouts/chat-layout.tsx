@@ -7,9 +7,14 @@ import type { Meta } from '@/types';
 interface ChatLayoutProps {
   children: React.ReactNode;
   meta: Meta;
+  showheader?: boolean;
 }
 
-export const ChatLayout = ({ children, meta }: ChatLayoutProps) => {
+export const ChatLayout = ({
+  children,
+  meta,
+  showheader = false,
+}: ChatLayoutProps) => {
   return (
     <HelmetProvider>
       <Helmet>
@@ -17,7 +22,7 @@ export const ChatLayout = ({ children, meta }: ChatLayoutProps) => {
         <title>{meta.title}</title>
       </Helmet>
       <div className="min-h-svh flex flex-col w-full">
-        <Navbar03 />
+        {showheader && <Navbar03 />}
         <main className="container h-[calc(100svh-4rem-1px)] mx-auto p-8">
           {children}
         </main>

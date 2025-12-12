@@ -8,10 +8,12 @@ import {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
+import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
-import { TransactionsTable } from '@/features/payment/wallet/components';
-import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
+import {
+  AdminTransactionsTable,
+  createAdminTransactionsColumns,
+} from '@/features/payment/wallet/components';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminTransactionsPage = () => {
@@ -39,7 +41,7 @@ const AdminTransactionsPage = () => {
       );
     }
     return f;
-  }, [columnFilters, fromDate]);
+  }, [columnFilters, fromDate, toDate]);
 
   const { data: transactionsData, isLoading: transactionsLoading } =
     useSearchAllTransactionsQuery(pagination, sorting, filters);
@@ -52,10 +54,14 @@ const AdminTransactionsPage = () => {
 
   const totalRowCount = transactionsData?.page?.totalElements ?? 0;
 
+  // Get translated filters and columns
+  const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
+  const columns = useMemo(() => createAdminTransactionsColumns(t), [t]);
+
   // Create table instance with manual pagination
   const table = useReactTable({
     data: transactions,
-    columns: transactionsColumns,
+    columns,
     state: {
       columnFilters,
       pagination,
@@ -72,7 +78,7 @@ const AdminTransactionsPage = () => {
   });
 
   return (
-    <AdminLayout meta={{ title: 'Transactions' }}>
+    <AdminLayout meta={{ title: t('transactions.title') }}>
       <div className="flex flex-col gap-8 p-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -84,10 +90,13 @@ const AdminTransactionsPage = () => {
         </div>
 
         <div>
-          <TransactionsTable
+          <AdminTransactionsTable
             table={table}
             isLoading={transactionsLoading}
             totalRowCount={totalRowCount}
+            t={t}
+            pageSize={pagination.pageSize}
+            columnsLength={columns.length}
             filters={transactionFilters}
             fromDate={fromDate}
             toDate={toDate}

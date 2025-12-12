@@ -1,5 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { CheckCircle, Home, ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { formatTrizilium } from '@/utils';
@@ -16,6 +17,7 @@ export const StepRefundResult = ({
   previewRefund,
   onGoBack,
 }: StepRefundResultProps) => {
+  const { t } = useTranslation('pages.refund');
   const navigate = useNavigate();
 
   const handleGoHome = () => {
@@ -38,22 +40,24 @@ export const StepRefundResult = ({
         </div>
         <div className="space-y-2">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
-            Refund Successful!
+            {t('step_result.title')}
           </h2>
           <p className="text-lg text-muted-foreground">
-            Your refund has been processed successfully
+            {t('step_result.description')}
           </p>
         </div>
       </div>
 
       {/* Quick Info Display */}
       <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900 rounded-lg p-6 text-center space-y-3">
-        <p className="text-sm text-muted-foreground">Refund Amount</p>
+        <p className="text-sm text-muted-foreground">
+          {t('step_result.amount_label')}
+        </p>
         <p className="text-3xl font-bold text-green-600">
           +{formatTrizilium(previewRefund?.amount || 0)}
         </p>
         <p className="text-xs text-muted-foreground pt-2">
-          Refunded to your wallet
+          {t('step_result.wallet_note')}
         </p>
       </div>
 
@@ -61,14 +65,14 @@ export const StepRefundResult = ({
       <div className="flex flex-col gap-3">
         <Button onClick={handleNewRefund} variant="outline" className="w-full">
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Process Another Refund
+          {t('step_result.new_refund_button')}
         </Button>
         <Button
           onClick={handleGoHome}
           className="w-full bg-green-600 hover:bg-green-700"
         >
           <Home className="h-4 w-4 mr-2" />
-          Back to Home
+          {t('step_result.home_button')}
         </Button>
       </div>
     </div>

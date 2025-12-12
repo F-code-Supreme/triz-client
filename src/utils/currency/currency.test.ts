@@ -48,12 +48,12 @@ describe('Currency Utils', () => {
 
   describe('formatDailyTrizilium', () => {
     it('should format with /day suffix', () => {
-      expect(formatDailyTrizilium(100)).toBe('100 Trizilium/day');
-      expect(formatDailyTrizilium(1000)).toBe('1,000 Trizilium/day');
+      expect(formatDailyTrizilium(100)).toBe('100/day');
+      expect(formatDailyTrizilium(1000)).toBe('1,000/day');
     });
 
     it(ZERO_MESSAGE, () => {
-      expect(formatDailyTrizilium(0)).toBe('0 Trizilium/day');
+      expect(formatDailyTrizilium(0)).toBe('0/day');
     });
   });
 

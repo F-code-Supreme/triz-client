@@ -16,6 +16,7 @@ import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
+import { Route as R6StepsRouteImport } from './routes/6-steps'
 import { Route as ExpertRouteRouteImport } from './routes/expert/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
@@ -49,7 +50,6 @@ import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscri
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
-import { Route as app6StepsRouteRouteImport } from './routes/(app)/6-steps/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
@@ -68,6 +68,7 @@ import { Route as appJournalsJournalIdRouteRouteImport } from './routes/(app)/jo
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
+import { Route as app6StepsWorkflowIndexRouteImport } from './routes/(app)/6-steps/workflow.index'
 import { Route as AdminCoursesEditCourseIdRouteImport } from './routes/admin/courses/edit/$courseId'
 import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
@@ -105,6 +106,11 @@ const ForumRoute = ForumRouteImport.update({
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   id: '/flashcard-deck',
   path: '/flashcard-deck',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R6StepsRoute = R6StepsRouteImport.update({
+  id: '/6-steps',
+  path: '/6-steps',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExpertRouteRoute = ExpertRouteRouteImport.update({
@@ -272,11 +278,6 @@ const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
-const app6StepsRouteRoute = app6StepsRouteRouteImport.update({
-  id: '/6-steps',
-  path: '/6-steps',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
@@ -369,6 +370,11 @@ const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   path: '',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
+const app6StepsWorkflowIndexRoute = app6StepsWorkflowIndexRouteImport.update({
+  id: '/6-steps/workflow/',
+  path: '/6-steps/workflow/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const AdminCoursesEditCourseIdRoute =
   AdminCoursesEditCourseIdRouteImport.update({
     id: '/edit/$courseId',
@@ -390,6 +396,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/expert': typeof ExpertRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -397,7 +404,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
@@ -447,9 +453,11 @@ export interface FileRoutesByFullPath {
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -457,7 +465,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
@@ -507,6 +514,7 @@ export interface FileRoutesByTo {
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -514,6 +522,7 @@ export interface FileRoutesById {
   '/(app)': typeof appRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/expert': typeof ExpertRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -521,7 +530,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/(app)/6-steps': typeof app6StepsRouteRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
   '/(app)/refund': typeof appRefundRouteRoute
@@ -572,6 +580,7 @@ export interface FileRoutesById {
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/(app)/6-steps/workflow/': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -579,6 +588,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/expert'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -586,7 +596,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
@@ -636,9 +645,11 @@ export interface FileRouteTypes {
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/6-steps/workflow'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -646,7 +657,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
@@ -696,12 +706,14 @@ export interface FileRouteTypes {
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/6-steps/workflow'
   id:
     | '__root__'
     | '/'
     | '/(app)'
     | '/admin'
     | '/expert'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -709,7 +721,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/(app)/6-steps'
     | '/(app)/chat-triz'
     | '/(app)/profile'
     | '/(app)/refund'
@@ -760,6 +771,7 @@ export interface FileRouteTypes {
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/(app)/6-steps/workflow/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -767,6 +779,7 @@ export interface RootRouteChildren {
   appRouteRoute: typeof appRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ExpertRouteRoute: typeof ExpertRouteRouteWithChildren
+  R6StepsRoute: typeof R6StepsRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   ForumRoute: typeof ForumRoute
   HomeRoute: typeof HomeRoute
@@ -836,6 +849,13 @@ declare module '@tanstack/react-router' {
       path: '/flashcard-deck'
       fullPath: '/flashcard-deck'
       preLoaderRoute: typeof FlashcardDeckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/6-steps': {
+      id: '/6-steps'
+      path: '/6-steps'
+      fullPath: '/6-steps'
+      preLoaderRoute: typeof R6StepsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/expert': {
@@ -1069,13 +1089,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/6-steps': {
-      id: '/(app)/6-steps'
-      path: '/6-steps'
-      fullPath: '/6-steps'
-      preLoaderRoute: typeof app6StepsRouteRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -1202,6 +1215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
+    '/(app)/6-steps/workflow/': {
+      id: '/(app)/6-steps/workflow/'
+      path: '/6-steps/workflow'
+      fullPath: '/6-steps/workflow'
+      preLoaderRoute: typeof app6StepsWorkflowIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/admin/courses/edit/$courseId': {
       id: '/admin/courses/edit/$courseId'
       path: '/edit/$courseId'
@@ -1227,7 +1247,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
-  app6StepsRouteRoute: typeof app6StepsRouteRoute
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
   appRefundRouteRoute: typeof appRefundRouteRoute
@@ -1247,10 +1266,10 @@ interface appRouteRouteChildren {
   appQuizIndexRoute: typeof appQuizIndexRoute
   appCourseLearnSlugRouteRoute: typeof appCourseLearnSlugRouteRoute
   appCourseQuizSlugRouteRoute: typeof appCourseQuizSlugRouteRoute
+  app6StepsWorkflowIndexRoute: typeof app6StepsWorkflowIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
-  app6StepsRouteRoute: app6StepsRouteRoute,
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
   appRefundRouteRoute: appRefundRouteRoute,
@@ -1270,6 +1289,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appQuizIndexRoute: appQuizIndexRoute,
   appCourseLearnSlugRouteRoute: appCourseLearnSlugRouteRoute,
   appCourseQuizSlugRouteRoute: appCourseQuizSlugRouteRoute,
+  app6StepsWorkflowIndexRoute: app6StepsWorkflowIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -1350,6 +1370,7 @@ const rootRouteChildren: RootRouteChildren = {
   appRouteRoute: appRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   ExpertRouteRoute: ExpertRouteRouteWithChildren,
+  R6StepsRoute: R6StepsRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   ForumRoute: ForumRoute,
   HomeRoute: HomeRoute,

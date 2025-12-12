@@ -76,6 +76,14 @@
     "archive": "Archive"
   },
 
+  "expert": {
+    "title": "TRIZ Expert",
+    "subtitle": "Expert Panel",
+    "main": "Main",
+    "dashboard": "Dashboard",
+    "assignments": "Assignments"
+  },
+
   "command_menu": {
     "placeholder": "Type a command or search...",
     "no_results": "No results found.",

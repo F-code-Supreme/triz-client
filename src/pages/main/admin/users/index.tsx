@@ -58,7 +58,7 @@ const AdminUsersPage = () => {
   });
 
   return (
-    <AdminLayout meta={{ title: 'Users' }}>
+    <AdminLayout meta={{ title: t('users.title') }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex items-center justify-between">
           <div>

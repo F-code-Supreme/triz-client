@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import type { ColumnDef } from '@tanstack/react-table';
+import type { TFunction } from 'i18next';
 
 export type Quiz = {
   id: string;
@@ -46,13 +47,15 @@ interface QuizColumnsProps {
   onEdit?: (quiz: Quiz) => void;
   onDelete?: (quiz: Quiz) => void;
   onViewDetail?: (quiz: Quiz) => void;
+  t: TFunction<'pages.admin'>;
 }
 
 export const createQuizColumns = ({
   onEdit,
   onDelete,
   onViewDetail,
-}: QuizColumnsProps = {}): ColumnDef<Quiz>[] => [
+  t,
+}: QuizColumnsProps): ColumnDef<Quiz>[] => [
   // {
   //   accessorKey: 'imageSource',
   //   header: 'Image',
@@ -74,7 +77,7 @@ export const createQuizColumns = ({
   // },
   {
     accessorKey: 'title',
-    header: 'Title',
+    header: () => t('quizzes.columns.title'),
     cell: ({ row }) => {
       const title = row.getValue('title') as string;
       return (
@@ -89,31 +92,41 @@ export const createQuizColumns = ({
   },
   {
     accessorKey: 'questions',
-    header: 'Questions',
+    header: () => t('quizzes.columns.questions'),
     cell: ({ row }) => {
       const questions = row.getValue('questions') as Quiz['questions'];
+      const count = questions.length;
       return (
         <Badge variant="secondary">
-          {questions.length} question{questions.length !== 1 ? 's' : ''}
+          {t(
+            count === 1
+              ? 'quizzes.columns.question_count'
+              : 'quizzes.columns.question_count_plural',
+            { count },
+          )}
         </Badge>
       );
     },
   },
   {
     accessorKey: 'durationInMinutes',
-    header: 'Duration',
+    header: () => t('quizzes.columns.duration'),
     cell: ({ row }) => {
       const duration = row.getValue('durationInMinutes') as number | null;
       return duration ? (
-        <Badge variant="outline">{duration} min</Badge>
+        <Badge variant="outline">
+          {t('quizzes.columns.duration_minutes', { count: duration })}
+        </Badge>
       ) : (
-        <span className="text-muted-foreground">No limit</span>
+        <span className="text-muted-foreground">
+          {t('quizzes.columns.no_limit')}
+        </span>
       );
     },
   },
   {
     accessorKey: 'createdAt',
-    header: 'Created',
+    header: () => t('quizzes.columns.created'),
     cell: ({ row }) => {
       const date = new Date(row.getValue('createdAt'));
       return (
@@ -126,7 +139,7 @@ export const createQuizColumns = ({
   },
   {
     accessorKey: 'updatedAt',
-    header: 'Updated',
+    header: () => t('quizzes.columns.updated'),
     cell: ({ row }) => {
       const date = new Date(row.getValue('updatedAt'));
       return (
@@ -152,18 +165,20 @@ export const createQuizColumns = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {t('quizzes.columns.actions')}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {onViewDetail && (
               <DropdownMenuItem onClick={() => onViewDetail(quiz)}>
                 <Eye className="mr-2 h-4 w-4" />
-                View details
+                {t('quizzes.actions.view_details')}
               </DropdownMenuItem>
             )}
             {onEdit && (
               <DropdownMenuItem onClick={() => onEdit(quiz)}>
                 <Edit className="mr-2 h-4 w-4" />
-                Edit quiz
+                {t('quizzes.actions.edit_quiz')}
               </DropdownMenuItem>
             )}
             {onDelete && (
@@ -172,7 +187,7 @@ export const createQuizColumns = ({
                 className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete quiz
+                {t('quizzes.actions.delete_quiz')}
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>
@@ -181,5 +196,3 @@ export const createQuizColumns = ({
     },
   },
 ];
-
-export const quizColumns = createQuizColumns();

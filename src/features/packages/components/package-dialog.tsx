@@ -1,5 +1,6 @@
 import { Plus, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -41,6 +42,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
   package: editPackage,
   onSave,
 }) => {
+  const { t } = useTranslation('pages.admin');
   const ERROR_CLASS = 'border-red-500';
 
   const [formData, setFormData] = useState({
@@ -101,23 +103,23 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
     } = {};
 
     if (!formData.name.trim()) {
-      errors.name = 'Package name is required';
+      errors.name = t('packages.dialog.package_name_required');
     }
 
     if (formData.priceInTokens <= 0) {
-      errors.priceInTokens = 'Price must be greater than 0';
+      errors.priceInTokens = t('packages.dialog.price_required');
     }
 
     if (formData.durationInDays <= 0) {
-      errors.durationInDays = 'Duration must be greater than 0';
+      errors.durationInDays = t('packages.dialog.duration_required');
     }
 
     if (formData.chatTokenPerDay <= 0) {
-      errors.chatTokenPerDay = 'Chat tokens per day must be greater than 0';
+      errors.chatTokenPerDay = t('packages.dialog.daily_required');
     }
 
     if (formData.features.length === 0) {
-      errors.features = 'At least 1 feature is required';
+      errors.features = t('packages.dialog.features_required');
     }
 
     setFormErrors(errors);
@@ -172,14 +174,17 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
       <DialogContent className="max-w-2xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {editPackage ? 'Edit Package' : 'Create New Package'}
+            {editPackage
+              ? t('packages.dialog.edit_title')
+              : t('packages.dialog.create_title')}
           </DialogTitle>
         </DialogHeader>
 
         <div className="grid">
           <div className="space-y-1">
             <Label htmlFor="name">
-              Package Name <span className="text-red-500">*</span>
+              {t('packages.dialog.package_name')}{' '}
+              <span className="text-red-500">*</span>
             </Label>
             <Input
               id="name"
@@ -190,7 +195,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   setFormErrors({ ...formErrors, name: undefined });
                 }
               }}
-              placeholder="e.g., Premium Plan"
+              placeholder={t('packages.dialog.package_name_placeholder')}
               className={formErrors.name ? 'border-red-500' : ''}
             />
             <div className="min-h-[20px]">
@@ -203,7 +208,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="priceInTokens">
-                Price (Trizilium) <span className="text-red-500">*</span>
+                {t('packages.dialog.price_trizilium')}{' '}
+                <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="priceInTokens"
@@ -219,7 +225,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                     setFormErrors({ ...formErrors, priceInTokens: undefined });
                   }
                 }}
-                placeholder="1000"
+                placeholder={t('packages.dialog.price_placeholder')}
                 className={formErrors.priceInTokens ? ERROR_CLASS : ''}
               />
               <div className="min-h-[20px]">
@@ -233,7 +239,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
 
             <div className="space-y-1">
               <Label htmlFor="durationInDays">
-                Duration (Days) <span className="text-red-500">*</span>
+                {t('packages.dialog.duration_days')}{' '}
+                <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="durationInDays"
@@ -252,7 +259,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                     });
                   }
                 }}
-                placeholder="30"
+                placeholder={t('packages.dialog.duration_placeholder')}
                 className={formErrors.durationInDays ? ERROR_CLASS : ''}
               />
               <div className="min-h-[20px]">
@@ -268,7 +275,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <Label htmlFor="chatTokenPerDay">
-                Daily Trizilium <span className="text-red-500">*</span>
+                {t('packages.dialog.daily_trizilium')}{' '}
+                <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="chatTokenPerDay"
@@ -287,7 +295,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                     });
                   }
                 }}
-                placeholder="500"
+                placeholder={t('packages.dialog.daily_placeholder')}
                 className={formErrors.chatTokenPerDay ? ERROR_CLASS : ''}
               />
               <div className="min-h-[20px]">
@@ -300,7 +308,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">{t('packages.dialog.status')}</Label>
               <Select
                 value={formData.status}
                 onValueChange={(value: PackageStatus) =>
@@ -308,11 +316,17 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                 }
               >
                 <SelectTrigger id="status">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue
+                    placeholder={t('packages.dialog.status_placeholder')}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ACTIVE">Active</SelectItem>
-                  <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  <SelectItem value="ACTIVE">
+                    {t('packages.dialog.status_active')}
+                  </SelectItem>
+                  <SelectItem value="INACTIVE">
+                    {t('packages.dialog.status_inactive')}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <div className="min-h-[20px]"></div>
@@ -321,7 +335,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
 
           <div className="">
             <Label className="text-base font-semibold">
-              Features <span className="text-red-500">*</span>
+              {t('packages.dialog.features_label')}{' '}
+              <span className="text-red-500">*</span>
             </Label>
             {formErrors.features && (
               <p className="text-xs text-red-500 mt-1">{formErrors.features}</p>
@@ -351,11 +366,13 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
             </div>
 
             <div className="mt-2 space-y-3 border rounded-md p-3 bg-muted/30">
-              <Label className="text-sm">Add New Feature</Label>
+              <Label className="text-sm">
+                {t('packages.dialog.add_new_feature')}
+              </Label>
               <div className="grid gap-2">
                 <div className="space-y-1">
                   <Input
-                    placeholder="Icon URL (e.g., https://example.com/icon.png)"
+                    placeholder={t('packages.dialog.icon_url_placeholder')}
                     value={newFeature.iconUrl}
                     onChange={(e) => handleIconUrlChange(e.target.value)}
                     className={iconUrlError ? ERROR_CLASS : ''}
@@ -365,12 +382,14 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   )}
                   {newFeature.iconUrl && !iconUrlError && (
                     <div className="flex items-center gap-2 text-xs text-green-600">
-                      <span>✓ Valid image URL</span>
+                      <span>{t('packages.dialog.valid_image_url')}</span>
                     </div>
                   )}
                 </div>
                 <Input
-                  placeholder="Feature description"
+                  placeholder={t(
+                    'packages.dialog.feature_description_placeholder',
+                  )}
                   value={newFeature.description}
                   onChange={(e) =>
                     setNewFeature({
@@ -391,7 +410,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   }
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Feature
+                  {t('packages.dialog.add_feature')}
                 </Button>
               </div>
             </div>
@@ -400,10 +419,12 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t('packages.dialog.cancel')}
           </Button>
           <Button onClick={handleSubmit}>
-            {editPackage ? 'Update Package' : 'Create Package'}
+            {editPackage
+              ? t('packages.dialog.update_package')
+              : t('packages.dialog.create_package')}
           </Button>
         </DialogFooter>
       </DialogContent>

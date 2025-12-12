@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -28,13 +29,15 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   onConfirm,
   isDeleting = false,
 }) => {
+  const { t } = useTranslation('pages.admin');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Delete Package</DialogTitle>
+          <DialogTitle>{t('packages.delete_dialog.title')}</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this package?
+            {t('packages.delete_dialog.message')}
           </DialogDescription>
         </DialogHeader>
 
@@ -42,8 +45,8 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
           <div className="rounded-md bg-muted p-4">
             <p className="text-sm font-medium">{pkg.name}</p>
             <p className="text-xs text-muted-foreground mt-1">
-              {formatNumber(pkg.priceInTokens)} tokens • {pkg.durationInDays}
-              days
+              {formatNumber(pkg.priceInTokens)} tokens • {pkg.durationInDays}{' '}
+              {t('packages.card.days')}
             </p>
           </div>
         )}
@@ -54,14 +57,16 @@ const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
             onClick={() => onOpenChange(false)}
             disabled={isDeleting}
           >
-            Cancel
+            {t('packages.delete_dialog.cancel')}
           </Button>
           <Button
             variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
           >
-            {isDeleting ? 'Deleting...' : 'Delete Package'}
+            {isDeleting
+              ? t('packages.delete_dialog.deleting')
+              : t('packages.delete_dialog.delete_package')}
           </Button>
         </DialogFooter>
       </DialogContent>

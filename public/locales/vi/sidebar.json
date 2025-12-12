@@ -76,6 +76,14 @@
     "archive": "Lưu trữ"
   },
 
+  "expert": {
+    "title": "TRIZ Chuyên gia",
+    "subtitle": "Bảng chuyên gia",
+    "main": "Chính",
+    "dashboard": "Bảng điều khiển",
+    "assignments": "Bài tập"
+  },
+
   "command_menu": {
     "placeholder": "Nhập lệnh hoặc tìm kiếm...",
     "no_results": "Không tìm thấy kết quả.",

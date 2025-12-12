@@ -110,6 +110,7 @@ const AdminQuizzesPage = () => {
     onEdit: handleEditQuiz,
     onDelete: handleDeleteQuiz,
     onViewDetail: handleViewDetail,
+    t,
   });
 
   const table = useReactTable({
@@ -134,7 +135,7 @@ const AdminQuizzesPage = () => {
   });
 
   return (
-    <AdminLayout meta={{ title: 'Manage Quizzes' }}>
+    <AdminLayout meta={{ title: t('quizzes.title') }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex justify-between items-center">
           <div>
@@ -154,12 +155,12 @@ const AdminQuizzesPage = () => {
         <div className="space-y-4">
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Search by title, description..."
+            searchPlaceholder={t('quizzes.search_placeholder')}
             searchKey="title"
             filters={[
               {
                 columnId: 'questionType',
-                title: 'Type',
+                title: t('quizzes.filter_type'),
                 options: quizStatuses,
               },
             ]}
@@ -167,13 +168,11 @@ const AdminQuizzesPage = () => {
 
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
-              <p className="text-muted-foreground">Loading quizzes...</p>
+              <p className="text-muted-foreground">{t('quizzes.loading')}</p>
             </div>
           ) : quizzes.length === 0 ? (
             <div className="flex justify-center items-center h-64">
-              <p className="text-muted-foreground">
-                No quizzes found. Create your first quiz!
-              </p>
+              <p className="text-muted-foreground">{t('quizzes.no_quizzes')}</p>
             </div>
           ) : (
             <>
@@ -218,7 +217,7 @@ const AdminQuizzesPage = () => {
                           colSpan={columns.length}
                           className="h-24 text-center"
                         >
-                          No results.
+                          {t('quizzes.no_results')}
                         </TableCell>
                       </TableRow>
                     )}

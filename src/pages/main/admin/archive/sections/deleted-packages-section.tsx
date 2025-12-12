@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatNumber } from '@/utils';
+import { formatTriziliumShort } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
 
@@ -89,10 +89,10 @@ export const DeletedPackagesSection = ({
             <div className="space-y-1 mb-4">
               <h3 className="font-semibold text-lg">{pkg.name}</h3>
               <p className="text-sm font-medium">
-                {formatNumber(pkg.priceInTokens)} tokens
+                {formatTriziliumShort(pkg.priceInTokens)}
               </p>
               <Badge variant="outline" className="mt-1">
-                {pkg.durationInDays} days
+                {pkg.durationInDays} {t('archive.packages.days')}
               </Badge>
             </div>
 
@@ -107,7 +107,11 @@ export const DeletedPackagesSection = ({
                     <li key={idx}>{feature.description}</li>
                   ))}
                   {pkg.features.length > 3 && (
-                    <li>+{pkg.features.length - 3} more features</li>
+                    <li>
+                      {t('archive.packages.more_features', {
+                        count: pkg.features.length - 3,
+                      })}
+                    </li>
                   )}
                 </ul>
               </div>

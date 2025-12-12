@@ -207,7 +207,7 @@ export function AsyncSelect<T>({
         <Command shouldFilter={false}>
           <div className="relative border-b w-full">
             <CommandInput
-              placeholder={`Search ${label.toLowerCase()}...`}
+              placeholder={`${label}...`}
               value={searchTerm}
               onValueChange={(value) => {
                 setSearchTerm(value);

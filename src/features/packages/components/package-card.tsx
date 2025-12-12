@@ -1,5 +1,6 @@
 import { Edit, Trash2 } from 'lucide-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,8 @@ const PackageCard: React.FC<PackageCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const { t } = useTranslation('pages.admin');
+
   return (
     <Card className="flex flex-col h-full shadow-md hover:shadow-lg transition-shadow">
       <CardHeader className="pb-3">
@@ -47,17 +50,25 @@ const PackageCard: React.FC<PackageCardProps> = ({
       <CardContent className="flex-1 space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Price:</span>
+            <span className="text-sm text-muted-foreground">
+              {t('packages.card.price')}
+            </span>
             <span className="font-semibold text-lg">
               {formatTrizilium(pkg.priceInTokens)}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Duration:</span>
-            <span className="font-medium">{pkg.durationInDays} days</span>
+            <span className="text-sm text-muted-foreground">
+              {t('packages.card.duration')}
+            </span>
+            <span className="font-medium">
+              {pkg.durationInDays} {t('packages.card.days')}
+            </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Daily Tokens:</span>
+            <span className="text-sm text-muted-foreground">
+              {t('packages.card.daily_tokens')}
+            </span>
             <span className="font-medium">
               {formatDailyTrizilium(pkg.chatTokenPerDay, {
                 shortForm: true,
@@ -67,7 +78,9 @@ const PackageCard: React.FC<PackageCardProps> = ({
         </div>
 
         <div className="pt-2 border-t">
-          <p className="text-sm font-medium mb-2">Features:</p>
+          <p className="text-sm font-medium mb-2">
+            {t('packages.card.features')}
+          </p>
           <ul className="space-y-2">
             {pkg.features.map((feature, index) => (
               <li key={index} className="flex items-start gap-2 text-sm">
@@ -93,7 +106,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
           onClick={() => onEdit(pkg)}
         >
           <Edit className="mr-2 h-4 w-4" />
-          Edit
+          {t('packages.card.edit')}
         </Button>
         <Button
           variant="destructive"
@@ -102,7 +115,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
           onClick={() => onDelete(pkg.id)}
         >
           <Trash2 className="mr-2 h-4 w-4" />
-          Delete
+          {t('packages.card.delete')}
         </Button>
       </CardFooter>
     </Card>

@@ -1,0 +1,91 @@
+{
+  "page_meta_title": "My Subscription",
+  "title": "My Subscription",
+  "description": "Manage your subscription and view subscription history",
+  "request_refund": "Request Refund",
+  "active_subscription": {
+    "title": "Active Subscription",
+    "no_active": "No Active Subscription",
+    "no_active_description": "You don't have any active subscription. Subscribe to a package to get started.",
+    "subscribe_now": "Subscribe Now",
+    "package": "Package",
+    "status": "Status",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "days_remaining": "Days Remaining",
+    "daily_tokens": "Daily Tokens",
+    "auto_renewal": "Auto Renewal",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "cancel_subscription": "Cancel Subscription",
+    "manage_subscription": "Manage Subscription",
+    "active_until": "Active subscription until",
+    "status_active": "Active",
+    "daily_token_allowance": "Daily Token Allowance",
+    "remaining": "remaining",
+    "duration": "Duration",
+    "days": "days",
+    "auto_renew_enabled_desc": "Your subscription will automatically renew",
+    "auto_renew_disabled_desc": "Your subscription will not renew automatically",
+    "no_active_visit_packages": "You don't have an active subscription. Visit the",
+    "packages_page": "packages page",
+    "to_get_started": "to get started."
+  },
+  "subscription_history": {
+    "title": "Subscription History",
+    "columns": {
+      "package": "Package",
+      "status": "Status",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "auto_renewal": "Auto Renewal",
+      "actions": "Actions"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "EXPIRED": "Expired",
+      "CANCELED": "Canceled",
+      "PENDING": "Pending"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "enable_auto_renewal": "Enable Auto Renewal",
+      "disable_auto_renewal": "Disable Auto Renewal",
+      "cancel_subscription": "Cancel Subscription"
+    },
+    "details": {
+      "title": "Subscription Details",
+      "package": "Package",
+      "status": "Status",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "tokens_per_day_remaining": "Tokens Per Day Remaining",
+      "auto_renewal": "Auto Renewal",
+      "close": "Close"
+    },
+    "toggle_auto_renewal": "Toggle Auto Renewal",
+    "empty": "No subscriptions found",
+    "loading": "Loading subscriptions...",
+    "no_subscriptions": "No subscriptions found",
+    "no_results": "No results found"
+  },
+  "cancel_dialog": {
+    "title": "Cancel Subscription?",
+    "description": "Are you sure you want to cancel your subscription? Your access to premium features will end immediately.",
+    "cancel": "No, Keep It",
+    "confirm": "Yes, Cancel Subscription",
+    "canceling": "Cancelling...",
+    "success": "Subscription cancelled successfully",
+    "error": "Failed to cancel subscription"
+  },
+  "auto_renewal_dialog": {
+    "title_enable": "Enable Auto Renewal?",
+    "title_disable": "Disable Auto Renewal?",
+    "enable_description": "Your subscription will automatically renew when it expires. Your wallet will be charged accordingly.",
+    "disable_description": "Your subscription will not automatically renew when it expires. You will need to manually purchase a new subscription.",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "updating": "Updating..."
+  },
+  "loading": "Loading subscription..."
+}

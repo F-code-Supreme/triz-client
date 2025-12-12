@@ -1,5 +1,6 @@
 import { MoreHorizontal, Eye, X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -44,12 +45,15 @@ interface TransactionsDataTableRowActionsProps {
   row: {
     original: TransactionWithTimestamp;
   };
+  namespace?: 'pages.admin' | 'pages.wallet';
 }
 
 export const TransactionsDataTableRowActions = ({
   row,
+  namespace = 'pages.admin',
 }: TransactionsDataTableRowActionsProps) => {
   const transaction = row.original;
+  const { t } = useTranslation(namespace);
   const { user, hasRole } = useAuth();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
@@ -71,11 +75,11 @@ export const TransactionsDataTableRowActions = ({
         {
           onSuccess: () => {
             setIsCancelDialogOpen(false);
-            toast.success('Transaction cancelled successfully');
+            toast.success(t('transactions.toast.cancel_success'));
           },
           onError: (error) => {
             toast.error(
-              (error as Error).message || 'Failed to cancel transaction',
+              (error as Error).message || t('transactions.toast.cancel_error'),
             );
           },
         },
@@ -86,11 +90,11 @@ export const TransactionsDataTableRowActions = ({
         {
           onSuccess: () => {
             setIsCancelDialogOpen(false);
-            toast.success('Transaction cancelled successfully');
+            toast.success(t('transactions.toast.cancel_success'));
           },
           onError: (error) => {
             toast.error(
-              (error as Error).message || 'Failed to cancel transaction',
+              (error as Error).message || t('transactions.toast.cancel_error'),
             );
           },
         },
@@ -108,11 +112,13 @@ export const TransactionsDataTableRowActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {t('transactions.columns.actions')}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
-            View Details
+            {t('transactions.actions.view_details')}
           </DropdownMenuItem>
           {canCancel && (
             <DropdownMenuItem
@@ -120,7 +126,7 @@ export const TransactionsDataTableRowActions = ({
               className="text-red-600 dark:text-red-400"
             >
               <X className="mr-2 h-4 w-4" />
-              Cancel Transaction
+              {t('transactions.actions.cancel_transaction')}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -129,40 +135,52 @@ export const TransactionsDataTableRowActions = ({
       <Sheet open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Transaction Details</SheetTitle>
+            <SheetTitle>{t('transactions.details.title')}</SheetTitle>
             <SheetDescription>
-              Order Code: {transaction.orderCode}
+              {t('transactions.details.order_code')}: {transaction.orderCode}
             </SheetDescription>
           </SheetHeader>
           <div className="space-y-4 pt-6">
             <div>
-              <p className="text-sm text-muted-foreground">Type</p>
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.type')}
+              </p>
               <p className="font-medium">{transaction.type}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Amount</p>
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.amount')}
+              </p>
               <p className="font-medium">
                 {transaction.amount.toLocaleString()} VND
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Provider</p>
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.provider')}
+              </p>
               <p className="font-medium capitalize">
                 {transaction.provider?.toLowerCase() || 'N/A'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Provider Tx Ref</p>
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.provider_tx_ref')}
+              </p>
               <p className="font-medium capitalize">
                 {transaction.providerTxRef?.toLowerCase() || 'N/A'}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Status</p>
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.status')}
+              </p>
               <p className="font-medium">{transaction.status}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Date</p>
+              <p className="text-sm text-muted-foreground">
+                {t('transactions.details.date')}
+              </p>
               <p className="font-medium">
                 {new Date(transaction.createdAt).toLocaleString()}
               </p>
@@ -171,7 +189,7 @@ export const TransactionsDataTableRowActions = ({
           <div className="flex gap-3 justify-end pt-6">
             <SheetClose asChild>
               <Button type="button" variant="outline">
-                Close
+                {t('transactions.details.close')}
               </Button>
             </SheetClose>
           </div>
@@ -182,10 +200,9 @@ export const TransactionsDataTableRowActions = ({
       <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel Transaction</DialogTitle>
+            <DialogTitle>{t('transactions.cancel_dialog.title')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to cancel this transaction? This action
-              cannot be undone.
+              {t('transactions.cancel_dialog.message')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -194,14 +211,16 @@ export const TransactionsDataTableRowActions = ({
               onClick={() => setIsCancelDialogOpen(false)}
               disabled={isCanceling}
             >
-              No, Keep It
+              {t('transactions.cancel_dialog.keep')}
             </Button>
             <Button
               variant="destructive"
               onClick={handleCancel}
               disabled={isCanceling}
             >
-              {isCanceling ? 'Cancelling...' : 'Yes, Cancel Transaction'}
+              {isCanceling
+                ? t('transactions.cancel_dialog.cancelling')
+                : t('transactions.cancel_dialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

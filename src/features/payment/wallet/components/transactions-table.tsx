@@ -12,10 +12,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { transactionsColumns } from './transactions-columns';
-
 import type { Transaction } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
+import type { TFunction } from 'i18next';
 
 type TransactionWithTimestamp = Transaction & DataTimestamp;
 
@@ -23,6 +22,9 @@ interface TransactionsTableProps {
   table: Table<TransactionWithTimestamp>;
   isLoading: boolean;
   totalRowCount: number;
+  t: TFunction<'pages.wallet', undefined>;
+  pageSize: number;
+  columnsLength: number;
   filters?: Array<{
     columnId: string;
     title: string;
@@ -37,6 +39,10 @@ interface TransactionsTableProps {
 export const TransactionsTable: React.FC<TransactionsTableProps> = ({
   table,
   isLoading,
+  totalRowCount,
+  t,
+  pageSize,
+  columnsLength,
   filters = [],
   fromDate,
   toDate,
@@ -47,7 +53,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     <div className="flex flex-col gap-2">
       <DataTableToolbar
         table={table}
-        searchPlaceholder="Search transactions..."
+        searchPlaceholder={t('transactions.search_placeholder')}
         searchKey="orderCode"
         filters={filters}
       />
@@ -81,23 +87,25 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             ))}
           </TableHeader>
           <TableBody>
-            {Array.from({ length: table.getState().pagination.pageSize }).map(
-              (_, idx) => (
-                <TableRow key={idx}>
-                  {transactionsColumns.map((_, cellIdx) => (
+            {Array.from({ length: pageSize }).map((_: unknown, idx: number) => (
+              <TableRow key={idx}>
+                {Array.from({ length: columnsLength }).map(
+                  (_: unknown, cellIdx: number) => (
                     <TableCell key={cellIdx}>
                       <Skeleton className="h-8 w-full" />
                     </TableCell>
-                  ))}
-                </TableRow>
-              ),
-            )}
+                  ),
+                )}
+              </TableRow>
+            ))}
           </TableBody>
         </UITable>
       </div>
-    ) : table.getRowModel().rows?.length === 0 ? (
+    ) : totalRowCount === 0 ? (
       <div className="flex justify-center items-center h-64">
-        <p className="text-muted-foreground">No transactions found</p>
+        <p className="text-muted-foreground">
+          {t('transactions.no_transactions')}
+        </p>
       </div>
     ) : (
       <div className="border rounded-md overflow-hidden">
@@ -137,11 +145,8 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={transactionsColumns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
+                <TableCell colSpan={columnsLength} className="h-24 text-center">
+                  {t('transactions.no_results')}
                 </TableCell>
               </TableRow>
             )}

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BackgroundBeams } from '@/components/ui/shadcn-io/background-beams';
 import { Skeleton } from '@/components/ui/skeleton';
+import TokenDisplay from '@/components/ui/token-display';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetActivePackagesQuery } from '@/features/packages/services/queries';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
@@ -248,12 +249,16 @@ const PackagesPricingPage = () => {
                               {t('trizilium')}
                             </div>
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            <span className="font-semibold text-foreground">
-                              {formatDailyTrizilium(pkg.chatTokenPerDay, {
-                                shortForm: true,
-                              })}
-                            </span>
+                          <div className="flex justify-center">
+                            <TokenDisplay
+                              isShortForm={false}
+                              content={formatDailyTrizilium(
+                                pkg.chatTokenPerDay,
+                                {
+                                  shortForm: true,
+                                },
+                              )}
+                            />
                           </div>
                           <Button
                             className="w-full"

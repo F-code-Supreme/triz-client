@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -20,6 +22,7 @@ const DetailQuizDialog = ({
   setOpen,
   selectedQuizData,
 }: DetailQuizDialogProps) => {
+  const { t } = useTranslation('pages.admin');
   const { data: moduleData } = useGetModulesById(
     selectedQuizData?.moduleId || '',
   );
@@ -32,7 +35,7 @@ const DetailQuizDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Quiz Details</DialogTitle>
+          <DialogTitle>{t('quizzes.detail_dialog.title')}</DialogTitle>
         </DialogHeader>
         {selectedQuizData && (
           <div className="space-y-4">
@@ -45,7 +48,9 @@ const DetailQuizDialog = ({
                   {selectedQuizData.description}
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Duration: {selectedQuizData.durationInMinutes} minutes
+                  {t('quizzes.detail_dialog.duration', {
+                    duration: selectedQuizData.durationInMinutes,
+                  })}
                 </p>
               </div>
               {/* <div className="w-full h-32 bg-muted flex items-center justify-center rounded text-muted-foreground">
@@ -56,24 +61,30 @@ const DetailQuizDialog = ({
             {/* Course & Module Information */}
             <div className="border rounded-lg p-4 bg-muted/30">
               <h4 className="font-semibold mb-3">
-                Course & Module Information
+                {t('quizzes.detail_dialog.course_module_info')}
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Course</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('quizzes.detail_dialog.course')}
+                  </p>
                   <p className="font-medium">
-                    {courseData?.title || 'Loading...'}
+                    {courseData?.title || t('quizzes.detail_dialog.loading')}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Module</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t('quizzes.detail_dialog.module')}
+                  </p>
                   <p className="font-medium">
-                    {moduleData?.name || 'Loading...'}
+                    {moduleData?.name || t('quizzes.detail_dialog.loading')}
                   </p>
                   {moduleData && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      {moduleData.durationInMinutes} mins · Level:{' '}
-                      {moduleData.level}
+                      {t('quizzes.detail_dialog.module_info', {
+                        duration: moduleData.durationInMinutes,
+                        level: moduleData.level,
+                      })}
                     </p>
                   )}
                 </div>
@@ -82,15 +93,22 @@ const DetailQuizDialog = ({
 
             <div className="space-y-3">
               <h4 className="font-semibold">
-                Questions ({selectedQuizData.questions?.length || 0})
+                {t('quizzes.detail_dialog.questions_title', {
+                  count: selectedQuizData.questions?.length || 0,
+                })}
               </h4>
               {selectedQuizData.questions?.map((question: any, idx: number) => (
                 <div key={question.id} className="border rounded-lg p-4">
                   <div className="font-medium mb-2">
-                    Question {idx + 1}: {question.content}
+                    {t('quizzes.detail_dialog.question_number', {
+                      number: idx + 1,
+                      content: question.content,
+                    })}
                   </div>
                   <div className="text-sm text-muted-foreground mb-2">
-                    Type: {question.questionType.replace('_', ' ')}
+                    {t('quizzes.detail_dialog.question_type', {
+                      type: question.questionType.replace('_', ' '),
+                    })}
                   </div>
                   <div className="space-y-1">
                     {question.options?.map((option: any, optIdx: number) => (
@@ -105,7 +123,7 @@ const DetailQuizDialog = ({
                         {String.fromCharCode(65 + optIdx)}. {option.content}
                         {option.isCorrect && (
                           <span className="ml-2 text-green-600 font-medium">
-                            ✓ Correct
+                            {t('quizzes.detail_dialog.correct_answer')}
                           </span>
                         )}
                       </div>
@@ -118,7 +136,7 @@ const DetailQuizDialog = ({
         )}
         <DialogFooter>
           <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
-            Close
+            {t('quizzes.detail_dialog.close')}
           </Button>
         </DialogFooter>
       </DialogContent>
