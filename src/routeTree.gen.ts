@@ -45,6 +45,7 @@ import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/ro
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
 import { Route as AdminAssignmentRouteRouteImport } from './routes/admin/assignment/route'
 import { Route as AdminArchiveRouteRouteImport } from './routes/admin/archive/route'
+import { Route as AdminAchievementsRouteRouteImport } from './routes/admin/achievements/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
@@ -253,6 +254,11 @@ const AdminArchiveRouteRoute = AdminArchiveRouteRouteImport.update({
   path: '/archive',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminAchievementsRouteRoute = AdminAchievementsRouteRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const appWalletRouteRoute = appWalletRouteRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -409,6 +415,7 @@ export interface FileRoutesByFullPath {
   '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -470,6 +477,7 @@ export interface FileRoutesByTo {
   '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -535,6 +543,7 @@ export interface FileRoutesById {
   '/(app)/refund': typeof appRefundRouteRoute
   '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -601,6 +610,7 @@ export interface FileRouteTypes {
     | '/refund'
     | '/subscription'
     | '/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -662,6 +672,7 @@ export interface FileRouteTypes {
     | '/refund'
     | '/subscription'
     | '/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -726,6 +737,7 @@ export interface FileRouteTypes {
     | '/(app)/refund'
     | '/(app)/subscription'
     | '/(app)/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -1054,6 +1066,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArchiveRouteRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/achievements': {
+      id: '/admin/achievements'
+      path: '/achievements'
+      fullPath: '/admin/achievements'
+      preLoaderRoute: typeof AdminAchievementsRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/(app)/wallet': {
       id: '/(app)/wallet'
       path: '/wallet'
@@ -1312,6 +1331,7 @@ const AdminCoursesRouteRouteWithChildren =
   AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
 
 interface AdminRouteRouteChildren {
+  AdminAchievementsRouteRoute: typeof AdminAchievementsRouteRoute
   AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
   AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
@@ -1329,6 +1349,7 @@ interface AdminRouteRouteChildren {
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminAchievementsRouteRoute: AdminAchievementsRouteRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
   AdminAssignmentRouteRoute: AdminAssignmentRouteRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,

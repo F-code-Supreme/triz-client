@@ -122,7 +122,8 @@
     "description": "Xem và quản lý các mục đã xóa. Khôi phục chúng để làm cho chúng hoạt động trở lại.",
     "tabs": {
       "books": "Sách",
-      "packages": "Gói đăng ký"
+      "packages": "Gói đăng ký",
+      "achievements": "Thành tựu"
     },
     "books": {
       "no_deleted": "Không tìm thấy sách đã xóa",
@@ -144,6 +145,84 @@
       "features": "Tính năng",
       "days": "ngày",
       "more_features": "+{{count}} tính năng khác"
+    },
+    "achievements": {
+      "no_deleted": "Không tìm thấy thành tựu đã xóa",
+      "all_active": "Tất cả thành tựu hiện đang hoạt động",
+      "restore_title": "Khôi phục thành tựu",
+      "restore_message": "Bạn có chắc chắn muốn khôi phục thành tựu này không?",
+      "restore_success": "Khôi phục thành tựu \"{{name}}\" thành công!",
+      "restore_error": "Không thể khôi phục thành tựu. Vui lòng thử lại.",
+      "deleted_at": "Đã xóa lúc"
+    }
+  },
+  "achievements": {
+    "title": "Quản lý Thành tựu",
+    "description": "Tạo và quản lý thành tựu người dùng",
+    "create_achievement": "Tạo Thành tựu",
+    "no_achievements": "Không tìm thấy thành tựu",
+    "create_first": "Tạo thành tựu đầu tiên để bắt đầu",
+    "status_filter": {
+      "all": "Tất cả",
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "type": {
+      "first_book": "Sách Đầu tiên",
+      "book_milestone": "Cột Mốc"
+    },
+    "card": {
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "restore": "Khôi phục",
+      "no_image": "Không có hình ảnh",
+      "milestone": "Cột mốc: {{count}} sách"
+    },
+    "dialog": {
+      "edit_title": "Sửa Thành tựu",
+      "create_title": "Tạo Thành tựu",
+      "edit_description": "Cập nhật chi tiết thành tựu bên dưới",
+      "create_description": "Điền thông tin để tạo thành tựu mới",
+      "form": {
+        "name": "Tên",
+        "name_placeholder": "Tên thành tựu",
+        "name_required": "Tên là bắt buộc",
+        "description": "Mô tả",
+        "description_placeholder": "Mô tả thành tựu",
+        "description_required": "Mô tả là bắt buộc",
+        "image": "Hình ảnh Thành tựu",
+        "image_description": "Tải lên biểu tượng hoặc huy hiệu thành tựu (tối đa 2MB)",
+        "type": "Loại",
+        "type_placeholder": "Chọn loại thành tựu",
+        "status": "Trạng thái",
+        "status_placeholder": "Chọn trạng thái",
+        "milestone_count": "Số Mốc",
+        "milestone_count_placeholder": "ví dụ: 5",
+        "milestone_count_required": "Số mốc là bắt buộc cho BOOK_MILESTONE",
+        "milestone_count_description": "Số lượng sách cần thiết để mở khóa thành tựu này"
+      },
+      "cancel": "Hủy",
+      "saving": "Đang lưu...",
+      "update": "Cập nhật",
+      "create": "Tạo"
+    },
+    "delete_dialog": {
+      "title": "Bạn có chắc chắn?",
+      "description": "Sẽ xóa thành tựu \"{{name}}\". Hành động này có thể được hoàn tác bằng cách khôi phục từ danh sách thành tựu đã xóa.",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "deleting": "Đang xóa..."
+    },
+    "toast": {
+      "delete_success": "Xóa thành tựu thành công",
+      "delete_error": "Không thể xóa thành tựu",
+      "create_success": "Tạo thành tựu thành công",
+      "create_error": "Không thể tạo thành tựu",
+      "update_success": "Cập nhật thành tựu thành công",
+      "update_error": "Không thể cập nhật thành tựu"
+    },
+    "pagination": {
+      "page_of": "Trang {{current}} / {{total}}"
     }
   },
   "books": {

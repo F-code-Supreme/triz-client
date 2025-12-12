@@ -186,7 +186,85 @@ interface Resources {
     "tools.six_steps_desc": "Systematic approach to creative problem solving"
   },
   "pages.admin": {
+    "achievements": {
+      "card": {
+        "delete": "Delete",
+        "edit": "Edit",
+        "milestone": "Milestone: {{count}} books",
+        "no_image": "No image",
+        "restore": "Restore"
+      },
+      "create_achievement": "Create Achievement",
+      "create_first": "Create your first achievement to get started",
+      "delete_dialog": {
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting...",
+        "description": "This will delete the achievement \"{{name}}\". This action can be undone by restoring from the deleted achievements list.",
+        "title": "Are you sure?"
+      },
+      "description": "Create and manage user achievements",
+      "dialog": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "create_description": "Fill in the details to create a new achievement",
+        "create_title": "Create Achievement",
+        "edit_description": "Update the achievement details below",
+        "edit_title": "Edit Achievement",
+        "form": {
+          "description": "Description",
+          "description_placeholder": "Achievement description",
+          "description_required": "Description is required",
+          "image": "Achievement Image",
+          "image_description": "Upload an achievement icon or badge (max 2MB)",
+          "milestone_count": "Milestone Count",
+          "milestone_count_description": "Number of books required to unlock this achievement",
+          "milestone_count_placeholder": "e.g., 5",
+          "milestone_count_required": "Milestone count is required for BOOK_MILESTONE",
+          "name": "Name",
+          "name_placeholder": "Achievement name",
+          "name_required": "Name is required",
+          "status": "Status",
+          "status_placeholder": "Select status",
+          "type": "Type",
+          "type_placeholder": "Select achievement type"
+        },
+        "saving": "Saving...",
+        "update": "Update"
+      },
+      "no_achievements": "No achievements found",
+      "pagination": {
+        "page_of": "Page {{current}} of {{total}}"
+      },
+      "status_filter": {
+        "active": "Active",
+        "all": "All",
+        "inactive": "Inactive"
+      },
+      "title": "Manage Achievements",
+      "toast": {
+        "create_error": "Failed to create achievement",
+        "create_success": "Achievement created successfully",
+        "delete_error": "Failed to delete achievement",
+        "delete_success": "Achievement deleted successfully",
+        "update_error": "Failed to update achievement",
+        "update_success": "Achievement updated successfully"
+      },
+      "type": {
+        "book_milestone": "Book Milestone",
+        "first_book": "First Book"
+      }
+    },
     "archive": {
+      "achievements": {
+        "all_active": "All achievements are currently active",
+        "deleted_at": "Deleted at",
+        "no_deleted": "No deleted achievements found",
+        "restore_error": "Failed to restore achievement. Please try again.",
+        "restore_message": "Are you sure you want to restore this achievement?",
+        "restore_success": "Achievement \"{{name}}\" restored successfully!",
+        "restore_title": "Restore Achievement"
+      },
       "books": {
         "all_active": "All books are currently active",
         "deleted_at": "Deleted at",
@@ -210,6 +288,7 @@ interface Resources {
         "restore_title": "Restore Package"
       },
       "tabs": {
+        "achievements": "Achievements",
         "books": "Books",
         "packages": "Packages"
       },
@@ -1671,6 +1750,7 @@ interface Resources {
   },
   "sidebar": {
     "admin": {
+      "achievements": "Achievements",
       "archive": "Archive",
       "assignments": "Assignments",
       "books": "Books",

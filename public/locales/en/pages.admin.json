@@ -122,7 +122,8 @@
     "description": "View and manage deleted items. Restore them to make them active again.",
     "tabs": {
       "books": "Books",
-      "packages": "Packages"
+      "packages": "Packages",
+      "achievements": "Achievements"
     },
     "books": {
       "no_deleted": "No deleted books found",
@@ -144,6 +145,84 @@
       "features": "Features",
       "days": "days",
       "more_features": "+{{count}} more features"
+    },
+    "achievements": {
+      "no_deleted": "No deleted achievements found",
+      "all_active": "All achievements are currently active",
+      "restore_title": "Restore Achievement",
+      "restore_message": "Are you sure you want to restore this achievement?",
+      "restore_success": "Achievement \"{{name}}\" restored successfully!",
+      "restore_error": "Failed to restore achievement. Please try again.",
+      "deleted_at": "Deleted at"
+    }
+  },
+  "achievements": {
+    "title": "Manage Achievements",
+    "description": "Create and manage user achievements",
+    "create_achievement": "Create Achievement",
+    "no_achievements": "No achievements found",
+    "create_first": "Create your first achievement to get started",
+    "status_filter": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "type": {
+      "first_book": "First Book",
+      "book_milestone": "Book Milestone"
+    },
+    "card": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "restore": "Restore",
+      "no_image": "No image",
+      "milestone": "Milestone: {{count}} books"
+    },
+    "dialog": {
+      "edit_title": "Edit Achievement",
+      "create_title": "Create Achievement",
+      "edit_description": "Update the achievement details below",
+      "create_description": "Fill in the details to create a new achievement",
+      "form": {
+        "name": "Name",
+        "name_placeholder": "Achievement name",
+        "name_required": "Name is required",
+        "description": "Description",
+        "description_placeholder": "Achievement description",
+        "description_required": "Description is required",
+        "image": "Achievement Image",
+        "image_description": "Upload an achievement icon or badge (max 2MB)",
+        "type": "Type",
+        "type_placeholder": "Select achievement type",
+        "status": "Status",
+        "status_placeholder": "Select status",
+        "milestone_count": "Milestone Count",
+        "milestone_count_placeholder": "e.g., 5",
+        "milestone_count_required": "Milestone count is required for BOOK_MILESTONE",
+        "milestone_count_description": "Number of books required to unlock this achievement"
+      },
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "update": "Update",
+      "create": "Create"
+    },
+    "delete_dialog": {
+      "title": "Are you sure?",
+      "description": "This will delete the achievement \"{{name}}\". This action can be undone by restoring from the deleted achievements list.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleting": "Deleting..."
+    },
+    "toast": {
+      "delete_success": "Achievement deleted successfully",
+      "delete_error": "Failed to delete achievement",
+      "create_success": "Achievement created successfully",
+      "create_error": "Failed to create achievement",
+      "update_success": "Achievement updated successfully",
+      "update_error": "Failed to update achievement"
+    },
+    "pagination": {
+      "page_of": "Page {{current}} of {{total}}"
     }
   },
   "books": {
