@@ -240,17 +240,15 @@ export const ProfileView = ({
                       <TooltipProvider key={achievement.achievementId}>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="text-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
-                              {achievement.achievementImageUrl ? (
-                                <img
-                                  src={achievement.achievementImageUrl}
-                                  alt={achievement.achievementName}
-                                  className="w-16 h-16 mx-auto object-contain"
-                                />
-                              ) : (
-                                <div className="text-4xl">🏆</div>
-                              )}
-                            </div>
+                            {achievement.achievementImageUrl ? (
+                              <img
+                                src={achievement.achievementImageUrl}
+                                alt={achievement.achievementName}
+                                className="w-20 h-20 mx-auto object-contain rounded-full hover:scale-105 transition-transform cursor-pointer"
+                              />
+                            ) : (
+                              <div className="text-4xl">🏆</div>
+                            )}
                           </TooltipTrigger>
                           <TooltipContent>
                             <div className="space-y-1">
