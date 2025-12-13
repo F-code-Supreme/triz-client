@@ -1,4 +1,5 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { type Row } from '@tanstack/react-table';
 import { BookDashed, Trash2 } from 'lucide-react';
 import React from 'react';
@@ -34,7 +35,17 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   useDeleteForumPostMutation,
   useUpdateForumPostMutation,
+  useDeleteReplyCommentMutation,
+  useCreateReplyCommentMutation,
+  useCreateCommentMutation,
 } from '@/features/forum/services/mutations';
+import {
+  useGetForumPostReplyByIdQuery,
+  useGetForumPostChildrenReplyByIdQuery,
+} from '@/features/forum/services/queries';
+import { ForumKeys } from '@/features/forum/services/queries/keys';
+
+import type { Comment } from '@/features/forum/types';
 
 interface AssignmentsDataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -48,6 +59,12 @@ export const ForumPostsDataTableRowActions = <TData,>({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const deleteForumPost = useDeleteForumPostMutation();
   const updateForumPostMutation = useUpdateForumPostMutation();
+
+  // reply management (admin)
+  const [isRepliesOpen, setIsRepliesOpen] = React.useState(false);
+  const queryClient = useQueryClient();
+  const deleteReplyComment = useDeleteReplyCommentMutation();
+  const createReplyComment = useCreateReplyCommentMutation();
 
   // Add editable local state
   const [postTitle, setPostTitle] = React.useState<string>('');
@@ -64,12 +81,130 @@ export const ForumPostsDataTableRowActions = <TData,>({
     }
   }, [isUpdateOpen, forumPost]);
 
+  // fetch top-level replies for the post when replies dialog is open
+  const { data: repliesData, isLoading: repliesLoading } =
+    useGetForumPostReplyByIdQuery(forumPost.id, { enabled: isRepliesOpen });
+
+  // local state for replying inside the dialog
+  const [activeReplyTarget, setActiveReplyTarget] = React.useState<
+    string | null
+  >(null);
+  const [replyText, setReplyText] = React.useState('');
+  const createTopLevelComment = useCreateCommentMutation();
+
+  const ReplyChildrenList: React.FC<{ parentId: string }> = ({ parentId }) => {
+    const { data } = useGetForumPostChildrenReplyByIdQuery(parentId);
+    const children = data ?? [];
+    if (!children || children.length === 0) return null;
+    return (
+      <div className="ml-4 mt-2 space-y-2">
+        {children.map((c: Comment) => (
+          <div key={c.id} className="flex items-start justify-between gap-3">
+            <div>
+              <div className="text-sm font-medium">
+                {c.userName || 'Người dùng'}
+              </div>
+              <div className="text-sm text-slate-600">{c.content}</div>
+              <div className="text-xs text-slate-400 mt-1">
+                {c.createdAt ? new Date(c.createdAt).toLocaleString() : ''}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => handleDeleteReply(c.id)}
+              >
+                Xóa
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const handleDelete = () => {
     deleteForumPost.mutate(forumPost.id, {
       onSuccess: () => {
         toast.success('Đã xóa bài đăng thành công.');
       },
     });
+  };
+
+  const handleDeleteReply = (replyId: string) => {
+    deleteReplyComment.mutate(replyId, {
+      onSuccess: () => {
+        toast.success('Đã xóa bình luận thành công.');
+        queryClient.invalidateQueries({
+          queryKey: [ForumKeys.GetForumPostReplies, forumPost.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [ForumKeys.GetForumPostsByAdminQuery],
+        });
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            Array.isArray(query.queryKey) &&
+            query.queryKey[0] === ForumKeys.GetForumPostChildrenReplies,
+        });
+      },
+      onError: () => {
+        toast.error('Xóa bình luận thất bại.');
+      },
+    });
+  };
+
+  const handleCreateReply = (parentReplyId?: string) => {
+    const text = replyText.trim();
+    if (!text) return;
+    if (parentReplyId) {
+      createReplyComment.mutate({ parentReplyId, content: text } as any, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [ForumKeys.GetForumPostChildrenReplies, parentReplyId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [ForumKeys.GetForumPostReplies, forumPost.id],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [ForumKeys.GetForumByIdQuery, forumPost.id],
+          });
+          toast.success('Đã trả lời bình luận.');
+          setReplyText('');
+          setActiveReplyTarget(null);
+        },
+        onError: () => {
+          toast.error('Không thể gửi phản hồi.');
+        },
+      });
+    } else {
+      // create top-level reply for the post
+      createTopLevelComment.mutate(
+        { postId: forumPost.id, content: text } as any,
+        {
+          onSuccess: () => {
+            toast.success('Đã thêm bình luận.');
+            setReplyText('');
+
+            queryClient.invalidateQueries({
+              queryKey: [ForumKeys.GetForumPostChildrenReplies, parentReplyId],
+            });
+            queryClient.invalidateQueries({
+              queryKey: [ForumKeys.GetForumPostsByAdminQuery],
+            });
+            queryClient.invalidateQueries({
+              queryKey: [ForumKeys.GetForumPostReplies, forumPost.id],
+            });
+            queryClient.invalidateQueries({
+              queryKey: [ForumKeys.GetForumByIdQuery, forumPost.id],
+            });
+          },
+          onError: () => {
+            toast.error('Không thể gửi bình luận.');
+          },
+        },
+      );
+    }
   };
 
   // Update handler
@@ -107,10 +242,14 @@ export const ForumPostsDataTableRowActions = <TData,>({
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
             <BookDashed className="mr-2 h-4 w-4" />
             Chỉnh sửa
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsRepliesOpen(true)}>
+            <BookDashed className="mr-2 h-4 w-4" />
+            Quản lý bình luận
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -198,6 +337,7 @@ export const ForumPostsDataTableRowActions = <TData,>({
                 <MinimalTiptapEditor
                   key={forumPost.id}
                   value={forumPost.content}
+                  className="max-h-[500px] overflow-y-auto border rounded-md"
                 />
               </TooltipProvider>
             </div>
@@ -217,6 +357,104 @@ export const ForumPostsDataTableRowActions = <TData,>({
                 {updateForumPostMutation.isPending ? 'Đang cập nhật...' : 'Lưu'}
               </Button>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isRepliesOpen} onOpenChange={setIsRepliesOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Quản lý bình luận - {forumPost.title}</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4  max-h-[500px] overflow-y-auto">
+            {repliesLoading ? (
+              <div>Đang tải...</div>
+            ) : (
+              <div className="space-y-3">
+                {repliesData?.content.length === 0 && (
+                  <div className="text-sm text-slate-600">
+                    Chưa có bình luận nào về bài viết này.
+                  </div>
+                )}
+                {(Array.isArray(repliesData?.content)
+                  ? repliesData.content
+                  : []
+                ).map((r: Comment) => (
+                  <div key={r.id} className="p-3 border rounded-md">
+                    <div className="flex justify-between items-start gap-3">
+                      <div>
+                        <div className="text-sm font-medium">
+                          {r.userName || 'Người dùng'}
+                        </div>
+                        <div className="text-sm text-slate-700">
+                          {r.content}
+                        </div>
+                        <div className="text-xs text-slate-400 mt-1">
+                          {r.createdAt
+                            ? new Date(r.createdAt).toLocaleString()
+                            : ''}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteReply(r.id)}
+                        >
+                          Xóa
+                        </Button>
+                      </div>
+                    </div>
+
+                    {activeReplyTarget === r.id && (
+                      <div className="mt-3 flex gap-2">
+                        <Input
+                          value={replyText}
+                          onChange={(e) =>
+                            setReplyText((e.target as HTMLInputElement).value)
+                          }
+                          placeholder="Nhập nội dung trả lời..."
+                        />
+                        <Button
+                          onClick={() => handleCreateReply(r.id)}
+                          disabled={!replyText.trim()}
+                        >
+                          Gửi
+                        </Button>
+                        <Button onClick={() => setActiveReplyTarget(null)}>
+                          Hủy
+                        </Button>
+                      </div>
+                    )}
+
+                    <ReplyChildrenList parentId={r.id} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="pt-2">
+            <div className="text-sm text-slate-600">Tạo Bình luận mới</div>
+            <div className="mt-2 flex gap-2">
+              <Input
+                value={replyText}
+                onChange={(e) =>
+                  setReplyText((e.target as HTMLInputElement).value)
+                }
+                placeholder="Bình luận bài viết này..."
+              />
+              <Button
+                onClick={() => handleCreateReply(undefined)}
+                disabled={!replyText.trim()}
+              >
+                Gửi
+              </Button>
+            </div>
+          </div>
+          <div className="flex justify-end mt-4">
+            <Button variant="ghost" onClick={() => setIsRepliesOpen(false)}>
+              Đóng
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

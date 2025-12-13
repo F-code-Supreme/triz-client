@@ -8,6 +8,7 @@ import type {
   ForumPostResponse,
 } from '@/features/forum/services/queries/types';
 import type { Comment } from '@/features/forum/types';
+import type { UseQueryOptions } from '@tanstack/react-query';
 import type {
   ColumnFiltersState,
   PaginationState,
@@ -115,8 +116,13 @@ export const useGetForumPostsByAdminQuery = (
     },
   });
 };
-export const useGetForumPostReplyByIdQuery = (postId: string) => {
+export const useGetForumPostReplyByIdQuery = (
+  postId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options?: Omit<UseQueryOptions<CommentResponse, any>, 'queryKey' | 'queryFn'>,
+) => {
   const _request = useAxios();
+
   return useQuery({
     queryKey: [ForumKeys.GetForumPostReplies, postId],
     queryFn: async () => {
@@ -125,6 +131,7 @@ export const useGetForumPostReplyByIdQuery = (postId: string) => {
       );
       return response.data;
     },
+    ...options,
   });
 };
 // Replies to a reply
@@ -140,5 +147,6 @@ export const useGetForumPostChildrenReplyByIdQuery = (
       );
       return response.data;
     },
+    enabled: !!parentReplyId,
   });
 };

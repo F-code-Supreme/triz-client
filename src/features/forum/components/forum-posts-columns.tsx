@@ -30,9 +30,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
   },
   {
     accessorKey: 'userName',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Người dùng" />
-    ),
+    header: () => <span>Người dùng</span>,
     cell: ({ row }) => {
       const userName = row.getValue('userName') as string;
       return (
@@ -54,9 +52,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
 
   {
     accessorKey: 'status',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Trạng thái" />
-    ),
+    header: () => <span>Trạng thái</span>,
     cell: ({ row }) => {
       const status = row.getValue('status') as string;
 
@@ -69,7 +65,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
               : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
           }
         >
-          {status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+          {status === 'ACTIVE' ? 'Công Khai' : 'Chưa Công Khai'}
         </Badge>
       );
     },
@@ -115,6 +111,30 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
           })}
         </div>
       );
+    },
+  },
+  {
+    accessorKey: 'upVoteCount',
+    header: () => <span>Lượt thích</span>,
+    cell: ({ row }) => {
+      const upVoteCount = row.getValue('upVoteCount') as number;
+      return <div className="text-sm text-gray-600">{upVoteCount}</div>;
+    },
+  },
+  {
+    accessorKey: 'downVoteCount',
+    header: () => <span>Lượt không thích</span>,
+    cell: ({ row }) => {
+      const downVoteCount = row.getValue('downVoteCount') as number;
+      return <div className="text-sm text-gray-600">{downVoteCount}</div>;
+    },
+  },
+  {
+    accessorKey: 'replyCount',
+    header: () => <span>Bình luận</span>,
+    cell: ({ row }) => {
+      const replyCount = row.getValue('replyCount') as number;
+      return <div className="text-sm text-gray-600">{replyCount}</div>;
     },
   },
   {
