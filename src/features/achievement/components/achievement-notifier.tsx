@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import useAuth from '@/features/auth/hooks/use-auth';
+import { Role } from '@/features/auth/types';
 
 import { AchievementNotificationDialog } from './achievement-notification-dialog';
 import { useAchievementPolling } from '../hooks/use-achievement-polling';
@@ -12,13 +13,16 @@ interface AchievementNotifierProps {
 export const AchievementNotifier = ({
   pollingInterval = 30000, // Default: 30 seconds
 }: AchievementNotifierProps) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, hasRole } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Only enable for regular users, not admins, experts, or moderators
+  const isUserRole = isAuthenticated && hasRole(Role.USER);
 
   const { unreadAchievements, hasNewAchievements, clearNewAchievements } =
     useAchievementPolling({
       userId: user?.id,
-      enabled: isAuthenticated && !!user?.id,
+      enabled: isUserRole && !!user?.id,
       pollingInterval,
     });
 
