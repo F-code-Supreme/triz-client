@@ -32,6 +32,8 @@ const QuizListPage = () => {
   const navigate = Route.useNavigate();
   const { user } = useAuth();
 
+  // const data = allQuizzes?.content;
+
   const startQuizAttemptMutation = useStartQuizAttemptMutation();
 
   const handleStartQuiz = (quizId: string) => {
@@ -173,11 +175,37 @@ const QuizListPage = () => {
           <div className="lg:col-span-4 min-h-full">
             <div className="fixed">
               {isLoadingDetail ? (
-                <div className="flex items-center justify-center">
-                  <div className="text-muted-foreground">
-                    Đang tải dữ liệu...
+                <Card className="min-h-[600px] min-w-[420px] shadow-xl border-0 max-w-md mx-auto">
+                  <div className="relative p-4 sm:p-6 lg:p-8 pb-4 rounded-t-xl">
+                    <div className="flex items-start gap-3 sm:gap-4 mt-2">
+                      <Skeleton className="w-20 h-28 sm:w-24 sm:h-32 rounded-lg flex-shrink-0" />
+                      <div className="flex-1 space-y-3">
+                        <Skeleton className="h-6 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                        <Skeleton className="h-4 w-4/6" />
+                      </div>
+                    </div>
                   </div>
-                </div>
+
+                  <CardContent className="p-4 sm:p-6 space-y-6">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-4 w-24" />
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="w-8 h-8 rounded-full" />
+                      <div className="space-y-2 flex-1">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-20" />
+                      </div>
+                    </div>
+
+                    <div className="pt-48">
+                      <Skeleton className="h-12 w-full rounded-lg" />
+                    </div>
+                  </CardContent>
+                </Card>
               ) : (
                 <Card className="min-h-[600px] min-w-[420px] shadow-xl border-0 dark:from-amber-950/50 dark:via-orange-950/50 dark:to-rose-950/50 max-w-md mx-auto flex flex-col">
                   <div className="relative p-4 sm:p-6 lg:p-8 pb-4 rounded-t-xl dark:from-amber-900/40 dark:to-orange-900/40">

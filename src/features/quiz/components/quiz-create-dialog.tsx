@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,8 +42,12 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
+import { useUploadFileMutation } from '@/features/media/services/mutations';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
-import { useCreateQuizMutation } from '@/features/quiz/service/mutations';
+import {
+  useCreateQuizGeneralMutation,
+  useCreateQuizMutation,
+} from '@/features/quiz/service/mutations';
 
 const questionSchema = z.object({
   content: z.string().min(1, 'Question content is required'),
@@ -64,7 +69,8 @@ const quizCreateFormSchema = z.object({
     .number()
     .min(1, 'Duration must be at least 1 minute')
     .optional(),
-  moduleId: z.string().min(1, 'Module is required'),
+  moduleId: z.string().optional(),
+  imageSource: z.string().optional(),
   questions: z.array(questionSchema).min(1, 'At least 1 question is required'),
 });
 
@@ -83,11 +89,15 @@ export const QuizCreateDialog = ({
 }: QuizCreateDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'general' | 'course'>('general');
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
 
   const { data: coursesData } = useGetCourseQuery();
   const { data: modulesData } = useGetModuleByCourseQuery(selectedCourseId);
 
   const createQuizMutation = useCreateQuizMutation();
+  const createQuizGeneralMutation = useCreateQuizGeneralMutation();
+  const uploadFileMutation = useUploadFileMutation();
   const form = useForm<QuizCreateFormValues>({
     resolver: zodResolver(quizCreateFormSchema),
     defaultValues: {
@@ -95,6 +105,7 @@ export const QuizCreateDialog = ({
       description: '',
       durationInMinutes: undefined,
       moduleId: '',
+      imageSource: '',
       questions: [
         {
           content: '',
@@ -235,6 +246,23 @@ export const QuizCreateDialog = ({
     }
   };
 
+  const handleImageUpload = async (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+
+    try {
+      setIsLoading(true);
+      const response = await uploadFileMutation.mutateAsync({ file });
+      const imageUrl = response.data || response;
+      setUploadedImageUrl(imageUrl as string);
+      form.setValue('imageSource', imageUrl as string);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleExcelUpload = (files: File[]) => {
     const file = files[0];
     if (!file) return;
@@ -285,11 +313,32 @@ export const QuizCreateDialog = ({
         durationInMinutes: values.durationInMinutes || 1,
       };
 
-      await createQuizMutation.mutateAsync(submitValues);
+      if (activeTab === 'general') {
+        // For general quiz, use imageSource and don't require moduleId
+        const generalPayload = {
+          ...submitValues,
+          imageSource: values.imageSource || null,
+          moduleId: 'general-module-id', // Replace with actual general module ID if needed
+        };
+        await createQuizGeneralMutation.mutateAsync(generalPayload);
+      } else {
+        // For course quiz, validate moduleId
+        if (!values.moduleId) {
+          throw new Error('Module is required for course quiz');
+        }
+        const coursePayload = {
+          ...submitValues,
+          moduleId: values.moduleId,
+        };
+        await createQuizMutation.mutateAsync(coursePayload);
+      }
+
       onSuccess?.();
       onOpenChange(false);
       form.reset();
       setSelectedCourseId('');
+      setUploadedImageUrl('');
+      setActiveTab('general');
     } catch (error) {
       console.error('Error creating quiz:', error);
     } finally {
@@ -333,16 +382,41 @@ export const QuizCreateDialog = ({
         if (!open) {
           form.reset();
           setSelectedCourseId('');
+          setUploadedImageUrl('');
+          setActiveTab('general');
         }
         onOpenChange(open);
       }}
     >
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-col gap-2 ">
+        <DialogHeader>
           <DialogTitle>Create New Quiz</DialogTitle>
-          <DialogDescription>
-            Create a new quiz with questions and options.
-          </DialogDescription>
+          <div className="flex items-start justify-between w-full">
+            <DialogDescription>
+              Create a new quiz with questions and options.
+            </DialogDescription>
+
+            <div className="items-end">
+              <Tabs
+                value={activeTab}
+                onValueChange={(val) => {
+                  setActiveTab(val as 'general' | 'course');
+                  if (val === 'general') {
+                    setSelectedCourseId('');
+                    form.setValue('moduleId', '');
+                  } else {
+                    setUploadedImageUrl('');
+                    form.setValue('imageSource', '');
+                  }
+                }}
+              >
+                <TabsList>
+                  <TabsTrigger value="general">General</TabsTrigger>
+                  <TabsTrigger value="course">Course</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          </div>
         </DialogHeader>
 
         <Form {...form}>
@@ -407,87 +481,146 @@ export const QuizCreateDialog = ({
 
             <Separator />
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Course & Module Selection</h3>
-
-              <div className="space-y-3">
-                <div className="space-y-2">
-                  <FormLabel>Select Course</FormLabel>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start"
-                      >
-                        {selectedCourseId
-                          ? coursesData?.content?.find(
-                              (c) => c.id === selectedCourseId,
-                            )?.title || 'Select a course'
-                          : 'Select a course'}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
-                      {coursesData?.content?.map((course) => (
-                        <DropdownMenuItem
-                          key={course.id}
-                          onClick={() => {
-                            setSelectedCourseId(course.id);
-                            form.setValue('moduleId', '');
-                          }}
-                        >
-                          {course.title}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            {activeTab === 'general' ? (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium">Quiz Image</h3>
+                  <div className="flex items-center gap-2">
+                    <FileUpload
+                      accept="image/*"
+                      maxFiles={1}
+                      onValueChange={handleImageUpload}
+                    >
+                      <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
+                        <Upload className="w-4 h-4" />
+                        Upload Image
+                      </FileUploadTrigger>
+                    </FileUpload>
+                    {uploadFileMutation.isPending && (
+                      <span className="text-sm text-muted-foreground">
+                        Uploading... {uploadFileMutation.progress}%
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                {selectedCourseId && (
-                  <FormField
-                    control={form.control}
-                    name="moduleId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Module *</FormLabel>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className="w-full justify-start"
-                              >
-                                {field.value
-                                  ? modulesData?.find(
-                                      (m) => m.id === field.value,
-                                    )?.name || 'Select a module'
-                                  : 'Select a module'}
-                              </Button>
-                            </FormControl>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
-                            {modulesData?.map((module) => (
-                              <DropdownMenuItem
-                                key={module.id}
-                                onClick={() => field.onChange(module.id)}
-                              >
-                                <div className="flex flex-col">
-                                  <span>{module.name}</span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {module.durationInMinutes} mins · Level:{' '}
-                                    {module.level}
-                                  </span>
-                                </div>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="imageSource"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter image URL..."
+                          {...field}
+                          value={uploadedImageUrl || field.value || ''}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            setUploadedImageUrl(e.target.value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {uploadedImageUrl && (
+                  <div className="mt-2">
+                    <img
+                      src={uploadedImageUrl}
+                      alt="Quiz preview"
+                      className="max-w-xs rounded-md border"
+                    />
+                  </div>
                 )}
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">
+                  Course & Module Selection
+                </h3>
+
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <FormLabel>Select Course</FormLabel>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          {selectedCourseId
+                            ? coursesData?.content?.find(
+                                (c) => c.id === selectedCourseId,
+                              )?.title || 'Select a course'
+                            : 'Select a course'}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
+                        {coursesData?.content?.map((course) => (
+                          <DropdownMenuItem
+                            key={course.id}
+                            onClick={() => {
+                              setSelectedCourseId(course.id);
+                              form.setValue('moduleId', '');
+                            }}
+                          >
+                            {course.title}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  {selectedCourseId && (
+                    <FormField
+                      control={form.control}
+                      name="moduleId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Select Module *</FormLabel>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  className="w-full justify-start"
+                                >
+                                  {field.value
+                                    ? modulesData?.find(
+                                        (m) => m.id === field.value,
+                                      )?.name || 'Select a module'
+                                    : 'Select a module'}
+                                </Button>
+                              </FormControl>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
+                              {modulesData?.map((module) => (
+                                <DropdownMenuItem
+                                  key={module.id}
+                                  onClick={() => field.onChange(module.id)}
+                                >
+                                  <div className="flex flex-col">
+                                    <span>{module.name}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {module.durationInMinutes} mins · Level:{' '}
+                                      {module.level}
+                                    </span>
+                                  </div>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
 
             <Separator />
 

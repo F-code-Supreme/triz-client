@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
@@ -75,9 +75,7 @@ const AdminQuizzesPage = () => {
     selectedQuizId || '',
   );
 
-  const quizzes = useMemo(() => {
-    return data?.content || [];
-  }, [data]);
+  const quizzes = data?.content || [];
 
   const handleDeleteQuiz = (quiz: any) => {
     setDeletingQuiz(quiz);

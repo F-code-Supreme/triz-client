@@ -14,6 +14,7 @@ import type {
   UpdateQuizResponse,
   GetAdminQuizzesResponse,
   RemainingTimeResponse,
+  CreateQuizGeneralResponse,
 } from './type';
 
 // users
@@ -115,7 +116,14 @@ export const useGetAdminQuizzesQuery = () => {
   return useQuery({
     queryKey: ['getAdminQuizzes'],
     queryFn: async () => {
-      const res = await _request.get<GetAdminQuizzesResponse>('/quizzes/admin');
+      const res = await _request.get<GetAdminQuizzesResponse>(
+        '/quizzes/admin',
+        {
+          params: {
+            sort: 'createdAt,desc',
+          },
+        },
+      );
       return res.data;
     },
   });
@@ -163,6 +171,19 @@ export const useUpdateQuizMutation = () => {
     mutationFn: async ({ quizId, payload }) => {
       const res = await _request.put<UpdateQuizResponse>(
         `/quizzes/${quizId}`,
+        payload,
+      );
+      return res.data;
+    },
+  });
+};
+
+export const useCreateQuizGeneralMutation = () => {
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: CreateQuizPayload) => {
+      const res = await _request.post<CreateQuizGeneralResponse>(
+        '/general-quizzes',
         payload,
       );
       return res.data;

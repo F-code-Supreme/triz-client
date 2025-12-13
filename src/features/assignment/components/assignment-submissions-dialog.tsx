@@ -16,6 +16,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useExpertReviewAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useGetAssignmentByIdQueryExpert } from '@/features/assignment/services/queries';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
 
 interface AssignmentSubmissionsDialogProps {
   open: boolean;
@@ -36,7 +38,6 @@ const AssignmentSubmissionsDialog = ({
     useGetAssignmentByIdQueryExpert(assignmentId);
   const reviewMutation = useExpertReviewAssignmentMutation(assignmentId);
 
-  // Update form values when submission data is loaded
   useEffect(() => {
     if (submission) {
       if (submission.isExpertPassed !== null) {
@@ -46,7 +47,7 @@ const AssignmentSubmissionsDialog = ({
         setComment(submission.expertComment);
       }
     }
-  }, [submission]);
+  }, [submission, open]);
 
   const handleSubmit = () => {
     if (passed === null) {
@@ -126,12 +127,14 @@ const AssignmentSubmissionsDialog = ({
 
             <div>
               <h3 className="font-semibold mb-2">Nội dung bài nộp</h3>
-              <div
-                className="border rounded-md p-4 bg-muted/30 prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: submission.submissionContent,
-                }}
-              />
+              <TooltipProvider>
+                <MinimalTiptapEditor
+                  key={submission.id}
+                  value={submission.submissionContent}
+                  showToolbar={false}
+                  editable={false}
+                />
+              </TooltipProvider>
             </div>
 
             {submission.expertComment && (
@@ -207,12 +210,14 @@ const AssignmentSubmissionsDialog = ({
           >
             Hủy
           </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={reviewMutation.isPending || !submission}
-          >
-            {reviewMutation.isPending ? 'Đang gửi...' : 'Gửi đánh giá'}
-          </Button>
+          {submission?.status === 'EXPERT_PENDING' && (
+            <Button
+              onClick={handleSubmit}
+              disabled={reviewMutation.isPending || !submission}
+            >
+              {reviewMutation.isPending ? 'Đang gửi...' : 'Gửi đánh giá'}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

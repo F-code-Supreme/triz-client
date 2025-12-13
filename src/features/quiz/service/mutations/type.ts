@@ -1,3 +1,5 @@
+import { PaginatedResponse } from '@/types';
+
 export type UpdateQuizPayload = {
   title: string;
   description: string;
@@ -24,7 +26,7 @@ export type UpdateQuizResponse = {
     }>;
   }>;
 };
-export type CreateQuizPayload = {
+export interface CreateQuizPayload {
   title: string;
   description: string;
   durationInMinutes: number;
@@ -37,7 +39,11 @@ export type CreateQuizPayload = {
       isCorrect: boolean;
     }>;
   }>;
-};
+}
+
+export interface CreateQuizGeneralPayload extends CreateQuizPayload {
+  imageSource?: string | null;
+}
 
 export type CreateQuizResponse = {
   id: string;
@@ -134,17 +140,7 @@ export interface Quiz {
   questions: QuizQuestion[];
 }
 
-export interface QuizPage {
-  size: number;
-  number: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface GetQuizzesResponse {
-  content: Quiz[];
-  page: QuizPage;
-}
+export type GetQuizzesResponse = PaginatedResponse<Quiz>;
 
 export interface GetQuizByIdResponse {
   id: string;
@@ -189,34 +185,34 @@ export interface GetUserQuizAttemptsResponse {
   content: QuizAttempt[];
 }
 
-export type GetAdminQuizzesResponse = {
-  content: {
+export type GetAdminQuizzes = {
+  id: string;
+  title: string;
+  description: string;
+  imageSource: string | null;
+  durationInMinutes: number | null;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string | null;
+  questions: {
     id: string;
-    title: string;
-    description: string;
-    imageSource: string | null;
-    durationInMinutes: number | null;
+    content: string;
+    questionType: string;
     createdAt: string;
     updatedAt: string;
-    createdBy: string | null;
-    questions: {
+    quizId: string;
+    options: {
       id: string;
       content: string;
-      questionType: string;
+      isCorrect: boolean;
       createdAt: string;
       updatedAt: string;
-      quizId: string;
-      options: {
-        id: string;
-        content: string;
-        isCorrect: boolean;
-        createdAt: string;
-        updatedAt: string;
-        questionId: string;
-      }[];
+      questionId: string;
     }[];
   }[];
 };
+
+export type GetAdminQuizzesResponse = PaginatedResponse<GetAdminQuizzes>;
 
 export interface RemainingTimeResponse {
   remainingSeconds: number;
@@ -224,3 +220,17 @@ export interface RemainingTimeResponse {
   expirationTime?: string;
   status?: 'IN_PROGRESS' | 'COMPLETED' | 'TIMED_OUT';
 }
+
+export type CreateQuizGeneralResponse = {
+  id: string;
+  title: string;
+  description: string;
+  imageSource: string | null;
+  durationInMinutes: number;
+  createdAt: string;
+  updatedAt: string;
+  moduleId: string | null;
+  moduleName: string | null;
+  userId: string | null;
+  questions: QuizQuestion[];
+};
