@@ -30,7 +30,7 @@ export interface CreateQuizPayload {
   title: string;
   description: string;
   durationInMinutes: number;
-  moduleId: string;
+  moduleId: string | null;
   questions: Array<{
     content: string;
     questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';

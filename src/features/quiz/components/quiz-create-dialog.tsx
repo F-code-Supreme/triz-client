@@ -68,17 +68,24 @@ const createQuestionSchema = (t: any) =>
       .min(2, t('quizzes.create_dialog.question.min_options')),
   });
 
-const quizCreateFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  durationInMinutes: z
-    .number()
-    .min(1, 'Duration must be at least 1 minute')
-    .optional(),
-  moduleId: z.string().optional(),
-  imageSource: z.string().optional(),
-  questions: z.array(questionSchema).min(1, 'At least 1 question is required'),
-});
+const createQuizCreateFormSchema = (t: any) =>
+  z.object({
+    title: z.string().min(1, t('quizzes.create_dialog.form.title_required')),
+    description: z
+      .string()
+      .min(1, t('quizzes.create_dialog.form.description_required')),
+    durationInMinutes: z
+      .number({
+        invalid_type_error: t('quizzes.create_dialog.form.duration_min'),
+      })
+      .min(1, t('quizzes.create_dialog.form.duration_min'))
+      .optional(),
+    moduleId: z.string().optional(),
+    imageSource: z.string().optional(),
+    questions: z
+      .array(createQuestionSchema(t))
+      .min(1, t('quizzes.create_dialog.question.min_questions')),
+  });
 
 type QuizCreateFormValues = z.infer<
   ReturnType<typeof createQuizCreateFormSchema>
@@ -219,7 +226,6 @@ export const QuizCreateDialog = ({
             }
           });
 
-          // Nếu không có đáp án đúng nào, đặt đáp án đầu tiên làm đúng
           if (correctCount === 0 && question.options.length > 0) {
             question.options[0].isCorrect = true;
           }
@@ -323,15 +329,13 @@ export const QuizCreateDialog = ({
       };
 
       if (activeTab === 'general') {
-        // For general quiz, use imageSource and don't require moduleId
         const generalPayload = {
           ...submitValues,
           imageSource: values.imageSource || null,
-          moduleId: 'general-module-id', // Replace with actual general module ID if needed
+          moduleId: null,
         };
         await createQuizGeneralMutation.mutateAsync(generalPayload);
       } else {
-        // For course quiz, validate moduleId
         if (!values.moduleId) {
           throw new Error('Module is required for course quiz');
         }
@@ -517,7 +521,7 @@ export const QuizCreateDialog = ({
                     >
                       <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
                         <Upload className="w-4 h-4" />
-                        Upload Image
+                        Upload
                       </FileUploadTrigger>
                     </FileUpload>
                     {uploadFileMutation.isPending && (
