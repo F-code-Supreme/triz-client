@@ -8,6 +8,7 @@ import {
   Receipt,
   CalendarSync,
   Archive,
+  Award,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -75,6 +76,11 @@ export const useAdminSidebarData = (): AdminSidebarData => {
               title: t('admin.quizzes'),
               url: '/admin/quizzes',
               icon: BookCheck,
+            },
+            {
+              title: t('admin.achievements'),
+              url: '/admin/achievements',
+              icon: Award,
             },
           ],
         },
