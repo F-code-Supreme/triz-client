@@ -14,6 +14,7 @@ import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as GamesRouteImport } from './routes/games'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
 import { Route as R6StepsRouteImport } from './routes/6-steps'
@@ -62,7 +63,6 @@ import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
-import { Route as appGamesIndexRouteImport } from './routes/(app)/games/index'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as appGamesSegmentationGameRouteImport } from './routes/(app)/games/segmentation-game'
 import { Route as appGamesPreliminaryGameRouteImport } from './routes/(app)/games/preliminary-game'
@@ -103,6 +103,11 @@ const LearnTrizRoute = LearnTrizRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesRoute = GamesRouteImport.update({
+  id: '/games',
+  path: '/games',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForumRoute = ForumRouteImport.update({
@@ -345,11 +350,6 @@ const appJournalsIndexRoute = appJournalsIndexRouteImport.update({
   path: '/journals/',
   getParentRoute: () => appRouteRoute,
 } as any)
-const appGamesIndexRoute = appGamesIndexRouteImport.update({
-  id: '/games/',
-  path: '/games/',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/users/$userId',
   path: '/users/$userId',
@@ -442,6 +442,7 @@ export interface FileRoutesByFullPath {
   '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
+  '/games': typeof GamesRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -493,7 +494,6 @@ export interface FileRoutesByFullPath {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/games': typeof appGamesIndexRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
@@ -509,6 +509,7 @@ export interface FileRoutesByTo {
   '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
+  '/games': typeof GamesRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -560,7 +561,6 @@ export interface FileRoutesByTo {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/games': typeof appGamesIndexRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
@@ -581,6 +581,7 @@ export interface FileRoutesById {
   '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
+  '/games': typeof GamesRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
@@ -633,7 +634,6 @@ export interface FileRoutesById {
   '/(app)/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/(app)/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/(app)/games/': typeof appGamesIndexRoute
   '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/forum/': typeof AdminForumIndexRoute
@@ -654,6 +654,7 @@ export interface FileRouteTypes {
     | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
+    | '/games'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -705,7 +706,6 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/games'
     | '/journals'
     | '/quiz'
     | '/admin/forum'
@@ -721,6 +721,7 @@ export interface FileRouteTypes {
     | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
+    | '/games'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -772,7 +773,6 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/games'
     | '/journals'
     | '/quiz'
     | '/admin/forum'
@@ -792,6 +792,7 @@ export interface FileRouteTypes {
     | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
+    | '/games'
     | '/home'
     | '/learn-triz'
     | '/login'
@@ -844,7 +845,6 @@ export interface FileRouteTypes {
     | '/(app)/games/preliminary-game'
     | '/(app)/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/(app)/games/'
     | '/(app)/journals/'
     | '/(app)/quiz/'
     | '/admin/forum/'
@@ -865,6 +865,7 @@ export interface RootRouteChildren {
   R6StepsRoute: typeof R6StepsRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   ForumRoute: typeof ForumRoute
+  GamesRoute: typeof GamesRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
@@ -919,6 +920,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games': {
+      id: '/games'
+      path: '/games'
+      fullPath: '/games'
+      preLoaderRoute: typeof GamesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forum': {
@@ -1257,13 +1265,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appJournalsIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/games/': {
-      id: '/(app)/games/'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof appGamesIndexRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
       path: '/users/$userId'
@@ -1394,7 +1395,6 @@ interface appRouteRouteChildren {
   appGamesMergingGameRoute: typeof appGamesMergingGameRoute
   appGamesPreliminaryGameRoute: typeof appGamesPreliminaryGameRoute
   appGamesSegmentationGameRoute: typeof appGamesSegmentationGameRoute
-  appGamesIndexRoute: typeof appGamesIndexRoute
   appJournalsIndexRoute: typeof appJournalsIndexRoute
   appQuizIndexRoute: typeof appQuizIndexRoute
   appCourseLearnSlugRouteRoute: typeof appCourseLearnSlugRouteRoute
@@ -1417,7 +1417,6 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appGamesMergingGameRoute: appGamesMergingGameRoute,
   appGamesPreliminaryGameRoute: appGamesPreliminaryGameRoute,
   appGamesSegmentationGameRoute: appGamesSegmentationGameRoute,
-  appGamesIndexRoute: appGamesIndexRoute,
   appJournalsIndexRoute: appJournalsIndexRoute,
   appQuizIndexRoute: appQuizIndexRoute,
   appCourseLearnSlugRouteRoute: appCourseLearnSlugRouteRoute,
@@ -1527,6 +1526,7 @@ const rootRouteChildren: RootRouteChildren = {
   R6StepsRoute: R6StepsRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   ForumRoute: ForumRoute,
+  GamesRoute: GamesRoute,
   HomeRoute: HomeRoute,
   LearnTrizRoute: LearnTrizRoute,
   LoginRoute: LoginRoute,
