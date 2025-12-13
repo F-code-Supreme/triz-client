@@ -10,6 +10,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { useGetUserAchievementsQuery } from '@/features/achievement/services/queries';
+import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetMeQuery } from '@/features/auth/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
@@ -46,20 +55,22 @@ export function getAvatarColor(identifier: string) {
   return COLORS[hash % COLORS.length];
 }
 
-const achievements = [
-  { icon: '🏆', name: 'Arctic Code Vault Contributor', count: 3 },
-  { icon: '🌟', name: 'Pull Shark', count: 1 },
-  { icon: '🔥', name: 'Quickdraw', count: 1 },
-];
-
 const ProfilePage = () => {
   const { t } = useTranslation('pages.profile');
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const { data, isLoading } = useGetMeQuery();
   const [editData, setEditData] = useState({
     fullName: '',
     email: '',
   });
+
+  // Fetch user achievements with pagination and sorting
+  const [pagination] = useState({ pageIndex: 0, pageSize: 100 });
+  const [sorting] = useState([{ id: 'earnedAt', desc: true }]);
+
+  const { data: achievementsData, isLoading: achievementsLoading } =
+    useGetUserAchievementsQuery(user?.id, pagination, sorting);
 
   const formatJoinDate = (dateString?: string) => {
     if (!dateString) return '';
@@ -241,23 +252,51 @@ const ProfilePage = () => {
                 </div> */}
 
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Award className="w-4 h-4" />
-                    Achievements
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <Award className="w-5 h-5" />
+                    Achievements ({achievementsData?.page.totalElements || 0})
                   </h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {achievements.map((achievement, index) => (
-                      <div
-                        key={index}
-                        className="text-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer"
-                        title={achievement.name}
-                      >
-                        <div className="text-lg mb-1">{achievement.icon}</div>
-                        <div className="text-xs font-medium text-gray-900 dark:text-white">
-                          x{achievement.count}
-                        </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {achievementsLoading ? (
+                      Array.from({ length: 6 }).map((_, index) => (
+                        <Skeleton key={index} className="h-28 w-full" />
+                      ))
+                    ) : achievementsData &&
+                      achievementsData.content.length > 0 ? (
+                      achievementsData.content.map((achievement) => (
+                        <TooltipProvider key={achievement.achievementId}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="text-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer">
+                                {achievement.achievementImageUrl ? (
+                                  <img
+                                    src={achievement.achievementImageUrl}
+                                    alt={achievement.achievementName}
+                                    className="w-16 h-16 mx-auto object-contain"
+                                  />
+                                ) : (
+                                  <div className="text-4xl">🏆</div>
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="space-y-1">
+                                <p className="font-semibold">
+                                  {achievement.achievementName}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {achievement.achievementDescription}
+                                </p>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))
+                    ) : (
+                      <div className="col-span-2 text-center text-sm text-gray-500 dark:text-gray-400 py-4">
+                        No achievements yet
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
