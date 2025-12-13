@@ -1805,6 +1805,15 @@ interface Resources {
     },
     "issues": "Issues",
     "licenses": "Licenses",
+    "moderator": {
+      "content": "Content",
+      "dashboard": "Dashboard",
+      "forum": "Forum",
+      "main": "Main",
+      "reports": "Reports",
+      "subtitle": "Moderation Panel",
+      "title": "TRIZ Moderator"
+    },
     "monitoring": "Monitoring",
     "monitoring.tracking_activities": "Tracking activities",
     "monitoring.tracking_emails": "Tracking emails",

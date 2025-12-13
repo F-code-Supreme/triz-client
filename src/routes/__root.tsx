@@ -40,6 +40,18 @@ export const Route = createRootRouteWithContext<AppRouterContext>()({
           },
         });
       }
+
+      if (
+        context.auth.hasRole(Role.MODERATOR) &&
+        !location.pathname.startsWith('/moderator')
+      ) {
+        throw redirect({
+          to: '/moderator',
+          search: {
+            redirect: location.href,
+          },
+        });
+      }
     }
   },
   notFoundComponent: NotFoundPage,

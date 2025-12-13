@@ -85,6 +85,16 @@
     "assignments": "Assignments"
   },
 
+  "moderator": {
+    "title": "TRIZ Moderator",
+    "subtitle": "Moderation Panel",
+    "main": "Main",
+    "content": "Content",
+    "dashboard": "Dashboard",
+    "forum": "Forum",
+    "reports": "Reports"
+  },
+
   "command_menu": {
     "placeholder": "Type a command or search...",
     "no_results": "No results found.",

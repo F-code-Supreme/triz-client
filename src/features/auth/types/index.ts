@@ -4,6 +4,7 @@ export enum Role {
   USER = 'ROLE_user',
   ADMIN = 'ROLE_admin',
   EXPERT = 'ROLE_expert',
+  MODERATOR = 'ROLE_moderator',
 }
 
 export enum TokenType {

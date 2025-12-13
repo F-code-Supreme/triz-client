@@ -85,6 +85,16 @@
     "assignments": "Bài tập"
   },
 
+  "moderator": {
+    "title": "TRIZ Kiểm duyệt",
+    "subtitle": "Bảng kiểm duyệt",
+    "main": "Chính",
+    "content": "Nội dung",
+    "dashboard": "Bảng điều khiển",
+    "forum": "Diễn đàn",
+    "reports": "Báo cáo"
+  },
+
   "command_menu": {
     "placeholder": "Nhập lệnh hoặc tìm kiếm...",
     "no_results": "Không tìm thấy kết quả.",
