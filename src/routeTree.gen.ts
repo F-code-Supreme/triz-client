@@ -30,6 +30,7 @@ import { Route as ExpertIndexRouteImport } from './routes/expert/index'
 import { Route as CourseIndexRouteImport } from './routes/course.index'
 import { Route as BooksIndexRouteImport } from './routes/books.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
@@ -182,6 +183,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const UsersUserIdRoute = UsersUserIdRouteImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
   id: '/register/verify-otp',
@@ -467,6 +473,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/users/$userId': typeof UsersUserIdRoute
   '/admin/': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
@@ -533,6 +540,7 @@ export interface FileRoutesByTo {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/users/$userId': typeof UsersUserIdRoute
   '/admin': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
@@ -604,6 +612,7 @@ export interface FileRoutesById {
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/users/$userId': typeof UsersUserIdRoute
   '/admin/': typeof AdminIndexRoute
   '/books/': typeof BooksIndexRoute
   '/course/': typeof CourseIndexRoute
@@ -676,6 +685,7 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/users/$userId'
     | '/admin/'
     | '/books'
     | '/course'
@@ -742,6 +752,7 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/users/$userId'
     | '/admin'
     | '/books'
     | '/course'
@@ -812,6 +823,7 @@ export interface FileRouteTypes {
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/users/$userId'
     | '/admin/'
     | '/books/'
     | '/course/'
@@ -863,6 +875,7 @@ export interface RootRouteChildren {
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
+  UsersUserIdRoute: typeof UsersUserIdRoute
   BooksIndexRoute: typeof BooksIndexRoute
   CourseIndexRoute: typeof CourseIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
@@ -1019,6 +1032,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/users/$userId': {
+      id: '/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof UsersUserIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/register/verify-otp': {
       id: '/register/verify-otp'
@@ -1517,6 +1537,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
+  UsersUserIdRoute: UsersUserIdRoute,
   BooksIndexRoute: BooksIndexRoute,
   CourseIndexRoute: CourseIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
