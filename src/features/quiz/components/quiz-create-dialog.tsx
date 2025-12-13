@@ -49,6 +49,7 @@ import {
   useCreateQuizGeneralMutation,
   useCreateQuizMutation,
 } from '@/features/quiz/service/mutations';
+import { NumberInput } from '@/components/ui/number-input';
 
 const createQuestionSchema = (t: any) =>
   z.object({
@@ -116,6 +117,7 @@ export const QuizCreateDialog = ({
   const uploadFileMutation = useUploadFileMutation();
   const form = useForm<QuizCreateFormValues>({
     resolver: zodResolver(createQuizCreateFormSchema(t)),
+    mode: 'onSubmit',
     defaultValues: {
       title: '',
       description: '',
@@ -347,11 +349,27 @@ export const QuizCreateDialog = ({
       }
 
       onSuccess?.();
-      onOpenChange(false);
-      form.reset();
+      form.reset({
+        title: '',
+        description: '',
+        durationInMinutes: undefined,
+        moduleId: '',
+        imageSource: '',
+        questions: [
+          {
+            content: '',
+            questionType: 'SINGLE_CHOICE' as const,
+            options: [
+              { content: '', isCorrect: true },
+              { content: '', isCorrect: false },
+            ],
+          },
+        ],
+      });
       setSelectedCourseId('');
       setUploadedImageUrl('');
       setActiveTab('general');
+      onOpenChange(false);
     } catch (error) {
       console.error('Error creating quiz:', error);
     } finally {
@@ -393,7 +411,23 @@ export const QuizCreateDialog = ({
       open={open}
       onOpenChange={(open) => {
         if (!open) {
-          form.reset();
+          form.reset({
+            title: '',
+            description: '',
+            durationInMinutes: 1,
+            moduleId: '',
+            imageSource: '',
+            questions: [
+              {
+                content: '',
+                questionType: 'SINGLE_CHOICE' as const,
+                options: [
+                  { content: '', isCorrect: true },
+                  { content: '', isCorrect: false },
+                ],
+              },
+            ],
+          });
           setSelectedCourseId('');
           setUploadedImageUrl('');
           setActiveTab('general');
@@ -487,18 +521,15 @@ export const QuizCreateDialog = ({
                       {t('quizzes.create_dialog.form.duration')}
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         min={1}
                         placeholder={t(
                           'quizzes.create_dialog.form.duration_placeholder',
                         )}
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined,
-                          )
-                        }
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isLoading}
+                        stepper={1}
                       />
                     </FormControl>
                     <FormMessage />
@@ -512,7 +543,9 @@ export const QuizCreateDialog = ({
             {activeTab === 'general' ? (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Quiz Image</h3>
+                  <h3 className="text-lg font-medium">
+                    {t('quizzes.create_dialog.form.upload_image')}
+                  </h3>
                   <div className="flex items-center gap-2">
                     <FileUpload
                       accept="image/*"
@@ -521,12 +554,13 @@ export const QuizCreateDialog = ({
                     >
                       <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
                         <Upload className="w-4 h-4" />
-                        Upload
+                        {t('quizzes.create_dialog.form.upload')}
                       </FileUploadTrigger>
                     </FileUpload>
                     {uploadFileMutation.isPending && (
                       <span className="text-sm text-muted-foreground">
-                        Uploading... {uploadFileMutation.progress}%
+                        {t('quizzes.create_dialog.form.upload_loading')}{' '}
+                        {uploadFileMutation.progress}%
                       </span>
                     )}
                   </div>
@@ -537,10 +571,11 @@ export const QuizCreateDialog = ({
                   name="imageSource"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Image URL</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter image URL..."
+                          placeholder={t(
+                            'quizzes.create_dialog.form.upload_placeholder',
+                          )}
                           {...field}
                           value={uploadedImageUrl || field.value || ''}
                           onChange={(e) => {
@@ -567,12 +602,14 @@ export const QuizCreateDialog = ({
             ) : (
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">
-                  Course & Module Selection
+                  {t('quizzes.create_dialog.course_module')}
                 </h3>
 
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <FormLabel>Select Course</FormLabel>
+                    <FormLabel>
+                      {t('quizzes.create_dialog.form.select_course')}
+                    </FormLabel>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -608,7 +645,10 @@ export const QuizCreateDialog = ({
                       name="moduleId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Select Module *</FormLabel>
+                          <FormLabel>
+                            {t('quizzes.create_dialog.form.select_module')}
+                            <span className="text-red-500">*</span>
+                          </FormLabel>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <FormControl>
@@ -871,7 +911,26 @@ export const QuizCreateDialog = ({
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  form.reset();
+                  form.reset({
+                    title: '',
+                    description: '',
+                    durationInMinutes: 1,
+                    moduleId: '',
+                    imageSource: '',
+                    questions: [
+                      {
+                        content: '',
+                        questionType: 'SINGLE_CHOICE' as const,
+                        options: [
+                          { content: '', isCorrect: true },
+                          { content: '', isCorrect: false },
+                        ],
+                      },
+                    ],
+                  });
+                  setSelectedCourseId('');
+                  setUploadedImageUrl('');
+                  setActiveTab('general');
                   onOpenChange(false);
                 }}
                 disabled={isLoading}

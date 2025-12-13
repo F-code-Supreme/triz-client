@@ -147,6 +147,7 @@ export interface GetQuizByIdResponse {
   title: string;
   description: string;
   durationInMinutes: string;
+  imageSource?: string;
   moduleId?: string;
   createdAt: string;
   updatedAt: string;

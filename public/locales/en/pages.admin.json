@@ -626,7 +626,13 @@
         "module": "Module",
         "module_placeholder": "Select a module",
         "module_required": "Module is required",
-        "select_course_first": "Please select a course first"
+        "select_course_first": "Please select a course first",
+        "upload_image": "Upload Quiz Image",
+        "upload": "Upload",
+        "upload_loading": "Uploading...",
+        "upload_placeholder": "Enter image URL...",
+        "select_course": "Select a course",
+        "select_module": "Select a module"
       },
       "course_module": "Course & Module Selection",
       "questions_section": "Questions",
