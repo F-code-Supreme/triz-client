@@ -1757,6 +1757,7 @@ interface Resources {
       "courses": "Courses",
       "dashboard": "Dashboard",
       "flashcards": "Flashcards",
+      "forum": "Forum",
       "main": "Main",
       "management": "Management",
       "others": "Others",
