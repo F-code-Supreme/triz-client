@@ -15,7 +15,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { usePublishSixStepJournalToForumMutation } from '@/features/6-steps/services/mutations';
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { DefaultLayout } from '@/layouts/default-layout';
@@ -35,28 +34,123 @@ const JournalDetailPage = () => {
     error,
   } = useGetJournalByIdQuery(user?.id, journalId);
 
-  const publishToForumMutation = usePublishSixStepJournalToForumMutation();
+  // eslint-disable-next-line sonarjs/cognitive-complexity
+  const formatJournalContentForForum = () => {
+    if (!journal) return '';
 
-  const handlePublishToForum = async () => {
-    if (!user?.id || !journalId) {
+    let content = '<h2>📝 Nhật ký giải quyết vấn đề TRIZ</h2>';
+
+    if (journal.stepData.step1Understand) {
+      content += '<h3>🎯 Bước 1: Hiểu bài toán</h3>';
+      content += '<p><strong>Vấn đề ban đầu:</strong></p>';
+      content += `<p>${journal.stepData.step1Understand.rawProblem}</p>`;
+      if (journal.stepData.step1Understand.selectedMiniProblem) {
+        content += '<p><strong>Vấn đề nhỏ đã chọn:</strong></p>';
+        content += `<p><em>${journal.stepData.step1Understand.selectedMiniProblem}</em></p>`;
+      }
+    }
+
+    if (journal.stepData.step2Objectives) {
+      content += '<h3>🎯 Bước 2: Đề ra mục đích cần đạt</h3>';
+      content += '<p><strong>Mục tiêu:</strong></p>';
+      content += `<p>${journal.stepData.step2Objectives.goal}</p>`;
+    }
+
+    if (journal.stepData.step3Analysis) {
+      content += '<h3>🔍 Bước 3: Phân tích hệ thống</h3>';
+      content += '<p><strong>Hệ thống xác định:</strong></p>';
+      content += `<p>${journal.stepData.step3Analysis.systemIdentified}</p>`;
+      if (journal.stepData.step3Analysis.elements?.length) {
+        content += '<p><strong>Các yếu tố:</strong></p>';
+        content += '<ul>';
+        journal.stepData.step3Analysis.elements.forEach((element: string) => {
+          content += `<li>${element}</li>`;
+        });
+        content += '</ul>';
+      }
+    }
+
+    if (journal.stepData.step4Contradiction) {
+      content += '<h3>⚡ Bước 4: Phát biểu mâu thuẫn</h3>';
+      if (journal.stepData.step4Contradiction.physicalContradictions?.length) {
+        content += '<p><strong>Mâu thuẫn vật lý:</strong></p>';
+        journal.stepData.step4Contradiction.physicalContradictions.forEach(
+          (pc: PhysicalContradiction, index: number) => {
+            content += `<p><strong>${index + 1}. ${pc.element}:</strong> ${pc.contradictionStatement}</p>`;
+          },
+        );
+      }
+    }
+
+    if (journal.stepData.step5Ideas) {
+      content += '<h3>💡 Bước 5: Ý tưởng giải quyết</h3>';
+      if (journal.stepData.step5Ideas.selectedIdeas?.length) {
+        content += '<ol>';
+        journal.stepData.step5Ideas.selectedIdeas.forEach(
+          (idea: {
+            ideaStatement: string;
+            principleUsed?: { id: number; name: string };
+          }) => {
+            content += '<li>';
+            if (idea.principleUsed) {
+              content += `<strong>Nguyên tắc #${idea.principleUsed.id}: ${idea.principleUsed.name}</strong><br/>`;
+            }
+            content += `${idea.ideaStatement}`;
+            content += '</li>';
+          },
+        );
+        content += '</ol>';
+      }
+    }
+
+    if (journal.stepData.step6Decision) {
+      content += '<h3>✅ Bước 6: Quyết định</h3>';
+      if (journal.stepData.step6Decision.evaluatedIdeas?.length) {
+        journal.stepData.step6Decision.evaluatedIdeas.forEach(
+          (
+            evaluation: {
+              ideaStatement?: string;
+              userRating?: number;
+              userComment?: string;
+            },
+            index: number,
+          ) => {
+            content += `<p><strong>Ý tưởng ${index + 1}:</strong> ${evaluation.ideaStatement || ''}</p>`;
+            if (evaluation.userRating) {
+              content += `<p>⭐ Đánh giá: ${evaluation.userRating}/5</p>`;
+            }
+            if (evaluation.userComment) {
+              content += `<p><em>"${evaluation.userComment}"</em></p>`;
+            }
+          },
+        );
+      }
+    }
+
+    return content;
+  };
+
+  const handlePublishToForum = () => {
+    if (!journal) {
       toast.error('Không thể xuất bản. Vui lòng thử lại.');
       return;
     }
 
-    try {
-      await publishToForumMutation.mutateAsync({
-        userId: user.id,
-        problemId: journalId,
-      });
+    const formattedContent = formatJournalContentForForum();
 
-      toast.success('Xuất bản lên diễn đàn thành công!');
+    // Store data in sessionStorage to pass to forum page
+    sessionStorage.setItem(
+      'forumDraft',
+      JSON.stringify({
+        fromJournal: true,
+        title: journal.title,
+        content: formattedContent,
+        imgUrl: '',
+      }),
+    );
 
-      // Navigate to forum page
-      navigate({ to: '/forum' });
-    } catch (error) {
-      console.error('Failed to publish to forum:', error);
-      toast.error('Có lỗi xảy ra khi xuất bản. Vui lòng thử lại.');
-    }
+    // Navigate to forum page
+    navigate({ to: '/forum' });
   };
 
   const getStatusBadge = (status: 'DRAFT' | 'IN_PROGRESS' | 'COMPLETED') => {
@@ -205,14 +299,11 @@ const JournalDetailPage = () => {
                     </div>
                     <Button
                       onClick={handlePublishToForum}
-                      disabled={publishToForumMutation.isPending}
                       className="w-full"
                       variant="default"
                     >
                       <Share2 className="mr-2 h-4 w-4" />
-                      {publishToForumMutation.isPending
-                        ? 'Đang xuất bản...'
-                        : 'Xuất bản lên diễn đàn'}
+                      Xuất bản lên diễn đàn
                     </Button>
                   </div>
                 </div>
