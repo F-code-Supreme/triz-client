@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import useAuth from '@/features/auth/hooks/use-auth';
 import { Role } from '@/features/auth/types';
+import { useUserInteracted } from '@/hooks';
 
 import { AchievementNotificationDialog } from './achievement-notification-dialog';
 import { useAchievementPolling } from '../hooks/use-achievement-polling';
@@ -15,7 +16,7 @@ export const AchievementNotifier = ({
 }: AchievementNotifierProps) => {
   const { user, isAuthenticated, hasRole } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
-
+  const hasUserInteracted = useUserInteracted();
   // Only enable for regular users, not admins, experts, or moderators
   const isUserRole = isAuthenticated && hasRole(Role.USER);
 
@@ -27,9 +28,21 @@ export const AchievementNotifier = ({
     });
 
   // Auto-open dialog when new achievements arrive
-  if (hasNewAchievements && !dialogOpen && unreadAchievements.length > 0) {
-    setDialogOpen(true);
-  }
+  useEffect(() => {
+    if (
+      hasUserInteracted &&
+      hasNewAchievements &&
+      !dialogOpen &&
+      unreadAchievements.length > 0
+    ) {
+      setDialogOpen(true);
+    }
+  }, [
+    hasUserInteracted,
+    hasNewAchievements,
+    dialogOpen,
+    unreadAchievements.length,
+  ]);
 
   const handleDialogClose = () => {
     setDialogOpen(false);

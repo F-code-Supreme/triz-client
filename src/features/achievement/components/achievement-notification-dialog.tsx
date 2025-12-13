@@ -1,18 +1,22 @@
-import { Award, X } from 'lucide-react';
-import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import achievementSound from '@/assets/sfx/steam-achievement-popup.mp3';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { useMarkAsReadAchievementsMutation } from '../services/mutations';
+import {
+  useMarkAsReadAchievementsMutation,
+  useMarkAllAsReadAchievementsMutation,
+} from '../services/mutations';
 
 import type { UserAchievement } from '../types';
 
@@ -33,10 +37,70 @@ export const AchievementNotificationDialog = ({
 }: AchievementNotificationDialogProps) => {
   const { t } = useTranslation('components');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { mutate: markAsRead } = useMarkAsReadAchievementsMutation();
+  const [snapshotAchievements, setSnapshotAchievements] = useState<
+    UserAchievement[]
+  >([]);
+  const { mutateAsync: markAsRead } = useMarkAsReadAchievementsMutation();
+  const { mutateAsync: markAllAsRead } = useMarkAllAsReadAchievementsMutation();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const hasPlayedSoundRef = useRef(false);
 
-  const currentAchievement = achievements[currentIndex];
-  const hasMore = currentIndex < achievements.length - 1;
+  // Snapshot achievements when dialog opens to prevent array changes mid-dialog
+  useEffect(() => {
+    if (open && achievements.length > 0) {
+      setSnapshotAchievements(achievements);
+      setCurrentIndex(0);
+    }
+  }, [open, achievements]);
+
+  const currentAchievement = snapshotAchievements[currentIndex];
+  const hasMore = currentIndex < snapshotAchievements.length - 1;
+
+  useEffect(() => {
+    if (open && currentAchievement && !hasPlayedSoundRef.current) {
+      const playSound = () => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
+        // Reset and play
+        audio.currentTime = 0;
+
+        // Ensure audio is loaded before playing
+        if (audio.readyState >= 2) {
+          // HAVE_CURRENT_DATA or better
+          audio.play().catch((error) => {
+            console.error('Failed to play achievement sound:', error);
+          });
+        } else {
+          // Wait for audio to be ready
+          audio.addEventListener(
+            'canplay',
+            () => {
+              audio.play().catch((error) => {
+                console.error('Failed to play achievement sound:', error);
+              });
+            },
+            { once: true },
+          );
+        }
+
+        // Mark that sound has been played
+        hasPlayedSoundRef.current = true;
+      };
+
+      // Small delay to ensure DOM is ready
+      const soundTimer = setTimeout(playSound, 100);
+
+      return () => {
+        clearTimeout(soundTimer);
+      };
+    }
+
+    // Reset the sound flag when dialog closes
+    if (!open) {
+      hasPlayedSoundRef.current = false;
+    }
+  }, [open, currentAchievement]);
 
   const handleMarkAsRead = (closeDialog: boolean = false) => {
     if (!userId || !currentAchievement) return;
@@ -66,16 +130,11 @@ export const AchievementNotificationDialog = ({
     if (!userId) return;
 
     // Mark all remaining achievements as read
-    const remainingIds = achievements
-      .slice(currentIndex)
-      .map((a) => a.achievementId);
+    const remainingCount = snapshotAchievements.length - currentIndex;
 
-    if (remainingIds.length > 0) {
-      markAsRead(
-        {
-          userId,
-          achievementIds: remainingIds,
-        },
+    if (remainingCount > 0) {
+      markAllAsRead(
+        { userId },
         {
           onSuccess: () => {
             setCurrentIndex(0);
@@ -94,99 +153,149 @@ export const AchievementNotificationDialog = ({
   if (!currentAchievement) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <button
-          onClick={handleClose}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">
-            {t('achievement_notification.close_aria_label')}
-          </span>
-        </button>
+    <>
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src={achievementSound} preload="auto" />
 
-        <DialogHeader className="text-center sm:text-center">
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-orange-500">
-            <Award className="h-10 w-10 text-white" />
-          </div>
-          <DialogTitle className="text-2xl">
-            🎉 {t('achievement_notification.title')}
-          </DialogTitle>
-          <DialogDescription className="text-base">
-            {t('achievement_notification.congratulations')}
-          </DialogDescription>
-        </DialogHeader>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[600px]">
+          <button
+            onClick={handleClose}
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none z-10"
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">
+              {t('achievement_notification.close_aria_label')}
+            </span>
+          </button>
 
-        <div className="space-y-4 py-4">
-          {/* Achievement Image */}
-          {currentAchievement.achievementImageUrl && (
-            <div className="flex justify-center">
-              <img
-                src={currentAchievement.achievementImageUrl}
-                alt={currentAchievement.achievementName}
-                className="h-32 w-32 rounded-lg object-cover shadow-md"
-              />
-            </div>
-          )}
+          <DialogHeader className="text-center sm:text-center">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <DialogTitle className="text-3xl font-bold">
+                🎉 {t('achievement_notification.title')}
+              </DialogTitle>
+            </motion.div>
+          </DialogHeader>
 
-          {/* Achievement Details */}
-          <div className="space-y-2 text-center">
-            <h3 className="text-xl font-bold">
-              {currentAchievement.achievementName}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {currentAchievement.achievementDescription}
-            </p>
-          </div>
+          <div className="space-y-6 py-4">
+            {/* Achievement Image */}
+            {currentAchievement.achievementImageUrl && (
+              <div className="flex justify-center">
+                <motion.div
+                  key={currentAchievement.achievementId}
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{
+                    scale: [0, 1, 1.1, 1],
+                    rotate: [-180, 0, 5, -5, 0],
+                  }}
+                  transition={{
+                    duration: 1.2,
+                    times: [0, 0.5, 0.7, 0.9, 1],
+                    ease: [0.34, 1.56, 0.64, 1],
+                  }}
+                >
+                  <img
+                    src={currentAchievement.achievementImageUrl}
+                    alt={currentAchievement.achievementName}
+                    className="h-48 w-48 rounded-xl object-cover shadow-2xl ring-4 ring-primary/20"
+                  />
+                </motion.div>
+              </div>
+            )}
 
-          {/* Book Context (if available) */}
-          {currentAchievement.bookTitle && (
-            <div className="rounded-lg bg-muted p-3">
-              <p className="text-center text-sm">
-                <span className="font-medium">
-                  {t('achievement_notification.book_label')}
-                </span>{' '}
-                {currentAchievement.bookTitle}
-              </p>
-            </div>
-          )}
-
-          {/* Progress Indicator */}
-          {achievements.length > 1 && (
-            <div className="text-center text-sm text-muted-foreground">
-              {t('achievement_notification.progress', {
-                current: currentIndex + 1,
-                total: achievements.length,
-              })}
-            </div>
-          )}
-        </div>
-
-        <DialogFooter className="flex-col gap-2 sm:flex-col">
-          {hasMore ? (
-            <>
-              <Button
-                onClick={() => handleMarkAsRead(false)}
-                className="w-full"
+            {/* Achievement Details */}
+            <motion.div
+              className="space-y-3 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <motion.h3
+                className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
               >
-                {t('achievement_notification.next_button')}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleClose}
-                className="w-full"
+                {currentAchievement.achievementName}
+              </motion.h3>
+              <motion.p
+                className="text-base text-muted-foreground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
               >
-                {t('achievement_notification.view_later_button')}
+                {currentAchievement.achievementDescription}
+              </motion.p>
+            </motion.div>
+
+            {/* Book Context (if available) */}
+            <AnimatePresence>
+              {currentAchievement.bookTitle && (
+                <motion.div
+                  className="rounded-lg bg-muted p-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <p className="text-center text-sm">
+                    <span className="font-medium">
+                      {t('achievement_notification.book_label')}
+                    </span>{' '}
+                    {currentAchievement.bookTitle}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Progress Indicator */}
+            <AnimatePresence>
+              {snapshotAchievements.length > 1 && (
+                <motion.div
+                  className="text-center text-sm text-muted-foreground"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  {t('achievement_notification.progress', {
+                    current: currentIndex + 1,
+                    total: snapshotAchievements.length,
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <DialogFooter className="flex-col gap-2 sm:flex-col">
+            {hasMore ? (
+              <>
+                <Button
+                  onClick={() => handleMarkAsRead(false)}
+                  className="w-full"
+                >
+                  {t('achievement_notification.next_button')}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleClose}
+                  className="w-full"
+                >
+                  {t('achievement_notification.view_later_button')}
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => handleMarkAsRead(true)} className="w-full">
+                {t('achievement_notification.awesome_button')}
               </Button>
-            </>
-          ) : (
-            <Button onClick={() => handleMarkAsRead(true)} className="w-full">
-              {t('achievement_notification.awesome_button')}
-            </Button>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
