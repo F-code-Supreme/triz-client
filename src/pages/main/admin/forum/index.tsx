@@ -134,7 +134,7 @@ const AdminForumPostManage = () => {
         <div className="space-y-4">
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Tìm theo nội dung..."
+            searchPlaceholder="Tìm theo tiêu đề..."
             searchKey="title"
             filters={forumPostFilters}
           />

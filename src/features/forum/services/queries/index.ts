@@ -94,7 +94,7 @@ export const useGetForumPostsByAdminQuery = (
     ],
     queryFn: async ({ signal }) => {
       const data = {
-        status: filters?.find((filter) => filter.id === 'status')?.value,
+        statuses: filters?.find((filter) => filter.id === 'status')?.value,
         keyword: filters?.find((filter) => filter.id === 'title')?.value,
       };
       const response = await _request.post<ForumPostResponse>(
