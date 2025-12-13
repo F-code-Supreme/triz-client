@@ -85,13 +85,13 @@ const AdminManagePackagePage = () => {
 
     deletePackage.mutate(deletingPackage.id, {
       onSuccess: () => {
-        toast.success('Package deleted successfully!');
+        toast.success(t('packages.toast.delete_success'));
         setDeleteDialogOpen(false);
         setDeletingPackage(null);
       },
       onError: (error) => {
         console.error('Delete error:', error);
-        toast.error('Failed to delete package. Please try again.');
+        toast.error(t('packages.toast.delete_error'));
       },
     });
   };
@@ -114,11 +114,11 @@ const AdminManagePackagePage = () => {
         {
           onSuccess: () => {
             setDialogOpen(false);
-            toast.success('Package updated successfully!');
+            toast.success(t('packages.toast.update_success'));
           },
           onError: (error) => {
             console.error('Update error:', error);
-            toast.error('Failed to update package. Please try again.');
+            toast.error(t('packages.toast.update_error'));
           },
         },
       );
@@ -128,19 +128,19 @@ const AdminManagePackagePage = () => {
         packageData as Package;
       createPackage.mutate(createData as CreatePackagePayload, {
         onSuccess: () => {
-          toast.success('Package created successfully!');
+          toast.success(t('packages.toast.create_success'));
           setDialogOpen(false);
         },
         onError: (error) => {
           console.error('Create error:', error);
-          toast.error('Failed to create package. Please try again.');
+          toast.error(t('packages.toast.create_error'));
         },
       });
     }
   };
 
   return (
-    <AdminLayout meta={{ title: 'Admin Manage Package' }}>
+    <AdminLayout meta={{ title: t('packages.title') }}>
       <div className="space-y-6 p-8">
         {/* Header */}
         <div className="flex items-center justify-between">

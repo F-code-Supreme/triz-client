@@ -57,7 +57,30 @@ export const useUpdateAssignmentMutation = (assignmentId: string) => {
     },
   });
 };
-
+export const useUpdateAssignmentStatusMutation = (assignmentId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (newStatus: 'ACTIVE' | 'INACTIVE') => {
+      const response = await _request.patch<Assignment>(
+        `/assignments/${assignmentId}/status`,
+        { status: newStatus },
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [AssignmentKeys.GetAssignmentById, assignmentId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [AssignmentKeys.GetAssignmentsByModuleQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ModuleKeys.GetModulesByCourseQuery],
+      });
+    },
+  });
+};
 export const useDeleteAssignmentMutation = (moduleId: string) => {
   const queryClient = useQueryClient();
   const _request = useAxios();

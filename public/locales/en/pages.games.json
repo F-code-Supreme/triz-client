@@ -1,0 +1,27 @@
+{
+  "page_meta_title": "TRIZ Games",
+  "title": "TRIZ Games",
+  "description": "Explore and learn TRIZ principles through engaging games",
+  "search_placeholder": "Search for a game...",
+  "select_game": "Select a game to start playing",
+  "games": {
+    "memory_card": {
+      "name": "Memory Card",
+      "description": "Game to train memory and recall abilities"
+    },
+    "merging_game": {
+      "name": "Alchemy",
+      "description": "Combine elements to create new products"
+    },
+    "preliminary_game": {
+      "name": "Guided Maze",
+      "description": "Plan and arrange ahead to overcome challenges"
+    },
+    "segmentation_game": {
+      "name": "Tower Builder",
+      "description": "Break down problems into parts to solve them"
+    }
+  },
+  "principle": "Principle",
+  "play_now": "Play Now"
+}

@@ -1,6 +1,5 @@
 import { HorizontalStepper } from './stepper';
 import {
-  Step0Introduction,
   Step1UnderstandProblem,
   Step2DefineObjective,
   Step3AnswerQuestions,
@@ -30,8 +29,6 @@ export const SixStepsWorkflow = () => {
     currentStep,
     nextStep,
     previousStep,
-    hasStarted,
-    setHasStarted,
     updateStep1,
     updateStep2,
     updateStep3,
@@ -39,10 +36,6 @@ export const SixStepsWorkflow = () => {
     updateStep5,
     updateStep6,
   } = useSixStepDataStore();
-
-  // Use actual store values instead of hardcoded dev values
-  // const devCurrentStep = 3;
-  // const devHasStarted = hasStarted;
 
   const handleStepNext = (step: number, data: unknown) => {
     // Update the appropriate step data based on step number
@@ -93,18 +86,9 @@ export const SixStepsWorkflow = () => {
     previousStep();
   };
 
-  const handleStart = () => {
-    setHasStarted(true);
-  };
-
-  // Show intro screen (Step 0) before starting
-  if (!hasStarted) {
-    return <Step0Introduction onStart={handleStart} />;
-  }
-
   return (
     <div className="space-y-8">
-      {/* Stepper - Only show when started */}
+      {/* Stepper */}
       <HorizontalStepper steps={STEPS} currentStep={currentStep} />
 
       {/* Step Content */}

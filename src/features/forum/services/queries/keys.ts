@@ -1,4 +1,5 @@
 export enum ForumKeys {
+  GetForumPostsByAdminQuery = 'Forums/getForumPostsByAdmin',
   GetForumQuery = 'Forums/getForum',
   GetMyForumPostQuery = 'Forums/getMyForumPost',
   GetForumByIdQuery = 'Forums/getForumById',

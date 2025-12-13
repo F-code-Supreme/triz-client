@@ -1,0 +1,109 @@
+{
+  "page_meta_title": "Wallet",
+  "title": "Wallet",
+  "description": "Manage your wallet balance and view transaction history",
+  "balance_card": {
+    "title": "Wallet Balance",
+    "current_balance": "Current Balance",
+    "top_up": "Top Up"
+  },
+  "transactions": {
+    "title": "Transaction History",
+    "search_placeholder": "Search transactions...",
+    "no_transactions": "No transactions found",
+    "no_results": "No results.",
+    "columns": {
+      "order_code": "Order Code",
+      "type": "Type",
+      "amount": "Amount",
+      "provider": "Provider",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "types": {
+      "topup": "Top Up",
+      "spend": "Spend",
+      "refund": "Refund",
+      "TOP_UP": "Top Up",
+      "PURCHASE": "Purchase",
+      "REFUND": "Refund",
+      "SUBSCRIPTION": "Subscription"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "COMPLETED": "Completed",
+      "PENDING": "Pending",
+      "FAILED": "Failed",
+      "CANCELLED": "Cancelled"
+    },
+    "providers": {
+      "stripe": "Stripe",
+      "payos": "PayOS",
+      "triz": "TRIZ"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "cancel_transaction": "Cancel Transaction"
+    },
+    "details": {
+      "title": "Transaction Details",
+      "order_code": "Order Code",
+      "type": "Type",
+      "amount": "Amount",
+      "provider": "Provider",
+      "provider_tx_ref": "Provider Tx Ref",
+      "status": "Status",
+      "date": "Date",
+      "close": "Close"
+    },
+    "cancel_dialog": {
+      "title": "Cancel Transaction",
+      "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+      "keep": "No, Keep It",
+      "confirm": "Yes, Cancel Transaction",
+      "cancelling": "Cancelling..."
+    },
+    "toast": {
+      "cancel_success": "Transaction cancelled successfully",
+      "cancel_error": "Failed to cancel transaction"
+    },
+    "filters": {
+      "from_date": "From Date",
+      "to_date": "To Date",
+      "type": "Type",
+      "transaction_type": "Transaction Type",
+      "status": "Status",
+      "provider": "Provider",
+      "all_types": "All Types",
+      "all_statuses": "All Statuses"
+    },
+    "empty": "No transactions found",
+    "loading": "Loading transactions..."
+  },
+  "topup_dialog": {
+    "title": "Top Up Wallet",
+    "description": "Add funds to your wallet. You will be redirected to the payment provider to complete the transaction.",
+    "amount_label": "Amount (VND)",
+    "amount_placeholder": "100,000",
+    "amount_min": "Minimum amount is {{amount}} Trizilium",
+    "amount_max": "Maximum amount is {{amount}} Trizilium",
+    "amount_hint": "Minimum: {{min}} | Maximum: {{max}}",
+    "quick_amounts": "Quick amounts",
+    "provider_label": "Payment Provider",
+    "provider_payos": "PayOS (Vietnam)",
+    "provider_stripe": "Stripe (International)",
+    "provider_paypal": "PayPal (International)",
+    "alert_message": "You will be redirected to PayOS based on your selection. Your return URL will be processed securely.",
+    "cancel": "Cancel",
+    "confirm": "Proceed to Payment",
+    "processing": "Processing...",
+    "success": "Top up successful!",
+    "error": "Failed to top up wallet",
+    "error_no_payment_url": "Failed to get payment URL",
+    "error_initiate": "Failed to initiate top-up. Please try again."
+  },
+  "loading": "Loading wallet..."
+}

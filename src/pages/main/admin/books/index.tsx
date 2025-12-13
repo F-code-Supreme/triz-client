@@ -77,7 +77,7 @@ const AdminBooksManagementPage = () => {
   });
 
   return (
-    <AdminLayout meta={{ title: 'Books Management' }}>
+    <AdminLayout meta={{ title: t('books.title') }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex justify-between items-center">
           <div>

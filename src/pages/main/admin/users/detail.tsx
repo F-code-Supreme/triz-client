@@ -24,13 +24,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import transactionFilters from '@/features/payment/transaction/components/transaction-filters';
+import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
-import { transactionsColumns } from '@/features/payment/wallet/components/transactions-columns';
-import { TransactionsTable } from '@/features/payment/wallet/components/transactions-table';
+import {
+  AdminTransactionsTable,
+  createAdminTransactionsColumns,
+} from '@/features/payment/wallet/components';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
-import { createSubscriptionsColumns } from '@/features/subscription/components';
-import { SubscriptionsTable } from '@/features/subscription/components/subscriptions-table';
+import {
+  createSubscriptionsColumns,
+  AdminSubscriptionsTable,
+} from '@/features/subscription/components';
 import { useCancelSubscriptionMutation } from '@/features/subscription/services/mutations';
 import {
   useGetActiveSubscriptionByUserQuery,
@@ -46,6 +50,8 @@ const AdminUserDetailPage = () => {
   const { t } = useTranslation('pages.admin');
   const navigate = useNavigate();
   const { userId } = useParams({ from: '/admin/users/$userId' });
+
+  const pageTitle = t('users.detail.title');
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -120,6 +126,13 @@ const AdminUserDetailPage = () => {
 
   const totalRowCount = transactionsData?.page?.totalElements ?? 0;
 
+  // Get translated filters and columns
+  const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
+  const transactionColumns = useMemo(
+    () => createAdminTransactionsColumns(t),
+    [t],
+  );
+
   const handleCancelSubscription = () => {
     if (!userId || !activeSubscription) return;
 
@@ -141,7 +154,7 @@ const AdminUserDetailPage = () => {
 
   const table = useReactTable({
     data: transactions,
-    columns: transactionsColumns,
+    columns: transactionColumns,
     state: {
       columnFilters,
       pagination,
@@ -174,7 +187,7 @@ const AdminUserDetailPage = () => {
 
   if (userLoading) {
     return (
-      <AdminLayout meta={{ title: t('users.detail.title') }}>
+      <AdminLayout meta={{ title: pageTitle }}>
         <div className="flex flex-col gap-8 p-8">
           {/* Back button skeleton */}
           <div className="flex flex-col gap-4">
@@ -261,7 +274,7 @@ const AdminUserDetailPage = () => {
 
   if (!userData) {
     return (
-      <AdminLayout meta={{ title: t('users.detail.title') }}>
+      <AdminLayout meta={{ title: pageTitle }}>
         <div className="flex items-center justify-center h-64">
           <p className="text-muted-foreground">
             {t('users.detail.customer_not_found')}
@@ -272,7 +285,7 @@ const AdminUserDetailPage = () => {
   }
 
   return (
-    <AdminLayout meta={{ title: t('users.detail.title') }}>
+    <AdminLayout meta={{ title: pageTitle }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex flex-col gap-4">
           <Button
@@ -464,10 +477,13 @@ const AdminUserDetailPage = () => {
             <CardTitle>{t('users.detail.subscription_history')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <SubscriptionsTable
+            <AdminSubscriptionsTable
               table={subscriptionTable}
               isLoading={subscriptionsLoading}
               totalRowCount={subscriptionsTotalRowCount}
+              t={t}
+              pageSize={subscriptionPagination.pageSize}
+              columnsLength={createSubscriptionsColumns(() => {}).length}
             />
           </CardContent>
         </Card>
@@ -478,10 +494,13 @@ const AdminUserDetailPage = () => {
             <CardTitle>{t('users.detail.transaction_history')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <TransactionsTable
+            <AdminTransactionsTable
               table={table}
               isLoading={transactionsLoading}
               totalRowCount={totalRowCount}
+              t={t}
+              pageSize={pagination.pageSize}
+              columnsLength={transactionColumns.length}
               filters={transactionFilters}
               fromDate={fromDate}
               toDate={toDate}

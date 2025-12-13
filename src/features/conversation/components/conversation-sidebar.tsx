@@ -48,6 +48,7 @@ import { cn } from '@/lib/utils';
 import { useGetConversationsQuery } from '../services/queries';
 
 import type { Conversation } from '../types';
+import type { TFunction } from 'i18next';
 
 type GroupedConversation =
   | {
@@ -66,12 +67,14 @@ const ConversationItem = ({
   onClick,
   onRename,
   onArchive,
+  t,
 }: {
   conversation: Conversation;
   isSelected: boolean;
   onClick: (conversation: Conversation) => void;
   onRename: (conversationId: string, newTitle: string) => void;
   onArchive: (conversation: Conversation) => void;
+  t: TFunction<'pages.chat_triz', undefined>;
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(
@@ -141,7 +144,7 @@ const ConversationItem = ({
                 isSelected && 'text-primary-foreground',
               )}
             >
-              {conversation.title || 'New Conversation'}
+              {conversation.title || t('conversation.new_conversation')}
             </p>
           )}
           <p className="text-xs text-muted-foreground">
@@ -166,7 +169,9 @@ const ConversationItem = ({
                     isSelected && 'text-primary-foreground',
                   )}
                 />
-                <span className="sr-only">More actions</span>
+                <span className="sr-only">
+                  {t('conversation.more_actions')}
+                </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -175,7 +180,7 @@ const ConversationItem = ({
             >
               <DropdownMenuItem onClick={handleStartEdit}>
                 <Edit className="mr-2 h-4 w-4" />
-                Rename
+                {t('conversation.rename')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={(e) => {
@@ -184,7 +189,7 @@ const ConversationItem = ({
                 }}
               >
                 <Archive className="mr-2 h-4 w-4" />
-                Archive
+                {t('conversation.archive')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -234,7 +239,7 @@ const ConversationSidebar = ({
   isCollapsed,
   onCollapsedChange,
 }: ConversationSidebarProps) => {
-  const { t } = useTranslation('action');
+  const { t } = useTranslation('pages.chat_triz');
   const [searchQuery, setSearchQuery] = useState(STRING_EMPTY);
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -263,12 +268,12 @@ const ConversationSidebar = ({
       },
       {
         onSuccess: () => {
-          toast.success('Conversation renamed successfully');
+          toast.success(t('conversation.rename_success'));
         },
         onError: (error) => {
           toast.error(
             (error as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message || 'Failed to rename conversation',
+              ?.data?.message || t('conversation.rename_error'),
           );
         },
       },
@@ -283,12 +288,12 @@ const ConversationSidebar = ({
       },
       {
         onSuccess: () => {
-          toast.success('Conversation archived successfully');
+          toast.success(t('conversation.archive_success'));
         },
         onError: (error) => {
           toast.error(
             (error as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message || 'Failed to archive conversation',
+              ?.data?.message || t('conversation.archive_error'),
           );
         },
       },
@@ -320,9 +325,9 @@ const ConversationSidebar = ({
         const date = parseISO(conversation.updatedAt!);
 
         if (isToday(date)) {
-          dateLabel = 'Today';
+          dateLabel = t('conversation.today');
         } else if (isYesterday(date)) {
-          dateLabel = 'Yesterday';
+          dateLabel = t('conversation.yesterday');
         } else {
           dateLabel = format(date, 'MMM dd, yyyy');
         }
@@ -341,7 +346,7 @@ const ConversationSidebar = ({
     });
 
     return groups;
-  }, [data, debouncedSearchQuery]);
+  }, [data, debouncedSearchQuery, t]);
 
   const virtualizer = useVirtualizer({
     count: groupedData.length,
@@ -423,7 +428,7 @@ const ConversationSidebar = ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">
-                <p>New Chat</p>
+                <p>{t('chat_interface.new_chat')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -441,7 +446,7 @@ const ConversationSidebar = ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="right">
-                <p>History</p>
+                <p>{t('conversation.history')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -455,7 +460,9 @@ const ConversationSidebar = ({
         >
           <div className="flex items-center gap-2">
             <SquarePen className="h-4 w-4" />
-            <span className="text-sm font-medium">New Chat</span>
+            <span className="text-sm font-medium">
+              {t('chat_interface.new_chat')}
+            </span>
           </div>
         </Button>
       )}
@@ -474,7 +481,9 @@ const ConversationSidebar = ({
             >
               <div className="flex items-center gap-2">
                 <History className="h-4 w-4" />
-                <span className="text-sm font-medium">History</span>
+                <span className="text-sm font-medium">
+                  {t('conversation.history')}
+                </span>
               </div>
               <ChevronDown
                 className={cn(
@@ -491,7 +500,7 @@ const ConversationSidebar = ({
               <div className="relative">
                 <Search className="absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder={t('search')}
+                  placeholder={t('conversation.search_placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-6 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -511,23 +520,23 @@ const ConversationSidebar = ({
                 isError ? (
                   <div className="p-4 text-center">
                     <p className="text-sm text-red-500 mb-2">
-                      Failed to load conversations
+                      {t('conversation.load_error')}
                     </p>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => window.location.reload()}
                     >
-                      Retry
+                      {t('conversation.retry')}
                     </Button>
                   </div>
                 ) : (
                   <div className="p-8 text-center text-muted-foreground">
                     <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No conversations found</p>
+                    <p>{t('conversation.empty')}</p>
                     {debouncedSearchQuery && (
                       <p className="text-sm mt-2">
-                        Try adjusting your search terms
+                        {t('conversation.search_no_results')}
                       </p>
                     )}
                   </div>
@@ -566,6 +575,7 @@ const ConversationSidebar = ({
                             onClick={onConversationSelect}
                             onRename={handleRename}
                             onArchive={handleArchive}
+                            t={t}
                           />
                         ) : null}
                       </div>

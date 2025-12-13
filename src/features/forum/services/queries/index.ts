@@ -8,7 +8,11 @@ import type {
   ForumPostResponse,
 } from '@/features/forum/services/queries/types';
 import type { Comment } from '@/features/forum/types';
-import type { PaginationState } from '@tanstack/react-table';
+import type {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from '@tanstack/react-table';
 
 export const useGetForumPostsQuery = (pagination?: PaginationState) => {
   const _request = useAxios();
@@ -74,7 +78,43 @@ export const useGetForumPostByIdQuery = (postId: string) => {
     },
   });
 };
-
+export const useGetForumPostsByAdminQuery = (
+  pagination: PaginationState,
+  sorting: SortingState,
+  filters?: ColumnFiltersState,
+) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [
+      ForumKeys.GetForumPostsByAdminQuery,
+      pagination,
+      sorting,
+      filters,
+    ],
+    queryFn: async ({ signal }) => {
+      const data = {
+        status: filters?.find((filter) => filter.id === 'status')?.value,
+        keyword: filters?.find((filter) => filter.id === 'title')?.value,
+      };
+      const response = await _request.post<ForumPostResponse>(
+        `/forumPosts/search`,
+        data,
+        {
+          page: pagination.pageIndex,
+          size: pagination.pageSize,
+          sort:
+            sorting.length > 0
+              ? sorting
+                  .map(({ id, desc }) => `${id},${desc ? 'desc' : 'asc'}`)
+                  .join('&')
+              : undefined,
+        },
+        signal,
+      );
+      return response.data;
+    },
+  });
+};
 export const useGetForumPostReplyByIdQuery = (postId: string) => {
   const _request = useAxios();
   return useQuery({

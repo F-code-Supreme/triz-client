@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-import { expertSidebarData } from './data/expert-sidebar-data';
+import { useExpertSidebarData } from './data/expert-sidebar-data';
 
 type ExpertCommandMenuProps = {
   open: boolean;
@@ -27,6 +27,7 @@ export const ExpertCommandMenu = ({
 }: ExpertCommandMenuProps) => {
   const navigate = useNavigate();
   const { setTheme } = useTheme();
+  const expertSidebarData = useExpertSidebarData();
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {

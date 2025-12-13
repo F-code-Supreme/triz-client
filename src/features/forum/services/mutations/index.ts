@@ -77,10 +77,33 @@ export const useDeleteForumPostMutation = () => {
       queryClient.invalidateQueries({
         queryKey: [ForumKeys.GetForumQuery],
       });
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumPostsByAdminQuery],
+      });
     },
   });
 };
-
+export const useUpdateForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (data: CreateForumPostPayload & { postId: string }) => {
+      const response = await _request.put<ForumPost>(
+        `/forumPosts/${data.postId}`,
+        data,
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumPostsByAdminQuery],
+      });
+    },
+  });
+};
 export const useDeleteReplyCommentMutation = () => {
   const queryClient = useQueryClient();
   const _request = useAxios();
@@ -118,7 +141,43 @@ export const useCreateReplyCommentMutation = () => {
     },
   });
 };
-
+export const useCreateReportForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (data: {
+      forumPostId: string;
+      reason: string;
+      description?: string;
+    }) => {
+      const response = await _request.post(`/reports`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetMyForumPostQuery],
+      });
+    },
+  });
+};
+export const useCreateRepostForumPostMutation = () => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (data: { originalPostId: string }) => {
+      const response = await _request.post(`/reposts`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetForumQuery],
+      });
+    },
+  });
+};
 // Replies to a reply
 export const useCreateVoteForReplyMutation = () => {
   const queryClient = useQueryClient();

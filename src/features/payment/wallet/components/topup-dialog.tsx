@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -38,15 +39,10 @@ import type { PaymentProvider } from '@/features/payment';
 
 const TOPUP_PRESETS = [10000, 100000, 250000, 500000, 1000000];
 
-const topupSchema = z.object({
-  amount: z.coerce
-    .number()
-    .min(1000, 'Minimum amount is 1,000 Trizilium')
-    .max(2000000000, 'Maximum amount is 2,000,000,000 Trizilium'),
-  provider: z.enum(['PAYOS', 'STRIPE'] as const),
-});
-
-type TopupFormValues = z.infer<typeof topupSchema>;
+type TopupFormValues = {
+  amount: number;
+  provider: 'PAYOS' | 'STRIPE';
+};
 
 interface TopupDialogProps {
   open: boolean;
@@ -57,8 +53,20 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
   open,
   onOpenChange,
 }) => {
+  const { t } = useTranslation('pages.wallet');
   const { mutate: topupWallet, isPending } = useTopupWalletMutation();
   const [selectedPreset, setSelectedPreset] = useState<number>(10000);
+
+  const topupSchema = z.object({
+    amount: z.coerce
+      .number()
+      .min(1000, t('topup_dialog.amount_min', { amount: '1,000' }))
+      .max(
+        2000000000,
+        t('topup_dialog.amount_max', { amount: '2,000,000,000' }),
+      ),
+    provider: z.enum(['PAYOS', 'STRIPE'] as const),
+  });
 
   const form = useForm<TopupFormValues>({
     resolver: zodResolver(topupSchema),
@@ -102,15 +110,15 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
             // Redirect to payment URL
             window.location.href = data.paymentUrl;
           } else {
-            toast.error('Failed to get payment URL');
+            toast.error(t('topup_dialog.error_no_payment_url'));
           }
         },
         onError: (error: unknown) => {
           const errorMessage =
             error instanceof Error
               ? error.message
-              : 'Failed to initiate top-up. Please try again.';
-          toast.error(errorMessage);
+              : t('topup_dialog.error_initiate');
+          toast.error(String(errorMessage));
         },
       },
     );
@@ -120,19 +128,13 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Top up Wallet</DialogTitle>
-          <DialogDescription>
-            Add funds to your wallet. You will be redirected to the payment
-            provider to complete the transaction.
-          </DialogDescription>
+          <DialogTitle>{t('topup_dialog.title')}</DialogTitle>
+          <DialogDescription>{t('topup_dialog.description')}</DialogDescription>
         </DialogHeader>
 
         <Alert>
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            You will be redirected to PayOS, Stripe, or PayPal based on your
-            selection. Your return URL will be processed securely.
-          </AlertDescription>
+          <AlertDescription>{t('topup_dialog.alert_message')}</AlertDescription>
         </Alert>
 
         <Form {...form}>
@@ -142,11 +144,11 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount (VND)</FormLabel>
+                  <FormLabel>{t('topup_dialog.amount_label')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="100,000"
+                      placeholder={t('topup_dialog.amount_placeholder')}
                       step="1000"
                       min="1000"
                       max="2000000000"
@@ -155,8 +157,10 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
                   </FormControl>
                   <FormMessage />
                   <p className="text-xs text-muted-foreground mt-2">
-                    Minimum: {formatTrizilium(1000)} | Maximum:{' '}
-                    {formatTrizilium(2000000000)}
+                    {t('topup_dialog.amount_hint', {
+                      min: formatTrizilium(1000),
+                      max: formatTrizilium(2000000000),
+                    })}
                   </p>
                 </FormItem>
               )}
@@ -164,7 +168,9 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
 
             {/* Quick preset amounts */}
             <div>
-              <p className="text-sm font-medium mb-2">Quick amounts</p>
+              <p className="text-sm font-medium mb-2">
+                {t('topup_dialog.quick_amounts')}
+              </p>
               <div className="grid grid-cols-4 gap-2">
                 {TOPUP_PRESETS.map((preset) => (
                   <Button
@@ -186,7 +192,7 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
               name="provider"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment Provider</FormLabel>
+                  <FormLabel>{t('topup_dialog.provider_label')}</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
@@ -196,17 +202,7 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
                     <SelectContent>
                       <SelectItem value="PAYOS">
                         <span className="flex items-center gap-2">
-                          PayOS (Vietnam)
-                        </span>
-                      </SelectItem>
-                      <SelectItem value="STRIPE">
-                        <span className="flex items-center gap-2">
-                          Stripe (International)
-                        </span>
-                      </SelectItem>
-                      <SelectItem value="PAYPAL">
-                        <span className="flex items-center gap-2">
-                          PayPal (International)
+                          {t('topup_dialog.provider_payos')}
                         </span>
                       </SelectItem>
                     </SelectContent>
@@ -223,16 +219,16 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
                 onClick={() => onOpenChange(false)}
                 disabled={isPending}
               >
-                Cancel
+                {t('topup_dialog.cancel')}
               </Button>
               <Button type="submit" disabled={isPending} className="gap-2">
                 {isPending ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing...
+                    {t('topup_dialog.processing')}
                   </>
                 ) : (
-                  'Proceed to Payment'
+                  t('topup_dialog.confirm')
                 )}
               </Button>
             </div>

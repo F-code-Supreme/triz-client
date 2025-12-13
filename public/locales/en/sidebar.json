@@ -70,10 +70,30 @@
     "courses": "Courses",
     "quizzes": "Quizzes",
     "assignments": "Assignments",
+    "achievements": "Achievements",
+    "forum": "Forum",
     "packages": "Packages",
     "subscriptions": "Subscriptions",
     "transactions": "Transactions",
     "archive": "Archive"
+  },
+
+  "expert": {
+    "title": "TRIZ Expert",
+    "subtitle": "Expert Panel",
+    "main": "Main",
+    "dashboard": "Dashboard",
+    "assignments": "Assignments"
+  },
+
+  "moderator": {
+    "title": "TRIZ Moderator",
+    "subtitle": "Moderation Panel",
+    "main": "Main",
+    "content": "Content",
+    "dashboard": "Dashboard",
+    "forum": "Forum",
+    "reports": "Reports"
   },
 
   "command_menu": {

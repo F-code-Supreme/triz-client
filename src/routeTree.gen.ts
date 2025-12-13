@@ -16,12 +16,15 @@ import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
+import { Route as R6StepsRouteImport } from './routes/6-steps'
+import { Route as ModeratorRouteRouteImport } from './routes/moderator/route'
 import { Route as ExpertRouteRouteImport } from './routes/expert/route'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
 import { Route as PackagesIndexRouteImport } from './routes/packages.index'
+import { Route as ModeratorIndexRouteImport } from './routes/moderator/index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
 import { Route as ExpertIndexRouteImport } from './routes/expert/index'
 import { Route as CourseIndexRouteImport } from './routes/course.index'
@@ -32,6 +35,9 @@ import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-pas
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as CourseSlugRouteImport } from './routes/course.$slug'
+import { Route as ModeratorReportsRouteRouteImport } from './routes/moderator/reports/route'
+import { Route as ModeratorForumRouteRouteImport } from './routes/moderator/forum/route'
+import { Route as ModeratorDashboardRouteRouteImport } from './routes/moderator/dashboard/route'
 import { Route as ExpertDashboardRouteRouteImport } from './routes/expert/dashboard/route'
 import { Route as ExpertAssignmentRouteRouteImport } from './routes/expert/assignment/route'
 import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/transactions/route'
@@ -44,14 +50,15 @@ import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/ro
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
 import { Route as AdminAssignmentRouteRouteImport } from './routes/admin/assignment/route'
 import { Route as AdminArchiveRouteRouteImport } from './routes/admin/archive/route'
+import { Route as AdminAchievementsRouteRouteImport } from './routes/admin/achievements/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
-import { Route as app6StepsRouteRouteImport } from './routes/(app)/6-steps/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
 import { Route as appGamesIndexRouteImport } from './routes/(app)/games/index'
@@ -67,6 +74,7 @@ import { Route as appJournalsJournalIdRouteRouteImport } from './routes/(app)/jo
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
+import { Route as app6StepsWorkflowIndexRouteImport } from './routes/(app)/6-steps/workflow.index'
 import { Route as AdminCoursesEditCourseIdRouteImport } from './routes/admin/courses/edit/$courseId'
 import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
@@ -106,6 +114,16 @@ const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   path: '/flashcard-deck',
   getParentRoute: () => rootRouteImport,
 } as any)
+const R6StepsRoute = R6StepsRouteImport.update({
+  id: '/6-steps',
+  path: '/6-steps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModeratorRouteRoute = ModeratorRouteRouteImport.update({
+  id: '/moderator',
+  path: '/moderator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExpertRouteRoute = ExpertRouteRouteImport.update({
   id: '/expert',
   path: '/expert',
@@ -134,6 +152,11 @@ const PackagesIndexRoute = PackagesIndexRouteImport.update({
   id: '/packages/',
   path: '/packages/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ModeratorIndexRoute = ModeratorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModeratorRouteRoute,
 } as any)
 const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
   id: '/forgot-password/',
@@ -185,6 +208,21 @@ const CourseSlugRoute = CourseSlugRouteImport.update({
   id: '/course/$slug',
   path: '/course/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ModeratorReportsRouteRoute = ModeratorReportsRouteRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const ModeratorForumRouteRoute = ModeratorForumRouteRouteImport.update({
+  id: '/forum',
+  path: '/forum',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const ModeratorDashboardRouteRoute = ModeratorDashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ModeratorRouteRoute,
 } as any)
 const ExpertDashboardRouteRoute = ExpertDashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -246,6 +284,11 @@ const AdminArchiveRouteRoute = AdminArchiveRouteRouteImport.update({
   path: '/archive',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminAchievementsRouteRoute = AdminAchievementsRouteRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const appWalletRouteRoute = appWalletRouteRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -271,11 +314,6 @@ const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
-const app6StepsRouteRoute = app6StepsRouteRouteImport.update({
-  id: '/6-steps',
-  path: '/6-steps',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
@@ -284,6 +322,11 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
 const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminForumIndexRoute = AdminForumIndexRouteImport.update({
+  id: '/forum/',
+  path: '/forum/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const appQuizIndexRoute = appQuizIndexRouteImport.update({
@@ -363,6 +406,11 @@ const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   path: '',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
+const app6StepsWorkflowIndexRoute = app6StepsWorkflowIndexRouteImport.update({
+  id: '/6-steps/workflow/',
+  path: '/6-steps/workflow/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const AdminCoursesEditCourseIdRoute =
   AdminCoursesEditCourseIdRouteImport.update({
     id: '/edit/$courseId',
@@ -384,6 +432,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteRouteWithChildren
   '/expert': typeof ExpertRouteRouteWithChildren
+  '/moderator': typeof ModeratorRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -391,12 +441,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -409,6 +459,9 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
+  '/moderator/forum': typeof ModeratorForumRouteRoute
+  '/moderator/reports': typeof ModeratorReportsRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -419,6 +472,7 @@ export interface FileRoutesByFullPath {
   '/course': typeof CourseIndexRoute
   '/expert/': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/moderator/': typeof ModeratorIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
   '/books/me': typeof appBooksMeRouteRoute
@@ -435,14 +489,17 @@ export interface FileRoutesByFullPath {
   '/games': typeof appGamesIndexRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
+  '/admin/forum': typeof AdminForumIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -450,12 +507,12 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -468,6 +525,9 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
+  '/moderator/forum': typeof ModeratorForumRouteRoute
+  '/moderator/reports': typeof ModeratorReportsRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -478,6 +538,7 @@ export interface FileRoutesByTo {
   '/course': typeof CourseIndexRoute
   '/expert': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/moderator': typeof ModeratorIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
   '/books/me': typeof appBooksMeRouteRoute
@@ -494,11 +555,13 @@ export interface FileRoutesByTo {
   '/games': typeof appGamesIndexRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
+  '/admin/forum': typeof AdminForumIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -506,6 +569,8 @@ export interface FileRoutesById {
   '/(app)': typeof appRouteRouteWithChildren
   '/admin': typeof AdminRouteRouteWithChildren
   '/expert': typeof ExpertRouteRouteWithChildren
+  '/moderator': typeof ModeratorRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
   '/home': typeof HomeRoute
@@ -513,12 +578,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/(app)/6-steps': typeof app6StepsRouteRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
   '/(app)/refund': typeof appRefundRouteRoute
   '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -531,6 +596,9 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
+  '/moderator/forum': typeof ModeratorForumRouteRoute
+  '/moderator/reports': typeof ModeratorReportsRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
@@ -541,6 +609,7 @@ export interface FileRoutesById {
   '/course/': typeof CourseIndexRoute
   '/expert/': typeof ExpertIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/moderator/': typeof ModeratorIndexRoute
   '/packages/': typeof PackagesIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
@@ -558,11 +627,13 @@ export interface FileRoutesById {
   '/(app)/games/': typeof appGamesIndexRoute
   '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
+  '/admin/forum/': typeof AdminForumIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/(app)/6-steps/workflow/': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -570,6 +641,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/expert'
+    | '/moderator'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -577,12 +650,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
     | '/subscription'
     | '/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -595,6 +668,9 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/moderator/dashboard'
+    | '/moderator/forum'
+    | '/moderator/reports'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -605,6 +681,7 @@ export interface FileRouteTypes {
     | '/course'
     | '/expert/'
     | '/forgot-password'
+    | '/moderator/'
     | '/packages'
     | '/register'
     | '/books/me'
@@ -621,14 +698,17 @@ export interface FileRouteTypes {
     | '/games'
     | '/journals'
     | '/quiz'
+    | '/admin/forum'
     | '/admin/users'
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/6-steps/workflow'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -636,12 +716,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
     | '/subscription'
     | '/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -654,6 +734,9 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/moderator/dashboard'
+    | '/moderator/forum'
+    | '/moderator/reports'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -664,6 +747,7 @@ export interface FileRouteTypes {
     | '/course'
     | '/expert'
     | '/forgot-password'
+    | '/moderator'
     | '/packages'
     | '/register'
     | '/books/me'
@@ -680,17 +764,21 @@ export interface FileRouteTypes {
     | '/games'
     | '/journals'
     | '/quiz'
+    | '/admin/forum'
     | '/admin/users'
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/6-steps/workflow'
   id:
     | '__root__'
     | '/'
     | '/(app)'
     | '/admin'
     | '/expert'
+    | '/moderator'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
     | '/home'
@@ -698,12 +786,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/(app)/6-steps'
     | '/(app)/chat-triz'
     | '/(app)/profile'
     | '/(app)/refund'
     | '/(app)/subscription'
     | '/(app)/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -716,6 +804,9 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/moderator/dashboard'
+    | '/moderator/forum'
+    | '/moderator/reports'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
@@ -726,6 +817,7 @@ export interface FileRouteTypes {
     | '/course/'
     | '/expert/'
     | '/forgot-password/'
+    | '/moderator/'
     | '/packages/'
     | '/register/'
     | '/admin/courses/'
@@ -743,11 +835,13 @@ export interface FileRouteTypes {
     | '/(app)/games/'
     | '/(app)/journals/'
     | '/(app)/quiz/'
+    | '/admin/forum/'
     | '/admin/users/'
     | '/books/$bookId/'
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/(app)/6-steps/workflow/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -755,6 +849,8 @@ export interface RootRouteChildren {
   appRouteRoute: typeof appRouteRouteWithChildren
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   ExpertRouteRoute: typeof ExpertRouteRouteWithChildren
+  ModeratorRouteRoute: typeof ModeratorRouteRouteWithChildren
+  R6StepsRoute: typeof R6StepsRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   ForumRoute: typeof ForumRoute
   HomeRoute: typeof HomeRoute
@@ -826,6 +922,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlashcardDeckRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/6-steps': {
+      id: '/6-steps'
+      path: '/6-steps'
+      fullPath: '/6-steps'
+      preLoaderRoute: typeof R6StepsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/moderator': {
+      id: '/moderator'
+      path: '/moderator'
+      fullPath: '/moderator'
+      preLoaderRoute: typeof ModeratorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/expert': {
       id: '/expert'
       path: '/expert'
@@ -867,6 +977,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/packages'
       preLoaderRoute: typeof PackagesIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/moderator/': {
+      id: '/moderator/'
+      path: '/'
+      fullPath: '/moderator/'
+      preLoaderRoute: typeof ModeratorIndexRouteImport
+      parentRoute: typeof ModeratorRouteRoute
     }
     '/forgot-password/': {
       id: '/forgot-password/'
@@ -937,6 +1054,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/course/$slug'
       preLoaderRoute: typeof CourseSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/moderator/reports': {
+      id: '/moderator/reports'
+      path: '/reports'
+      fullPath: '/moderator/reports'
+      preLoaderRoute: typeof ModeratorReportsRouteRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/moderator/forum': {
+      id: '/moderator/forum'
+      path: '/forum'
+      fullPath: '/moderator/forum'
+      preLoaderRoute: typeof ModeratorForumRouteRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/moderator/dashboard': {
+      id: '/moderator/dashboard'
+      path: '/dashboard'
+      fullPath: '/moderator/dashboard'
+      preLoaderRoute: typeof ModeratorDashboardRouteRouteImport
+      parentRoute: typeof ModeratorRouteRoute
     }
     '/expert/dashboard': {
       id: '/expert/dashboard'
@@ -1022,6 +1160,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArchiveRouteRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/admin/achievements': {
+      id: '/admin/achievements'
+      path: '/achievements'
+      fullPath: '/admin/achievements'
+      preLoaderRoute: typeof AdminAchievementsRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/(app)/wallet': {
       id: '/(app)/wallet'
       path: '/wallet'
@@ -1057,13 +1202,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/6-steps': {
-      id: '/(app)/6-steps'
-      path: '/6-steps'
-      fullPath: '/6-steps'
-      preLoaderRoute: typeof app6StepsRouteRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -1076,6 +1214,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/forum/': {
+      id: '/admin/forum/'
+      path: '/forum'
+      fullPath: '/admin/forum'
+      preLoaderRoute: typeof AdminForumIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/(app)/quiz/': {
@@ -1183,6 +1328,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
+    '/(app)/6-steps/workflow/': {
+      id: '/(app)/6-steps/workflow/'
+      path: '/6-steps/workflow'
+      fullPath: '/6-steps/workflow'
+      preLoaderRoute: typeof app6StepsWorkflowIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/admin/courses/edit/$courseId': {
       id: '/admin/courses/edit/$courseId'
       path: '/edit/$courseId'
@@ -1208,7 +1360,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
-  app6StepsRouteRoute: typeof app6StepsRouteRoute
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
   appRefundRouteRoute: typeof appRefundRouteRoute
@@ -1228,10 +1379,10 @@ interface appRouteRouteChildren {
   appQuizIndexRoute: typeof appQuizIndexRoute
   appCourseLearnSlugRouteRoute: typeof appCourseLearnSlugRouteRoute
   appCourseQuizSlugRouteRoute: typeof appCourseQuizSlugRouteRoute
+  app6StepsWorkflowIndexRoute: typeof app6StepsWorkflowIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
-  app6StepsRouteRoute: app6StepsRouteRoute,
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
   appRefundRouteRoute: appRefundRouteRoute,
@@ -1251,6 +1402,7 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appQuizIndexRoute: appQuizIndexRoute,
   appCourseLearnSlugRouteRoute: appCourseLearnSlugRouteRoute,
   appCourseQuizSlugRouteRoute: appCourseQuizSlugRouteRoute,
+  app6StepsWorkflowIndexRoute: app6StepsWorkflowIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -1273,6 +1425,7 @@ const AdminCoursesRouteRouteWithChildren =
   AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
 
 interface AdminRouteRouteChildren {
+  AdminAchievementsRouteRoute: typeof AdminAchievementsRouteRoute
   AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
   AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
   AdminBooksRouteRoute: typeof AdminBooksRouteRoute
@@ -1285,10 +1438,12 @@ interface AdminRouteRouteChildren {
   AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+  AdminForumIndexRoute: typeof AdminForumIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminAchievementsRouteRoute: AdminAchievementsRouteRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
   AdminAssignmentRouteRoute: AdminAssignmentRouteRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
@@ -1301,6 +1456,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminTransactionsRouteRoute: AdminTransactionsRouteRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+  AdminForumIndexRoute: AdminForumIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
@@ -1324,11 +1480,31 @@ const ExpertRouteRouteWithChildren = ExpertRouteRoute._addFileChildren(
   ExpertRouteRouteChildren,
 )
 
+interface ModeratorRouteRouteChildren {
+  ModeratorDashboardRouteRoute: typeof ModeratorDashboardRouteRoute
+  ModeratorForumRouteRoute: typeof ModeratorForumRouteRoute
+  ModeratorReportsRouteRoute: typeof ModeratorReportsRouteRoute
+  ModeratorIndexRoute: typeof ModeratorIndexRoute
+}
+
+const ModeratorRouteRouteChildren: ModeratorRouteRouteChildren = {
+  ModeratorDashboardRouteRoute: ModeratorDashboardRouteRoute,
+  ModeratorForumRouteRoute: ModeratorForumRouteRoute,
+  ModeratorReportsRouteRoute: ModeratorReportsRouteRoute,
+  ModeratorIndexRoute: ModeratorIndexRoute,
+}
+
+const ModeratorRouteRouteWithChildren = ModeratorRouteRoute._addFileChildren(
+  ModeratorRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   appRouteRoute: appRouteRouteWithChildren,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   ExpertRouteRoute: ExpertRouteRouteWithChildren,
+  ModeratorRouteRoute: ModeratorRouteRouteWithChildren,
+  R6StepsRoute: R6StepsRoute,
   FlashcardDeckRoute: FlashcardDeckRoute,
   ForumRoute: ForumRoute,
   HomeRoute: HomeRoute,

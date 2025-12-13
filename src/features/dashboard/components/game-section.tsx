@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AsyncSelect } from '@/components/ui/async-select';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +24,7 @@ interface GameSectionProps {
 }
 
 export const GameSection = ({ data }: GameSectionProps) => {
+  const { t } = useTranslation('pages.admin');
   const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
   const [selectedGame, setSelectedGame] = useState<string>('overview');
 
@@ -51,33 +53,55 @@ export const GameSection = ({ data }: GameSectionProps) => {
     data.gameStats.reduce((sum, game) => sum + game.averageTimePlay, 0) /
     data.gameStats.length;
 
+  const getPeriodLabel = () => {
+    if (period === 'day') return t('dashboard.games.period_30_days');
+    if (period === 'month') return t('dashboard.games.period_12_months');
+    return t('dashboard.games.period_4_quarters');
+  };
+
   // Get selected game details
   const selectedGameData = data.gameStats.find((g) => g.id === selectedGame);
 
-  // Create options list with Overview as first option
-  const gameOptions: GameStats[] = [
-    {
-      id: 'overview',
-      name: 'Overview - All Games',
-      plays: data.totalPlays,
-      averageScore: avgScore,
-      completionRate: avgCompletionRate,
-      averageTimePlay: avgTimePlay,
-    },
-    ...data.gameStats,
-  ];
+  // Fetcher function for AsyncSelect
+  const fetchGames = async (query?: string): Promise<GameStats[]> => {
+    // Simulate async behavior (immediate return since data is local)
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const allGames: GameStats[] = [
+      {
+        id: 'overview',
+        name: t('dashboard.games.overview_all_games'),
+        plays: data.totalPlays,
+        averageScore: avgScore,
+        completionRate: avgCompletionRate,
+        averageTimePlay: avgTimePlay,
+      },
+      ...data.gameStats,
+    ];
+
+    if (!query) return allGames;
+
+    const searchQuery = query.toLowerCase();
+    return allGames.filter((game) =>
+      game.name.toLowerCase().includes(searchQuery),
+    );
+  };
+
+  // Filter function for local filtering when using preload
+  const filterGame = (game: GameStats, query: string): boolean => {
+    const searchQuery = query.toLowerCase();
+    return game.name.toLowerCase().includes(searchQuery);
+  };
 
   return (
     <DashboardSection
-      title="Game Analytics"
-      description="Track game engagement, player performance, and popular games"
+      title={t('dashboard.games.title')}
+      description={t('dashboard.games.description')}
       action={
         <AsyncSelect<GameStats>
-          fetcher={async () => gameOptions}
+          fetcher={fetchGames}
           preload
-          filterFn={(game, query) =>
-            game.name.toLowerCase().includes(query.toLowerCase())
-          }
+          filterFn={filterGame}
           renderOption={(n) => (
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
@@ -85,9 +109,10 @@ export const GameSection = ({ data }: GameSectionProps) => {
               </div>
             </div>
           )}
+          width={250}
           getOptionValue={(n) => n.id}
           getDisplayValue={(n) => n.name}
-          label="Select View"
+          label={t('dashboard.games.select_view')}
           value={selectedGame}
           onChange={setSelectedGame}
         />
@@ -96,27 +121,29 @@ export const GameSection = ({ data }: GameSectionProps) => {
       {/* Overview Statistics */}
       {selectedGame === 'overview' && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Overview - All Games</h3>
+          <h3 className="text-lg font-semibold">
+            {t('dashboard.games.overview_all_games')}
+          </h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
-              title="Total Game Plays"
+              title={t('dashboard.games.total_game_plays')}
               value={data.totalPlays.toLocaleString()}
-              description="Across all games"
+              description={t('dashboard.games.total_plays_desc')}
             />
             <StatCard
-              title="Avg Time Play"
-              value={`${avgTimePlay.toFixed(1)} min`}
-              description="Average across all games"
+              title={t('dashboard.games.avg_time_play')}
+              value={`${avgTimePlay.toFixed(1)} ${t('dashboard.games.minutes')}`}
+              description={t('dashboard.games.avg_time_all_games')}
             />
             <StatCard
-              title="Avg Completion Rate"
+              title={t('dashboard.games.avg_completion_rate')}
               value={`${avgCompletionRate.toFixed(1)}%`}
-              description="Average across all games"
+              description={t('dashboard.games.avg_completion_all_games')}
             />
             <StatCard
-              title="Avg Score"
+              title={t('dashboard.games.avg_score')}
               value={avgScore.toFixed(0)}
-              description="Average player score"
+              description={t('dashboard.games.avg_player_score')}
             />
           </div>
         </div>
@@ -127,24 +154,24 @@ export const GameSection = ({ data }: GameSectionProps) => {
           <h3 className="text-lg font-semibold">{selectedGameData.name}</h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
-              title="Total Games Play"
+              title={t('dashboard.games.total_games_play')}
               value={selectedGameData.plays.toLocaleString()}
-              description="Total plays for this game"
+              description={t('dashboard.games.total_plays_game')}
             />
             <StatCard
-              title="Avg Time Play"
-              value={`${selectedGameData.averageTimePlay.toFixed(1)} min`}
-              description="Average time per game"
+              title={t('dashboard.games.avg_time_play')}
+              value={`${selectedGameData.averageTimePlay.toFixed(1)} ${t('dashboard.games.minutes')}`}
+              description={t('dashboard.games.avg_time_per_game')}
             />
             <StatCard
-              title="Avg Completion Rate"
+              title={t('dashboard.games.completion_rate')}
               value={`${selectedGameData.completionRate.toFixed(1)}%`}
-              description="Players who complete the game"
+              description={t('dashboard.games.players_complete')}
             />
             <StatCard
-              title="Avg Score"
+              title={t('dashboard.games.avg_score')}
               value={selectedGameData.averageScore.toFixed(0)}
-              description="Average score for this game"
+              description={t('dashboard.games.avg_score_game')}
             />
           </div>
         </div>
@@ -152,8 +179,10 @@ export const GameSection = ({ data }: GameSectionProps) => {
 
       <div className="grid gap-4 md:grid-cols-2">
         <ChartCard
-          title="Game Plays Over Time"
-          description={`Total plays in the last ${period === 'day' ? '30 days' : period === 'month' ? '12 months' : '4 quarters'}`}
+          title={t('dashboard.games.plays_over_time')}
+          description={t('dashboard.games.total_plays_period', {
+            period: getPeriodLabel(),
+          })}
         >
           <div className="space-y-4">
             <div className="flex justify-end">
@@ -165,7 +194,7 @@ export const GameSection = ({ data }: GameSectionProps) => {
               lines={[
                 {
                   dataKey: 'plays',
-                  name: 'Plays',
+                  name: t('dashboard.games.plays'),
                   stroke: '#8884d8',
                 },
               ]}
@@ -175,8 +204,10 @@ export const GameSection = ({ data }: GameSectionProps) => {
         </ChartCard>
 
         <ChartCard
-          title="Average Score Trend"
-          description={`Average scores in the last ${period === 'day' ? '30 days' : period === 'month' ? '12 months' : '4 quarters'}`}
+          title={t('dashboard.games.avg_score_trend')}
+          description={t('dashboard.games.avg_scores_period', {
+            period: getPeriodLabel(),
+          })}
         >
           <div className="space-y-4">
             <div className="flex justify-end">
@@ -186,7 +217,11 @@ export const GameSection = ({ data }: GameSectionProps) => {
               data={filteredData}
               xKey="period"
               bars={[
-                { dataKey: 'averageScore', name: 'Avg Score', fill: '#ffc658' },
+                {
+                  dataKey: 'averageScore',
+                  name: t('dashboard.games.avg_score_label'),
+                  fill: '#ffc658',
+                },
               ]}
               height={300}
             />
@@ -195,18 +230,26 @@ export const GameSection = ({ data }: GameSectionProps) => {
       </div>
 
       <ChartCard
-        title="Top Players Leaderboard"
-        description="Highest scoring players across all games"
+        title={t('dashboard.games.top_players')}
+        description={t('dashboard.games.top_players_desc')}
       >
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[50px]">Rank</TableHead>
-                <TableHead>Player</TableHead>
-                <TableHead className="text-right">Games Played</TableHead>
-                <TableHead className="text-right">Total Score</TableHead>
-                <TableHead className="text-right">Avg per Game</TableHead>
+                <TableHead className="w-[50px]">
+                  {t('dashboard.games.rank')}
+                </TableHead>
+                <TableHead>{t('dashboard.games.player')}</TableHead>
+                <TableHead className="text-right">
+                  {t('dashboard.games.games_played')}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t('dashboard.games.total_score')}
+                </TableHead>
+                <TableHead className="text-right">
+                  {t('dashboard.games.avg_per_game')}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Pagination,
@@ -24,6 +25,7 @@ import type { CourseFilters } from '@/features/courses/types';
 import type { PaginationState } from '@tanstack/react-table';
 
 const AllCoursePage = () => {
+  const { t } = useTranslation('pages.courses');
   const [filters, setFilters] = useState<CourseFilters>({});
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -38,7 +40,7 @@ const AllCoursePage = () => {
   );
 
   return (
-    <DefaultLayout meta={{ title: 'My Courses' }}>
+    <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -50,10 +52,10 @@ const AllCoursePage = () => {
           <div className="flex flex-row justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">
-                All Courses
+                {t('all_courses.title')}
               </h1>
               <p className="text-muted-foreground">
-                Explore and enroll in courses to start your learning journey
+                {t('all_courses.description')}
               </p>
             </div>
 
@@ -62,7 +64,7 @@ const AllCoursePage = () => {
                 to="/course/my-course"
                 className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition"
               >
-                My Courses
+                {t('all_courses.my_courses_button')}
               </Link>
             </div>
           </div>
@@ -101,7 +103,7 @@ const AllCoursePage = () => {
               ))}
             </div>
           ) : isError ? (
-            <div>Failed to load courses.</div>
+            <div>{t('error')}</div>
           ) : (
             <>
               <CourseList

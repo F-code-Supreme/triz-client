@@ -153,7 +153,7 @@ const AdminManageCoursePage = () => {
   };
 
   return (
-    <AdminLayout meta={{ title: 'Admin Manage Course' }}>
+    <AdminLayout meta={{ title: t('courses.title') }}>
       {renderTabContent()}
     </AdminLayout>
   );

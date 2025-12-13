@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { PieChart } from '@/components/ui/chart';
 
 import { DashboardSection, ChartCard } from './dashboard-section';
@@ -10,33 +12,46 @@ interface ChatForumSectionProps {
 }
 
 export const ChatForumSection = ({ chat }: ChatForumSectionProps) => {
+  const { t } = useTranslation('pages.admin');
+
   return (
     <DashboardSection
-      title="Chat Analytics"
-      description="Monitor chat bot performance"
+      title={t('dashboard.chat.title')}
+      description={t('dashboard.chat.description')}
     >
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total Messages"
+          title={t('dashboard.chat.total_messages')}
           value={chat.totalMessages.toLocaleString()}
-          description={`${chat.userMessages.toLocaleString()} user, ${chat.botMessages.toLocaleString()} bot`}
+          description={t('dashboard.chat.user_bot_messages', {
+            user: chat.userMessages.toLocaleString(),
+            bot: chat.botMessages.toLocaleString(),
+          })}
         />
         <StatCard
-          title="Bot Satisfaction"
+          title={t('dashboard.chat.bot_satisfaction')}
           value={`${chat.satisfactionRating.toFixed(1)} / 5.0`}
-          description={`Avg response: ${chat.averageResponseTime}s`}
+          description={t('dashboard.chat.avg_response', {
+            time: chat.averageResponseTime,
+          })}
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <ChartCard
-          title="Chat Message Distribution"
-          description="User messages vs bot responses"
+          title={t('dashboard.chat.message_distribution')}
+          description={t('dashboard.chat.message_distribution_desc')}
         >
           <PieChart
             data={[
-              { name: 'User Messages', value: chat.userMessages },
-              { name: 'Bot Messages', value: chat.botMessages },
+              {
+                name: t('dashboard.chat.user_messages'),
+                value: chat.userMessages,
+              },
+              {
+                name: t('dashboard.chat.bot_messages'),
+                value: chat.botMessages,
+              },
             ]}
             colors={['#8884d8', '#82ca9d']}
             height={300}
@@ -44,18 +59,21 @@ export const ChatForumSection = ({ chat }: ChatForumSectionProps) => {
         </ChartCard>
 
         <ChartCard
-          title="Chat Bot Satisfaction"
-          description="User satisfaction with bot responses"
+          title={t('dashboard.chat.satisfaction_title')}
+          description={t('dashboard.chat.satisfaction_desc')}
         >
           <PieChart
             data={[
               {
-                name: 'Satisfied',
+                name: t('dashboard.chat.satisfied'),
                 value: chat.satisfactionBreakdown.satisfied,
               },
-              { name: 'Neutral', value: chat.satisfactionBreakdown.neutral },
               {
-                name: 'Unsatisfied',
+                name: t('dashboard.chat.neutral'),
+                value: chat.satisfactionBreakdown.neutral,
+              },
+              {
+                name: t('dashboard.chat.unsatisfied'),
                 value: chat.satisfactionBreakdown.unsatisfied,
               },
             ]}

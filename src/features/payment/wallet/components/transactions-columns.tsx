@@ -1,5 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
@@ -10,30 +12,40 @@ import type {
   TransactionType,
 } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
+import type { TFunction } from 'i18next';
 
 type TransactionWithTimestamp = Transaction & DataTimestamp;
 
 const columnHelper = createColumnHelper<TransactionWithTimestamp>();
 
-export const getTransactionTypeLabel = (type: TransactionType): string => {
+const TRANSACTION_TYPE_COLORS = {
+  TOPUP: 'text-green-600',
+  REFUND: 'text-blue-600',
+  SPEND: 'text-red-600',
+} as const;
+
+export const getTransactionTypeLabel = (
+  type: TransactionType,
+  t: TFunction<'pages.admin' | 'pages.wallet', undefined>,
+): string => {
   switch (type) {
     case 'TOPUP':
-      return 'Top Up';
+      return t('transactions.types.topup');
     case 'REFUND':
-      return 'Refund';
+      return t('transactions.types.refund');
     default:
-      return 'Spend';
+      return t('transactions.types.spend');
   }
 };
 
 export const getTransactionTypeColor = (type: TransactionType): string => {
   switch (type) {
     case 'TOPUP':
-      return 'text-green-600';
+      return TRANSACTION_TYPE_COLORS.TOPUP;
     case 'REFUND':
-      return 'text-blue-600';
+      return TRANSACTION_TYPE_COLORS.REFUND;
     default:
-      return 'text-red-600';
+      return TRANSACTION_TYPE_COLORS.SPEND;
   }
 };
 
@@ -50,9 +62,11 @@ export const getTransactionStatusColor = (status: string): string => {
   }
 };
 
-export const transactionsColumns = [
+export const createAdminTransactionsColumns = (
+  t: TFunction<'pages.admin', undefined>,
+) => [
   columnHelper.accessor('orderCode', {
-    header: 'Order Code',
+    header: t('transactions.columns.order_code'),
     cell: (info) => (
       <span className="font-mono text-sm">{info.getValue()}</span>
     ),
@@ -60,11 +74,14 @@ export const transactionsColumns = [
 
   columnHelper.accessor('type', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.type')}
+      />
     ),
     cell: (info) => {
       const type = info.getValue();
-      const label = getTransactionTypeLabel(type);
+      const label = getTransactionTypeLabel(type, t);
       const color = getTransactionTypeColor(type);
       return <span className={`font-medium ${color}`}>{label}</span>;
     },
@@ -72,7 +89,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('amount', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Amount" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.amount')}
+      />
     ),
     cell: (info) => {
       const amount = info.getValue();
@@ -81,8 +101,8 @@ export const transactionsColumns = [
         <span
           className={
             type === 'TOPUP' || type === 'REFUND'
-              ? 'text-green-600'
-              : 'text-red-600'
+              ? TRANSACTION_TYPE_COLORS.TOPUP
+              : TRANSACTION_TYPE_COLORS.SPEND
           }
         >
           {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
@@ -94,7 +114,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('provider', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Provider" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.provider')}
+      />
     ),
     cell: (info) => (
       <Badge variant="outline" className="capitalize">
@@ -105,7 +128,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('status', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.status')}
+      />
     ),
     cell: (info) => {
       const status = info.getValue();
@@ -116,7 +142,10 @@ export const transactionsColumns = [
 
   columnHelper.accessor('createdAt', {
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.date')}
+      />
     ),
     cell: (info) => (
       <span className="text-sm">
@@ -128,10 +157,129 @@ export const transactionsColumns = [
   columnHelper.display({
     id: 'actions',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Actions" />
+      <DataTableColumnHeader
+        column={column}
+        title={t('transactions.columns.actions')}
+      />
     ),
-    cell: ({ row }) => <TransactionsDataTableRowActions row={row} />,
+    cell: ({ row }) => (
+      <TransactionsDataTableRowActions row={row} namespace="pages.admin" />
+    ),
     enableSorting: false,
     enableHiding: false,
   }),
 ];
+
+// Customer transactions columns
+export const useTransactionsColumns = () => {
+  const { t } = useTranslation('pages.wallet');
+
+  return useMemo(
+    () => [
+      columnHelper.accessor('orderCode', {
+        header: t('transactions.columns.order_code'),
+        cell: (info) => (
+          <span className="font-mono text-sm">{info.getValue()}</span>
+        ),
+      }),
+
+      columnHelper.accessor('type', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.type')}
+          />
+        ),
+        cell: (info) => {
+          const type = info.getValue();
+          const label = getTransactionTypeLabel(type, t);
+          const color = getTransactionTypeColor(type);
+          return <span className={`font-medium ${color}`}>{label}</span>;
+        },
+      }),
+
+      columnHelper.accessor('amount', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.amount')}
+          />
+        ),
+        cell: (info) => {
+          const amount = info.getValue();
+          const type = info.row.original.type;
+          return (
+            <span
+              className={
+                type === 'TOPUP' || type === 'REFUND'
+                  ? TRANSACTION_TYPE_COLORS.TOPUP
+                  : TRANSACTION_TYPE_COLORS.SPEND
+              }
+            >
+              {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
+              {amount.toLocaleString()} VND
+            </span>
+          );
+        },
+      }),
+
+      columnHelper.accessor('provider', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.provider')}
+          />
+        ),
+        cell: (info) => (
+          <Badge variant="outline" className="capitalize">
+            {info.getValue()?.toLowerCase() || 'TRIZ'}
+          </Badge>
+        ),
+      }),
+
+      columnHelper.accessor('status', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.status')}
+          />
+        ),
+        cell: (info) => {
+          const status = info.getValue();
+          const colors = getTransactionStatusColor(status);
+          return <Badge className={colors}>{status}</Badge>;
+        },
+      }),
+
+      columnHelper.accessor('createdAt', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.date')}
+          />
+        ),
+        cell: (info) => (
+          <span className="text-sm">
+            {format(new Date(info.getValue()), 'MMM dd, yyyy HH:mm')}
+          </span>
+        ),
+      }),
+
+      columnHelper.display({
+        id: 'actions',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.actions')}
+          />
+        ),
+        cell: ({ row }) => (
+          <TransactionsDataTableRowActions row={row} namespace="pages.wallet" />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      }),
+    ],
+    [t],
+  );
+};

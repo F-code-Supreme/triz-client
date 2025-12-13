@@ -5,9 +5,9 @@ import {
   CopyIcon,
   CheckIcon,
   Menu,
-  Zap,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -35,6 +35,7 @@ import {
   PromptInputTools,
 } from '@/components/ui/shadcn-io/ai/prompt-input';
 import { Response } from '@/components/ui/shadcn-io/ai/response';
+import TokenDisplay from '@/components/ui/token-display';
 import { STRING_EMPTY } from '@/constants';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetMeQuery } from '@/features/auth/services/queries';
@@ -65,6 +66,7 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
+  const { t } = useTranslation('pages.chat_triz');
   const { activeConversationId, setActiveConversationId } =
     useConversationsQueryStore();
 
@@ -173,15 +175,14 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
         toast.error(
           'message' in error && typeof error.message === 'string'
             ? error.message
-            : "You don't have an active subscription or your daily tokens have been exhausted.",
+            : t('errors.no_subscription'),
           {
-            description:
-              'Please upgrade your subscription or wait until tomorrow to continue chatting.',
+            description: t('errors.subscription_description'),
             duration: 5000,
           },
         );
       } else {
-        toast.error('Failed to send message. Please try again.');
+        toast.error(t('errors.send_failed'));
       }
       console.error('Failed to send message:', error);
     }
@@ -221,18 +222,15 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
           </Button>
           <div className="flex items-center gap-2">
             <div className="size-2 rounded-full bg-green-500" />
-            <span className="font-medium text-sm">Chat Triz</span>
+            <span className="font-medium text-sm">
+              {t('chat_interface.title')}
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Subscription Token Display */}
           {activeSubscription && (
-            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-md bg-accent/50">
-              <Zap className="h-4 w-4 text-secondary" />
-              <span className="text-sm font-medium">
-                {activeSubscription.tokensPerDayRemaining.toLocaleString()}
-              </span>
-            </div>
+            <TokenDisplay tokens={activeSubscription.tokensPerDayRemaining} />
           )}
           <Button
             variant="ghost"
@@ -241,7 +239,9 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
             className="h-8 px-2"
           >
             <RotateCcwIcon className="size-4" />
-            <span className="ml-1 hidden sm:inline">Reset</span>
+            <span className="ml-1 hidden sm:inline">
+              {t('chat_interface.reset')}
+            </span>
           </Button>
         </div>
       </div>
@@ -258,7 +258,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
                       <div className="flex items-center gap-2">
                         <Loader size={14} />
                         <span className="text-muted-foreground text-sm">
-                          Thinking...
+                          {t('chat_interface.thinking')}
                         </span>
                       </div>
                     ) : (
@@ -271,7 +271,11 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
                         ? userData?.avatarUrl || '/logo.svg'
                         : '/chatbot.svg'
                     }
-                    name={message.role === 'USER' ? 'User' : 'AI'}
+                    name={
+                      message.role === 'USER'
+                        ? t('chat_interface.user_name')
+                        : t('chat_interface.ai_name')
+                    }
                   />
                 </Message>
                 {message.content && (
@@ -288,7 +292,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
                   >
                     <Actions>
                       <Action
-                        tooltip="Copy"
+                        tooltip={t('chat_interface.copy')}
                         onClick={() => handleCopy(message.content, message.id)}
                       >
                         {copiedId === message.id ? (
@@ -319,7 +323,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
             <PromptInputTextarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask me anything about development, coding, or technology..."
+              placeholder={t('chat_interface.placeholder')}
               disabled={isTyping}
             />
             <PromptInputToolbar>
@@ -340,8 +344,7 @@ const ChatInterface = ({ onMobileMenuClick }: ChatInterfaceProps) => {
         )}
       </div>
       <div className="text-center pb-2 text-xs text-muted-foreground">
-        Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một
-        số câu trả lời sai lệch.
+        {t('chat_interface.footer_disclaimer')}
       </div>
     </div>
   );

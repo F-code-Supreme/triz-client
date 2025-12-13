@@ -1,0 +1,69 @@
+{
+  "page_meta_title": "Hoàn tiền đăng ký",
+  "title": "Hoàn tiền đăng ký",
+  "description": "Xử lý hoàn tiền cho đăng ký của bạn",
+  "step_select": {
+    "title": "Chọn đăng ký",
+    "description": "Chọn đăng ký bạn muốn hoàn tiền",
+    "no_eligible": "Bạn không có đăng ký nào đủ điều kiện để hoàn tiền.",
+    "subscription_id": "Mã",
+    "package": "Gói",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "status": "Trạng thái",
+    "daily_tokens": "Token hàng ngày",
+    "select_button": "Chọn & Tiếp tục",
+    "loading": "Đang tải đăng ký..."
+  },
+  "step_preview": {
+    "title": "Xem trước hoàn tiền",
+    "description": "Xem lại chi tiết hoàn tiền trước khi xác nhận",
+    "warning": "Vui lòng xem lại chi tiết hoàn tiền cẩn thận. Sau khi xác nhận, hành động này không thể hoàn tác.",
+    "subscription_details": "Chi tiết đăng ký",
+    "refund_details": "Chi tiết hoàn tiền",
+    "package": "Gói",
+    "status": "Trạng thái",
+    "start_date": "Ngày bắt đầu",
+    "end_date": "Ngày kết thúc",
+    "transaction_id": "Mã giao dịch",
+    "transaction_type": "Loại giao dịch",
+    "amount": "Số tiền",
+    "original_amount": "Số tiền gốc",
+    "refund_amount": "Số tiền hoàn",
+    "refund_type": "Loại hoàn tiền",
+    "transaction_status": "Trạng thái giao dịch",
+    "go_back": "Quay lại",
+    "confirm_button": "Xác nhận hoàn tiền",
+    "processing": "Đang xử lý hoàn tiền...",
+    "loading": "Đang tải chi tiết hoàn tiền..."
+  },
+  "step_result": {
+    "title": "Hoàn tiền thành công!",
+    "description": "Hoàn tiền của bạn đã được xử lý thành công",
+    "amount_label": "Số tiền hoàn",
+    "wallet_note": "Đã hoàn vào ví của bạn",
+    "new_refund_button": "Xử lý hoàn tiền khác",
+    "home_button": "Về trang chủ"
+  },
+  "refund_types": {
+    "FULL": "Hoàn tiền đầy đủ",
+    "PARTIAL": "Hoàn tiền một phần",
+    "PRORATED": "Hoàn tiền theo tỷ lệ"
+  },
+  "status": {
+    "ACTIVE": "Đang hoạt động",
+    "EXPIRED": "Hết hạn",
+    "CANCELED": "Đã hủy",
+    "PENDING": "Đang chờ"
+  },
+  "transaction_status": {
+    "COMPLETED": "Hoàn thành",
+    "PENDING": "Đang chờ",
+    "FAILED": "Thất bại"
+  },
+  "errors": {
+    "missing_info": "Thiếu thông tin bắt buộc",
+    "no_transaction": "Không tìm thấy giao dịch để hoàn tiền",
+    "refund_failed": "Xử lý hoàn tiền thất bại. Vui lòng thử lại."
+  }
+}

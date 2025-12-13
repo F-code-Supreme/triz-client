@@ -1,3 +1,50 @@
 {
-  "page_meta_title": "Chat TRIZ"
+  "page_meta_title": "Chat TRIZ",
+  "title": "Chat TRIZ",
+  "description": "Nhận hỗ trợ AI cho việc giải quyết vấn đề TRIZ",
+  "chat_interface": {
+    "new_chat": "Cuộc trò chuyện mới",
+    "title": "Chat Triz",
+    "placeholder": "Hỏi tôi bất cứ điều gì về phát triển, lập trình hoặc công nghệ...",
+    "send": "Gửi",
+    "reset": "Đặt lại",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép!",
+    "recording": "Đang ghi âm...",
+    "tokens_remaining": "Token còn lại",
+    "unlimited": "Không giới hạn",
+    "thinking": "Đang suy nghĩ...",
+    "user_name": "Người dùng",
+    "ai_name": "AI",
+    "footer_disclaimer": "Nội dung AI cung cấp chỉ mang tính chất tham khảo. Có thể cung cấp một số câu trả lời sai lệch."
+  },
+  "errors": {
+    "no_subscription": "Bạn không có gói đăng ký hoặc đã hết token hàng ngày.",
+    "subscription_description": "Vui lòng nâng cấp gói đăng ký hoặc chờ đến ngày mai để tiếp tục trò chuyện.",
+    "send_failed": "Không thể gửi tin nhắn. Vui lòng thử lại."
+  },
+  "conversation": {
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua",
+    "last_7_days": "7 ngày qua",
+    "last_30_days": "30 ngày qua",
+    "older": "Cũ hơn",
+    "search_placeholder": "Tìm kiếm cuộc trò chuyện...",
+    "history": "Lịch sử",
+    "rename": "Đổi tên",
+    "archive": "Lưu trữ",
+    "delete": "Xóa",
+    "loading": "Đang tải cuộc trò chuyện...",
+    "empty": "Không tìm thấy cuộc trò chuyện",
+    "empty_description": "Bắt đầu cuộc trò chuyện mới để nhận hỗ trợ AI",
+    "new_conversation": "Cuộc trò chuyện mới",
+    "more_actions": "Thêm hành động",
+    "rename_success": "Đổi tên cuộc trò chuyện thành công",
+    "rename_error": "Không thể đổi tên cuộc trò chuyện",
+    "archive_success": "Lưu trữ cuộc trò chuyện thành công",
+    "archive_error": "Không thể lưu trữ cuộc trò chuyện",
+    "load_error": "Không thể tải cuộc trò chuyện",
+    "retry": "Thử lại",
+    "search_no_results": "Thử điều chỉnh từ khóa tìm kiếm của bạn"
+  }
 }

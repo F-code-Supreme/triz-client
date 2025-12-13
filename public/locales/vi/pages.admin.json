@@ -23,6 +23,98 @@
       "revenue": "Doanh thu",
       "chat": "Trò chuyện",
       "games": "Trò chơi"
+    },
+    "revenue": {
+      "title": "Doanh thu & Gói khóa học",
+      "description": "Theo dõi xu hướng doanh thu, hiệu suất gói và tỷ lệ thành công giao dịch",
+      "total_revenue": "Tổng doanh thu",
+      "total_packages_sold": "Tổng gói đã bán",
+      "packages_sold_desc": "Trên tất cả các loại gói",
+      "success_rate": "Tỷ lệ thành công",
+      "success_transactions": "{{count}} giao dịch thành công",
+      "failure_rate": "Tỷ lệ thất bại",
+      "failed_transactions": "{{count}} giao dịch thất bại",
+      "revenue_trend": "Xu hướng doanh thu",
+      "revenue_over_period": "Doanh thu trong {{period}} qua",
+      "period_30_days": "30 ngày",
+      "period_12_months": "12 tháng",
+      "period_4_quarters": "4 quý",
+      "revenue_by_package": "Doanh thu theo gói",
+      "revenue_by_package_desc": "Tổng doanh thu được tạo ra cho mỗi loại gói",
+      "purchases_distribution": "Phân bố lượt mua",
+      "purchases_distribution_desc": "Số lượng mua theo loại gói",
+      "success_rate_by_package": "Tỷ lệ thành công theo gói",
+      "success_rate_by_package_desc": "Tỷ lệ giao dịch thành công cho mỗi gói",
+      "top_spenders": "Người dùng chi tiêu nhiều nhất",
+      "top_spenders_desc": "Người dùng có tổng chi tiêu cao nhất",
+      "rank": "Xếp hạng",
+      "name": "Tên",
+      "email": "Email",
+      "purchases": "Lượt mua",
+      "total_spent": "Tổng chi tiêu"
+    },
+    "chat": {
+      "title": "Phân tích trò chuyện",
+      "description": "Theo dõi hiệu suất chatbot",
+      "total_messages": "Tổng tin nhắn",
+      "user_bot_messages": "{{user}} người dùng, {{bot}} bot",
+      "bot_satisfaction": "Độ hài lòng bot",
+      "avg_response": "Phản hồi trung bình: {{time}}s",
+      "message_distribution": "Phân bố tin nhắn trò chuyện",
+      "message_distribution_desc": "Tin nhắn người dùng so với phản hồi bot",
+      "user_messages": "Tin nhắn người dùng",
+      "bot_messages": "Tin nhắn bot",
+      "satisfaction_title": "Độ hài lòng chatbot",
+      "satisfaction_desc": "Mức độ hài lòng của người dùng với phản hồi bot",
+      "satisfied": "Hài lòng",
+      "neutral": "Trung lập",
+      "unsatisfied": "Không hài lòng"
+    },
+    "games": {
+      "title": "Phân tích trò chơi",
+      "description": "Theo dõi mức độ tương tác, hiệu suất người chơi và trò chơi phổ biến",
+      "select_view": "Chọn chế độ xem",
+      "overview": "Tổng quan",
+      "overview_all_games": "Tổng quan - Tất cả trò chơi",
+      "total_game_plays": "Tổng lượt chơi",
+      "total_plays_desc": "Trên tất cả các trò chơi",
+      "avg_time_play": "Thời gian chơi trung bình",
+      "avg_time_all_games": "Trung bình trên tất cả trò chơi",
+      "avg_completion_rate": "Tỷ lệ hoàn thành trung bình",
+      "avg_completion_all_games": "Trung bình trên tất cả trò chơi",
+      "avg_score": "Điểm trung bình",
+      "avg_player_score": "Điểm trung bình của người chơi",
+      "total_games_play": "Tổng lượt chơi",
+      "total_plays_game": "Tổng lượt chơi cho trò chơi này",
+      "avg_time_per_game": "Thời gian trung bình mỗi trò chơi",
+      "completion_rate": "Tỷ lệ hoàn thành",
+      "players_complete": "Người chơi hoàn thành trò chơi",
+      "avg_score_game": "Điểm trung bình cho trò chơi này",
+      "plays_over_time": "Lượt chơi theo thời gian",
+      "total_plays_period": "Tổng lượt chơi trong {{period}} qua",
+      "period_30_days": "30 ngày",
+      "period_12_months": "12 tháng",
+      "period_4_quarters": "4 quý",
+      "plays": "Lượt chơi",
+      "avg_score_trend": "Xu hướng điểm trung bình",
+      "avg_scores_period": "Điểm trung bình trong {{period}} qua",
+      "avg_score_label": "Điểm TB",
+      "top_players": "Bảng xếp hạng người chơi hàng đầu",
+      "top_players_desc": "Người chơi có điểm cao nhất trên tất cả trò chơi",
+      "rank": "Xếp hạng",
+      "player": "Người chơi",
+      "games_played": "Số trò chơi đã chơi",
+      "total_score": "Tổng điểm",
+      "avg_per_game": "TB mỗi trò chơi",
+      "minutes": "phút"
+    },
+    "period_filter": {
+      "day": "Ngày",
+      "month": "Tháng",
+      "quarter": "Quý"
+    },
+    "stat_card": {
+      "from_last_period": "so với kỳ trước"
     }
   },
   "archive": {
@@ -30,7 +122,8 @@
     "description": "Xem và quản lý các mục đã xóa. Khôi phục chúng để làm cho chúng hoạt động trở lại.",
     "tabs": {
       "books": "Sách",
-      "packages": "Gói đăng ký"
+      "packages": "Gói đăng ký",
+      "achievements": "Thành tựu"
     },
     "books": {
       "no_deleted": "Không tìm thấy sách đã xóa",
@@ -49,7 +142,87 @@
       "restore_success": "Khôi phục gói đăng ký \"{{name}}\" thành công!",
       "restore_error": "Không thể khôi phục gói đăng ký. Vui lòng thử lại.",
       "deleted_at": "Đã xóa lúc",
-      "features": "Tính năng"
+      "features": "Tính năng",
+      "days": "ngày",
+      "more_features": "+{{count}} tính năng khác"
+    },
+    "achievements": {
+      "no_deleted": "Không tìm thấy thành tựu đã xóa",
+      "all_active": "Tất cả thành tựu hiện đang hoạt động",
+      "restore_title": "Khôi phục thành tựu",
+      "restore_message": "Bạn có chắc chắn muốn khôi phục thành tựu này không?",
+      "restore_success": "Khôi phục thành tựu \"{{name}}\" thành công!",
+      "restore_error": "Không thể khôi phục thành tựu. Vui lòng thử lại.",
+      "deleted_at": "Đã xóa lúc"
+    }
+  },
+  "achievements": {
+    "title": "Quản lý Thành tựu",
+    "description": "Tạo và quản lý thành tựu người dùng",
+    "create_achievement": "Tạo Thành tựu",
+    "no_achievements": "Không tìm thấy thành tựu",
+    "create_first": "Tạo thành tựu đầu tiên để bắt đầu",
+    "status_filter": {
+      "all": "Tất cả",
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "type": {
+      "first_book": "Sách Đầu tiên",
+      "book_milestone": "Cột Mốc"
+    },
+    "card": {
+      "edit": "Sửa",
+      "delete": "Xóa",
+      "restore": "Khôi phục",
+      "no_image": "Không có hình ảnh",
+      "milestone": "Cột mốc: {{count}} sách"
+    },
+    "dialog": {
+      "edit_title": "Sửa Thành tựu",
+      "create_title": "Tạo Thành tựu",
+      "edit_description": "Cập nhật chi tiết thành tựu bên dưới",
+      "create_description": "Điền thông tin để tạo thành tựu mới",
+      "form": {
+        "name": "Tên",
+        "name_placeholder": "Tên thành tựu",
+        "name_required": "Tên là bắt buộc",
+        "description": "Mô tả",
+        "description_placeholder": "Mô tả thành tựu",
+        "description_required": "Mô tả là bắt buộc",
+        "image": "Hình ảnh Thành tựu",
+        "image_description": "Tải lên biểu tượng hoặc huy hiệu thành tựu (tối đa 2MB)",
+        "type": "Loại",
+        "type_placeholder": "Chọn loại thành tựu",
+        "status": "Trạng thái",
+        "status_placeholder": "Chọn trạng thái",
+        "milestone_count": "Số Mốc",
+        "milestone_count_placeholder": "ví dụ: 5",
+        "milestone_count_required": "Số mốc là bắt buộc cho BOOK_MILESTONE",
+        "milestone_count_description": "Số lượng sách cần thiết để mở khóa thành tựu này"
+      },
+      "cancel": "Hủy",
+      "saving": "Đang lưu...",
+      "update": "Cập nhật",
+      "create": "Tạo"
+    },
+    "delete_dialog": {
+      "title": "Bạn có chắc chắn?",
+      "description": "Sẽ xóa thành tựu \"{{name}}\". Hành động này có thể được hoàn tác bằng cách khôi phục từ danh sách thành tựu đã xóa.",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "deleting": "Đang xóa..."
+    },
+    "toast": {
+      "delete_success": "Xóa thành tựu thành công",
+      "delete_error": "Không thể xóa thành tựu",
+      "create_success": "Tạo thành tựu thành công",
+      "create_error": "Không thể tạo thành tựu",
+      "update_success": "Cập nhật thành tựu thành công",
+      "update_error": "Không thể cập nhật thành tựu"
+    },
+    "pagination": {
+      "page_of": "Trang {{current}} / {{total}}"
     }
   },
   "books": {
@@ -67,7 +240,7 @@
       "author_placeholder": "Tên tác giả",
       "publisher": "Nhà xuất bản",
       "publisher_placeholder": "Tên nhà xuất bản",
-      "book_file": "Tệp sách (EPUB/PDF)",
+      "book_file": "Tệp sách (EPUB)",
       "book_file_required": "Tệp sách là bắt buộc",
       "cover_image": "Ảnh bìa",
       "status": "Trạng thái",
@@ -348,22 +521,105 @@
       "all": "Tất cả trạng thái",
       "active": "Hoạt động",
       "inactive": "Không hoạt động"
+    },
+    "card": {
+      "price": "Giá:",
+      "duration": "Thời hạn:",
+      "daily_tokens": "Token hàng ngày:",
+      "features": "Tính năng:",
+      "days": "ngày",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa"
+    },
+    "dialog": {
+      "edit_title": "Chỉnh sửa gói",
+      "create_title": "Tạo gói mới",
+      "package_name": "Tên gói",
+      "package_name_placeholder": "vd: Gói Premium",
+      "package_name_required": "Tên gói là bắt buộc",
+      "price_trizilium": "Giá (Trizilium)",
+      "price_placeholder": "1000",
+      "price_required": "Giá phải lớn hơn 0",
+      "duration_days": "Thời hạn (Ngày)",
+      "duration_placeholder": "30",
+      "duration_required": "Thời hạn phải lớn hơn 0",
+      "daily_trizilium": "Trizilium hàng ngày",
+      "daily_placeholder": "500",
+      "daily_required": "Token trò chuyện mỗi ngày phải lớn hơn 0",
+      "status": "Trạng thái",
+      "status_placeholder": "Chọn trạng thái",
+      "status_active": "Hoạt động",
+      "status_inactive": "Không hoạt động",
+      "features_label": "Tính năng",
+      "features_required": "Cần ít nhất 1 tính năng",
+      "add_new_feature": "Thêm tính năng mới",
+      "icon_url_placeholder": "URL biểu tượng (vd: https://example.com/icon.png)",
+      "feature_description_placeholder": "Mô tả tính năng",
+      "valid_image_url": "✓ URL hình ảnh hợp lệ",
+      "add_feature": "Thêm tính năng",
+      "cancel": "Hủy",
+      "update_package": "Cập nhật gói",
+      "create_package": "Tạo gói"
+    },
+    "delete_dialog": {
+      "title": "Xóa gói",
+      "message": "Bạn có chắc chắn muốn xóa gói này không?",
+      "deleting": "Đang xóa...",
+      "delete_package": "Xóa gói",
+      "cancel": "Hủy"
+    },
+    "toast": {
+      "create_success": "Tạo gói thành công!",
+      "create_error": "Không thể tạo gói. Vui lòng thử lại.",
+      "update_success": "Cập nhật gói thành công!",
+      "update_error": "Không thể cập nhật gói. Vui lòng thử lại.",
+      "delete_success": "Xóa gói thành công!",
+      "delete_error": "Không thể xóa gói. Vui lòng thử lại."
     }
-  },
-  "quizzes": {
-    "title": "Quiz",
-    "description": "Quản lý tất cả quiz trong hệ thống.",
-    "new_quiz": "Quiz mới",
-    "delete_title": "Xóa quiz",
-    "delete_message": "Bạn có chắc chắn muốn xóa quiz này không?",
-    "delete_success": "Xóa quiz thành công!",
-    "delete_error": "Không thể xóa quiz. Vui lòng thử lại."
   },
   "subscriptions": {
     "title": "Gói đăng ký",
     "description": "Quản lý tất cả gói đăng ký trong hệ thống",
     "no_subscriptions": "Không tìm thấy gói đăng ký",
     "no_results": "Không có kết quả.",
+    "columns": {
+      "user_id": "ID người dùng",
+      "package": "Gói",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc",
+      "trizilium_per_day": "Token/Ngày",
+      "status": "Trạng thái",
+      "auto_renewal": "Tự động gia hạn",
+      "actions": "Hành động"
+    },
+    "status": {
+      "enabled": "Đã bật",
+      "disabled": "Đã tắt"
+    },
+    "actions": {
+      "view_details": "Xem chi tiết",
+      "enable_auto_renewal": "Bật tự động gia hạn",
+      "disable_auto_renewal": "Tắt tự động gia hạn",
+      "cancel_subscription": "Hủy gói đăng ký"
+    },
+    "details": {
+      "title": "Chi tiết gói đăng ký",
+      "package": "Gói",
+      "user_id": "ID người dùng",
+      "status": "Trạng thái",
+      "start_date": "Ngày bắt đầu",
+      "end_date": "Ngày kết thúc",
+      "tokens_per_day_remaining": "Token còn lại mỗi ngày",
+      "auto_renewal": "Tự động gia hạn",
+      "close": "Đóng"
+    },
+    "cancel_dialog": {
+      "title": "Hủy gói đăng ký?",
+      "message": "Bạn có chắc chắn muốn hủy gói đăng ký này không? Người dùng sẽ mất quyền truy cập các tính năng cao cấp ngay lập tức.",
+      "keep": "Không, Giữ lại",
+      "confirm": "Có, Hủy gói đăng ký",
+      "cancelling": "Đang hủy..."
+    },
     "auto_renewal": {
       "dialog_title": "Xác nhận thay đổi tự động gia hạn",
       "dialog_description_enable": "Bạn có chắc chắn muốn bật tự động gia hạn cho gói đăng ký này không?",
@@ -371,11 +627,73 @@
       "cancel": "Hủy",
       "confirm": "Xác nhận",
       "saving": "Đang lưu..."
+    },
+    "toast": {
+      "cancel_success": "Hủy gói đăng ký thành công",
+      "cancel_error": "Không thể hủy gói đăng ký"
     }
   },
   "transactions": {
     "title": "Giao dịch",
-    "description": "Xem và quản lý tất cả giao dịch hệ thống"
+    "description": "Xem và quản lý tất cả giao dịch hệ thống",
+    "search_placeholder": "Tìm kiếm giao dịch...",
+    "no_transactions": "Không tìm thấy giao dịch",
+    "no_results": "Không có kết quả.",
+    "columns": {
+      "order_code": "Mã đơn hàng",
+      "type": "Loại",
+      "amount": "Số tiền",
+      "provider": "Nhà cung cấp",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "actions": "Hành động"
+    },
+    "types": {
+      "topup": "Nạp tiền",
+      "spend": "Chi tiêu",
+      "refund": "Hoàn tiền"
+    },
+    "status": {
+      "completed": "Hoàn thành",
+      "pending": "Đang chờ",
+      "cancelled": "Đã hủy"
+    },
+    "providers": {
+      "stripe": "Stripe",
+      "payos": "PayOS",
+      "triz": "TRIZ"
+    },
+    "filters": {
+      "transaction_type": "Loại giao dịch",
+      "status": "Trạng thái",
+      "provider": "Nhà cung cấp"
+    },
+    "actions": {
+      "view_details": "Xem chi tiết",
+      "cancel_transaction": "Hủy giao dịch"
+    },
+    "details": {
+      "title": "Chi tiết giao dịch",
+      "order_code": "Mã đơn hàng",
+      "type": "Loại",
+      "amount": "Số tiền",
+      "provider": "Nhà cung cấp",
+      "provider_tx_ref": "Mã tham chiếu NCC",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "close": "Đóng"
+    },
+    "cancel_dialog": {
+      "title": "Hủy giao dịch",
+      "message": "Bạn có chắc chắn muốn hủy giao dịch này? Hành động này không thể hoàn tác.",
+      "keep": "Không, Giữ lại",
+      "confirm": "Có, Hủy giao dịch",
+      "cancelling": "Đang hủy..."
+    },
+    "toast": {
+      "cancel_success": "Hủy giao dịch thành công",
+      "cancel_error": "Không thể hủy giao dịch"
+    }
   },
   "users": {
     "title": "Người dùng",
@@ -421,6 +739,112 @@
         "success": "Hủy gói đăng ký thành công",
         "error": "Không thể hủy gói đăng ký"
       }
+    }
+  },
+  "quizzes": {
+    "title": "Bài kiểm tra",
+    "description": "Quản lý tất cả bài kiểm tra trong hệ thống.",
+    "new_quiz": "Bài kiểm tra mới",
+    "delete_title": "Xóa bài kiểm tra",
+    "delete_message": "Bạn có chắc chắn muốn xóa bài kiểm tra này không?",
+    "delete_success": "Xóa bài kiểm tra thành công!",
+    "delete_error": "Không thể xóa bài kiểm tra. Vui lòng thử lại.",
+    "search_placeholder": "Tìm kiếm theo tiêu đề, mô tả...",
+    "filter_type": "Loại",
+    "loading": "Đang tải bài kiểm tra...",
+    "no_quizzes": "Không tìm thấy bài kiểm tra nào. Tạo bài kiểm tra đầu tiên của bạn!",
+    "no_results": "Không có kết quả.",
+    "columns": {
+      "title": "Tiêu đề",
+      "questions": "Câu hỏi",
+      "question_count": "{{count}} câu hỏi",
+      "question_count_plural": "{{count}} câu hỏi",
+      "duration": "Thời lượng",
+      "duration_minutes": "{{count}} phút",
+      "no_limit": "Không giới hạn",
+      "created": "Ngày tạo",
+      "updated": "Ngày cập nhật",
+      "actions": "Hành động"
+    },
+    "actions": {
+      "view_details": "Xem chi tiết",
+      "edit_quiz": "Chỉnh sửa bài kiểm tra",
+      "delete_quiz": "Xóa bài kiểm tra"
+    },
+    "create_dialog": {
+      "title": "Tạo bài kiểm tra mới",
+      "description": "Tạo bài kiểm tra mới với các câu hỏi và lựa chọn.",
+      "form": {
+        "title": "Tiêu đề",
+        "title_placeholder": "Nhập tiêu đề bài kiểm tra...",
+        "title_required": "Tiêu đề là bắt buộc",
+        "description": "Mô tả",
+        "description_placeholder": "Nhập mô tả bài kiểm tra...",
+        "description_required": "Mô tả là bắt buộc",
+        "duration": "Thời lượng (phút)",
+        "duration_placeholder": "Nhập thời lượng tính bằng phút",
+        "duration_min": "Thời lượng phải ít nhất 1 phút",
+        "course": "Khóa học",
+        "course_placeholder": "Chọn khóa học",
+        "course_required": "Khóa học là bắt buộc",
+        "module": "Chương",
+        "module_placeholder": "Chọn chương",
+        "module_required": "Chương là bắt buộc",
+        "select_course_first": "Vui lòng chọn khóa học trước"
+      },
+      "course_module": "Lựa chọn khóa học & Chương",
+      "questions_section": "Câu hỏi",
+      "add_question": "Thêm câu hỏi",
+      "upload_excel": "Tải lên tệp Excel",
+      "question": {
+        "title": "Câu hỏi {{number}}",
+        "content": "Nội dung câu hỏi",
+        "content_placeholder": "Nhập nội dung câu hỏi...",
+        "content_required": "Nội dung câu hỏi là bắt buộc",
+        "type": "Loại câu hỏi",
+        "single_choice": "Chọn một đáp án",
+        "multiple_choice": "Chọn nhiều đáp án",
+        "option": "Lựa chọn {{letter}}",
+        "option_placeholder": "Nhập nội dung lựa chọn...",
+        "option_required": "Nội dung lựa chọn là bắt buộc",
+        "correct": "Đúng",
+        "add_option": "Thêm lựa chọn",
+        "remove_option": "Xóa lựa chọn",
+        "remove_question": "Xóa câu hỏi",
+        "min_options": "Cần ít nhất 2 lựa chọn",
+        "min_questions": "Cần ít nhất 1 câu hỏi"
+      },
+      "buttons": {
+        "cancel": "Hủy",
+        "create": "Tạo bài kiểm tra",
+        "creating": "Đang tạo..."
+      }
+    },
+    "edit_dialog": {
+      "title": "Chỉnh sửa bài kiểm tra",
+      "description": "Cập nhật thông tin và câu hỏi của bài kiểm tra.",
+      "loading": "Đang tải dữ liệu bài kiểm tra...",
+      "error": "Lỗi khi tải dữ liệu bài kiểm tra",
+      "close": "Đóng",
+      "buttons": {
+        "cancel": "Hủy",
+        "update": "Cập nhật bài kiểm tra",
+        "updating": "Đang cập nhật..."
+      }
+    },
+    "detail_dialog": {
+      "title": "Chi tiết bài kiểm tra",
+      "duration": "Thời lượng: {{duration}} phút",
+      "course_module_info": "Thông tin khóa học & Chương",
+      "course": "Khóa học",
+      "module": "Chương",
+      "module_info": "{{duration}} phút · Cấp độ: {{level}}",
+      "questions_title": "Câu hỏi ({{count}})",
+      "question_number": "Câu {{number}}: {{content}}",
+      "question_type": "Loại: {{type}}",
+      "correct_answer": "✓ Đúng",
+      "close": "Đóng",
+      "loading": "Đang tải..."
     }
   }
 }

@@ -8,7 +8,7 @@ import {
 import { useLayout } from '@/context/layout-provider';
 import useAuth from '@/features/auth/hooks/use-auth';
 
-import { expertSidebarData } from './data/expert-sidebar-data';
+import { useExpertSidebarData } from './data/expert-sidebar-data';
 import { ExpertAppTitle } from './expert-app-title';
 import { NavGroup } from './nav-group';
 import { NavUser } from './nav-user';
@@ -16,6 +16,7 @@ import { NavUser } from './nav-user';
 export const ExpertSidebar = () => {
   const { collapsible, variant } = useLayout();
   const { user } = useAuth();
+  const expertSidebarData = useExpertSidebarData();
 
   const userData = user
     ? {

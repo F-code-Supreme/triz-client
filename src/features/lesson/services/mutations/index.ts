@@ -78,7 +78,30 @@ export const useUpdateLessonMutation = (lessonId: string) => {
     },
   });
 };
-
+export const useUpdateStatusLessonMutation = (lessonId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (status: 'ACTIVE' | 'INACTIVE') => {
+      const response = await _request.patch<Response<Lesson>>(
+        `/lessons/${lessonId}/status`,
+        { status },
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [ModuleKeys.GetModulesByCourseQuery],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsById, lessonId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonsByModuleQuery],
+      });
+    },
+  });
+};
 export const useReorderLessonMutation = (moduleId: string) => {
   const _request = useAxios();
   const queryClient = useQueryClient();

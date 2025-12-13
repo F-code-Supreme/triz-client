@@ -1,0 +1,109 @@
+{
+  "page_meta_title": "Ví tiền",
+  "title": "Ví tiền",
+  "description": "Quản lý số dư ví và xem lịch sử giao dịch",
+  "balance_card": {
+    "title": "Số dư ví",
+    "current_balance": "Số dư hiện tại",
+    "top_up": "Nạp tiền"
+  },
+  "transactions": {
+    "title": "Lịch sử giao dịch",
+    "search_placeholder": "Tìm kiếm giao dịch...",
+    "no_transactions": "Không tìm thấy giao dịch",
+    "no_results": "Không có kết quả.",
+    "columns": {
+      "order_code": "Mã đơn hàng",
+      "type": "Loại",
+      "amount": "Số tiền",
+      "provider": "Nhà cung cấp",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "actions": "Thao tác"
+    },
+    "types": {
+      "topup": "Nạp tiền",
+      "spend": "Chi tiêu",
+      "refund": "Hoàn tiền",
+      "TOP_UP": "Nạp tiền",
+      "PURCHASE": "Mua hàng",
+      "REFUND": "Hoàn tiền",
+      "SUBSCRIPTION": "Đăng ký"
+    },
+    "status": {
+      "completed": "Hoàn thành",
+      "pending": "Đang chờ",
+      "cancelled": "Đã hủy",
+      "COMPLETED": "Hoàn thành",
+      "PENDING": "Đang chờ",
+      "FAILED": "Thất bại",
+      "CANCELLED": "Đã hủy"
+    },
+    "providers": {
+      "stripe": "Stripe",
+      "payos": "PayOS",
+      "triz": "TRIZ"
+    },
+    "actions": {
+      "view_details": "Xem chi tiết",
+      "cancel_transaction": "Hủy giao dịch"
+    },
+    "details": {
+      "title": "Chi tiết giao dịch",
+      "order_code": "Mã đơn hàng",
+      "type": "Loại",
+      "amount": "Số tiền",
+      "provider": "Nhà cung cấp",
+      "provider_tx_ref": "Mã tham chiếu",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "close": "Đóng"
+    },
+    "cancel_dialog": {
+      "title": "Hủy giao dịch",
+      "message": "Bạn có chắc chắn muốn hủy giao dịch này? Hành động này không thể hoàn tác.",
+      "keep": "Không, giữ lại",
+      "confirm": "Có, hủy giao dịch",
+      "cancelling": "Đang hủy..."
+    },
+    "toast": {
+      "cancel_success": "Hủy giao dịch thành công",
+      "cancel_error": "Hủy giao dịch thất bại"
+    },
+    "filters": {
+      "from_date": "Từ ngày",
+      "to_date": "Đến ngày",
+      "type": "Loại",
+      "transaction_type": "Loại giao dịch",
+      "status": "Trạng thái",
+      "provider": "Nhà cung cấp",
+      "all_types": "Tất cả loại",
+      "all_statuses": "Tất cả trạng thái"
+    },
+    "empty": "Không tìm thấy giao dịch",
+    "loading": "Đang tải giao dịch..."
+  },
+  "topup_dialog": {
+    "title": "Nạp tiền vào ví",
+    "description": "Thêm tiền vào ví của bạn. Bạn sẽ được chuyển hướng đến nhà cung cấp thanh toán để hoàn tất giao dịch.",
+    "amount_label": "Số tiền (VND)",
+    "amount_placeholder": "100,000",
+    "amount_min": "Số tiền tối thiểu là {{amount}} Trizilium",
+    "amount_max": "Số tiền tối đa là {{amount}} Trizilium",
+    "amount_hint": "Tối thiểu: {{min}} | Tối đa: {{max}}",
+    "quick_amounts": "Số tiền nhanh",
+    "provider_label": "Nhà cung cấp thanh toán",
+    "provider_payos": "PayOS (Việt Nam)",
+    "provider_stripe": "Stripe (Quốc tế)",
+    "provider_paypal": "PayPal (Quốc tế)",
+    "alert_message": "Bạn sẽ được chuyển hướng đến PayOS dựa trên lựa chọn của bạn. URL trả về của bạn sẽ được xử lý an toàn.",
+    "cancel": "Hủy",
+    "confirm": "Tiến hành thanh toán",
+    "processing": "Đang xử lý...",
+    "success": "Nạp tiền thành công!",
+    "error": "Nạp tiền thất bại",
+    "error_no_payment_url": "Không thể lấy URL thanh toán",
+    "error_initiate": "Không thể khởi tạo nạp tiền. Vui lòng thử lại."
+  },
+  "loading": "Đang tải ví..."
+}

@@ -1,0 +1,94 @@
+{
+  "page_meta_title": "Khóa học",
+  "all_courses": {
+    "title": "Tất cả khóa học",
+    "description": "Khám phá và đăng ký khóa học để bắt đầu hành trình học tập của bạn",
+    "my_courses_button": "Khóa học của tôi"
+  },
+  "my_courses": {
+    "title": "Khóa học của tôi",
+    "description": "Tiếp tục hành trình học tập với các khóa học đã đăng ký"
+  },
+  "overview": {
+    "back_to_courses": "Quay lại tất cả khóa học",
+    "enroll_now": "Đăng ký ngay",
+    "start_learning": "Bắt đầu học",
+    "level": "Cấp độ",
+    "duration": "Thời lượng",
+    "learners": "Học viên",
+    "price": "Giá",
+    "deal_price": "Giá ưu đãi",
+    "free": "Miễn phí",
+    "minutes": "phút",
+    "description_title": "Mô tả",
+    "curriculum_title": "Chương trình học",
+    "lessons": "bài học",
+    "error": "Không thể tải khóa học.",
+    "enroll_error": "Đăng ký thất bại!",
+    "level_beginner": "Cơ bản",
+    "level_intermediate": "Trung cấp",
+    "level_advanced": "Nâng cao"
+  },
+  "learn": {
+    "loading": "Đang tải nội dung khóa học...",
+    "error": "Không thể tải nội dung khóa học.",
+    "back_to_my_courses": "Quay lại khóa học của tôi"
+  },
+  "quiz": {
+    "page_meta_title": "Bài kiểm tra",
+    "loading": "Đang tải bài kiểm tra...",
+    "no_quiz": "Không có bài kiểm tra",
+    "no_quiz_description": "Module này chưa có bài kiểm tra.",
+    "no_questions": "Không có câu hỏi",
+    "no_questions_description": "Bài kiểm tra này chưa có câu hỏi nào.",
+    "confirm_start": {
+      "title": "Bắt đầu bài kiểm tra",
+      "description": "Bạn đã sẵn sàng bắt đầu bài kiểm tra chưa?",
+      "duration": "Thời gian",
+      "minutes": "phút",
+      "questions": "Câu hỏi",
+      "cancel": "Hủy",
+      "start": "Bắt đầu",
+      "starting": "Đang bắt đầu..."
+    },
+    "quiz_header": {
+      "time_remaining": "Thời gian còn lại",
+      "question_progress": "Câu hỏi"
+    },
+    "questions": {
+      "multiple_answers": "Chọn tất cả đáp án đúng",
+      "single_answer": "Chọn một đáp án"
+    },
+    "submit": "Nộp bài",
+    "submit_confirm": "Bạn có chắc chắn muốn nộp bài? Bạn không thể thay đổi câu trả lời sau khi nộp.",
+    "results": {
+      "title": "Kết quả bài kiểm tra",
+      "score": "Điểm của bạn",
+      "passed": "Chúc mừng! Bạn đã vượt qua!",
+      "failed": "Bạn chưa vượt qua lần này. Hãy tiếp tục học tập!",
+      "correct_answers": "Câu trả lời đúng",
+      "total_questions": "Tổng số câu hỏi",
+      "review": "Xem lại đáp án",
+      "back_to_course": "Quay lại khóa học",
+      "your_answer": "Câu trả lời của bạn",
+      "correct_answer": "Đáp án đúng",
+      "correct": "Đúng",
+      "incorrect": "Sai"
+    },
+    "errors": {
+      "start_failed": "Không thể bắt đầu bài kiểm tra",
+      "submit_failed": "Không thể nộp bài kiểm tra"
+    }
+  },
+  "filters": {
+    "search_placeholder": "Tìm kiếm khóa học...",
+    "level": "Cấp độ",
+    "all_levels": "Tất cả cấp độ",
+    "sort_by": "Sắp xếp theo",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "most_popular": "Phổ biến nhất"
+  },
+  "loading": "Đang tải khóa học...",
+  "error": "Không thể tải khóa học."
+}

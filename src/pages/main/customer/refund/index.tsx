@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import useAuth from '@/features/auth/hooks/use-auth';
@@ -19,6 +20,7 @@ type StepType = 1 | 2 | 3;
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const RefundPage = () => {
+  const { t } = useTranslation('pages.refund');
   const { user } = useAuth();
   const [step, setStep] = useState<StepType>(1);
   const [selectedSubscription, setSelectedSubscription] = useState<
@@ -61,13 +63,13 @@ const RefundPage = () => {
   // Handle refund confirmation
   const handleRefund = () => {
     if (!selectedSubscription || !user) {
-      toast.error('Missing required information');
+      toast.error(t('errors.missing_info'));
       return;
     }
 
     const transactionId = previewRefund?.id;
     if (!transactionId) {
-      toast.error('Cannot find transaction to refund');
+      toast.error(t('errors.no_transaction'));
       return;
     }
 
@@ -76,15 +78,14 @@ const RefundPage = () => {
       {
         onSuccess: () => {
           setStep(3);
-          toast.success('Refund processed successfully!');
+          toast.success(t('step_result.title'));
         },
         onError: (error: unknown) => {
           const err = error as {
             response?: { data?: { message?: string } };
           };
           const errorMessage =
-            err?.response?.data?.message ||
-            'Failed to process refund. Please try again.';
+            err?.response?.data?.message || t('errors.refund_failed');
           toast.error(errorMessage);
         },
       },
@@ -103,16 +104,12 @@ const RefundPage = () => {
   };
 
   return (
-    <DefaultLayout meta={{ title: 'Refund Subscription' }}>
+    <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <div className="flex flex-col gap-8 p-8 max-w-4xl mx-auto">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Refund Subscription
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Process a refund for your subscription
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+          <p className="text-muted-foreground mt-2">{t('description')}</p>
         </div>
 
         {/* Step Content */}

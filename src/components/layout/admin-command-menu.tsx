@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-import { adminSidebarData } from './data/admin-sidebar-data';
+import { useAdminSidebarData } from './data/admin-sidebar-data';
 
 type AdminCommandMenuProps = {
   open: boolean;
@@ -26,6 +26,7 @@ export const AdminCommandMenu = ({ open, setOpen }: AdminCommandMenuProps) => {
   const { t } = useTranslation('sidebar');
   const navigate = useNavigate();
   const { setTheme } = useTheme();
+  const adminSidebarData = useAdminSidebarData();
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
