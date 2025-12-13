@@ -2,20 +2,11 @@ import { type ColumnDef } from '@tanstack/react-table';
 
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+
 import { AssignmentsDataTableRowActions } from '@/features/assignment/components/assignments-data-table-row-actions';
 
-import type {
-  // Assignment,
-  AssignmentSubmissionExpertReview,
-} from '@/features/assignment/services/queries/types';
+import type { AssignmentSubmissionExpertReview } from '@/features/assignment/services/queries/types';
 
-// export const assignmentsColumns: ColumnDef<Assignment>[] = [
 export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
   [
     {
@@ -34,57 +25,29 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
       },
     },
     {
-      accessorKey: 'description',
+      accessorKey: 'userFullName',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Mô tả" />
+        <DataTableColumnHeader column={column} title="Tác giả" />
       ),
       cell: ({ row }) => {
-        const description = row.getValue('description') as string;
         return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="max-w-[200px] truncate text-sm cursor-help">
-                  {description || 'N/A'}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="max-w-[300px]">
-                <p className="text-xs">{description || 'No description'}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
-      },
-    },
-    {
-      accessorKey: 'durationInMinutes',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Thời lượng" />
-      ),
-      cell: ({ row }) => {
-        const duration = row.getValue('durationInMinutes') as number;
-        return (
-          <div className="flex items-center gap-1">
-            <span className="font-medium">{duration}</span>
-            <span className="text-xs text-gray-500">phút</span>
+          <div className="flex space-x-2">
+            <span className="max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]">
+              {row.getValue('userFullName')}
+            </span>
           </div>
         );
       },
     },
+
     {
-      accessorKey: 'maxAttempts',
+      accessorKey: 'attemptNumber',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Số lần thử" />
+        <DataTableColumnHeader column={column} title="Số lần làm" />
       ),
       cell: ({ row }) => {
-        const maxAttempts = row.getValue('maxAttempts') as number;
-        return (
-          <div className="text-center">
-            <Badge variant="outline" className="font-mono">
-              {maxAttempts}
-            </Badge>
-          </div>
-        );
+        const maxAttempts = row.getValue('attemptNumber') as number;
+        return <div className="text-center">{maxAttempts}</div>;
       },
     },
     {
@@ -97,14 +60,20 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
 
         return (
           <Badge
-            variant={status === 'ACTIVE' ? 'default' : 'secondary'}
+            variant={status === 'EXPERT_PENDING' ? 'default' : 'secondary'}
             className={
-              status === 'ACTIVE'
-                ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
+              status === 'EXPERT_PENDING'
+                ? 'bg-blue-100 text-blue-700 hover:bg-blue-100'
+                : status === 'AI_PENDING'
+                  ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100'
+                  : status === 'APPROVED'
+                    ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                    : status === 'AI_REJECTED' || status === 'REJECTED'
+                      ? 'bg-red-100 text-red-700 hover:bg-red-100'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
             }
           >
-            {status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
+            {status}
           </Badge>
         );
       },
@@ -154,6 +123,8 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
     },
     {
       id: 'actions',
-      cell: ({ row }) => <AssignmentsDataTableRowActions row={row} />,
+      cell: ({ row }) => {
+        return <AssignmentsDataTableRowActions row={row} />;
+      },
     },
   ];

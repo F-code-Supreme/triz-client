@@ -345,11 +345,14 @@ const CourseAssignment = ({
                     <div>
                       <h4 className="font-medium text-sm mb-2">Your Answer:</h4>
                       <div className="prose prose-sm max-w-none bg-muted p-4 rounded-lg">
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: submission.submissionContent,
-                          }}
-                        />
+                        <TooltipProvider>
+                          <MinimalTiptapEditor
+                            key={submission.id}
+                            value={submission.submissionContent}
+                            showToolbar={false}
+                            editable={false}
+                          />
+                        </TooltipProvider>
                       </div>
                     </div>
                     {submission.expertComment && (

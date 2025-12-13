@@ -793,6 +793,7 @@ interface Resources {
         "description": "Create a new quiz with questions and options.",
         "form": {
           "course": "Course",
+          "course_module:": "Course & Module selection",
           "course_placeholder": "Select a course",
           "course_required": "Course is required",
           "description": "Description",
@@ -804,10 +805,16 @@ interface Resources {
           "module": "Module",
           "module_placeholder": "Select a module",
           "module_required": "Module is required",
+          "select_course": "Select a course",
           "select_course_first": "Please select a course first",
+          "select_module": "Select a module",
           "title": "Title",
           "title_placeholder": "Enter quiz title...",
-          "title_required": "Title is required"
+          "title_required": "Title is required",
+          "upload": "Upload",
+          "upload_image": "Upload Quiz Image",
+          "upload_loading": "Uploading...",
+          "upload_placeholder": "Enter image URL..."
         },
         "question": {
           "add_option": "Add Option",

@@ -39,7 +39,7 @@ export interface AssignmentSubmissionExpertReview {
   isAiPassed: boolean | null;
   isExpertPassed: boolean | null;
   expertComment: string | null;
-  status: 'AI_PENDING' | 'PENDING' | 'APPROVED' | 'REJECTED';
+  status: 'AI_PENDING' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'EXPERT_PENDING';
   gradedAt: string | null;
   createdAt: string;
   updatedAt: string;

@@ -3,16 +3,6 @@ import { type Row } from '@tanstack/react-table';
 import { BookDashed } from 'lucide-react';
 import { useState } from 'react';
 
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-// } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -37,23 +27,6 @@ export const AssignmentsDataTableRowActions = <TData,>({
   const [_setIsDeleteDialogOpen] = useState(false);
   const [isSubmissionsDialogOpen, setIsSubmissionsDialogOpen] = useState(false);
 
-  // Note: You'll need to pass moduleId somehow - could be from context or route params
-  // const deleteAssignment = useDeleteAssignmentMutation(''); // TODO: Add moduleId
-
-  // const handleDelete = () => {
-  //   deleteAssignment.mutate(assignment.id, {
-  //     onSuccess: () => {
-  //       toast.success('Xóa bài tập thành công');
-  //       setIsDeleteDialogOpen(false);
-  //     },
-  //     onError: (error) => {
-  //       toast.error(
-  //         error instanceof Error ? error.message : 'Không thể xóa bài tập',
-  //       );
-  //     },
-  //   });
-  // };
-
   const handleDetailAssignment = () => {
     setIsSubmissionsDialogOpen(true);
   };
@@ -73,45 +46,11 @@ export const AssignmentsDataTableRowActions = <TData,>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={handleDetailAssignment}>
             <BookDashed className="mr-2 h-4 w-4" />
-            Chi tiết các bài
+            Chi tiết bài
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          {/* <DropdownMenuItem
-            onClick={() => setIsDeleteDialogOpen(true)}
-            className="text-red-600"
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Xóa
-          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {/* <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Xác nhận xóa bài tập</AlertDialogTitle>
-            <AlertDialogDescription>
-              Bạn có chắc chắn muốn xóa bài tập "{assignment.title}" không? Hành
-              động này không thể hoàn tác.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteAssignment.isPending}>
-              Hủy
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={deleteAssignment.isPending}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {deleteAssignment.isPending ? 'Đang xóa...' : 'Xóa'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog> */}
 
       <AssignmentSubmissionsDialog
         open={isSubmissionsDialogOpen}

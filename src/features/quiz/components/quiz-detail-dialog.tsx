@@ -27,6 +27,9 @@ const DetailQuizDialog = ({
     selectedQuizData?.moduleId || '',
   );
 
+  console.log('selectedQuizData', selectedQuizData);
+  console.log('moduleData', moduleData);
+
   const { data: courseData } = useGetCourseByIdQuery(
     moduleData?.courseId || '',
   );
@@ -53,43 +56,38 @@ const DetailQuizDialog = ({
                   })}
                 </p>
               </div>
-              {/* <div className="w-full h-32 bg-muted flex items-center justify-center rounded text-muted-foreground">
-                Quiz Image
-              </div> */}
             </div>
 
-            {/* Course & Module Information */}
-            <div className="border rounded-lg p-4 bg-muted/30">
-              <h4 className="font-semibold mb-3">
-                {t('quizzes.detail_dialog.course_module_info')}
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    {t('quizzes.detail_dialog.course')}
-                  </p>
-                  <p className="font-medium">
-                    {courseData?.title || t('quizzes.detail_dialog.loading')}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    {t('quizzes.detail_dialog.module')}
-                  </p>
-                  <p className="font-medium">
-                    {moduleData?.name || t('quizzes.detail_dialog.loading')}
-                  </p>
-                  {moduleData && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {t('quizzes.detail_dialog.module_info', {
-                        duration: moduleData.durationInMinutes,
-                        level: moduleData.level,
-                      })}
+            {moduleData && (
+              <div className="border rounded-lg p-4 bg-muted/30">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {t('quizzes.detail_dialog.course')}
                     </p>
-                  )}
+                    <p className="font-medium">
+                      {courseData?.title || t('quizzes.detail_dialog.loading')}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {t('quizzes.detail_dialog.module')}
+                    </p>
+                    <p className="font-medium">
+                      {moduleData?.name || t('quizzes.detail_dialog.loading')}
+                    </p>
+                    {moduleData && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t('quizzes.detail_dialog.module_info', {
+                          duration: moduleData.durationInMinutes,
+                          level: moduleData.level,
+                        })}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="space-y-3">
               <h4 className="font-semibold">

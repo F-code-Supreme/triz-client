@@ -790,7 +790,13 @@
         "module": "Chương",
         "module_placeholder": "Chọn chương",
         "module_required": "Chương là bắt buộc",
-        "select_course_first": "Vui lòng chọn khóa học trước"
+        "select_course_first": "Vui lòng chọn khóa học trước",
+        "upload_image": "Tải lên hình ảnh",
+        "upload": "Tải hình ảnh lên",
+        "upload_loading": "Đang tải lên...",
+        "upload_placeholder": "Nhập đường dẫn hình ảnh...",
+        "select_course": "Chọn khóa học",
+        "select_module": "Chọn chương"
       },
       "course_module": "Lựa chọn khóa học & Chương",
       "questions_section": "Câu hỏi",
