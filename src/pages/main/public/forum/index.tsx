@@ -33,7 +33,7 @@ import {
 import { ForumKeys } from '@/features/forum/services/queries/keys';
 import { useUploadFileMutation } from '@/features/media/services/mutations';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils/string/string';
+import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
 
 const ForumPage: React.FC = () => {
   const tabs = [

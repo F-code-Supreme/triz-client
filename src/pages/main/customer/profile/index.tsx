@@ -40,6 +40,7 @@ const ProfilePage = () => {
         achievementsData={achievementsData}
         isLoadingAchievements={achievementsLoading}
         isOwnProfile={true}
+        currentUser={user || undefined}
         onSaveProfile={handleSaveProfile}
       />
     </DefaultLayout>

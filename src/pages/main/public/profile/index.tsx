@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGetUserAchievementsQuery } from '@/features/achievement/services/queries';
+import { useGetMeQuery } from '@/features/auth/services/queries';
 import { ProfileView } from '@/features/user/components';
 import { useGetUserByIdQuery } from '@/features/user/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
@@ -19,6 +20,8 @@ const PublicProfilePage = () => {
   const { data: achievementsData, isLoading: achievementsLoading } =
     useGetUserAchievementsQuery(userId, pagination, sorting);
 
+  const { data: currentUser } = useGetMeQuery();
+
   return (
     <DefaultLayout
       meta={{
@@ -33,6 +36,7 @@ const PublicProfilePage = () => {
         achievementsData={achievementsData}
         isLoadingAchievements={achievementsLoading}
         isOwnProfile={false}
+        currentUser={currentUser}
       />
     </DefaultLayout>
   );

@@ -142,3 +142,36 @@ export const useGetForumPostChildrenReplyByIdQuery = (
     },
   });
 };
+
+export const useGetForumPostsByUserIdQuery = (
+  userId?: string,
+  pagination?: PaginationState,
+) => {
+  const _request = useAxios();
+  const initialSize = pagination?.pageSize ?? 20;
+
+  return useInfiniteQuery({
+    queryKey: [ForumKeys.GetForumQuery, 'user', userId, initialSize],
+    queryFn: async ({ pageParam = 0, signal }) => {
+      const response = await _request.get<ForumPostResponse>(
+        `/forumPosts/users/${userId}`,
+        {
+          params: {
+            page: pageParam,
+            size: initialSize,
+            sort: 'createdAt,desc',
+          },
+          signal,
+        },
+      );
+      return response.data;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      return lastPage.page.number + 1 < lastPage.page.totalPages
+        ? lastPage.page.number + 1
+        : undefined;
+    },
+    enabled: !!userId,
+  });
+};

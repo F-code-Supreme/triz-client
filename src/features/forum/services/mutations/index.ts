@@ -78,6 +78,9 @@ export const useDeleteForumPostMutation = () => {
         queryKey: [ForumKeys.GetForumQuery],
       });
       queryClient.invalidateQueries({
+        queryKey: [ForumKeys.GetMyForumPostQuery],
+      });
+      queryClient.invalidateQueries({
         queryKey: [ForumKeys.GetForumPostsByAdminQuery],
       });
     },

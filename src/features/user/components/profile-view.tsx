@@ -1,10 +1,10 @@
 import { format } from 'date-fns';
-import { Activity, Award, Edit3, X, Check } from 'lucide-react';
-import { useState } from 'react';
+import { Award, Edit3, X, Check } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { toast } from 'sonner';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -14,6 +14,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import PostCard from '@/features/forum/components/post-card';
+import {
+  useCreateVoteMutation,
+  useDeleteForumPostMutation,
+} from '@/features/forum/services/mutations';
+import { useGetForumPostsByUserIdQuery } from '@/features/forum/services/queries';
+import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
 
 import type { UserAchievementResponse } from '@/features/achievement/types';
 import type { User } from '@/features/auth/types';
@@ -57,6 +64,7 @@ interface ProfileViewProps {
   achievementsData?: UserAchievementResponse;
   isLoadingAchievements: boolean;
   isOwnProfile?: boolean;
+  currentUser?: User;
   onSaveProfile?: (data: { fullName: string; email: string }) => void;
 }
 
@@ -66,13 +74,55 @@ export const ProfileView = ({
   achievementsData,
   isLoadingAchievements,
   isOwnProfile = false,
+  currentUser,
   onSaveProfile,
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 }: ProfileViewProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     fullName: '',
     email: '',
   });
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Forum posts query
+  const {
+    data: forumPostsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingPosts,
+  } = useGetForumPostsByUserIdQuery(userData?.id, {
+    pageIndex: 0,
+    pageSize: 5,
+  });
+
+  const forumPosts = React.useMemo(
+    () => forumPostsData?.pages.flatMap((page) => page?.content || []) || [],
+    [forumPostsData?.pages],
+  );
+
+  const createVoteMutation = useCreateVoteMutation();
+  const deletePostMutation = useDeleteForumPostMutation();
+
+  // Infinite scroll for forum posts
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 },
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const formatJoinDate = (dateString?: string) => {
     if (!dateString) return '';
@@ -275,40 +325,104 @@ export const ProfileView = ({
         </div>
 
         {/* Right content area */}
-        <div className="lg:col-span-3 space-y-6 mt-10">
-          <Card>
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Pinned</CardTitle>
-                {isOwnProfile && (
-                  <Button variant="ghost" size="sm" className="text-xs">
-                    Customize your pins
-                  </Button>
-                )}
+        <div className="lg:col-span-3 space-y-6 mt-6">
+          {/* Forum Posts Section */}
+          {isLoadingPosts ? (
+            <div className="space-y-4">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="h-32 w-full" />
+              ))}
+            </div>
+          ) : forumPosts.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No forum posts yet
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {forumPosts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  userData={currentUser}
+                  id={post.id}
+                  image={post.imgUrl}
+                  isOwner={currentUser?.id === post.userId}
+                  onDelete={(postId) => {
+                    deletePostMutation.mutate(postId, {
+                      onSuccess: () => {
+                        toast.success('Post deleted successfully');
+                      },
+                      onError: (error) => {
+                        toast.error(
+                          error instanceof Error
+                            ? error.message
+                            : 'Failed to delete post',
+                        );
+                      },
+                    });
+                  }}
+                  title={post.title}
+                  author={{
+                    name: post.userName || 'User',
+                    href: `/users/${post.createdBy}`,
+                    avatar: post.avtUrl || '',
+                  }}
+                  time={formatISODate(post.createdAt)}
+                  excerpt={
+                    <>
+                      <div
+                        className="whitespace-pre-line break-words"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            expandedId === post.id
+                              ? cleanHtml(post.content || '')
+                              : htmlExcerpt(post.content || ''),
+                        }}
+                      />
+                      {post.content && post.content.length > 400 && (
+                        <button
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === post.id ? null : post.id,
+                            )
+                          }
+                          className="text-sm text-primary hover:underline mt-2"
+                        >
+                          {expandedId === post.id ? 'Show less' : 'Show more'}
+                        </button>
+                      )}
+                    </>
+                  }
+                  likes={post.upVoteCount || 0}
+                  comments={post.replyCount || 0}
+                  onLike={(postId, isUpvote) => {
+                    if (!currentUser) {
+                      toast.error('Please login to interact with posts');
+                      return;
+                    }
+                    createVoteMutation.mutate(
+                      { postId, isUpvote },
+                      {
+                        onError: (error) => {
+                          toast.error(
+                            error instanceof Error
+                              ? error.message
+                              : 'Failed to vote',
+                          );
+                        },
+                      },
+                    );
+                  }}
+                  isAuthenticated={!!currentUser}
+                />
+              ))}
+              <div
+                ref={loadMoreRef}
+                className="py-6 flex justify-center text-slate-500"
+              >
+                {isFetchingNextPage ? 'Loading more...' : ''}
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                Phát triển sau
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Activity className="w-5 h-5" />
-                Contribution activity
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="border-l-2 border-gray-200 dark:border-gray-700 pl-4 ml-2">
-                  <div className="space-y-3">Phát triển sau</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>
