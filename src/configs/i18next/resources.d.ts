@@ -123,6 +123,16 @@ interface Resources {
     "yes": "Yes"
   },
   "components": {
+    "achievement_notification": {
+      "awesome_button": "Awesome!",
+      "book_label": "Book:",
+      "close_aria_label": "Close",
+      "congratulations": "Congratulations! You've earned a new achievement.",
+      "next_button": "Next Achievement",
+      "progress": "Achievement {{current}} of {{total}}",
+      "title": "Achievement Unlocked!",
+      "view_later_button": "View All Later"
+    },
     "hero_section": {
       "description": "TRIZ is a toolset to help you solve problems scientifically, effectively and creatively - no inspiration or innate talent required.",
       "register": "Sign up",

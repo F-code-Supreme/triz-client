@@ -5,5 +5,15 @@
     "description": "TRIZ là bộ công cụ giúp bạn giải quyết vấn đề một cách khoa học, hiệu quả và sáng tạo – không cần cảm hứng hay năng khiếu thiên bẩm.",
     "register": "Đăng ký tài khoản",
     "start_learning": "Bắt đầu học ngay"
+  },
+  "achievement_notification": {
+    "title": "Mở Khóa Thành Tích!",
+    "congratulations": "Chúc mừng! Bạn đã nhận được thành tích mới.",
+    "book_label": "Sách:",
+    "progress": "Thành tích {{current}} / {{total}}",
+    "next_button": "Thành Tích Tiếp Theo",
+    "view_later_button": "Xem Sau",
+    "awesome_button": "Tuyệt Vời!",
+    "close_aria_label": "Đóng"
   }
 }

@@ -4,6 +4,7 @@ import {
   redirect,
 } from '@tanstack/react-router';
 
+import { AchievementNotifier } from '@/features/achievement/components';
 import { Role } from '@/features/auth/types';
 import NotFoundPage from '@/pages/global/not-found';
 
@@ -13,8 +14,17 @@ interface AppRouterContext {
   auth: AuthState;
 }
 
+const RootComponent = () => {
+  return (
+    <>
+      <Outlet />
+      <AchievementNotifier pollingInterval={30000} />
+    </>
+  );
+};
+
 export const Route = createRootRouteWithContext<AppRouterContext>()({
-  component: () => <Outlet />,
+  component: RootComponent,
   beforeLoad: ({ context, location }) => {
     if (context.auth.isAuthenticated) {
       if (

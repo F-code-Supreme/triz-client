@@ -5,5 +5,15 @@
     "description": "TRIZ is a toolset to help you solve problems scientifically, effectively and creatively - no inspiration or innate talent required.",
     "register": "Sign up",
     "start_learning": "Start learning now"
+  },
+  "achievement_notification": {
+    "title": "Achievement Unlocked!",
+    "congratulations": "Congratulations! You've earned a new achievement.",
+    "book_label": "Book:",
+    "progress": "Achievement {{current}} of {{total}}",
+    "next_button": "Next Achievement",
+    "view_later_button": "View All Later",
+    "awesome_button": "Awesome!",
+    "close_aria_label": "Close"
   }
 }
