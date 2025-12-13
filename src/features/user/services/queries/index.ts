@@ -1,6 +1,6 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
-import { useAxios } from '@/configs/axios';
+import { request, useAxios } from '@/configs/axios';
 
 import { UserKeys } from './keys';
 
@@ -8,14 +8,13 @@ import type { IUser } from '../../types';
 import type { DataTimestamp, PaginatedResponse } from '@/types';
 import type { PaginationState, SortingState } from '@tanstack/react-table';
 
-// AUTHENTICATED USER & ADMIN
+// PUBLIC
 export const useGetUserByIdQuery = (userId?: string) => {
-  const _request = useAxios();
   return useQuery({
     queryKey: [UserKeys.GetUserByIdQuery, userId],
     queryFn: userId
       ? async ({ signal }) => {
-          const response = await _request.get<IUser & DataTimestamp>(
+          const response = await request.get<IUser & DataTimestamp>(
             `/users/${userId}`,
             {
               signal,

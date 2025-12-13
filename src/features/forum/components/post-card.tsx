@@ -54,7 +54,6 @@ import { ForumKeys } from '@/features/forum/services/queries/keys';
 
 import type { User } from '@/features/auth/types';
 import type { Comment } from '@/features/forum/types';
-import type { DataTimestamp } from '@/types';
 
 // add shared constants used for like icons
 const LIKE_TRANSITION_CLASS = 'transition-colors';
@@ -65,7 +64,7 @@ const LIKE_INACTIVE_CLASS = 'text-slate-700';
 const ReplyChildrenExternal: React.FC<{
   isAuthenticated: boolean;
   parentId: string;
-  userData?: (User & DataTimestamp) | undefined;
+  userData?: User;
   isOwner?: boolean;
   likedReplies: Record<string, boolean>;
   setLikedReplies: React.Dispatch<
@@ -278,7 +277,7 @@ const ReplyChildrenExternal: React.FC<{
 
 interface PostCardProps {
   id: string;
-  userData?: (User & DataTimestamp) | undefined;
+  userData?: User;
   isOwner?: boolean;
   onDelete?: (postId: string) => void;
   title: string;

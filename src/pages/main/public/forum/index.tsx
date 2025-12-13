@@ -33,7 +33,7 @@ import {
 import { ForumKeys } from '@/features/forum/services/queries/keys';
 import { useUploadFileMutation } from '@/features/media/services/mutations';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils/string/string';
+import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
 
 const ForumPage: React.FC = () => {
   const tabs = [
@@ -92,6 +92,34 @@ const ForumPage: React.FC = () => {
       null
     );
   }, [selectedPostId, forumPosts, myPostsTab]);
+
+  // Handle pre-filled content from journal navigation
+  React.useEffect(() => {
+    const draftData = sessionStorage.getItem('forumDraft');
+    if (draftData) {
+      try {
+        const parsed = JSON.parse(draftData) as {
+          fromJournal?: boolean;
+          title: string;
+          content: string;
+          imgUrl: string;
+        };
+
+        if (parsed.fromJournal) {
+          setPostTitle(parsed.title);
+          setAnswer(parsed.content);
+          setPostImage(parsed.imgUrl);
+          setShowCreateDialog(true);
+
+          // Clear sessionStorage to prevent re-opening on refresh
+          sessionStorage.removeItem('forumDraft');
+        }
+      } catch (error) {
+        console.error('Failed to parse forum draft data:', error);
+        sessionStorage.removeItem('forumDraft');
+      }
+    }
+  }, []);
 
   React.useEffect(() => {
     if (!loadMoreRef.current) return;
@@ -319,7 +347,7 @@ const ForumPage: React.FC = () => {
 
                         <TooltipProvider>
                           <Tooltip>
-                            <div>
+                            <div className="max-h-[500px] overflow-y-auto border rounded-md">
                               <MinimalTiptapEditor
                                 value={answer}
                                 onChange={(v) =>

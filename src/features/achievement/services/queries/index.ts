@@ -201,7 +201,12 @@ export const useGetUserAchievementsQuery = (
   });
 };
 
-export const useGetUserUnreadAchievementsQuery = (userId?: string) => {
+export const useGetUserUnreadAchievementsQuery = (
+  userId?: string,
+  options?: {
+    refetchInterval?: number | false;
+  },
+) => {
   const _request = useAxios();
 
   return useQuery({
@@ -219,5 +224,6 @@ export const useGetUserUnreadAchievementsQuery = (userId?: string) => {
         }
       : skipToken,
     enabled: !!userId,
+    refetchInterval: options?.refetchInterval,
   });
 };
