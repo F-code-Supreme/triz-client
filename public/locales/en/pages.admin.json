@@ -852,5 +852,46 @@
         "error": "Failed to cancel subscription"
       }
     }
+  },
+  "system_config": {
+    "title": "System Configuration",
+    "description": "Manage system settings and Six Step tool configuration",
+    "save_changes": "Save Changes",
+    "tabs": {
+      "system_wide": "System Wide",
+      "six_step": "Six Step Tool"
+    },
+    "system_wide": {
+      "general": {
+        "title": "General Settings",
+        "description": "Configure basic system settings",
+        "site_name": "Site Name",
+        "site_description": "Site Description"
+      },
+      "limits": {
+        "title": "System Limits",
+        "description": "Configure system limits and thresholds",
+        "max_upload_size": "Max Upload Size (MB)",
+        "max_upload_size_hint": "Maximum file size that can be uploaded",
+        "session_timeout": "Session Timeout (minutes)",
+        "session_timeout_hint": "Auto logout time when inactive"
+      }
+    },
+    "six_step": {
+      "step5": {
+        "title": "Step 5 Configuration",
+        "description": "Configure the number of top ideas to select from Step 5",
+        "top_ideas": "Top Ideas Count",
+        "top_ideas_hint": "Number of best ideas to display",
+        "min_ideas": "Minimum",
+        "max_ideas": "Maximum"
+      },
+      "auto_save": {
+        "title": "Auto Save",
+        "description": "Configure automatic progress saving",
+        "interval": "Auto Save Interval (seconds)",
+        "interval_hint": "How often to automatically save user progress"
+      }
+    }
   }
 }

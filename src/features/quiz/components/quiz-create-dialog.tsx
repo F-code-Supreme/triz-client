@@ -16,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,6 +32,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectContent,
@@ -41,6 +41,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
 import { useUploadFileMutation } from '@/features/media/services/mutations';
@@ -49,7 +50,6 @@ import {
   useCreateQuizGeneralMutation,
   useCreateQuizMutation,
 } from '@/features/quiz/service/mutations';
-import { NumberInput } from '@/components/ui/number-input';
 
 const createQuestionSchema = (t: any) =>
   z.object({

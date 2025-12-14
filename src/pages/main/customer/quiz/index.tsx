@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
+import { Skeleton } from '@/components/ui/skeleton';
 import useAuth from '@/features/auth/hooks/use-auth';
 import {
   useGetQuizByIdMutation,
@@ -21,7 +22,6 @@ import {
 } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
 import { Route } from '@/routes/(app)/quiz';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const QuizListPage = () => {
   const { data, isLoading } = useGetQuizzesMutation();

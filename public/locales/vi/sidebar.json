@@ -75,7 +75,8 @@
     "packages": "Gói",
     "subscriptions": "Đăng ký",
     "transactions": "Giao dịch",
-    "archive": "Lưu trữ"
+    "archive": "Lưu trữ",
+    "system_config": "Cấu hình hệ thống"
   },
 
   "expert": {
@@ -83,7 +84,9 @@
     "subtitle": "Bảng chuyên gia",
     "main": "Chính",
     "dashboard": "Bảng điều khiển",
-    "assignments": "Bài tập"
+    "assignments": "Bài tập",
+    "configuration": "Cấu hình",
+    "six_step_config": "Cấu hình 6 Bước"
   },
 
   "moderator": {

@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { FileUpload, FileUploadTrigger } from '@/components/ui/file-upload';
 import {
   Form,
   FormControl,
@@ -39,7 +40,6 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { FileUpload, FileUploadTrigger } from '@/components/ui/file-upload';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
 import { useUploadFileMutation } from '@/features/media/services/mutations';
 import {

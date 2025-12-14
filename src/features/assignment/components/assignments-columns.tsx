@@ -2,7 +2,6 @@ import { type ColumnDef } from '@tanstack/react-table';
 
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Badge } from '@/components/ui/badge';
-
 import { AssignmentsDataTableRowActions } from '@/features/assignment/components/assignments-data-table-row-actions';
 
 import type { AssignmentSubmissionExpertReview } from '@/features/assignment/services/queries/types';

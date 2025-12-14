@@ -75,7 +75,8 @@
     "packages": "Packages",
     "subscriptions": "Subscriptions",
     "transactions": "Transactions",
-    "archive": "Archive"
+    "archive": "Archive",
+    "system_config": "System Configuration"
   },
 
   "expert": {
@@ -83,7 +84,9 @@
     "subtitle": "Expert Panel",
     "main": "Main",
     "dashboard": "Dashboard",
-    "assignments": "Assignments"
+    "assignments": "Assignments",
+    "configuration": "Configuration",
+    "six_step_config": "Six Step Configuration"
   },
 
   "moderator": {

@@ -58,8 +58,10 @@ import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscri
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
+import { Route as ExpertSixStepConfigIndexRouteImport } from './routes/expert/six-step-config/index'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminSystemConfigIndexRouteImport } from './routes/admin/system-config/index'
 import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
@@ -325,6 +327,12 @@ const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
+const ExpertSixStepConfigIndexRoute =
+  ExpertSixStepConfigIndexRouteImport.update({
+    id: '/six-step-config/',
+    path: '/six-step-config/',
+    getParentRoute: () => ExpertRouteRoute,
+  } as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
@@ -333,6 +341,11 @@ const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
 const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminSystemConfigIndexRoute = AdminSystemConfigIndexRouteImport.update({
+  id: '/system-config/',
+  path: '/system-config/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminForumIndexRoute = AdminForumIndexRouteImport.update({
@@ -497,8 +510,10 @@ export interface FileRoutesByFullPath {
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
+  '/admin/system-config': typeof AdminSystemConfigIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
+  '/expert/six-step-config': typeof ExpertSixStepConfigIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
@@ -564,8 +579,10 @@ export interface FileRoutesByTo {
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
+  '/admin/system-config': typeof AdminSystemConfigIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
+  '/expert/six-step-config': typeof ExpertSixStepConfigIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
@@ -637,8 +654,10 @@ export interface FileRoutesById {
   '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/forum/': typeof AdminForumIndexRoute
+  '/admin/system-config/': typeof AdminSystemConfigIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
+  '/expert/six-step-config/': typeof ExpertSixStepConfigIndexRoute
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
@@ -709,8 +728,10 @@ export interface FileRouteTypes {
     | '/journals'
     | '/quiz'
     | '/admin/forum'
+    | '/admin/system-config'
     | '/admin/users'
     | '/books/$bookId'
+    | '/expert/six-step-config'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
@@ -776,8 +797,10 @@ export interface FileRouteTypes {
     | '/journals'
     | '/quiz'
     | '/admin/forum'
+    | '/admin/system-config'
     | '/admin/users'
     | '/books/$bookId'
+    | '/expert/six-step-config'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
@@ -848,8 +871,10 @@ export interface FileRouteTypes {
     | '/(app)/journals/'
     | '/(app)/quiz/'
     | '/admin/forum/'
+    | '/admin/system-config/'
     | '/admin/users/'
     | '/books/$bookId/'
+    | '/expert/six-step-config/'
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
@@ -1230,6 +1255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/expert/six-step-config/': {
+      id: '/expert/six-step-config/'
+      path: '/six-step-config'
+      fullPath: '/expert/six-step-config'
+      preLoaderRoute: typeof ExpertSixStepConfigIndexRouteImport
+      parentRoute: typeof ExpertRouteRoute
+    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -1242,6 +1274,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/system-config/': {
+      id: '/admin/system-config/'
+      path: '/system-config'
+      fullPath: '/admin/system-config'
+      preLoaderRoute: typeof AdminSystemConfigIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/forum/': {
@@ -1458,6 +1497,7 @@ interface AdminRouteRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
   AdminForumIndexRoute: typeof AdminForumIndexRoute
+  AdminSystemConfigIndexRoute: typeof AdminSystemConfigIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
@@ -1476,6 +1516,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminUsersUserIdRoute: AdminUsersUserIdRoute,
   AdminForumIndexRoute: AdminForumIndexRoute,
+  AdminSystemConfigIndexRoute: AdminSystemConfigIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
@@ -1487,12 +1528,14 @@ interface ExpertRouteRouteChildren {
   ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
   ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
   ExpertIndexRoute: typeof ExpertIndexRoute
+  ExpertSixStepConfigIndexRoute: typeof ExpertSixStepConfigIndexRoute
 }
 
 const ExpertRouteRouteChildren: ExpertRouteRouteChildren = {
   ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
   ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
   ExpertIndexRoute: ExpertIndexRoute,
+  ExpertSixStepConfigIndexRoute: ExpertSixStepConfigIndexRoute,
 }
 
 const ExpertRouteRouteWithChildren = ExpertRouteRoute._addFileChildren(
