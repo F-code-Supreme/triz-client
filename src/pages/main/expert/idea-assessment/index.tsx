@@ -18,11 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { assignmentsColumns } from '@/features/assignment/components/assignments-columns';
-import { useGetAssignmentsQueryExpert } from '@/features/assignment/services/queries';
+import { ideaAssessmentColumns } from '@/features/6-steps/components/idea-assessment-columns';
 import { ExpertLayout } from '@/layouts/expert-layout';
 
-const ExpertAssignmentsManagementPage = () => {
+import type { IdeaAssessmentRequest } from '@/features/6-steps/services/queries/types';
+
+const ExpertIdeaAssessmentPage = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<
     Array<{
@@ -41,16 +42,82 @@ const ExpertAssignmentsManagementPage = () => {
   >({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert();
+  // TODO: Replace with actual API call when backend is ready
+  const isLoading = false;
 
-  const assignments = useMemo(() => {
-    const currentData = assignmentsData;
-    return currentData?.content || [];
-  }, [assignmentsData]);
+  const assessmentRequests = useMemo(() => {
+    // TODO: Replace with actual API data
+    const mockData: IdeaAssessmentRequest[] = [
+      // Mock data for development
+      {
+        id: '1',
+        userId: 'user1',
+        userFullName: 'Xi Nê Ép Pê Tê',
+        userEmail: 'xinefpt@gmail.com',
+        journalId: 'journal1',
+        journalTitle: 'Giải quyết vấn đề về năng lượng tái tạo',
+        ideaStatement:
+          'Sử dụng pin mặt trời kết hợp với hệ thống lưu trữ năng lượng để tối ưu hóa việc sử dụng điện',
+        principleUsed: {
+          id: 1,
+          name: 'Nguyên tắc phân đoạn',
+        },
+        howItAddresses:
+          'Chia hệ thống năng lượng thành các module nhỏ để dễ dàng mở rộng và bảo trì',
+        status: 'PENDING',
+        requestedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        userId: 'user2',
+        userFullName: 'Xi Nê Ép Pê Tê',
+        userEmail: 'xinefpt@gmail.com',
+        journalId: 'journal2',
+        journalTitle: 'Cải thiện hiệu suất sản xuất',
+        ideaStatement:
+          'Áp dụng automation để giảm thời gian sản xuất và tăng chất lượng sản phẩm',
+        principleUsed: {
+          id: 10,
+          name: 'Hành động sơ bộ',
+        },
+        howItAddresses:
+          'Chuẩn bị trước các bước sản xuất quan trọng để giảm thời gian chờ đợi',
+        status: 'IN_REVIEW',
+        requestedAt: new Date(Date.now() - 86400000).toISOString(),
+        createdAt: new Date(Date.now() - 86400000).toISOString(),
+        updatedAt: new Date(Date.now() - 43200000).toISOString(),
+      },
+      {
+        id: '3',
+        userId: 'user3',
+        userFullName: 'Võ Minh Trí',
+        userEmail: 'vominhtri@gmail.com',
+        journalId: 'journal3',
+        journalTitle: 'Tối ưu hóa quy trình logistics',
+        ideaStatement:
+          'Sử dụng AI để dự đoán nhu cầu và tối ưu hóa tuyến đường giao hàng',
+        principleUsed: {
+          id: 15,
+          name: 'Tính động',
+        },
+        status: 'APPROVED',
+        expertRating: 5,
+        expertComment:
+          'Ý tưởng rất sáng tạo và khả thi. Đề xuất triển khai pilot.',
+        requestedAt: new Date(Date.now() - 172800000).toISOString(),
+        reviewedAt: new Date(Date.now() - 86400000).toISOString(),
+        createdAt: new Date(Date.now() - 172800000).toISOString(),
+        updatedAt: new Date(Date.now() - 86400000).toISOString(),
+      },
+    ];
+    return mockData;
+  }, []);
 
   const table = useReactTable({
-    data: assignments,
-    columns: assignmentsColumns,
+    data: assessmentRequests,
+    columns: ideaAssessmentColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -70,15 +137,15 @@ const ExpertAssignmentsManagementPage = () => {
   });
 
   return (
-    <ExpertLayout meta={{ title: 'Assignments Management' }}>
+    <ExpertLayout meta={{ title: 'Idea Assessment Management' }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              Quản lý Bài tập
+              Quản lý Đánh giá Ý tưởng
             </h1>
             <p className="text-muted-foreground mt-2">
-              Duyệt các bài tập đã được giao cho sinh viên.
+              Đánh giá các ý tưởng 6 bước từ người dùng yêu cầu
             </p>
           </div>
         </div>
@@ -86,8 +153,8 @@ const ExpertAssignmentsManagementPage = () => {
         <div className="space-y-4">
           <DataTableToolbar
             table={table}
-            searchPlaceholder="Search by title, author..."
-            searchKey="title"
+            searchPlaceholder="Tìm kiếm theo tiêu đề, người dùng..."
+            searchKey="journalTitle"
           />
 
           {isLoading ? (
@@ -95,19 +162,21 @@ const ExpertAssignmentsManagementPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Author</TableHead>
-                    <TableHead>Number of submissions</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created At</TableHead>
-                    <TableHead>Updated At</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>Tiêu đề nhật ký</TableHead>
+                    <TableHead>Người dùng</TableHead>
+                    <TableHead>Ý tưởng</TableHead>
+                    <TableHead>Nguyên tắc TRIZ</TableHead>
+                    <TableHead>Trạng thái</TableHead>
+                    <TableHead>Đánh giá</TableHead>
+                    <TableHead>Ngày yêu cầu</TableHead>
+                    <TableHead>Ngày đánh giá</TableHead>
+                    <TableHead>Hành động</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {Array.from({ length: 6 }).map((_, idx) => (
                     <TableRow key={idx}>
-                      {assignmentsColumns.map((_, cellIdx) => (
+                      {ideaAssessmentColumns.map((_, cellIdx) => (
                         <TableCell key={cellIdx}>
                           <Skeleton className="h-8 w-full" />
                         </TableCell>
@@ -117,10 +186,10 @@ const ExpertAssignmentsManagementPage = () => {
                 </TableBody>
               </Table>
             </div>
-          ) : assignments.length === 0 ? (
+          ) : assessmentRequests.length === 0 ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-muted-foreground">
-                Chưa có bài tập nào được nộp.
+                Chưa có yêu cầu đánh giá nào.
               </p>
             </div>
           ) : (
@@ -163,10 +232,10 @@ const ExpertAssignmentsManagementPage = () => {
                     ) : (
                       <TableRow>
                         <TableCell
-                          colSpan={assignmentsColumns.length}
+                          colSpan={ideaAssessmentColumns.length}
                           className="h-24 text-center"
                         >
-                          No results.
+                          Không có kết quả.
                         </TableCell>
                       </TableRow>
                     )}
@@ -183,4 +252,4 @@ const ExpertAssignmentsManagementPage = () => {
   );
 };
 
-export default ExpertAssignmentsManagementPage;
+export default ExpertIdeaAssessmentPage;

@@ -1884,7 +1884,9 @@ interface Resources {
       "assignments": "Assignments",
       "configuration": "Configuration",
       "dashboard": "Dashboard",
+      "idea_assessment": "Idea Assessment",
       "main": "Main",
+      "review": "Review",
       "six_step_config": "Six Step Configuration",
       "subtitle": "Expert Panel",
       "title": "TRIZ Expert"
