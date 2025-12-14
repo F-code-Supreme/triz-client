@@ -93,7 +93,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
       // TODO: Implement the actual API call to publish the course
       // await publishCourse(courseId);
       await publishCourseMutation.mutateAsync(
-        { status: 'INACTIVE' },
+        { status: 'ACTIVE' },
         {
           onSuccess: () => {
             toast.success('Xuất bản khóa học thành công!');

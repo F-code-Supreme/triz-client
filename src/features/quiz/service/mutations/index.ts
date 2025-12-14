@@ -14,6 +14,7 @@ import type {
   UpdateQuizResponse,
   GetAdminQuizzesResponse,
   RemainingTimeResponse,
+  CreateQuizGeneralResponse,
 } from './type';
 
 // users
@@ -22,7 +23,7 @@ export const useGetQuizzesMutation = () => {
   return useQuery({
     queryKey: ['getQuizzes'],
     queryFn: async () => {
-      const res = await _request.get<GetQuizzesResponse>('');
+      const res = await _request.get<GetQuizzesResponse>('/general-quizzes');
       return res.data;
     },
   });
@@ -43,15 +44,9 @@ export const useGetQuizByIdMutation = (id: string) => {
 export const useStartQuizAttemptMutation = () => {
   const _request = useAxios();
   return useMutation({
-    mutationFn: async ({
-      quizId,
-      userId,
-    }: {
-      quizId: string;
-      userId: string;
-    }) => {
+    mutationFn: async ({ quizId }: { quizId: string }) => {
       const res = await _request.post(
-        `/quiz-attempts/start/quiz/${quizId}/user/${userId}`,
+        `/quiz-attempts/start/quiz/${quizId}`,
         {},
       );
       return res.data;
@@ -121,7 +116,14 @@ export const useGetAdminQuizzesQuery = () => {
   return useQuery({
     queryKey: ['getAdminQuizzes'],
     queryFn: async () => {
-      const res = await _request.get<GetAdminQuizzesResponse>('/quizzes/admin');
+      const res = await _request.get<GetAdminQuizzesResponse>(
+        '/quizzes/admin',
+        {
+          params: {
+            sort: 'createdAt,desc',
+          },
+        },
+      );
       return res.data;
     },
   });
@@ -169,6 +171,19 @@ export const useUpdateQuizMutation = () => {
     mutationFn: async ({ quizId, payload }) => {
       const res = await _request.put<UpdateQuizResponse>(
         `/quizzes/${quizId}`,
+        payload,
+      );
+      return res.data;
+    },
+  });
+};
+
+export const useCreateQuizGeneralMutation = () => {
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async (payload: CreateQuizPayload) => {
+      const res = await _request.post<CreateQuizGeneralResponse>(
+        '/general-quizzes',
         payload,
       );
       return res.data;

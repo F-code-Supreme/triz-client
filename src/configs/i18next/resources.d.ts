@@ -123,6 +123,16 @@ interface Resources {
     "yes": "Yes"
   },
   "components": {
+    "achievement_notification": {
+      "awesome_button": "Awesome!",
+      "book_label": "Book:",
+      "close_aria_label": "Close",
+      "congratulations": "Congratulations! You've earned a new achievement.",
+      "next_button": "Next Achievement",
+      "progress": "Achievement {{current}} of {{total}}",
+      "title": "Achievement Unlocked!",
+      "view_later_button": "View All Later"
+    },
     "hero_section": {
       "description": "TRIZ is a toolset to help you solve problems scientifically, effectively and creatively - no inspiration or innate talent required.",
       "register": "Sign up",
@@ -160,6 +170,7 @@ interface Resources {
     "chat_ai": "Chat AI",
     "dropdown_menu.journals": "My Journals",
     "dropdown_menu.my_books": "My Books",
+    "dropdown_menu.my_courses": "My Courses",
     "dropdown_menu.profile": "Profile",
     "dropdown_menu.sign_out": "Sign Out",
     "dropdown_menu.subscriptions": "Subscriptions",
@@ -185,7 +196,85 @@ interface Resources {
     "tools.six_steps_desc": "Systematic approach to creative problem solving"
   },
   "pages.admin": {
+    "achievements": {
+      "card": {
+        "delete": "Delete",
+        "edit": "Edit",
+        "milestone": "Milestone: {{count}} books",
+        "no_image": "No image",
+        "restore": "Restore"
+      },
+      "create_achievement": "Create Achievement",
+      "create_first": "Create your first achievement to get started",
+      "delete_dialog": {
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleting": "Deleting...",
+        "description": "This will delete the achievement \"{{name}}\". This action can be undone by restoring from the deleted achievements list.",
+        "title": "Are you sure?"
+      },
+      "description": "Create and manage user achievements",
+      "dialog": {
+        "cancel": "Cancel",
+        "create": "Create",
+        "create_description": "Fill in the details to create a new achievement",
+        "create_title": "Create Achievement",
+        "edit_description": "Update the achievement details below",
+        "edit_title": "Edit Achievement",
+        "form": {
+          "description": "Description",
+          "description_placeholder": "Achievement description",
+          "description_required": "Description is required",
+          "image": "Achievement Image",
+          "image_description": "Upload an achievement icon or badge (max 2MB)",
+          "milestone_count": "Milestone Count",
+          "milestone_count_description": "Number of books required to unlock this achievement",
+          "milestone_count_placeholder": "e.g., 5",
+          "milestone_count_required": "Milestone count is required for BOOK_MILESTONE",
+          "name": "Name",
+          "name_placeholder": "Achievement name",
+          "name_required": "Name is required",
+          "status": "Status",
+          "status_placeholder": "Select status",
+          "type": "Type",
+          "type_placeholder": "Select achievement type"
+        },
+        "saving": "Saving...",
+        "update": "Update"
+      },
+      "no_achievements": "No achievements found",
+      "pagination": {
+        "page_of": "Page {{current}} of {{total}}"
+      },
+      "status_filter": {
+        "active": "Active",
+        "all": "All",
+        "inactive": "Inactive"
+      },
+      "title": "Manage Achievements",
+      "toast": {
+        "create_error": "Failed to create achievement",
+        "create_success": "Achievement created successfully",
+        "delete_error": "Failed to delete achievement",
+        "delete_success": "Achievement deleted successfully",
+        "update_error": "Failed to update achievement",
+        "update_success": "Achievement updated successfully"
+      },
+      "type": {
+        "book_milestone": "Book Milestone",
+        "first_book": "First Book"
+      }
+    },
     "archive": {
+      "achievements": {
+        "all_active": "All achievements are currently active",
+        "deleted_at": "Deleted at",
+        "no_deleted": "No deleted achievements found",
+        "restore_error": "Failed to restore achievement. Please try again.",
+        "restore_message": "Are you sure you want to restore this achievement?",
+        "restore_success": "Achievement \"{{name}}\" restored successfully!",
+        "restore_title": "Restore Achievement"
+      },
       "books": {
         "all_active": "All books are currently active",
         "deleted_at": "Deleted at",
@@ -198,8 +287,10 @@ interface Resources {
       "description": "View and manage deleted items. Restore them to make them active again.",
       "packages": {
         "all_active": "All packages are currently active",
+        "days": "days",
         "deleted_at": "Deleted at",
         "features": "Features",
+        "more_features": "+{{count}} more features",
         "no_deleted": "No deleted packages found",
         "restore_error": "Failed to restore package. Please try again.",
         "restore_message": "Are you sure you want to restore this package?",
@@ -207,6 +298,7 @@ interface Resources {
         "restore_title": "Restore Package"
       },
       "tabs": {
+        "achievements": "Achievements",
         "books": "Books",
         "packages": "Packages"
       },
@@ -237,7 +329,7 @@ interface Resources {
       "form": {
         "author": "Author",
         "author_placeholder": "Author name",
-        "book_file": "Book File (EPUB/PDF)",
+        "book_file": "Book File (EPUB)",
         "book_file_required": "Book file is required",
         "cancel": "Cancel",
         "cover_image": "Cover Image",
@@ -424,7 +516,99 @@ interface Resources {
       "title": "Course Management"
     },
     "dashboard": {
+      "chat": {
+        "avg_response": "Avg response: {{time}}s",
+        "bot_messages": "Bot Messages",
+        "bot_satisfaction": "Bot Satisfaction",
+        "description": "Monitor chat bot performance",
+        "message_distribution": "Chat Message Distribution",
+        "message_distribution_desc": "User messages vs bot responses",
+        "neutral": "Neutral",
+        "satisfaction_desc": "User satisfaction with bot responses",
+        "satisfaction_title": "Chat Bot Satisfaction",
+        "satisfied": "Satisfied",
+        "title": "Chat Analytics",
+        "total_messages": "Total Messages",
+        "unsatisfied": "Unsatisfied",
+        "user_bot_messages": "{{user}} user, {{bot}} bot",
+        "user_messages": "User Messages"
+      },
       "description": "Welcome to the admin panel.",
+      "games": {
+        "avg_completion_all_games": "Average across all games",
+        "avg_completion_rate": "Avg Completion Rate",
+        "avg_per_game": "Avg per Game",
+        "avg_player_score": "Average player score",
+        "avg_score": "Avg Score",
+        "avg_score_game": "Average score for this game",
+        "avg_score_label": "Avg Score",
+        "avg_score_trend": "Average Score Trend",
+        "avg_scores_period": "Average scores in the last {{period}}",
+        "avg_time_all_games": "Average across all games",
+        "avg_time_per_game": "Average time per game",
+        "avg_time_play": "Avg Time Play",
+        "completion_rate": "Avg Completion Rate",
+        "description": "Track game engagement, player performance, and popular games",
+        "games_played": "Games Played",
+        "minutes": "min",
+        "overview": "Overview",
+        "overview_all_games": "Overview - All Games",
+        "period_12_months": "12 months",
+        "period_30_days": "30 days",
+        "period_4_quarters": "4 quarters",
+        "player": "Player",
+        "players_complete": "Players who complete the game",
+        "plays": "Plays",
+        "plays_over_time": "Game Plays Over Time",
+        "rank": "Rank",
+        "select_view": "Select View",
+        "title": "Game Analytics",
+        "top_players": "Top Players Leaderboard",
+        "top_players_desc": "Highest scoring players across all games",
+        "total_game_plays": "Total Game Plays",
+        "total_games_play": "Total Games Play",
+        "total_plays_desc": "Across all games",
+        "total_plays_game": "Total plays for this game",
+        "total_plays_period": "Total plays in the last {{period}}",
+        "total_score": "Total Score"
+      },
+      "period_filter": {
+        "day": "Day",
+        "month": "Month",
+        "quarter": "Quarter"
+      },
+      "revenue": {
+        "description": "Track revenue trends, package performance, and transaction success rates",
+        "email": "Email",
+        "failed_transactions": "{{count}} failed transactions",
+        "failure_rate": "Failure Rate",
+        "name": "Name",
+        "packages_sold_desc": "Across all package types",
+        "period_12_months": "12 months",
+        "period_30_days": "30 days",
+        "period_4_quarters": "4 quarters",
+        "purchases": "Purchases",
+        "purchases_distribution": "Purchases Distribution",
+        "purchases_distribution_desc": "Number of purchases by package type",
+        "rank": "Rank",
+        "revenue_by_package": "Revenue by Package",
+        "revenue_by_package_desc": "Total revenue generated per package type",
+        "revenue_over_period": "Revenue over the last {{period}}",
+        "revenue_trend": "Revenue Trend",
+        "success_rate": "Success Rate",
+        "success_rate_by_package": "Success Rate by Package",
+        "success_rate_by_package_desc": "Transaction success rate per package",
+        "success_transactions": "{{count}} successful transactions",
+        "title": "Revenue & Course Packages",
+        "top_spenders": "Top Users by Spending",
+        "top_spenders_desc": "Users with the highest total spending",
+        "total_packages_sold": "Total Packages Sold",
+        "total_revenue": "Total Revenue",
+        "total_spent": "Total Spent"
+      },
+      "stat_card": {
+        "from_last_period": "from last period"
+      },
       "tabs": {
         "chat": "Chat",
         "games": "Games",
@@ -493,7 +677,7 @@ interface Resources {
         "card_updated": "Card updated successfully",
         "create_failed": "Failed to create card",
         "create_title": "Create New Card",
-        "deck_id_label": "Deck ID",
+        "deck_label": "Manage cards for deck {{deckTitle}}",
         "definition_label": "Definition",
         "delete_failed": "Failed to delete card",
         "delete_message": "Are you sure you want to delete this card? This action cannot be undone.",
@@ -509,9 +693,7 @@ interface Resources {
         "table": {
           "actions": "Actions",
           "definition": "Definition",
-          "id": "ID",
           "image": "Image",
-          "select": "Select",
           "term": "Term"
         },
         "term_label": "Term",
@@ -524,8 +706,54 @@ interface Resources {
       "title": "Flashcards"
     },
     "packages": {
+      "card": {
+        "daily_tokens": "Daily Tokens:",
+        "days": "days",
+        "delete": "Delete",
+        "duration": "Duration:",
+        "edit": "Edit",
+        "features": "Features:",
+        "price": "Price:"
+      },
       "create_package": "Create Package",
+      "delete_dialog": {
+        "cancel": "Cancel",
+        "delete_package": "Delete Package",
+        "deleting": "Deleting...",
+        "message": "Are you sure you want to delete this package?",
+        "title": "Delete Package"
+      },
       "description": "Manage subscription packages offered on the platform. You can add, edit, or remove packages as needed.",
+      "dialog": {
+        "add_feature": "Add Feature",
+        "add_new_feature": "Add New Feature",
+        "cancel": "Cancel",
+        "create_package": "Create Package",
+        "create_title": "Create New Package",
+        "daily_placeholder": "500",
+        "daily_required": "Chat tokens per day must be greater than 0",
+        "daily_trizilium": "Daily Trizilium",
+        "duration_days": "Duration (Days)",
+        "duration_placeholder": "30",
+        "duration_required": "Duration must be greater than 0",
+        "edit_title": "Edit Package",
+        "feature_description_placeholder": "Feature description",
+        "features_label": "Features",
+        "features_required": "At least 1 feature is required",
+        "icon_url_placeholder": "Icon URL (e.g., https://example.com/icon.png)",
+        "package_name": "Package Name",
+        "package_name_placeholder": "e.g., Premium Plan",
+        "package_name_required": "Package name is required",
+        "price_placeholder": "1000",
+        "price_required": "Price must be greater than 0",
+        "price_trizilium": "Price (Trizilium)",
+        "status": "Status",
+        "status_active": "Active",
+        "status_inactive": "Inactive",
+        "status_placeholder": "Select status",
+        "update_package": "Update Package",
+        "valid_image_url": "✓ Valid image URL"
+      },
       "no_packages": "No packages found",
       "status_filter": {
         "active": "Active",
@@ -534,20 +762,138 @@ interface Resources {
       },
       "status_label": "Status:",
       "title": "Package Management",
+      "toast": {
+        "create_error": "Failed to create package. Please try again.",
+        "create_success": "Package created successfully!",
+        "delete_error": "Failed to delete package. Please try again.",
+        "delete_success": "Package deleted successfully!",
+        "update_error": "Failed to update package. Please try again.",
+        "update_success": "Package updated successfully!"
+      },
       "total_one": "Total: {{count}} package",
       "total_other": "Total: {{count}} packages",
       "try_adjusting": "Try adjusting your filters or create a new package"
     },
     "quizzes": {
+      "actions": {
+        "delete_quiz": "Delete quiz",
+        "edit_quiz": "Edit quiz",
+        "view_details": "View details"
+      },
+      "columns": {
+        "actions": "Actions",
+        "created": "Created",
+        "duration": "Duration",
+        "duration_minutes": "{{count}} min",
+        "no_limit": "No limit",
+        "question_count": "{{count}} question",
+        "question_count_plural": "{{count}} questions",
+        "questions": "Questions",
+        "title": "Title",
+        "updated": "Updated"
+      },
+      "create_dialog": {
+        "add_question": "Add Question",
+        "buttons": {
+          "cancel": "Cancel",
+          "create": "Create Quiz",
+          "creating": "Creating..."
+        },
+        "course_module": "Course & Module Selection",
+        "description": "Create a new quiz with questions and options.",
+        "form": {
+          "course": "Course",
+          "course_module:": "Course & Module selection",
+          "course_placeholder": "Select a course",
+          "course_required": "Course is required",
+          "description": "Description",
+          "description_placeholder": "Enter quiz description...",
+          "description_required": "Description is required",
+          "duration": "Duration (minutes)",
+          "duration_min": "Duration must be at least 1 minute",
+          "duration_placeholder": "Enter duration in minutes",
+          "module": "Module",
+          "module_placeholder": "Select a module",
+          "module_required": "Module is required",
+          "select_course": "Select a course",
+          "select_course_first": "Please select a course first",
+          "select_module": "Select a module",
+          "title": "Title",
+          "title_placeholder": "Enter quiz title...",
+          "title_required": "Title is required",
+          "upload": "Upload",
+          "upload_image": "Upload Quiz Image",
+          "upload_loading": "Uploading...",
+          "upload_placeholder": "Enter image URL..."
+        },
+        "question": {
+          "add_option": "Add Option",
+          "content": "Question Content",
+          "content_placeholder": "Enter question content...",
+          "content_required": "Question content is required",
+          "correct": "Correct",
+          "min_options": "At least 2 options are required",
+          "min_questions": "At least 1 question is required",
+          "multiple_choice": "Multiple Choice",
+          "option": "Option {{letter}}",
+          "option_placeholder": "Enter option content...",
+          "option_required": "Option content is required",
+          "remove_option": "Remove Option",
+          "remove_question": "Remove Question",
+          "single_choice": "Single Choice",
+          "title": "Question {{number}}",
+          "type": "Question Type"
+        },
+        "questions_section": "Questions",
+        "title": "Create New Quiz",
+        "upload_excel": "Upload Excel File"
+      },
       "delete_error": "Failed to delete quiz. Please try again.",
       "delete_message": "Are you sure you want to delete this quiz?",
       "delete_success": "Quiz deleted successfully!",
       "delete_title": "Delete Quiz",
       "description": "Manage all quizzes in the system.",
+      "detail_dialog": {
+        "close": "Close",
+        "correct_answer": "✓ Correct",
+        "course": "Course",
+        "course_module_info": "Course & Module Information",
+        "duration": "Duration: {{duration}} minutes",
+        "loading": "Loading...",
+        "module": "Module",
+        "module_info": "{{duration}} mins · Level: {{level}}",
+        "question_number": "Question {{number}}: {{content}}",
+        "question_type": "Type: {{type}}",
+        "questions_title": "Questions ({{count}})",
+        "title": "Quiz Details"
+      },
+      "edit_dialog": {
+        "buttons": {
+          "cancel": "Cancel",
+          "update": "Update Quiz",
+          "updating": "Updating..."
+        },
+        "close": "Close",
+        "description": "Update the quiz information and questions.",
+        "error": "Error loading quiz data",
+        "loading": "Loading quiz data...",
+        "title": "Edit Quiz"
+      },
+      "filter_type": "Type",
+      "loading": "Loading quizzes...",
       "new_quiz": "New Quiz",
+      "no_quizzes": "No quizzes found. Create your first quiz!",
+      "no_results": "No results.",
+      "search_placeholder": "Search by title, description...",
       "title": "Quizzes"
     },
     "subscriptions": {
+      "actions": {
+        "cancel_subscription": "Cancel Subscription",
+        "disable_auto_renewal": "Disable Auto Renewal",
+        "enable_auto_renewal": "Enable Auto Renewal",
+        "view_details": "View Details"
+      },
       "auto_renewal": {
         "cancel": "Cancel",
         "confirm": "Confirm",
@@ -556,14 +902,108 @@ interface Resources {
         "dialog_title": "Confirm Auto Renewal Change",
         "saving": "Saving..."
       },
+      "cancel_dialog": {
+        "cancelling": "Cancelling...",
+        "confirm": "Yes, Cancel Subscription",
+        "keep": "No, Keep It",
+        "message": "Are you sure you want to cancel this subscription? The user will lose access to premium features immediately.",
+        "title": "Cancel Subscription?"
+      },
+      "columns": {
+        "actions": "Actions",
+        "auto_renewal": "Auto Renewal",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status",
+        "trizilium_per_day": "Trizilium/Day",
+        "user_id": "User ID"
+      },
       "description": "Manage all subscriptions in the system",
+      "details": {
+        "auto_renewal": "Auto Renewal",
+        "close": "Close",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status",
+        "title": "Subscription Details",
+        "tokens_per_day_remaining": "Tokens Per Day Remaining",
+        "user_id": "User ID"
+      },
       "no_results": "No results.",
       "no_subscriptions": "No subscriptions found",
-      "title": "Subscriptions"
+      "status": {
+        "disabled": "Disabled",
+        "enabled": "Enabled"
+      },
+      "title": "Subscriptions",
+      "toast": {
+        "cancel_error": "Failed to cancel subscription",
+        "cancel_success": "Subscription cancelled successfully"
+      }
     },
     "transactions": {
+      "actions": {
+        "cancel_transaction": "Cancel Transaction",
+        "view_details": "View Details"
+      },
+      "cancel_dialog": {
+        "cancelling": "Cancelling...",
+        "confirm": "Yes, Cancel Transaction",
+        "keep": "No, Keep It",
+        "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+        "title": "Cancel Transaction"
+      },
+      "columns": {
+        "actions": "Actions",
+        "amount": "Amount",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "status": "Status",
+        "type": "Type"
+      },
       "description": "View and manage all system transactions",
-      "title": "Transactions"
+      "details": {
+        "amount": "Amount",
+        "close": "Close",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
+        "status": "Status",
+        "title": "Transaction Details",
+        "type": "Type"
+      },
+      "filters": {
+        "provider": "Provider",
+        "status": "Status",
+        "transaction_type": "Transaction Type"
+      },
+      "no_results": "No results.",
+      "no_transactions": "No transactions found",
+      "providers": {
+        "payos": "PayOS",
+        "stripe": "Stripe",
+        "triz": "TRIZ"
+      },
+      "search_placeholder": "Search transactions...",
+      "status": {
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "pending": "Pending"
+      },
+      "title": "Transactions",
+      "toast": {
+        "cancel_error": "Failed to cancel transaction",
+        "cancel_success": "Transaction cancelled successfully"
+      },
+      "types": {
+        "refund": "Refund",
+        "spend": "Spend",
+        "topup": "Top Up"
+      }
     },
     "users": {
       "create_user": "Create New User",
@@ -629,7 +1069,148 @@ interface Resources {
     "title": "Book Library"
   },
   "pages.chat_triz": {
-    "page_meta_title": "Chat TRIZ"
+    "chat_interface": {
+      "ai_name": "AI",
+      "copied": "Copied!",
+      "copy": "Copy",
+      "footer_disclaimer": "AI-generated content is for reference only. Some answers may be inaccurate.",
+      "new_chat": "New Chat",
+      "placeholder": "Ask me anything about development, coding, or technology...",
+      "recording": "Recording...",
+      "reset": "Reset",
+      "send": "Send",
+      "thinking": "Thinking...",
+      "title": "Chat Triz",
+      "tokens_remaining": "Tokens Remaining",
+      "unlimited": "Unlimited",
+      "user_name": "User"
+    },
+    "conversation": {
+      "archive": "Archive",
+      "archive_error": "Failed to archive conversation",
+      "archive_success": "Conversation archived successfully",
+      "delete": "Delete",
+      "empty": "No conversations found",
+      "empty_description": "Start a new conversation to get AI assistance",
+      "history": "History",
+      "last_30_days": "Last 30 Days",
+      "last_7_days": "Last 7 Days",
+      "load_error": "Failed to load conversations",
+      "loading": "Loading conversations...",
+      "more_actions": "More actions",
+      "new_conversation": "New Conversation",
+      "older": "Older",
+      "rename": "Rename",
+      "rename_error": "Failed to rename conversation",
+      "rename_success": "Conversation renamed successfully",
+      "retry": "Retry",
+      "search_no_results": "Try adjusting your search terms",
+      "search_placeholder": "Search conversations...",
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "description": "Get AI-powered assistance for TRIZ problem solving",
+    "errors": {
+      "no_subscription": "You don't have an active subscription or your daily tokens have been exhausted.",
+      "send_failed": "Failed to send message. Please try again.",
+      "subscription_description": "Please upgrade your subscription or wait until tomorrow to continue chatting."
+    },
+    "page_meta_title": "Chat TRIZ",
+    "title": "Chat TRIZ"
+  },
+  "pages.courses": {
+    "all_courses": {
+      "description": "Explore and enroll in courses to start your learning journey",
+      "my_courses_button": "My Courses",
+      "title": "All Courses"
+    },
+    "error": "Failed to load courses.",
+    "filters": {
+      "all_levels": "All Levels",
+      "level": "Level",
+      "most_popular": "Most Popular",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "search_placeholder": "Search courses...",
+      "sort_by": "Sort by"
+    },
+    "learn": {
+      "back_to_my_courses": "Back to My Courses",
+      "error": "Failed to load course content.",
+      "loading": "Loading course content..."
+    },
+    "loading": "Loading courses...",
+    "my_courses": {
+      "description": "Continue your learning journey with your enrolled courses",
+      "title": "My Courses"
+    },
+    "overview": {
+      "back_to_courses": "Back to All Courses",
+      "curriculum_title": "Curriculum",
+      "deal_price": "Deal Price",
+      "description_title": "Description",
+      "duration": "Duration",
+      "enroll_error": "Enrollment failed!",
+      "enroll_now": "Enroll Now",
+      "error": "Failed to load course.",
+      "free": "Free",
+      "learners": "Learners",
+      "lessons": "lessons",
+      "level": "Level",
+      "level_advanced": "Advanced",
+      "level_beginner": "Beginner",
+      "level_intermediate": "Intermediate",
+      "minutes": "minutes",
+      "price": "Price",
+      "start_learning": "Start Learning"
+    },
+    "page_meta_title": "Courses",
+    "quiz": {
+      "confirm_start": {
+        "cancel": "Cancel",
+        "description": "Are you ready to start the quiz?",
+        "duration": "Duration",
+        "minutes": "minutes",
+        "questions": "Questions",
+        "start": "Start Quiz",
+        "starting": "Starting...",
+        "title": "Start Quiz"
+      },
+      "errors": {
+        "start_failed": "Failed to start quiz",
+        "submit_failed": "Failed to submit quiz"
+      },
+      "loading": "Loading quiz...",
+      "no_questions": "No Questions Available",
+      "no_questions_description": "This quiz doesn't have any questions yet.",
+      "no_quiz": "No Quiz Available",
+      "no_quiz_description": "This module does not have a quiz yet.",
+      "page_meta_title": "Course Quiz",
+      "questions": {
+        "multiple_answers": "Select all that apply",
+        "single_answer": "Select one answer"
+      },
+      "quiz_header": {
+        "question_progress": "Question",
+        "time_remaining": "Time Remaining"
+      },
+      "results": {
+        "back_to_course": "Back to Course",
+        "correct": "Correct",
+        "correct_answer": "Correct Answer",
+        "correct_answers": "Correct Answers",
+        "failed": "You didn't pass this time. Keep studying!",
+        "incorrect": "Incorrect",
+        "passed": "Congratulations! You passed!",
+        "review": "Review Answers",
+        "score": "Your Score",
+        "title": "Quiz Results",
+        "total_questions": "Total Questions",
+        "your_answer": "Your Answer"
+      },
+      "submit": "Submit Quiz",
+      "submit_confirm": "Are you sure you want to submit? You cannot change your answers after submission."
+    }
   },
   "pages.forgot_password": {
     "form.description": "Enter your email address and we'll send you an OTP to reset your password.",
@@ -654,6 +1235,33 @@ interface Resources {
     "form.submit": "Verify OTP",
     "form.title": "Verify OTP",
     "page_meta_title": "Verify OTP for Password Reset"
+  },
+  "pages.games": {
+    "description": "Explore and learn TRIZ principles through engaging games",
+    "games": {
+      "memory_card": {
+        "description": "Game to train memory and recall abilities",
+        "name": "Memory Card"
+      },
+      "merging_game": {
+        "description": "Combine elements to create new products",
+        "name": "Alchemy"
+      },
+      "preliminary_game": {
+        "description": "Plan and arrange ahead to overcome challenges",
+        "name": "Guided Maze"
+      },
+      "segmentation_game": {
+        "description": "Break down problems into parts to solve them",
+        "name": "Tower Builder"
+      }
+    },
+    "page_meta_title": "TRIZ Games",
+    "play_now": "Play Now",
+    "principle": "Principle",
+    "search_placeholder": "Search for a game...",
+    "select_game": "Select a game to start playing",
+    "title": "TRIZ Games"
   },
   "pages.home": {
     "comprehensive_platform": {
@@ -787,6 +1395,9 @@ interface Resources {
   "pages.learn_triz": {
     "description": "Unlock breakthrough thinking from the foundation of creative science",
     "page_meta_title": "40 Creative Principles",
+    "search_label": "TRIZ Principles",
+    "search_no_results": "No principles found matching your search",
+    "search_placeholder": "Search principles by number, title, or content...",
     "title": "Discover",
     "title_highlight": "40 Creative Principles"
   },
@@ -838,6 +1449,75 @@ interface Resources {
     "support": "Support",
     "support_desc": "Contact support team"
   },
+  "pages.refund": {
+    "description": "Process a refund for your subscription",
+    "errors": {
+      "missing_info": "Missing required information",
+      "no_transaction": "Cannot find transaction to refund",
+      "refund_failed": "Failed to process refund. Please try again."
+    },
+    "page_meta_title": "Refund Subscription",
+    "refund_types": {
+      "FULL": "Full Refund",
+      "PARTIAL": "Partial Refund",
+      "PRORATED": "Prorated Refund"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "CANCELED": "Canceled",
+      "EXPIRED": "Expired",
+      "PENDING": "Pending"
+    },
+    "step_preview": {
+      "amount": "Amount",
+      "confirm_button": "Confirm Refund",
+      "description": "Review the refund details before confirming",
+      "end_date": "End Date",
+      "go_back": "Go Back",
+      "loading": "Loading refund details...",
+      "original_amount": "Original Amount",
+      "package": "Package",
+      "processing": "Processing Refund...",
+      "refund_amount": "Refund Amount",
+      "refund_details": "Refund Details",
+      "refund_type": "Refund Type",
+      "start_date": "Start Date",
+      "status": "Status",
+      "subscription_details": "Subscription Details",
+      "title": "Preview Refund",
+      "transaction_id": "Transaction ID",
+      "transaction_status": "Transaction Status",
+      "transaction_type": "Transaction Type",
+      "warning": "Please review the refund details carefully. Once confirmed, this action cannot be undone."
+    },
+    "step_result": {
+      "amount_label": "Refund Amount",
+      "description": "Your refund has been processed successfully",
+      "home_button": "Back to Home",
+      "new_refund_button": "Process Another Refund",
+      "title": "Refund Successful!",
+      "wallet_note": "Refunded to your wallet"
+    },
+    "step_select": {
+      "daily_tokens": "Daily Tokens",
+      "description": "Choose which subscription you would like to refund",
+      "end_date": "End Date",
+      "loading": "Loading subscriptions...",
+      "no_eligible": "You do not have any eligible subscriptions available for refund.",
+      "package": "Package",
+      "select_button": "Select & Continue",
+      "start_date": "Start Date",
+      "status": "Status",
+      "subscription_id": "ID",
+      "title": "Select Subscription"
+    },
+    "title": "Refund Subscription",
+    "transaction_status": {
+      "COMPLETED": "Completed",
+      "FAILED": "Failed",
+      "PENDING": "Pending"
+    }
+  },
   "pages.sign_in": {
     "form.description": "Welcome to Triz, please sign in to your account.",
     "form.forgot_password": "Forgot password?",
@@ -873,6 +1553,102 @@ interface Resources {
     "form.title": "OTP Verification",
     "page_meta_title": "OTP Verification"
   },
+  "pages.six_steps": {
+    "description": "Follow the systematic approach to solve problems using TRIZ methodology",
+    "page_meta_title": "6 Steps to Innovative Problem Solving",
+    "title": "6 Steps to Innovative Problem Solving"
+  },
+  "pages.subscription": {
+    "active_subscription": {
+      "active_until": "Active subscription until",
+      "auto_renew_disabled_desc": "Your subscription will not renew automatically",
+      "auto_renew_enabled_desc": "Your subscription will automatically renew",
+      "auto_renewal": "Auto Renewal",
+      "cancel_subscription": "Cancel Subscription",
+      "daily_token_allowance": "Daily Token Allowance",
+      "daily_tokens": "Daily Tokens",
+      "days": "days",
+      "days_remaining": "Days Remaining",
+      "disabled": "Disabled",
+      "duration": "Duration",
+      "enabled": "Enabled",
+      "end_date": "End Date",
+      "manage_subscription": "Manage Subscription",
+      "no_active": "No Active Subscription",
+      "no_active_description": "You don't have any active subscription. Subscribe to a package to get started.",
+      "no_active_visit_packages": "You don't have an active subscription. Visit the",
+      "package": "Package",
+      "packages_page": "packages page",
+      "remaining": "remaining",
+      "start_date": "Start Date",
+      "status": "Status",
+      "status_active": "Active",
+      "subscribe_now": "Subscribe Now",
+      "title": "Active Subscription",
+      "to_get_started": "to get started."
+    },
+    "auto_renewal_dialog": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "disable_description": "Your subscription will not automatically renew when it expires. You will need to manually purchase a new subscription.",
+      "enable_description": "Your subscription will automatically renew when it expires. Your wallet will be charged accordingly.",
+      "title_disable": "Disable Auto Renewal?",
+      "title_enable": "Enable Auto Renewal?",
+      "updating": "Updating..."
+    },
+    "cancel_dialog": {
+      "cancel": "No, Keep It",
+      "canceling": "Cancelling...",
+      "confirm": "Yes, Cancel Subscription",
+      "description": "Are you sure you want to cancel your subscription? Your access to premium features will end immediately.",
+      "error": "Failed to cancel subscription",
+      "success": "Subscription cancelled successfully",
+      "title": "Cancel Subscription?"
+    },
+    "description": "Manage your subscription and view subscription history",
+    "loading": "Loading subscription...",
+    "page_meta_title": "My Subscription",
+    "request_refund": "Request Refund",
+    "subscription_history": {
+      "actions": {
+        "cancel_subscription": "Cancel Subscription",
+        "disable_auto_renewal": "Disable Auto Renewal",
+        "enable_auto_renewal": "Enable Auto Renewal",
+        "view_details": "View Details"
+      },
+      "columns": {
+        "actions": "Actions",
+        "auto_renewal": "Auto Renewal",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status"
+      },
+      "details": {
+        "auto_renewal": "Auto Renewal",
+        "close": "Close",
+        "end_date": "End Date",
+        "package": "Package",
+        "start_date": "Start Date",
+        "status": "Status",
+        "title": "Subscription Details",
+        "tokens_per_day_remaining": "Tokens Per Day Remaining"
+      },
+      "empty": "No subscriptions found",
+      "loading": "Loading subscriptions...",
+      "no_results": "No results found",
+      "no_subscriptions": "No subscriptions found",
+      "status": {
+        "ACTIVE": "Active",
+        "CANCELED": "Canceled",
+        "EXPIRED": "Expired",
+        "PENDING": "Pending"
+      },
+      "title": "Subscription History",
+      "toggle_auto_renewal": "Toggle Auto Renewal"
+    },
+    "title": "My Subscription"
+  },
   "pages.unauthorized": {
     "back_to_homepage": "Back to homepage",
     "message": "You don't have permission to access this resource. Please sign in with an authorized account or contact your administrator.",
@@ -880,14 +1656,125 @@ interface Resources {
     "sign_in": "Sign In",
     "unauthorized": "Access Denied"
   },
+  "pages.wallet": {
+    "balance_card": {
+      "current_balance": "Current Balance",
+      "title": "Wallet Balance",
+      "top_up": "Top Up"
+    },
+    "description": "Manage your wallet balance and view transaction history",
+    "loading": "Loading wallet...",
+    "page_meta_title": "Wallet",
+    "title": "Wallet",
+    "topup_dialog": {
+      "alert_message": "You will be redirected to PayOS based on your selection. Your return URL will be processed securely.",
+      "amount_hint": "Minimum: {{min}} | Maximum: {{max}}",
+      "amount_label": "Amount (VND)",
+      "amount_max": "Maximum amount is {{amount}} Trizilium",
+      "amount_min": "Minimum amount is {{amount}} Trizilium",
+      "amount_placeholder": "100,000",
+      "cancel": "Cancel",
+      "confirm": "Proceed to Payment",
+      "description": "Add funds to your wallet. You will be redirected to the payment provider to complete the transaction.",
+      "error": "Failed to top up wallet",
+      "error_initiate": "Failed to initiate top-up. Please try again.",
+      "error_no_payment_url": "Failed to get payment URL",
+      "processing": "Processing...",
+      "provider_label": "Payment Provider",
+      "provider_payos": "PayOS (Vietnam)",
+      "provider_paypal": "PayPal (International)",
+      "provider_stripe": "Stripe (International)",
+      "quick_amounts": "Quick amounts",
+      "success": "Top up successful!",
+      "title": "Top Up Wallet"
+    },
+    "transactions": {
+      "actions": {
+        "cancel_transaction": "Cancel Transaction",
+        "view_details": "View Details"
+      },
+      "cancel_dialog": {
+        "cancelling": "Cancelling...",
+        "confirm": "Yes, Cancel Transaction",
+        "keep": "No, Keep It",
+        "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+        "title": "Cancel Transaction"
+      },
+      "columns": {
+        "actions": "Actions",
+        "amount": "Amount",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "status": "Status",
+        "type": "Type"
+      },
+      "details": {
+        "amount": "Amount",
+        "close": "Close",
+        "date": "Date",
+        "order_code": "Order Code",
+        "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
+        "status": "Status",
+        "title": "Transaction Details",
+        "type": "Type"
+      },
+      "empty": "No transactions found",
+      "filters": {
+        "all_statuses": "All Statuses",
+        "all_types": "All Types",
+        "from_date": "From Date",
+        "provider": "Provider",
+        "status": "Status",
+        "to_date": "To Date",
+        "transaction_type": "Transaction Type",
+        "type": "Type"
+      },
+      "loading": "Loading transactions...",
+      "no_results": "No results.",
+      "no_transactions": "No transactions found",
+      "providers": {
+        "payos": "PayOS",
+        "stripe": "Stripe",
+        "triz": "TRIZ"
+      },
+      "search_placeholder": "Search transactions...",
+      "status": {
+        "CANCELLED": "Cancelled",
+        "COMPLETED": "Completed",
+        "FAILED": "Failed",
+        "PENDING": "Pending",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "pending": "Pending"
+      },
+      "title": "Transaction History",
+      "toast": {
+        "cancel_error": "Failed to cancel transaction",
+        "cancel_success": "Transaction cancelled successfully"
+      },
+      "types": {
+        "PURCHASE": "Purchase",
+        "REFUND": "Refund",
+        "SUBSCRIPTION": "Subscription",
+        "TOP_UP": "Top Up",
+        "refund": "Refund",
+        "spend": "Spend",
+        "topup": "Top Up"
+      }
+    }
+  },
   "sidebar": {
     "admin": {
+      "achievements": "Achievements",
       "archive": "Archive",
       "assignments": "Assignments",
       "books": "Books",
       "courses": "Courses",
       "dashboard": "Dashboard",
       "flashcards": "Flashcards",
+      "forum": "Forum",
       "main": "Main",
       "management": "Management",
       "others": "Others",
@@ -927,8 +1814,24 @@ interface Resources {
     "dashboard": "Dashboard",
     "devices": "Devices",
     "events": "Events",
+    "expert": {
+      "assignments": "Assignments",
+      "dashboard": "Dashboard",
+      "main": "Main",
+      "subtitle": "Expert Panel",
+      "title": "TRIZ Expert"
+    },
     "issues": "Issues",
     "licenses": "Licenses",
+    "moderator": {
+      "content": "Content",
+      "dashboard": "Dashboard",
+      "forum": "Forum",
+      "main": "Main",
+      "reports": "Reports",
+      "subtitle": "Moderation Panel",
+      "title": "TRIZ Moderator"
+    },
     "monitoring": "Monitoring",
     "monitoring.tracking_activities": "Tracking activities",
     "monitoring.tracking_emails": "Tracking emails",

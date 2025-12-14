@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { Eye, MoreHorizontal, RefreshCw, X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
@@ -48,6 +49,7 @@ export const AdminSubscriptionsDataTableRowActions = ({
   row,
   onAutoRenewalToggle,
 }: AdminSubscriptionsDataTableRowActionsProps) => {
+  const { t } = useTranslation('pages.admin');
   const subscription = row.original;
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
@@ -62,11 +64,11 @@ export const AdminSubscriptionsDataTableRowActions = ({
       {
         onSuccess: () => {
           setIsCancelDialogOpen(false);
-          toast.success('Subscription cancelled successfully');
+          toast.success(t('subscriptions.toast.cancel_success'));
         },
         onError: (error) => {
           toast.error(
-            (error as Error).message || 'Failed to cancel subscription',
+            (error as Error).message || t('subscriptions.toast.cancel_error'),
           );
         },
       },
@@ -83,11 +85,13 @@ export const AdminSubscriptionsDataTableRowActions = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>
+            {t('subscriptions.columns.actions')}
+          </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setIsPreviewOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
-            View Details
+            {t('subscriptions.actions.view_details')}
           </DropdownMenuItem>
           {isActive && onAutoRenewalToggle && (
             <DropdownMenuItem
@@ -96,7 +100,9 @@ export const AdminSubscriptionsDataTableRowActions = ({
               }}
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              {subscription.autoRenew ? 'Disable' : 'Enable'} Auto Renewal
+              {subscription.autoRenew
+                ? t('subscriptions.actions.disable_auto_renewal')
+                : t('subscriptions.actions.enable_auto_renewal')}
             </DropdownMenuItem>
           )}
           {isActive && (
@@ -105,7 +111,7 @@ export const AdminSubscriptionsDataTableRowActions = ({
               onClick={() => setIsCancelDialogOpen(true)}
             >
               <X className="mr-2 h-4 w-4" />
-              Cancel Subscription
+              {t('subscriptions.actions.cancel_subscription')}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -114,53 +120,67 @@ export const AdminSubscriptionsDataTableRowActions = ({
       <Sheet open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Subscription Details</SheetTitle>
+            <SheetTitle>{t('subscriptions.details.title')}</SheetTitle>
             <SheetDescription>{subscription.id}</SheetDescription>
           </SheetHeader>
           <div className="space-y-4 pt-6">
             <div>
-              <p className="text-sm text-muted-foreground">Package</p>
+              <p className="text-sm text-muted-foreground">
+                {t('subscriptions.details.package')}
+              </p>
               <p className="font-medium">{subscription.packageName}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">User ID</p>
+              <p className="text-sm text-muted-foreground">
+                {t('subscriptions.details.user_id')}
+              </p>
               <p className="font-mono text-sm">{subscription.userId}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Status</p>
+              <p className="text-sm text-muted-foreground">
+                {t('subscriptions.details.status')}
+              </p>
               <Badge className="mt-1">{subscription.status}</Badge>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Start Date</p>
+              <p className="text-sm text-muted-foreground">
+                {t('subscriptions.details.start_date')}
+              </p>
               <p className="font-medium">
                 {format(new Date(subscription.startDate), 'MMM dd, yyyy HH:mm')}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">End Date</p>
+              <p className="text-sm text-muted-foreground">
+                {t('subscriptions.details.end_date')}
+              </p>
               <p className="font-medium">
                 {format(new Date(subscription.endDate), 'MMM dd, yyyy HH:mm')}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">
-                Tokens Per Day Remaining
+                {t('subscriptions.details.tokens_per_day_remaining')}
               </p>
               <p className="font-medium">
                 {subscription.tokensPerDayRemaining}
               </p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Auto Renewal</p>
+              <p className="text-sm text-muted-foreground">
+                {t('subscriptions.details.auto_renewal')}
+              </p>
               <Badge variant={subscription.autoRenew ? 'default' : 'outline'}>
-                {subscription.autoRenew ? 'Enabled' : 'Disabled'}
+                {subscription.autoRenew
+                  ? t('subscriptions.status.enabled')
+                  : t('subscriptions.status.disabled')}
               </Badge>
             </div>
           </div>
           <div className="flex gap-3 justify-end pt-6">
             <SheetClose asChild>
               <Button type="button" variant="outline">
-                Close
+                {t('subscriptions.details.close')}
               </Button>
             </SheetClose>
           </div>
@@ -170,10 +190,9 @@ export const AdminSubscriptionsDataTableRowActions = ({
       <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel Subscription?</DialogTitle>
+            <DialogTitle>{t('subscriptions.cancel_dialog.title')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to cancel this subscription? The user will
-              lose access to premium features immediately.
+              {t('subscriptions.cancel_dialog.message')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -182,7 +201,7 @@ export const AdminSubscriptionsDataTableRowActions = ({
               onClick={() => setIsCancelDialogOpen(false)}
               disabled={isCancelingSubscription}
             >
-              No, Keep It
+              {t('subscriptions.cancel_dialog.keep')}
             </Button>
             <Button
               variant="destructive"
@@ -190,8 +209,8 @@ export const AdminSubscriptionsDataTableRowActions = ({
               disabled={isCancelingSubscription}
             >
               {isCancelingSubscription
-                ? 'Cancelling...'
-                : 'Yes, Cancel Subscription'}
+                ? t('subscriptions.cancel_dialog.cancelling')
+                : t('subscriptions.cancel_dialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

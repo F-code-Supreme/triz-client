@@ -6,9 +6,10 @@ export interface CreateCommentPayload {
 }
 
 export interface CreateForumPostPayload {
-  title: string;
-  content: string;
-  tagIds: string[];
+  title?: string;
+  content?: string;
+  imgUrl?: string;
+  tagIds?: string[];
 }
 
 export type UUID = string;

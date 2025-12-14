@@ -4,15 +4,19 @@ import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useRestoreAchievementMutation } from '@/features/achievement/services/mutations';
+import { useGetDeletedAchievementsQuery } from '@/features/achievement/services/queries';
 import { useRestoreBookMutation } from '@/features/book/services/mutations';
 import { useGetAllDeletedBooksAdminQuery } from '@/features/book/services/queries';
 import { useRestorePackageMutation } from '@/features/packages/services/mutations';
 import { useGetDeletedPackagesQuery } from '@/features/packages/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
+import { DeletedAchievementsSection } from './sections/deleted-achievements-section';
 import { DeletedBooksSection } from './sections/deleted-books-section';
 import { DeletedPackagesSection } from './sections/deleted-packages-section';
 
+import type { Achievement } from '@/features/achievement/types';
 import type { AdminBook } from '@/features/book/types';
 import type { Package } from '@/features/packages/types';
 
@@ -30,6 +34,13 @@ const AdminArchivePage = () => {
     useGetDeletedPackagesQuery();
   const restorePackage = useRestorePackageMutation();
 
+  // Achievements queries and mutations
+  const { data: deletedAchievementsData, isLoading: isLoadingAchievements } =
+    useGetDeletedAchievementsQuery({ pageIndex: 0, pageSize: 100 }, [
+      { id: 'deletedAt', desc: true },
+    ]);
+  const restoreAchievement = useRestoreAchievementMutation();
+
   const deletedBooks = useMemo(() => {
     return deletedBooksData?.content || [];
   }, [deletedBooksData]);
@@ -37,6 +48,10 @@ const AdminArchivePage = () => {
   const deletedPackages = useMemo(() => {
     return deletedPackagesData?.content || [];
   }, [deletedPackagesData]);
+
+  const deletedAchievements = useMemo(() => {
+    return deletedAchievementsData?.content || [];
+  }, [deletedAchievementsData]);
 
   const handleRestoreBook = async (book: AdminBook) => {
     try {
@@ -60,8 +75,20 @@ const AdminArchivePage = () => {
     }
   };
 
+  const handleRestoreAchievement = async (achievement: Achievement) => {
+    try {
+      await restoreAchievement.mutateAsync(achievement.id);
+      toast.success(
+        t('archive.achievements.restore_success', { name: achievement.name }),
+      );
+    } catch (error) {
+      console.error('Restore error:', error);
+      toast.error(t('archive.achievements.restore_error'));
+    }
+  };
+
   return (
-    <AdminLayout meta={{ title: 'Archive' }}>
+    <AdminLayout meta={{ title: t('archive.title') }}>
       <div className="flex flex-col gap-8 p-8">
         {/* Header */}
         <div>
@@ -75,7 +102,7 @@ const AdminArchivePage = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger className="gap-2" value="books">
               {t('archive.tabs.books')}
               {deletedBooks.length > 0 && (
@@ -89,6 +116,14 @@ const AdminArchivePage = () => {
               {deletedPackages.length > 0 && (
                 <Badge variant="secondary" className="ml-1">
                   {deletedPackages.length}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger className="gap-2" value="achievements">
+              {t('archive.tabs.achievements')}
+              {deletedAchievements.length > 0 && (
+                <Badge variant="secondary" className="ml-1">
+                  {deletedAchievements.length}
                 </Badge>
               )}
             </TabsTrigger>
@@ -109,6 +144,15 @@ const AdminArchivePage = () => {
               packages={deletedPackages}
               isLoading={isLoadingPackages}
               onRestore={handleRestorePackage}
+            />
+          </TabsContent>
+
+          {/* Achievements Tab */}
+          <TabsContent value="achievements" className="space-y-4">
+            <DeletedAchievementsSection
+              achievements={deletedAchievements}
+              isLoading={isLoadingAchievements}
+              onRestore={handleRestoreAchievement}
             />
           </TabsContent>
         </Tabs>

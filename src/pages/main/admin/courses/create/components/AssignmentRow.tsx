@@ -2,9 +2,18 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Paperclip, Eye, Pencil, Trash2 } from 'lucide-react';
 import React from 'react';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useUpdateAssignmentStatusMutation } from '@/features/assignment/services/mutations';
 
 import type { Assignment } from '@/features/assignment/services/queries/types';
 
@@ -34,11 +43,29 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
     transition,
     isDragging,
   } = useSortable({ id: String(assignment.id), disabled });
+  const updateStatusAssignmentMutation = useUpdateAssignmentStatusMutation(
+    assignment.id || '',
+  );
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+  };
+
+  const handleStatusChange = (newStatus: 'ACTIVE' | 'INACTIVE') => {
+    updateStatusAssignmentMutation.mutate(newStatus, {
+      onSuccess: () => {
+        toast.success('Cập nhật trạng thái thành công');
+      },
+      onError: (error) => {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Không thể cập nhật trạng thái. Vui lòng thử lại.',
+        );
+      },
+    });
   };
 
   return (
@@ -71,7 +98,7 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
 
       {/* Assignment number */}
       <div className="flex items-center w-[200px] h-14 px-4 border-r">
-        <span className="text-blue-600 font-medium text-sm">
+        <span className="text-blue-600 font-medium text-sm truncate">
           Tiêu đề: {assignment.title}
         </span>
       </div>
@@ -82,18 +109,50 @@ export const AssignmentRow: React.FC<AssignmentRowProps> = ({
         <span className="text-sm">{assignment.title}</span>
       </div>
 
-      {/* Status badge */}
-      <div className="flex items-center justify-center w-[157px] h-14 border-r">
-        <Badge
-          variant={assignment.status === 'ACTIVE' ? 'default' : 'secondary'}
-          className={
-            assignment.status === 'ACTIVE'
-              ? 'bg-green-100 text-green-700 hover:bg-green-100'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-          }
+      {/* Status select */}
+      <div className="flex items-center justify-center w-[180px] h-14 border-r px-2">
+        <Select
+          value={assignment.status || 'INACTIVE'}
+          onValueChange={handleStatusChange}
+          disabled={disabled || updateStatusAssignmentMutation.isPending}
         >
-          {assignment.status === 'ACTIVE' ? 'Published' : 'Unpublish'}
-        </Badge>
+          <SelectTrigger className="h-8 w-full">
+            <SelectValue>
+              <Badge
+                variant={
+                  assignment.status === 'ACTIVE' ? 'default' : 'secondary'
+                }
+                className={
+                  assignment.status === 'ACTIVE'
+                    ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
+                }
+              >
+                {assignment.status === 'ACTIVE'
+                  ? 'Công khai'
+                  : 'Chưa công khai'}
+              </Badge>
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ACTIVE">
+              <Badge
+                variant={'default'}
+                className={'bg-green-100 text-green-700 hover:bg-green-100'}
+              >
+                Công khai
+              </Badge>
+            </SelectItem>
+            <SelectItem value="INACTIVE">
+              <Badge
+                variant={'secondary'}
+                className={'bg-gray-100 text-gray-700 hover:bg-gray-100'}
+              >
+                Chưa công khai
+              </Badge>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Action buttons */}

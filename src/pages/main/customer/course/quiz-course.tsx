@@ -58,7 +58,7 @@ const CourseQuizPage = () => {
 
   const { data: quizDataArray, isLoading } =
     useGetQuizzByModulesQuery(moduleId);
-  const quizData = quizDataArray?.[0];
+  const quizData = quizDataArray?.content?.[0];
   const startQuizAttemptMutation = useStartQuizAttemptMutation();
   const submitQuizAttemptMutation = useSubmitQuizAttemptMutation();
   const autoSaveQuizAnswerMutation = useAutoSaveQuizAnswerMutation();
@@ -151,7 +151,7 @@ const CourseQuizPage = () => {
         // Start a new quiz attempt
         const attemptResponse = await startQuizAttemptMutation.mutateAsync({
           quizId: quizData.id,
-          userId: user.id,
+          // userId: user.id,
         });
 
         toast.success('Bài quiz đã được bắt đầu!');

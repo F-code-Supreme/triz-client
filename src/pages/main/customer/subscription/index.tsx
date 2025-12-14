@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { AlertCircle, ArrowRight, X } from 'lucide-react';
 import { useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -33,7 +34,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import useAuth from '@/features/auth/hooks/use-auth';
 import {
-  createSubscriptionsColumns,
+  useCreateSubscriptionsColumns,
   SubscriptionsTable,
 } from '@/features/subscription/components';
 import {
@@ -51,6 +52,7 @@ import type { Subscription } from '@/features/subscription/types';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const SubscriptionPage = () => {
+  const { t } = useTranslation('pages.subscription');
   const navigate = useNavigate();
   const { user } = useAuth();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -92,10 +94,7 @@ const SubscriptionPage = () => {
   }, []);
 
   // Create columns with callback for auto renewal toggle
-  const columns = useMemo(
-    () => createSubscriptionsColumns(handleAutoRenewalToggle),
-    [handleAutoRenewalToggle],
-  );
+  const columns = useCreateSubscriptionsColumns(handleAutoRenewalToggle);
 
   // Create table instance with manual pagination
   const table = useReactTable({
@@ -124,12 +123,10 @@ const SubscriptionPage = () => {
       {
         onSuccess: () => {
           setIsCancelDialogOpen(false);
-          toast.success('Subscription cancelled successfully');
+          toast.success(t('cancel_dialog.success'));
         },
         onError: (error) => {
-          toast.error(
-            (error as Error).message || 'Failed to cancel subscription',
-          );
+          toast.error((error as Error).message || t('cancel_dialog.error'));
         },
       },
     );
@@ -154,17 +151,13 @@ const SubscriptionPage = () => {
   };
 
   return (
-    <DefaultLayout meta={{ title: 'My Subscription' }}>
+    <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              My Subscription
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Manage your subscription and view subscription history
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+            <p className="text-muted-foreground mt-2">{t('description')}</p>
           </div>
           <Button
             variant="secondary"
@@ -172,7 +165,7 @@ const SubscriptionPage = () => {
             className="gap-2"
           >
             <ArrowRight className="h-4 w-4" />
-            Request Refund
+            {t('request_refund')}
           </Button>
         </div>
 
@@ -233,7 +226,7 @@ const SubscriptionPage = () => {
                     {activeSubscription.packageName}
                   </CardTitle>
                   <CardDescription>
-                    Active subscription until{' '}
+                    {t('active_subscription.active_until')}{' '}
                     {new Date(activeSubscription.endDate).toLocaleDateString(
                       'en-US',
                       {
@@ -245,7 +238,7 @@ const SubscriptionPage = () => {
                   </CardDescription>
                 </div>
                 <Badge className="bg-green-600 hover:bg-green-600/90">
-                  Active
+                  {t('active_subscription.status_active')}
                 </Badge>
               </div>
             </CardHeader>
@@ -255,7 +248,7 @@ const SubscriptionPage = () => {
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      Daily Token Allowance
+                      {t('active_subscription.daily_token_allowance')}
                     </p>
                     <p className="text-2xl font-bold mt-2">
                       {formatNumber(activeSubscription.tokensPerDayRemaining)} /{' '}
@@ -275,25 +268,29 @@ const SubscriptionPage = () => {
                           activeSubscription.packageChatTokenPerDay) *
                           100,
                       )}
-                      % remaining
+                      % {t('active_subscription.remaining')}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Duration</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('active_subscription.duration')}
+                    </p>
                     <p className="text-lg font-semibold mt-1">
                       {Math.ceil(
                         (new Date(activeSubscription.endDate).getTime() -
                           new Date(activeSubscription.startDate).getTime()) /
                           (1000 * 60 * 60 * 24),
                       )}{' '}
-                      days
+                      {t('active_subscription.days')}
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Start Date</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('active_subscription.start_date')}
+                    </p>
                     <p className="text-lg font-semibold mt-1">
                       {new Date(
                         activeSubscription.startDate,
@@ -305,7 +302,9 @@ const SubscriptionPage = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">End Date</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t('active_subscription.end_date')}
+                    </p>
                     <p className="text-lg font-semibold mt-1">
                       {new Date(activeSubscription.endDate).toLocaleDateString(
                         'en-US',
@@ -325,11 +324,13 @@ const SubscriptionPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="space-y-1">
-                      <p className="font-semibold">Auto Renewal</p>
+                      <p className="font-semibold">
+                        {t('active_subscription.auto_renewal')}
+                      </p>
                       <p className="text-sm text-muted-foreground">
                         {activeSubscription.autoRenew
-                          ? 'Your subscription will automatically renew'
-                          : 'Your subscription will not renew automatically'}
+                          ? t('active_subscription.auto_renew_enabled_desc')
+                          : t('active_subscription.auto_renew_disabled_desc')}
                       </p>
                     </div>
                     <Switch
@@ -344,10 +345,10 @@ const SubscriptionPage = () => {
                     variant="destructive"
                     onClick={() => setIsCancelDialogOpen(true)}
                     disabled={isCancelingSubscription}
-                    title="Cancel subscription"
+                    title={t('active_subscription.cancel_subscription')}
                   >
                     <X className="h-4 w-4" />
-                    Cancel Subscription
+                    {t('active_subscription.cancel_subscription')}
                   </Button>
                 </div>
               </div>
@@ -357,22 +358,27 @@ const SubscriptionPage = () => {
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              You don&apos;t have an active subscription. Visit the{' '}
+              {t('active_subscription.no_active_visit_packages')}{' '}
               <a href="/packages" className="underline font-semibold">
-                packages page
+                {t('active_subscription.packages_page')}
               </a>{' '}
-              to get started.
+              {t('active_subscription.to_get_started')}
             </AlertDescription>
           </Alert>
         )}
 
         {/* Subscription History */}
         <div>
-          <h2 className="text-2xl font-bold mb-4">Subscription History</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            {t('subscription_history.title')}
+          </h2>
           <SubscriptionsTable
             table={table}
             isLoading={isLoading}
             totalRowCount={totalRowCount}
+            t={t}
+            pageSize={pagination.pageSize}
+            columnsLength={columns.length}
             onAutoRenewalToggle={handleAutoRenewalToggle}
           />
         </div>
@@ -387,13 +393,13 @@ const SubscriptionPage = () => {
           <DialogHeader>
             <DialogTitle>
               {selectedSubscription?.autoRenew
-                ? 'Disable Auto Renewal?'
-                : 'Enable Auto Renewal?'}
+                ? t('auto_renewal_dialog.title_disable')
+                : t('auto_renewal_dialog.title_enable')}
             </DialogTitle>
             <DialogDescription>
               {selectedSubscription?.autoRenew
-                ? 'Your subscription will not automatically renew when it expires. You will need to manually purchase a new subscription.'
-                : 'Your subscription will automatically renew when it expires. Your wallet will be charged accordingly.'}
+                ? t('auto_renewal_dialog.disable_description')
+                : t('auto_renewal_dialog.enable_description')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -402,7 +408,7 @@ const SubscriptionPage = () => {
               onClick={() => setShowAutoRenewalDialog(false)}
               disabled={isUpdating}
             >
-              Cancel
+              {t('auto_renewal_dialog.cancel')}
             </Button>
             <Button
               onClick={confirmAutoRenewalChange}
@@ -411,7 +417,9 @@ const SubscriptionPage = () => {
                 selectedSubscription?.autoRenew ? 'destructive' : 'default'
               }
             >
-              {isUpdating ? 'Updating...' : 'Confirm'}
+              {isUpdating
+                ? t('auto_renewal_dialog.updating')
+                : t('auto_renewal_dialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -421,10 +429,9 @@ const SubscriptionPage = () => {
       <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel Subscription?</DialogTitle>
+            <DialogTitle>{t('cancel_dialog.title')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to cancel your subscription? Your access to
-              premium features will end immediately.
+              {t('cancel_dialog.description')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -433,7 +440,7 @@ const SubscriptionPage = () => {
               onClick={() => setIsCancelDialogOpen(false)}
               disabled={isCancelingSubscription}
             >
-              No, Keep It
+              {t('cancel_dialog.cancel')}
             </Button>
             <Button
               variant="destructive"
@@ -441,8 +448,8 @@ const SubscriptionPage = () => {
               disabled={isCancelingSubscription}
             >
               {isCancelingSubscription
-                ? 'Cancelling...'
-                : 'Yes, Cancel Subscription'}
+                ? t('cancel_dialog.canceling')
+                : t('cancel_dialog.confirm')}
             </Button>
           </DialogFooter>
         </DialogContent>

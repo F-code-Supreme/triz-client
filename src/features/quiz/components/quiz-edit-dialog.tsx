@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -38,7 +39,9 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { FileUpload, FileUploadTrigger } from '@/components/ui/file-upload';
 import { useGetCourseQuery } from '@/features/courses/services/queries';
+import { useUploadFileMutation } from '@/features/media/services/mutations';
 import {
   useGetModuleByCourseQuery,
   useGetModulesById,
@@ -48,31 +51,42 @@ import {
   useGetQuizByIdMutationAdmin,
 } from '@/features/quiz/service/mutations';
 
-const questionSchema = z.object({
-  content: z.string().min(1, 'Question content is required'),
-  questionType: z.enum(['SINGLE_CHOICE', 'MULTIPLE_CHOICE']),
-  options: z
-    .array(
-      z.object({
-        content: z.string().min(1, 'Option content is required'),
-        isCorrect: z.boolean(),
-      }),
-    )
-    .min(2, 'At least 2 options are required'),
-});
+const createQuestionSchema = (t: any) =>
+  z.object({
+    content: z
+      .string()
+      .min(1, t('quizzes.create_dialog.question.content_required')),
+    questionType: z.enum(['SINGLE_CHOICE', 'MULTIPLE_CHOICE']),
+    options: z
+      .array(
+        z.object({
+          content: z
+            .string()
+            .min(1, t('quizzes.create_dialog.question.option_required')),
+          isCorrect: z.boolean(),
+        }),
+      )
+      .min(2, t('quizzes.create_dialog.question.min_options')),
+  });
 
-const quizEditFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  durationInMinutes: z
-    .number()
-    .min(1, 'Duration must be at least 1 minute')
-    .optional(),
-  moduleId: z.string().min(1, 'Module is required'),
-  questions: z.array(questionSchema).min(1, 'At least 1 question is required'),
-});
+const createQuizEditFormSchema = (t: any) =>
+  z.object({
+    title: z.string().min(1, t('quizzes.create_dialog.form.title_required')),
+    description: z
+      .string()
+      .min(1, t('quizzes.create_dialog.form.description_required')),
+    durationInMinutes: z
+      .number()
+      .min(1, t('quizzes.create_dialog.form.duration_min'))
+      .optional(),
+    moduleId: z.string().optional(),
+    imageSource: z.string().optional(),
+    questions: z
+      .array(createQuestionSchema(t))
+      .min(1, t('quizzes.create_dialog.question.min_questions')),
+  });
 
-type QuizEditFormValues = z.infer<typeof quizEditFormSchema>;
+type QuizEditFormValues = z.infer<ReturnType<typeof createQuizEditFormSchema>>;
 
 interface QuizEditDialogProps {
   open: boolean;
@@ -87,31 +101,36 @@ export const QuizEditDialog = ({
   quizId,
   onSuccess,
 }: QuizEditDialogProps) => {
+  const { t } = useTranslation('pages.admin');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string>('');
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('');
+  const [isGeneralQuiz, setIsGeneralQuiz] = useState<boolean>(false);
 
   const { data: coursesData } = useGetCourseQuery();
   const { data: modulesData } = useGetModuleByCourseQuery(selectedCourseId);
 
   const updateQuizMutation = useUpdateQuizMutation();
+  const uploadFileMutation = useUploadFileMutation();
   const {
     data: quizData,
     isLoading: isLoadingQuiz,
     error,
   } = useGetQuizByIdMutationAdmin(quizId);
 
-  // Lấy thông tin module để có courseId
   const { data: currentModuleData } = useGetModulesById(
     quizData?.moduleId || '',
   );
 
   const form = useForm<QuizEditFormValues>({
-    resolver: zodResolver(quizEditFormSchema),
+    resolver: zodResolver(createQuizEditFormSchema(t)),
+    mode: 'onSubmit',
     defaultValues: {
       title: '',
       description: '',
       durationInMinutes: undefined,
       moduleId: '',
+      imageSource: '',
       questions: [
         {
           content: '',
@@ -134,9 +153,15 @@ export const QuizEditDialog = ({
     name: 'questions',
   });
 
-  // Load dữ liệu quiz khi có data từ API
   useEffect(() => {
-    if (quizData && currentModuleData) {
+    if (quizData) {
+      const isGeneral = !quizData.moduleId;
+      setIsGeneralQuiz(isGeneral);
+
+      if (isGeneral && quizData.imageSource) {
+        setUploadedImageUrl(quizData.imageSource);
+      }
+
       const formattedQuestions =
         quizData.questions?.map((question) => ({
           content: question.content,
@@ -150,8 +175,7 @@ export const QuizEditDialog = ({
             })) || [],
         })) || [];
 
-      // Set courseId từ module hiện tại của quiz
-      if (currentModuleData.courseId) {
+      if (!isGeneral && currentModuleData?.courseId) {
         setSelectedCourseId(currentModuleData.courseId);
       }
 
@@ -162,6 +186,7 @@ export const QuizEditDialog = ({
           ? Number(quizData.durationInMinutes)
           : undefined,
         moduleId: quizData.moduleId || '',
+        imageSource: quizData.imageSource || '',
         questions:
           formattedQuestions.length > 0
             ? formattedQuestions
@@ -199,12 +224,21 @@ export const QuizEditDialog = ({
         return q;
       });
 
-      const submitValues = {
+      const submitValues: any = {
         title: values.title,
         description: values.description,
-        moduleId: values.moduleId,
         questions: processedQuestions,
       };
+
+      if (isGeneralQuiz) {
+        submitValues.imageSource = values.imageSource || null;
+        submitValues.moduleId = null;
+      } else {
+        if (!values.moduleId) {
+          throw new Error('Module is required for course quiz');
+        }
+        submitValues.moduleId = values.moduleId;
+      }
 
       await updateQuizMutation.mutateAsync({
         quizId,
@@ -232,6 +266,23 @@ export const QuizEditDialog = ({
     });
   };
 
+  const handleImageUpload = async (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+
+    try {
+      setIsLoading(true);
+      const response = await uploadFileMutation.mutateAsync({ file });
+      const imageUrl = response.data || response;
+      setUploadedImageUrl(imageUrl as string);
+      form.setValue('imageSource', imageUrl as string);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const addOption = (questionIndex: number) => {
     const currentOptions = form.getValues(`questions.${questionIndex}.options`);
     form.setValue(`questions.${questionIndex}.options`, [
@@ -257,7 +308,9 @@ export const QuizEditDialog = ({
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-              <p className="mt-2 text-sm text-gray-600">Loading quiz data...</p>
+              <p className="mt-2 text-sm text-gray-600">
+                {t('quizzes.edit_dialog.loading')}
+              </p>
             </div>
           </div>
         </DialogContent>
@@ -271,13 +324,13 @@ export const QuizEditDialog = ({
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
-              <p className="text-red-600">Error loading quiz data</p>
+              <p className="text-red-600">{t('quizzes.edit_dialog.error')}</p>
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
                 className="mt-4"
               >
-                Close
+                {t('quizzes.edit_dialog.close')}
               </Button>
             </div>
           </div>
@@ -290,9 +343,9 @@ export const QuizEditDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Quiz</DialogTitle>
+          <DialogTitle>{t('quizzes.edit_dialog.title')}</DialogTitle>
           <DialogDescription>
-            Update the quiz information and questions.
+            {t('quizzes.edit_dialog.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -304,9 +357,16 @@ export const QuizEditDialog = ({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>
+                      {t('quizzes.create_dialog.form.title')}
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter quiz title..." {...field} />
+                      <Input
+                        placeholder={t(
+                          'quizzes.create_dialog.form.title_placeholder',
+                        )}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -318,10 +378,14 @@ export const QuizEditDialog = ({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>
+                      {t('quizzes.create_dialog.form.description')}
+                    </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Enter quiz description..."
+                        placeholder={t(
+                          'quizzes.create_dialog.form.description_placeholder',
+                        )}
                         rows={3}
                         {...field}
                       />
@@ -336,12 +400,16 @@ export const QuizEditDialog = ({
                 name="durationInMinutes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Duration (minutes)</FormLabel>
+                    <FormLabel>
+                      {t('quizzes.create_dialog.form.duration')}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="number"
                         min={1}
-                        placeholder="Enter duration in minutes (optional)..."
+                        placeholder={t(
+                          'quizzes.create_dialog.form.duration_placeholder',
+                        )}
                         {...field}
                         onChange={(e) =>
                           field.onChange(
@@ -358,93 +426,170 @@ export const QuizEditDialog = ({
 
             <Separator />
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Course & Module Selection</h3>
-
-              <div className="space-y-3">
-                <div className="space-y-2">
-                  <FormLabel>Select Course</FormLabel>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start"
-                      >
-                        {selectedCourseId
-                          ? coursesData?.content?.find(
-                              (c) => c.id === selectedCourseId,
-                            )?.title || 'Select a course'
-                          : 'Select a course'}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
-                      {coursesData?.content?.map((course) => (
-                        <DropdownMenuItem
-                          key={course.id}
-                          onClick={() => {
-                            setSelectedCourseId(course.id);
-                            form.setValue('moduleId', '');
-                          }}
-                        >
-                          {course.title}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            {isGeneralQuiz ? (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium">
+                    {t('quizzes.create_dialog.form.upload_image')}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <FileUpload
+                      accept="image/*"
+                      maxFiles={1}
+                      onValueChange={handleImageUpload}
+                    >
+                      <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
+                        <Upload className="w-4 h-4" />
+                        {t('quizzes.create_dialog.form.upload')}
+                      </FileUploadTrigger>
+                    </FileUpload>
+                    {uploadFileMutation.isPending && (
+                      <span className="text-sm text-muted-foreground">
+                        {t('quizzes.create_dialog.form.upload_loading')}{' '}
+                        {uploadFileMutation.progress}%
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                {selectedCourseId && (
-                  <FormField
-                    control={form.control}
-                    name="moduleId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Module *</FormLabel>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                className="w-full justify-start"
-                              >
-                                {field.value
-                                  ? modulesData?.find(
-                                      (m) => m.id === field.value,
-                                    )?.name || 'Select a module'
-                                  : 'Select a module'}
-                              </Button>
-                            </FormControl>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
-                            {modulesData?.map((module) => (
-                              <DropdownMenuItem
-                                key={module.id}
-                                onClick={() => field.onChange(module.id)}
-                              >
-                                <div className="flex flex-col">
-                                  <span>{module.name}</span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {module.durationInMinutes} mins · Level:{' '}
-                                    {module.level}
-                                  </span>
-                                </div>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="imageSource"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder={t(
+                            'quizzes.create_dialog.form.upload_placeholder',
+                          )}
+                          {...field}
+                          value={uploadedImageUrl || field.value || ''}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                            setUploadedImageUrl(e.target.value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {uploadedImageUrl && (
+                  <div className="mt-2">
+                    <img
+                      src={uploadedImageUrl}
+                      alt="Quiz preview"
+                      className="max-w-xs rounded-md border"
+                    />
+                  </div>
                 )}
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">
+                  {t('quizzes.create_dialog.course_module')}
+                </h3>
+
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <FormLabel>
+                      {t('quizzes.create_dialog.form.course')}
+                    </FormLabel>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          {selectedCourseId
+                            ? coursesData?.content?.find(
+                                (c) => c.id === selectedCourseId,
+                              )?.title ||
+                              t('quizzes.create_dialog.form.course_placeholder')
+                            : t(
+                                'quizzes.create_dialog.form.course_placeholder',
+                              )}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
+                        {coursesData?.content?.map((course) => (
+                          <DropdownMenuItem
+                            key={course.id}
+                            onClick={() => {
+                              setSelectedCourseId(course.id);
+                              form.setValue('moduleId', '');
+                            }}
+                          >
+                            {course.title}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  {selectedCourseId && (
+                    <FormField
+                      control={form.control}
+                      name="moduleId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('quizzes.create_dialog.form.module')}
+                          </FormLabel>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant="outline"
+                                  className="w-full justify-start"
+                                >
+                                  {field.value
+                                    ? modulesData?.find(
+                                        (m) => m.id === field.value,
+                                      )?.name ||
+                                      t(
+                                        'quizzes.create_dialog.form.module_placeholder',
+                                      )
+                                    : t(
+                                        'quizzes.create_dialog.form.module_placeholder',
+                                      )}
+                                </Button>
+                              </FormControl>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-[400px] max-h-[300px] overflow-y-auto">
+                              {modulesData?.map((module) => (
+                                <DropdownMenuItem
+                                  key={module.id}
+                                  onClick={() => field.onChange(module.id)}
+                                >
+                                  <div className="flex flex-col">
+                                    <span>{module.name}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {module.durationInMinutes} mins · Level:{' '}
+                                      {module.level}
+                                    </span>
+                                  </div>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
 
             <Separator />
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Questions</h3>
+                <h3 className="text-lg font-medium">
+                  {t('quizzes.create_dialog.questions_section')}
+                </h3>
                 <Button
                   type="button"
                   variant="outline"
@@ -452,7 +597,7 @@ export const QuizEditDialog = ({
                   onClick={addQuestion}
                 >
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Question
+                  {t('quizzes.create_dialog.add_question')}
                 </Button>
               </div>
 
@@ -461,7 +606,9 @@ export const QuizEditDialog = ({
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm">
-                        Question {questionIndex + 1}
+                        {t('quizzes.create_dialog.question.title', {
+                          number: questionIndex + 1,
+                        })}
                       </CardTitle>
                       {questionFields.length > 1 && (
                         <Button
@@ -481,10 +628,14 @@ export const QuizEditDialog = ({
                       name={`questions.${questionIndex}.content`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Question Content</FormLabel>
+                          <FormLabel>
+                            {t('quizzes.create_dialog.question.content')}
+                          </FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder="Enter question content..."
+                              placeholder={t(
+                                'quizzes.create_dialog.question.content_placeholder',
+                              )}
                               rows={2}
                               {...field}
                             />
@@ -499,22 +650,32 @@ export const QuizEditDialog = ({
                       name={`questions.${questionIndex}.questionType`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Question Type</FormLabel>
+                          <FormLabel>
+                            {t('quizzes.create_dialog.question.type')}
+                          </FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select question type" />
+                                <SelectValue
+                                  placeholder={t(
+                                    'quizzes.create_dialog.question.type',
+                                  )}
+                                />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="SINGLE_CHOICE">
-                                Single Choice
+                                {t(
+                                  'quizzes.create_dialog.question.single_choice',
+                                )}
                               </SelectItem>
                               <SelectItem value="MULTIPLE_CHOICE">
-                                Multiple Choice
+                                {t(
+                                  'quizzes.create_dialog.question.multiple_choice',
+                                )}
                               </SelectItem>
                             </SelectContent>
                           </Select>
@@ -525,7 +686,9 @@ export const QuizEditDialog = ({
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <FormLabel>Options</FormLabel>
+                        <FormLabel>
+                          {t('quizzes.create_dialog.question.option')}
+                        </FormLabel>
                         <Button
                           type="button"
                           variant="ghost"
@@ -533,7 +696,7 @@ export const QuizEditDialog = ({
                           onClick={() => addOption(questionIndex)}
                         >
                           <Plus className="mr-1 h-3 w-3" />
-                          Add Option
+                          {t('quizzes.create_dialog.question.add_option')}
                         </Button>
                       </div>
 
@@ -593,7 +756,9 @@ export const QuizEditDialog = ({
                                 <FormItem className="flex-1">
                                   <FormControl>
                                     <Input
-                                      placeholder={`Option ${optionIndex + 1}...`}
+                                      placeholder={t(
+                                        'quizzes.create_dialog.question.option_placeholder',
+                                      )}
                                       {...field}
                                     />
                                   </FormControl>
@@ -629,10 +794,12 @@ export const QuizEditDialog = ({
                 onClick={() => onOpenChange(false)}
                 disabled={isLoading}
               >
-                Cancel
+                {t('quizzes.edit_dialog.buttons.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Updating...' : 'Update Quiz'}
+                {isLoading
+                  ? t('quizzes.edit_dialog.buttons.updating')
+                  : t('quizzes.edit_dialog.buttons.update')}
               </Button>
             </div>
           </form>

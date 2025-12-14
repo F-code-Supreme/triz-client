@@ -25,13 +25,10 @@ import {
   useGetAssignmentsQueryExpert,
 } from '@/features/assignment/services/queries';
 import { booksColumns } from '@/features/book/components/books-columns';
-import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
-import { bookStatuses } from '@/features/book/data/data';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminAssignmentsManagementPage = () => {
   const { t } = useTranslation('pages.admin');
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState<
     Array<{
@@ -102,7 +99,24 @@ const AdminAssignmentsManagementPage = () => {
               {
                 columnId: 'status',
                 title: 'Status',
-                options: bookStatuses,
+                options: [
+                  {
+                    label: 'Chờ AI đánh giá',
+                    value: 'AI_PENDING',
+                  },
+                  {
+                    label: 'Đã đánh giá',
+                    value: 'APPROVED',
+                  },
+                  {
+                    label: 'Chờ duyệt',
+                    value: 'PENDING',
+                  },
+                  {
+                    label: 'Từ chối',
+                    value: 'REJECTED',
+                  },
+                ],
               },
             ]}
           />
@@ -112,7 +126,6 @@ const AdminAssignmentsManagementPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Author</TableHead>
                     <TableHead>Category</TableHead>
@@ -195,8 +208,6 @@ const AdminAssignmentsManagementPage = () => {
           )}
         </div>
       </div>
-
-      <BooksFormDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
     </AdminLayout>
   );
 };

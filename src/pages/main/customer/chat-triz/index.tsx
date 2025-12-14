@@ -56,7 +56,7 @@ const ChatTrizPage = () => {
   };
 
   return (
-    <ChatLayout meta={{ title: t('page_meta_title') }}>
+    <ChatLayout meta={{ title: t('page_meta_title') }} showheader={true}>
       {/* Mobile Sidebar Sheet */}
       {isMobile && (
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>

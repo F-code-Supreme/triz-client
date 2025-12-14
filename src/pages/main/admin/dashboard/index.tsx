@@ -16,7 +16,7 @@ const AdminDashboardPage = () => {
   const [activeTab, setActiveTab] = useState('revenue');
 
   return (
-    <AdminLayout meta={{ title: 'Admin Dashboard' }}>
+    <AdminLayout meta={{ title: t('dashboard.title') }}>
       <div className="space-y-8 p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="flex justify-between items-center">

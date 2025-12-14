@@ -1,14 +1,9 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 import { SubscriptionsDataTableRowActions } from './subscriptions-data-table-row-actions';
 
@@ -34,33 +29,93 @@ export const getSubscriptionStatusColor = (status: string): string => {
   }
 };
 
-export const subscriptionsColumns = [
-  columnHelper.accessor('id', {
-    id: 'id',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
-    ),
-    cell: (info) => {
-      const id = info.getValue();
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="w-[100px] truncate font-mono text-sm cursor-help">
-                {id}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="font-mono text-xs">
-              {id}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    },
-    enableSorting: false,
-    enableHiding: false,
-  }),
+export const useSubscriptionsColumns = () => {
+  const { t } = useTranslation('pages.subscription');
 
+  return [
+    columnHelper.accessor('packageName', {
+      id: 'packagePlanId',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t('subscription_history.columns.package')}
+        />
+      ),
+      cell: (info) => <span className="font-medium">{info.getValue()}</span>,
+    }),
+
+    columnHelper.accessor('startDate', {
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t('subscription_history.columns.start_date')}
+        />
+      ),
+      cell: (info) => {
+        const date = info.getValue();
+        return format(new Date(date), 'MMM dd, yyyy');
+      },
+    }),
+
+    columnHelper.accessor('endDate', {
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t('subscription_history.columns.end_date')}
+        />
+      ),
+      cell: (info) => {
+        const date = info.getValue();
+        return format(new Date(date), 'MMM dd, yyyy');
+      },
+    }),
+
+    columnHelper.accessor('status', {
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t('subscription_history.columns.status')}
+        />
+      ),
+      cell: (info) => {
+        const status = info.getValue();
+        const colors = getSubscriptionStatusColor(status);
+        return <Badge className={colors}>{status}</Badge>;
+      },
+    }),
+
+    columnHelper.accessor('autoRenew', {
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t('subscription_history.columns.auto_renewal')}
+        />
+      ),
+      cell: (info) => (
+        <Badge variant={info.getValue() ? 'default' : 'outline'}>
+          {info.getValue()
+            ? t('active_subscription.enabled')
+            : t('active_subscription.disabled')}
+        </Badge>
+      ),
+    }),
+
+    columnHelper.display({
+      id: 'actions',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title={t('subscription_history.columns.actions')}
+        />
+      ),
+      cell: ({ row }) => <SubscriptionsDataTableRowActions row={row} />,
+      enableSorting: false,
+      enableHiding: false,
+    }),
+  ];
+};
+
+export const subscriptionsColumns = [
   columnHelper.accessor('packageName', {
     id: 'packagePlanId',
     header: ({ column }) => (
@@ -125,7 +180,29 @@ export const subscriptionsColumns = [
 export const createSubscriptionsColumns = (
   onAutoRenewalToggle?: (subscription: SubscriptionWithTimestamp) => void,
 ) => {
+  // This is kept for backward compatibility with admin pages
   return subscriptionsColumns.map((column) => {
+    if (column.id === 'actions') {
+      return {
+        ...column,
+        cell: ({ row }: { row: { original: SubscriptionWithTimestamp } }) => (
+          <SubscriptionsDataTableRowActions
+            row={row}
+            onAutoRenewalToggle={onAutoRenewalToggle}
+          />
+        ),
+      };
+    }
+    return column;
+  });
+};
+
+export const useCreateSubscriptionsColumns = (
+  onAutoRenewalToggle?: (subscription: SubscriptionWithTimestamp) => void,
+) => {
+  const columns = useSubscriptionsColumns();
+
+  return columns.map((column) => {
     if (column.id === 'actions') {
       return {
         ...column,

@@ -19,13 +19,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { assignmentsColumns } from '@/features/assignment/components/assignments-columns';
-import {
-  // useGetAssignmentsQuery,
-  useGetAssignmentsQueryExpert,
-} from '@/features/assignment/services/queries';
+import { useGetAssignmentsQueryExpert } from '@/features/assignment/services/queries';
 import { booksColumns } from '@/features/book/components/books-columns';
 import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
-import { bookStatuses } from '@/features/book/data/data';
 import { ExpertLayout } from '@/layouts/expert-layout';
 
 const ExpertAssignmentsManagementPage = () => {
@@ -48,16 +44,15 @@ const ExpertAssignmentsManagementPage = () => {
   >({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  // const { data: assignmentsData, isLoading } = useGetAssignmentsQuery();
   const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert();
 
-  const books = useMemo(() => {
+  const assignments = useMemo(() => {
     const currentData = assignmentsData;
     return currentData?.content || [];
   }, [assignmentsData]);
 
   const table = useReactTable({
-    data: books,
+    data: assignments,
     columns: assignmentsColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -78,7 +73,7 @@ const ExpertAssignmentsManagementPage = () => {
   });
 
   return (
-    <ExpertLayout meta={{ title: 'Books Management' }}>
+    <ExpertLayout meta={{ title: 'Assignments Management' }}>
       <div className="flex flex-col gap-8 p-8">
         <div className="flex justify-between items-center">
           <div>
@@ -96,13 +91,6 @@ const ExpertAssignmentsManagementPage = () => {
             table={table}
             searchPlaceholder="Search by title, author..."
             searchKey="title"
-            filters={[
-              {
-                columnId: 'status',
-                title: 'Status',
-                options: bookStatuses,
-              },
-            ]}
           />
 
           {isLoading ? (
@@ -110,18 +98,19 @@ const ExpertAssignmentsManagementPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>ID</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Author</TableHead>
-                    <TableHead>Category</TableHead>
+                    <TableHead>Number of submissions</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead>Updated At</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {Array.from({ length: 10 }).map((_, idx) => (
+                  {Array.from({ length: 6 }).map((_, idx) => (
                     <TableRow key={idx}>
-                      {booksColumns.map((_, cellIdx) => (
+                      {assignmentsColumns.map((_, cellIdx) => (
                         <TableCell key={cellIdx}>
                           <Skeleton className="h-8 w-full" />
                         </TableCell>
@@ -131,10 +120,10 @@ const ExpertAssignmentsManagementPage = () => {
                 </TableBody>
               </Table>
             </div>
-          ) : books.length === 0 ? (
+          ) : assignments.length === 0 ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-muted-foreground">
-                No books found. Create your first book!
+                Chưa có bài tập nào được nộp.
               </p>
             </div>
           ) : (

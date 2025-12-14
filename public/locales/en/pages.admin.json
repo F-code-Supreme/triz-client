@@ -23,6 +23,98 @@
       "revenue": "Revenue",
       "chat": "Chat",
       "games": "Games"
+    },
+    "revenue": {
+      "title": "Revenue & Course Packages",
+      "description": "Track revenue trends, package performance, and transaction success rates",
+      "total_revenue": "Total Revenue",
+      "total_packages_sold": "Total Packages Sold",
+      "packages_sold_desc": "Across all package types",
+      "success_rate": "Success Rate",
+      "success_transactions": "{{count}} successful transactions",
+      "failure_rate": "Failure Rate",
+      "failed_transactions": "{{count}} failed transactions",
+      "revenue_trend": "Revenue Trend",
+      "revenue_over_period": "Revenue over the last {{period}}",
+      "period_30_days": "30 days",
+      "period_12_months": "12 months",
+      "period_4_quarters": "4 quarters",
+      "revenue_by_package": "Revenue by Package",
+      "revenue_by_package_desc": "Total revenue generated per package type",
+      "purchases_distribution": "Purchases Distribution",
+      "purchases_distribution_desc": "Number of purchases by package type",
+      "success_rate_by_package": "Success Rate by Package",
+      "success_rate_by_package_desc": "Transaction success rate per package",
+      "top_spenders": "Top Users by Spending",
+      "top_spenders_desc": "Users with the highest total spending",
+      "rank": "Rank",
+      "name": "Name",
+      "email": "Email",
+      "purchases": "Purchases",
+      "total_spent": "Total Spent"
+    },
+    "chat": {
+      "title": "Chat Analytics",
+      "description": "Monitor chat bot performance",
+      "total_messages": "Total Messages",
+      "user_bot_messages": "{{user}} user, {{bot}} bot",
+      "bot_satisfaction": "Bot Satisfaction",
+      "avg_response": "Avg response: {{time}}s",
+      "message_distribution": "Chat Message Distribution",
+      "message_distribution_desc": "User messages vs bot responses",
+      "user_messages": "User Messages",
+      "bot_messages": "Bot Messages",
+      "satisfaction_title": "Chat Bot Satisfaction",
+      "satisfaction_desc": "User satisfaction with bot responses",
+      "satisfied": "Satisfied",
+      "neutral": "Neutral",
+      "unsatisfied": "Unsatisfied"
+    },
+    "games": {
+      "title": "Game Analytics",
+      "description": "Track game engagement, player performance, and popular games",
+      "select_view": "Select View",
+      "overview": "Overview",
+      "overview_all_games": "Overview - All Games",
+      "total_game_plays": "Total Game Plays",
+      "total_plays_desc": "Across all games",
+      "avg_time_play": "Avg Time Play",
+      "avg_time_all_games": "Average across all games",
+      "avg_completion_rate": "Avg Completion Rate",
+      "avg_completion_all_games": "Average across all games",
+      "avg_score": "Avg Score",
+      "avg_player_score": "Average player score",
+      "total_games_play": "Total Games Play",
+      "total_plays_game": "Total plays for this game",
+      "avg_time_per_game": "Average time per game",
+      "completion_rate": "Avg Completion Rate",
+      "players_complete": "Players who complete the game",
+      "avg_score_game": "Average score for this game",
+      "plays_over_time": "Game Plays Over Time",
+      "total_plays_period": "Total plays in the last {{period}}",
+      "period_30_days": "30 days",
+      "period_12_months": "12 months",
+      "period_4_quarters": "4 quarters",
+      "plays": "Plays",
+      "avg_score_trend": "Average Score Trend",
+      "avg_scores_period": "Average scores in the last {{period}}",
+      "avg_score_label": "Avg Score",
+      "top_players": "Top Players Leaderboard",
+      "top_players_desc": "Highest scoring players across all games",
+      "rank": "Rank",
+      "player": "Player",
+      "games_played": "Games Played",
+      "total_score": "Total Score",
+      "avg_per_game": "Avg per Game",
+      "minutes": "min"
+    },
+    "period_filter": {
+      "day": "Day",
+      "month": "Month",
+      "quarter": "Quarter"
+    },
+    "stat_card": {
+      "from_last_period": "from last period"
     }
   },
   "archive": {
@@ -30,7 +122,8 @@
     "description": "View and manage deleted items. Restore them to make them active again.",
     "tabs": {
       "books": "Books",
-      "packages": "Packages"
+      "packages": "Packages",
+      "achievements": "Achievements"
     },
     "books": {
       "no_deleted": "No deleted books found",
@@ -49,7 +142,87 @@
       "restore_success": "Package \"{{name}}\" restored successfully!",
       "restore_error": "Failed to restore package. Please try again.",
       "deleted_at": "Deleted at",
-      "features": "Features"
+      "features": "Features",
+      "days": "days",
+      "more_features": "+{{count}} more features"
+    },
+    "achievements": {
+      "no_deleted": "No deleted achievements found",
+      "all_active": "All achievements are currently active",
+      "restore_title": "Restore Achievement",
+      "restore_message": "Are you sure you want to restore this achievement?",
+      "restore_success": "Achievement \"{{name}}\" restored successfully!",
+      "restore_error": "Failed to restore achievement. Please try again.",
+      "deleted_at": "Deleted at"
+    }
+  },
+  "achievements": {
+    "title": "Manage Achievements",
+    "description": "Create and manage user achievements",
+    "create_achievement": "Create Achievement",
+    "no_achievements": "No achievements found",
+    "create_first": "Create your first achievement to get started",
+    "status_filter": {
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "type": {
+      "first_book": "First Book",
+      "book_milestone": "Book Milestone"
+    },
+    "card": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "restore": "Restore",
+      "no_image": "No image",
+      "milestone": "Milestone: {{count}} books"
+    },
+    "dialog": {
+      "edit_title": "Edit Achievement",
+      "create_title": "Create Achievement",
+      "edit_description": "Update the achievement details below",
+      "create_description": "Fill in the details to create a new achievement",
+      "form": {
+        "name": "Name",
+        "name_placeholder": "Achievement name",
+        "name_required": "Name is required",
+        "description": "Description",
+        "description_placeholder": "Achievement description",
+        "description_required": "Description is required",
+        "image": "Achievement Image",
+        "image_description": "Upload an achievement icon or badge (max 2MB)",
+        "type": "Type",
+        "type_placeholder": "Select achievement type",
+        "status": "Status",
+        "status_placeholder": "Select status",
+        "milestone_count": "Milestone Count",
+        "milestone_count_placeholder": "e.g., 5",
+        "milestone_count_required": "Milestone count is required for BOOK_MILESTONE",
+        "milestone_count_description": "Number of books required to unlock this achievement"
+      },
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "update": "Update",
+      "create": "Create"
+    },
+    "delete_dialog": {
+      "title": "Are you sure?",
+      "description": "This will delete the achievement \"{{name}}\". This action can be undone by restoring from the deleted achievements list.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleting": "Deleting..."
+    },
+    "toast": {
+      "delete_success": "Achievement deleted successfully",
+      "delete_error": "Failed to delete achievement",
+      "create_success": "Achievement created successfully",
+      "create_error": "Failed to create achievement",
+      "update_success": "Achievement updated successfully",
+      "update_error": "Failed to update achievement"
+    },
+    "pagination": {
+      "page_of": "Page {{current}} of {{total}}"
     }
   },
   "books": {
@@ -67,7 +240,7 @@
       "author_placeholder": "Author name",
       "publisher": "Publisher",
       "publisher_placeholder": "Publisher name",
-      "book_file": "Book File (EPUB/PDF)",
+      "book_file": "Book File (EPUB)",
       "book_file_required": "Book file is required",
       "cover_image": "Cover Image",
       "status": "Status",
@@ -307,7 +480,7 @@
     },
     "manage_cards": {
       "title": "Manage Cards",
-      "deck_id_label": "Deck ID",
+      "deck_label": "Manage cards for deck {{deckTitle}}",
       "new_card": "New Card",
       "search_placeholder": "Search by term, definition...",
       "no_cards": "No cards found. Create your first card!",
@@ -328,8 +501,6 @@
       "no_image": "No image",
       "no_img": "No img",
       "table": {
-        "select": "Select",
-        "id": "ID",
         "image": "Image",
         "term": "Term",
         "definition": "Definition",
@@ -350,6 +521,60 @@
       "all": "All Status",
       "active": "Active",
       "inactive": "Inactive"
+    },
+    "card": {
+      "price": "Price:",
+      "duration": "Duration:",
+      "daily_tokens": "Daily Tokens:",
+      "features": "Features:",
+      "days": "days",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "dialog": {
+      "edit_title": "Edit Package",
+      "create_title": "Create New Package",
+      "package_name": "Package Name",
+      "package_name_placeholder": "e.g., Premium Plan",
+      "package_name_required": "Package name is required",
+      "price_trizilium": "Price (Trizilium)",
+      "price_placeholder": "1000",
+      "price_required": "Price must be greater than 0",
+      "duration_days": "Duration (Days)",
+      "duration_placeholder": "30",
+      "duration_required": "Duration must be greater than 0",
+      "daily_trizilium": "Daily Trizilium",
+      "daily_placeholder": "500",
+      "daily_required": "Chat tokens per day must be greater than 0",
+      "status": "Status",
+      "status_placeholder": "Select status",
+      "status_active": "Active",
+      "status_inactive": "Inactive",
+      "features_label": "Features",
+      "features_required": "At least 1 feature is required",
+      "add_new_feature": "Add New Feature",
+      "icon_url_placeholder": "Icon URL (e.g., https://example.com/icon.png)",
+      "feature_description_placeholder": "Feature description",
+      "valid_image_url": "✓ Valid image URL",
+      "add_feature": "Add Feature",
+      "cancel": "Cancel",
+      "update_package": "Update Package",
+      "create_package": "Create Package"
+    },
+    "delete_dialog": {
+      "title": "Delete Package",
+      "message": "Are you sure you want to delete this package?",
+      "deleting": "Deleting...",
+      "delete_package": "Delete Package",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "create_success": "Package created successfully!",
+      "create_error": "Failed to create package. Please try again.",
+      "update_success": "Package updated successfully!",
+      "update_error": "Failed to update package. Please try again.",
+      "delete_success": "Package deleted successfully!",
+      "delete_error": "Failed to delete package. Please try again."
     }
   },
   "quizzes": {
@@ -359,13 +584,154 @@
     "delete_title": "Delete Quiz",
     "delete_message": "Are you sure you want to delete this quiz?",
     "delete_success": "Quiz deleted successfully!",
-    "delete_error": "Failed to delete quiz. Please try again."
+    "delete_error": "Failed to delete quiz. Please try again.",
+    "search_placeholder": "Search by title, description...",
+    "filter_type": "Type",
+    "loading": "Loading quizzes...",
+    "no_quizzes": "No quizzes found. Create your first quiz!",
+    "no_results": "No results.",
+    "columns": {
+      "title": "Title",
+      "questions": "Questions",
+      "question_count": "{{count}} question",
+      "question_count_plural": "{{count}} questions",
+      "duration": "Duration",
+      "duration_minutes": "{{count}} min",
+      "no_limit": "No limit",
+      "created": "Created",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view_details": "View details",
+      "edit_quiz": "Edit quiz",
+      "delete_quiz": "Delete quiz"
+    },
+    "create_dialog": {
+      "title": "Create New Quiz",
+      "description": "Create a new quiz with questions and options.",
+      "form": {
+        "title": "Title",
+        "title_placeholder": "Enter quiz title...",
+        "title_required": "Title is required",
+        "description": "Description",
+        "description_placeholder": "Enter quiz description...",
+        "description_required": "Description is required",
+        "duration": "Duration (minutes)",
+        "duration_placeholder": "Enter duration in minutes",
+        "duration_min": "Duration must be at least 1 minute",
+        "course": "Course",
+        "course_placeholder": "Select a course",
+        "course_required": "Course is required",
+        "module": "Module",
+        "module_placeholder": "Select a module",
+        "module_required": "Module is required",
+        "select_course_first": "Please select a course first",
+        "upload_image": "Upload Quiz Image",
+        "upload": "Upload",
+        "upload_loading": "Uploading...",
+        "upload_placeholder": "Enter image URL...",
+        "select_course": "Select a course",
+        "select_module": "Select a module"
+      },
+      "course_module": "Course & Module Selection",
+      "questions_section": "Questions",
+      "add_question": "Add Question",
+      "upload_excel": "Upload Excel File",
+      "question": {
+        "title": "Question {{number}}",
+        "content": "Question Content",
+        "content_placeholder": "Enter question content...",
+        "content_required": "Question content is required",
+        "type": "Question Type",
+        "single_choice": "Single Choice",
+        "multiple_choice": "Multiple Choice",
+        "option": "Option {{letter}}",
+        "option_placeholder": "Enter option content...",
+        "option_required": "Option content is required",
+        "correct": "Correct",
+        "add_option": "Add Option",
+        "remove_option": "Remove Option",
+        "remove_question": "Remove Question",
+        "min_options": "At least 2 options are required",
+        "min_questions": "At least 1 question is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create Quiz",
+        "creating": "Creating..."
+      }
+    },
+    "edit_dialog": {
+      "title": "Edit Quiz",
+      "description": "Update the quiz information and questions.",
+      "loading": "Loading quiz data...",
+      "error": "Error loading quiz data",
+      "close": "Close",
+      "buttons": {
+        "cancel": "Cancel",
+        "update": "Update Quiz",
+        "updating": "Updating..."
+      }
+    },
+    "detail_dialog": {
+      "title": "Quiz Details",
+      "duration": "Duration: {{duration}} minutes",
+      "course_module_info": "Course & Module Information",
+      "course": "Course",
+      "module": "Module",
+      "module_info": "{{duration}} mins · Level: {{level}}",
+      "questions_title": "Questions ({{count}})",
+      "question_number": "Question {{number}}: {{content}}",
+      "question_type": "Type: {{type}}",
+      "correct_answer": "✓ Correct",
+      "close": "Close",
+      "loading": "Loading..."
+    }
   },
   "subscriptions": {
     "title": "Subscriptions",
     "description": "Manage all subscriptions in the system",
     "no_subscriptions": "No subscriptions found",
     "no_results": "No results.",
+    "columns": {
+      "user_id": "User ID",
+      "package": "Package",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "trizilium_per_day": "Trizilium/Day",
+      "status": "Status",
+      "auto_renewal": "Auto Renewal",
+      "actions": "Actions"
+    },
+    "status": {
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "enable_auto_renewal": "Enable Auto Renewal",
+      "disable_auto_renewal": "Disable Auto Renewal",
+      "cancel_subscription": "Cancel Subscription"
+    },
+    "details": {
+      "title": "Subscription Details",
+      "package": "Package",
+      "user_id": "User ID",
+      "status": "Status",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "tokens_per_day_remaining": "Tokens Per Day Remaining",
+      "auto_renewal": "Auto Renewal",
+      "close": "Close"
+    },
+    "cancel_dialog": {
+      "title": "Cancel Subscription?",
+      "message": "Are you sure you want to cancel this subscription? The user will lose access to premium features immediately.",
+      "keep": "No, Keep It",
+      "confirm": "Yes, Cancel Subscription",
+      "cancelling": "Cancelling..."
+    },
     "auto_renewal": {
       "dialog_title": "Confirm Auto Renewal Change",
       "dialog_description_enable": "Are you sure you want to enable auto-renewal for this subscription?",
@@ -373,11 +739,73 @@
       "cancel": "Cancel",
       "confirm": "Confirm",
       "saving": "Saving..."
+    },
+    "toast": {
+      "cancel_success": "Subscription cancelled successfully",
+      "cancel_error": "Failed to cancel subscription"
     }
   },
   "transactions": {
     "title": "Transactions",
-    "description": "View and manage all system transactions"
+    "description": "View and manage all system transactions",
+    "search_placeholder": "Search transactions...",
+    "no_transactions": "No transactions found",
+    "no_results": "No results.",
+    "columns": {
+      "order_code": "Order Code",
+      "type": "Type",
+      "amount": "Amount",
+      "provider": "Provider",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "types": {
+      "topup": "Top Up",
+      "spend": "Spend",
+      "refund": "Refund"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "providers": {
+      "stripe": "Stripe",
+      "payos": "PayOS",
+      "triz": "TRIZ"
+    },
+    "filters": {
+      "transaction_type": "Transaction Type",
+      "status": "Status",
+      "provider": "Provider"
+    },
+    "actions": {
+      "view_details": "View Details",
+      "cancel_transaction": "Cancel Transaction"
+    },
+    "details": {
+      "title": "Transaction Details",
+      "order_code": "Order Code",
+      "type": "Type",
+      "amount": "Amount",
+      "provider": "Provider",
+      "provider_tx_ref": "Provider Tx Ref",
+      "status": "Status",
+      "date": "Date",
+      "close": "Close"
+    },
+    "cancel_dialog": {
+      "title": "Cancel Transaction",
+      "message": "Are you sure you want to cancel this transaction? This action cannot be undone.",
+      "keep": "No, Keep It",
+      "confirm": "Yes, Cancel Transaction",
+      "cancelling": "Cancelling..."
+    },
+    "toast": {
+      "cancel_success": "Transaction cancelled successfully",
+      "cancel_error": "Failed to cancel transaction"
+    }
   },
   "users": {
     "title": "Users",

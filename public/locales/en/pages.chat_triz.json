@@ -1,3 +1,50 @@
 {
-  "page_meta_title": "Chat TRIZ"
+  "page_meta_title": "Chat TRIZ",
+  "title": "Chat TRIZ",
+  "description": "Get AI-powered assistance for TRIZ problem solving",
+  "chat_interface": {
+    "new_chat": "New Chat",
+    "title": "Chat Triz",
+    "placeholder": "Ask me anything about development, coding, or technology...",
+    "send": "Send",
+    "reset": "Reset",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "recording": "Recording...",
+    "tokens_remaining": "Tokens Remaining",
+    "unlimited": "Unlimited",
+    "thinking": "Thinking...",
+    "user_name": "User",
+    "ai_name": "AI",
+    "footer_disclaimer": "AI-generated content is for reference only. Some answers may be inaccurate."
+  },
+  "errors": {
+    "no_subscription": "You don't have an active subscription or your daily tokens have been exhausted.",
+    "subscription_description": "Please upgrade your subscription or wait until tomorrow to continue chatting.",
+    "send_failed": "Failed to send message. Please try again."
+  },
+  "conversation": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last_7_days": "Last 7 Days",
+    "last_30_days": "Last 30 Days",
+    "older": "Older",
+    "search_placeholder": "Search conversations...",
+    "history": "History",
+    "rename": "Rename",
+    "archive": "Archive",
+    "delete": "Delete",
+    "loading": "Loading conversations...",
+    "empty": "No conversations found",
+    "empty_description": "Start a new conversation to get AI assistance",
+    "new_conversation": "New Conversation",
+    "more_actions": "More actions",
+    "rename_success": "Conversation renamed successfully",
+    "rename_error": "Failed to rename conversation",
+    "archive_success": "Conversation archived successfully",
+    "archive_error": "Failed to archive conversation",
+    "load_error": "Failed to load conversations",
+    "retry": "Retry",
+    "search_no_results": "Try adjusting your search terms"
+  }
 }

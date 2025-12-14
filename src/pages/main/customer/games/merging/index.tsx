@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import {
   ArrowLeft,
@@ -15,8 +16,14 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
+import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
+import { GamesEnumId } from '@/features/game/services/mutations/enum';
+import { useGetGameLeaderboardByIdQuery } from '@/features/game/services/queries';
+import { GameKeys } from '@/features/game/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
+import Leaderboard from '@/pages/main/customer/games/segmentation/components/Leaderboard';
 
 // --- CẤU HÌNH DỮ LIỆU ---
 
@@ -119,7 +126,12 @@ const RECIPES: Record<string, string> = {
 
 const MergingGamePage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
+  const updateScoreMutation = useUpdateGameScoreMutation();
+  const { data } = useGetGameLeaderboardByIdQuery(GamesEnumId.Merging);
+  const [milestone, setMilestone] = useState(0);
+  const [startTime, setStartTime] = useState<number>(() => Date.now());
   // State
   const [discovered, setDiscovered] = useState<string[]>([
     'fire',
@@ -183,6 +195,29 @@ const MergingGamePage = () => {
         // CÓ CÔNG THỨC
         if (!discovered.includes(result)) {
           // Khám phá mới
+          const newMilestone = milestone + 1;
+          const timeTaken = Math.round((Date.now() - startTime) / 1000);
+          setMilestone(newMilestone);
+          setStartTime(Date.now());
+          updateScoreMutation.mutate(
+            {
+              gameId: GamesEnumId.Merging,
+              score: discovered.length >= totalElements - 1 ? 20 : 10,
+              timeTaken,
+              milestone: newMilestone,
+            },
+            {
+              onSuccess: () => {
+                toast.success('Điểm số đã được cập nhật!');
+                queryClient.invalidateQueries({
+                  queryKey: [
+                    GameKeys.GetGameLeaderboardById,
+                    GamesEnumId.Merging,
+                  ],
+                });
+              },
+            },
+          );
           setDiscovered((prev) => [...prev, result]);
           showNotify(
             `Tuyệt vời! Bạn đã tạo ra: ${ELEMENTS_DB[result].name}`,
@@ -224,193 +259,184 @@ const MergingGamePage = () => {
       meta={{ title: 'Nguyên Tắc Kết Hợp: Giả Kim Thuật' }}
       className=""
     >
-      <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 h-[calc(100svh-4rem-1px)]">
-        <div className="w-full max-w-8xl p-4 sm:p-16 mx-auto">
-          {/* Header Navigation & Progress */}
-          <div className=" flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <button
-              className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
-              onClick={() => navigate({ to: '/learn-triz' })}
-            >
-              <ArrowLeft className="mr-2" size={24} /> Quay lại
-            </button>
+      <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
+        <div className=" w-full max-w-8xl grid grid-cols-3 p-4 sm:p-16 mx-auto">
+          <div className=" col-span-2 max-w-4xl mx-auto w-full  relative z-10">
+            {/* Header Navigation & Progress */}
+            <div className=" flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+              <button
+                className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
+                onClick={() => navigate({ to: '/learn-triz' })}
+              >
+                <ArrowLeft className="mr-2" size={24} /> Quay lại
+              </button>
 
-            <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-xl shadow-sm border border-slate-200 w-full md:w-auto">
-              <BookOpen size={20} className="text-blue-500" />
-              <div className="flex-1 min-w-[200px]">
-                <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
-                  <span>Tiến độ khám phá</span>
-                  <span>
-                    {discovered.length} / {totalElements}
-                  </span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-blue-400 to-purple-500 h-2.5 rounded-full transition-all duration-500"
-                    style={{ width: `${progress}%` }}
-                  ></div>
+              <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-xl shadow-sm border border-slate-200 w-full md:w-auto">
+                <BookOpen size={20} className="text-blue-500" />
+                <div className="flex-1 min-w-[200px]">
+                  <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                    <span>Tiến độ khám phá</span>
+                    <span>
+                      {discovered.length} / {totalElements}
+                    </span>
+                  </div>
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-blue-400 to-purple-500 h-2.5 rounded-full transition-all duration-500"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Main Game Area */}
-          <div className=" flex-1 flex flex-col md:flex-row gap-6">
-            {/* LEFT: Mixing Area (Nồi pha chế) */}
-            <div className="flex-1 order-2 md:order-1">
-              <div className="bg-white rounded-3xl shadow-xl border-2 border-slate-100 p-8 h-full flex flex-col items-center justify-center relative overflow-hidden">
-                <h2 className="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2">
-                  <FlaskConical className="text-purple-500" /> Khu Vực Kết Hợp
-                </h2>
+            {/* Main Game Area */}
+            <div className=" flex-1 flex flex-col md:flex-row gap-6">
+              {/* LEFT: Mixing Area (Nồi pha chế) */}
+              <div className="flex-1 order-2 md:order-1">
+                <div className="bg-white rounded-3xl shadow-xl border-2 border-slate-100 p-8 h-full flex flex-col items-center justify-center relative overflow-hidden">
+                  <h2 className="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2">
+                    <FlaskConical className="text-purple-500" /> Khu Vực Kết Hợp
+                  </h2>
 
-                {/* Drop Zone */}
-                <div
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Khu vực kết hợp, kéo hai nguyên tố vào đây"
-                  onClick={(e) => (e.currentTarget as HTMLElement).focus()}
-                  onKeyDown={(e: any) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      (e.currentTarget as HTMLElement).focus();
+                  {/* Drop Zone */}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Khu vực kết hợp, kéo hai nguyên tố vào đây"
+                    onClick={(e) => (e.currentTarget as HTMLElement).focus()}
+                    onKeyDown={(e: any) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        (e.currentTarget as HTMLElement).focus();
+                      }
+                    }}
+                    onTouchStart={(e) =>
+                      (e.currentTarget as HTMLElement).focus()
                     }
-                  }}
-                  onTouchStart={(e) => (e.currentTarget as HTMLElement).focus()}
-                  onDrop={handleDrop}
-                  onDragOver={handleDragOver}
-                  className={`
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    className={`
                         w-64 h-64 rounded-full border-4 border-dashed transition-all duration-300 flex items-center justify-center relative
                         ${isShaking ? 'animate-shake border-red-400 bg-red-50' : 'border-slate-300 bg-slate-50 hover:border-blue-400 hover:bg-blue-50'}
                         ${successAnim ? 'ring-8 ring-green-200 border-green-500 scale-105' : ''}
                     `}
-                >
-                  {/* Background Icon */}
-                  {mixingSlot.length === 0 && (
-                    <div className="text-slate-300 flex flex-col items-center animate-pulse">
-                      <Sparkles size={48} />
-                      <span className="text-sm font-semibold mt-2">
-                        Kéo nguyên tố vào đây
-                      </span>
-                    </div>
-                  )}
+                  >
+                    {/* Background Icon */}
+                    {mixingSlot.length === 0 && (
+                      <div className="text-slate-300 flex flex-col items-center animate-pulse">
+                        <Sparkles size={48} />
+                        <span className="text-sm font-semibold mt-2">
+                          Kéo nguyên tố vào đây
+                        </span>
+                      </div>
+                    )}
 
-                  {/* Items inside Mix */}
-                  <div className="flex gap-2 z-10">
-                    {mixingSlot.map((id, index) => {
-                      const item = ELEMENTS_DB[id];
-                      const Icon = item.icon;
-                      return (
-                        <div
-                          key={index}
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Xóa ${item.name}`}
-                          className="relative group cursor-pointer focus:outline-none"
-                          onClick={() => removeFromMix(index)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
-                              removeFromMix(index);
-                            }
-                          }}
-                          onTouchStart={(e) =>
-                            (e.currentTarget as HTMLElement).focus()
-                          }
-                        >
+                    {/* Items inside Mix */}
+                    <div className="flex gap-2 z-10">
+                      {mixingSlot.map((id, index) => {
+                        const item = ELEMENTS_DB[id];
+                        const Icon = item.icon;
+                        return (
                           <div
-                            className={`w-20 h-20 rounded-2xl shadow-lg flex items-center justify-center transform transition-all hover:scale-105 ${item.bg}`}
-                          >
-                            <Icon size={32} className={item.color} />
-                          </div>
-                          <button
-                            type="button"
+                            key={index}
+                            role="button"
+                            tabIndex={0}
                             aria-label={`Xóa ${item.name}`}
-                            onClick={(ev) => {
-                              ev.stopPropagation();
-                              removeFromMix(index);
+                            className="relative group cursor-pointer focus:outline-none"
+                            onClick={() => removeFromMix(index)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                removeFromMix(index);
+                              }
                             }}
-                            className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow border focus:outline-none hover:bg-red-50"
+                            onTouchStart={(e) =>
+                              (e.currentTarget as HTMLElement).focus()
+                            }
                           >
-                            <Trash2 size={12} className="text-red-500" />
-                          </button>
-                        </div>
-                      );
-                    })}
+                            <div
+                              className={`w-20 h-20 rounded-2xl shadow-lg flex items-center justify-center transform transition-all hover:scale-105 ${item.bg}`}
+                            >
+                              <Icon size={32} className={item.color} />
+                            </div>
+                            <button
+                              type="button"
+                              aria-label={`Xóa ${item.name}`}
+                              onClick={(ev) => {
+                                ev.stopPropagation();
+                                removeFromMix(index);
+                              }}
+                              className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow border focus:outline-none hover:bg-red-50"
+                            >
+                              <Trash2 size={12} className="text-red-500" />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Mixing Animation Effect */}
+                    {isShaking && (
+                      <div className="absolute inset-0 rounded-full bg-white/50 backdrop-blur-sm flex items-center justify-center z-20">
+                        <RefreshCwSpin className="text-purple-600 w-10 h-10" />
+                      </div>
+                    )}
                   </div>
 
-                  {/* Mixing Animation Effect */}
-                  {isShaking && (
-                    <div className="absolute inset-0 rounded-full bg-white/50 backdrop-blur-sm flex items-center justify-center z-20">
-                      <RefreshCwSpin className="text-purple-600 w-10 h-10" />
-                    </div>
+                  <div className="mt-8 text-center text-slate-400 text-sm">
+                    Kéo 2 nguyên tố vào vòng tròn để tạo hợp chất mới.
+                  </div>
+
+                  {mixingSlot.length > 0 && (
+                    <button
+                      onClick={clearMix}
+                      className="mt-4 text-slate-500 hover:text-red-500 font-bold text-sm underline"
+                    >
+                      Làm sạch nồi
+                    </button>
                   )}
-                </div>
 
-                <div className="mt-8 text-center text-slate-400 text-sm">
-                  Kéo 2 nguyên tố vào vòng tròn để tạo hợp chất mới.
-                </div>
-
-                {mixingSlot.length > 0 && (
-                  <button
-                    onClick={clearMix}
-                    className="mt-4 text-slate-500 hover:text-red-500 font-bold text-sm underline"
-                  >
-                    Làm sạch nồi
-                  </button>
-                )}
-
-                {/* Notification Toast */}
-                {notification && (
-                  <div
-                    className={`absolute top-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full shadow-lg font-bold text-white text-sm animate-bounce-in z-50 whitespace-nowrap
+                  {/* Notification Toast */}
+                  {notification && (
+                    <div
+                      className={`absolute top-4 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full shadow-lg font-bold text-white text-sm animate-bounce-in z-50 whitespace-nowrap
                         ${notification.type === 'success' ? 'bg-green-500' : notification.type === 'error' ? 'bg-red-500' : 'bg-blue-500'}
                     `}
-                  >
-                    {notification.msg}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* RIGHT: Inventory (Kho nguyên liệu) */}
-            <div className="w-full md:w-80 order-1 md:order-2 h-[300px] md:h-auto flex flex-col">
-              <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-4 h-full flex flex-col">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-bold text-lg text-slate-700">
-                    Kho Nguyên Liệu
-                  </h3>
+                    >
+                      {notification.msg}
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                <div
-                  className="overflow-y-auto h-[500px] p-4"
-                  style={{ scrollbarWidth: 'thin' }}
-                >
-                  <div className="grid grid-cols-2 gap-3">
-                    {discovered.map((id) => {
-                      const item = ELEMENTS_DB[id];
-                      if (!item) return null;
-                      const Icon = item.icon;
-                      return (
-                        <div
-                          key={id}
-                          draggable
-                          onDragStart={(e) => handleDragStart(e, id)}
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Thêm ${item.name} vào nồi`}
-                          onClick={() => {
-                            if (mixingSlot.length < 2) {
-                              setMixingSlot((prev) => [...prev, id]);
-                            } else {
-                              showNotify(
-                                'Nồi pha chế đã đầy! Hãy xóa bớt.',
-                                'error',
-                              );
-                            }
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
+              {/* RIGHT: Inventory (Kho nguyên liệu) */}
+              <div className="w-full md:w-80 order-1 md:order-2 h-[300px] md:h-auto flex flex-col">
+                <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-4 h-full flex flex-col">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-lg text-slate-700">
+                      Kho Nguyên Liệu
+                    </h3>
+                  </div>
+
+                  <div
+                    className="overflow-y-auto h-[500px] p-4"
+                    style={{ scrollbarWidth: 'thin' }}
+                  >
+                    <div className="grid grid-cols-2 gap-3">
+                      {discovered.map((id) => {
+                        const item = ELEMENTS_DB[id];
+                        if (!item) return null;
+                        const Icon = item.icon;
+                        return (
+                          <div
+                            key={id}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, id)}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Thêm ${item.name} vào nồi`}
+                            onClick={() => {
                               if (mixingSlot.length < 2) {
                                 setMixingSlot((prev) => [...prev, id]);
                               } else {
@@ -419,32 +445,48 @@ const MergingGamePage = () => {
                                   'error',
                                 );
                               }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                if (mixingSlot.length < 2) {
+                                  setMixingSlot((prev) => [...prev, id]);
+                                } else {
+                                  showNotify(
+                                    'Nồi pha chế đã đầy! Hãy xóa bớt.',
+                                    'error',
+                                  );
+                                }
+                              }
+                            }}
+                            onTouchStart={(e) =>
+                              (e.currentTarget as HTMLElement).focus()
                             }
-                          }}
-                          onTouchStart={(e) =>
-                            (e.currentTarget as HTMLElement).focus()
-                          }
-                          className={`
+                            className={`
                                         cursor-grab active:cursor-grabbing
                                         flex flex-col items-center justify-center p-3 rounded-xl border-2 border-transparent hover:border-blue-200 hover:shadow-md transition-all
                                         bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-200
                                     `}
-                        >
-                          <div
-                            className={`w-12 h-12 rounded-full mb-2 flex items-center justify-center ${item.bg}`}
                           >
-                            <Icon size={24} className={item.color} />
+                            <div
+                              className={`w-12 h-12 rounded-full mb-2 flex items-center justify-center ${item.bg}`}
+                            >
+                              <Icon size={24} className={item.color} />
+                            </div>
+                            <span className="text-xs font-bold text-slate-600 text-center">
+                              {item.name}
+                            </span>
                           </div>
-                          <span className="text-xs font-bold text-slate-600 text-center">
-                            {item.name}
-                          </span>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div className="col-span-1 mx-auto w-full  mt-auto">
+            <Leaderboard entries={data} />
           </div>
         </div>
       </section>

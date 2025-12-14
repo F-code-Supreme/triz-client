@@ -1,25 +1,27 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import CourseFiltersComponent from '@/features/courses/components/course-filters';
 import CourseList from '@/features/courses/components/course-list';
 import {
   useGetMyEnrollmentsQuery,
-  useGetCourseQuery,
+  useGetCourseQueryUser,
 } from '@/features/courses/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
 import type { CourseFilters } from '@/features/courses/types';
 
 const MyCoursePage = () => {
+  const { t } = useTranslation('pages.courses');
   const [filters, setFilters] = useState<CourseFilters>({});
   const {
     data: enrollmentsData,
     isLoading,
     isError,
   } = useGetMyEnrollmentsQuery();
-  const { data: coursesData } = useGetCourseQuery();
+  const { data: coursesData } = useGetCourseQueryUser();
 
   const enrolledCourses = (enrollmentsData?.content || []).map((enrollment) => {
     const courseDetail = (coursesData?.content || []).find(
@@ -46,7 +48,7 @@ const MyCoursePage = () => {
   });
 
   return (
-    <DefaultLayout meta={{ title: 'My Courses' }}>
+    <DefaultLayout meta={{ title: t('my_courses.title') }}>
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <motion.div
@@ -57,10 +59,10 @@ const MyCoursePage = () => {
         >
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              My Courses
+              {t('my_courses.title')}
             </h1>
             <p className="text-muted-foreground">
-              Continue your learning journey with your enrolled courses
+              {t('my_courses.description')}
             </p>
           </div>
         </motion.div>
@@ -98,7 +100,7 @@ const MyCoursePage = () => {
               ))}
             </div>
           ) : isError ? (
-            <div>Failed to load courses.</div>
+            <div>{t('error')}</div>
           ) : (
             <CourseList
               courses={enrolledCourses}

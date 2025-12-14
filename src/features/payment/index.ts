@@ -1,1 +1,1 @@
-export type PaymentProvider = 'PAYOS' | 'STRIPE' | 'PAYPAL';
+export type PaymentProvider = 'PAYOS' | 'STRIPE';

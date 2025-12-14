@@ -1,0 +1,27 @@
+{
+  "page_meta_title": "Trò chơi TRIZ",
+  "title": "Trò Chơi TRIZ",
+  "description": "Khám phá và học hỏi các nguyên tắc TRIZ thông qua các trò chơi thú vị",
+  "search_placeholder": "Tìm kiếm trò chơi...",
+  "select_game": "Chọn một trò chơi để bắt đầu chơi",
+  "games": {
+    "memory_card": {
+      "name": "Ghi Nhớ Thẻ Bài",
+      "description": "Trò chơi rèn luyện trí nhớ và khả năng ghi nhớ"
+    },
+    "merging_game": {
+      "name": "Giả Kim Thuật",
+      "description": "Kết hợp các nguyên tố để tạo ra sản phẩm mới"
+    },
+    "preliminary_game": {
+      "name": "Mê Cung Hướng Dẫn",
+      "description": "Lập kế hoạch và sắp xếp trước để vượt qua thử thách"
+    },
+    "segmentation_game": {
+      "name": "Xây Tháp",
+      "description": "Chia nhỏ vấn đề thành các phần để giải quyết"
+    }
+  },
+  "principle": "Nguyên tắc",
+  "play_now": "Chơi ngay"
+}

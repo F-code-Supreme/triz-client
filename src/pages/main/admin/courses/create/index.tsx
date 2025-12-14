@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import StepIndicator from '@/components/ui/step-indicator';
 import { AdminLayout } from '@/layouts/admin-layout';
@@ -8,6 +9,7 @@ import StepModules from './components/StepModules';
 import StepPlaceholder from './components/StepPlaceholder';
 
 const CreateCoursePage = () => {
+  const { t } = useTranslation('pages.admin');
   // Step and form state
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
@@ -32,13 +34,15 @@ const CreateCoursePage = () => {
   };
 
   return (
-    <AdminLayout meta={{ title: 'Quản lý khóa học' }}>
+    <AdminLayout meta={{ title: t('courses.create.title') }}>
       <div className="space-y-6 p-4">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">Tạo khóa học</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t('courses.create.title')}
+            </h1>
             <p className="text-muted-foreground">
-              Tạo một khóa học mới với nhiều chương trình và bài tập.
+              {t('courses.create.description')}
             </p>
           </div>
         </div>
@@ -48,21 +52,21 @@ const CreateCoursePage = () => {
           <div className="flex items-center space-x-4">
             <StepIndicator
               number={1}
-              label="Thông tin cơ bản"
+              label={t('courses.create.steps.basic')}
               active={step === 1}
               completed={step > 1}
             />
             <div className="flex-1 h-0.5 bg-gray-200" />
             <StepIndicator
               number={2}
-              label="Quản lý chương trình"
+              label={t('courses.create.steps.modules')}
               active={step === 2}
               completed={step > 2}
             />
             <div className="flex-1 h-0.5 bg-gray-200" />
             <StepIndicator
               number={3}
-              label="Xuất bản & Tổng kết"
+              label={t('courses.create.steps.summary')}
               active={step === 3}
               completed={step > 3}
             />

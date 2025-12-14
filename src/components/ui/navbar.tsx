@@ -88,8 +88,11 @@ export interface Navbar03Props extends React.HTMLAttributes<HTMLElement> {
 const MAIN_NAV_LINKS = (t: (key: string) => string): Navbar03NavItem[] => [
   { href: '/', label: t('home'), active: true },
   { href: '/forum', label: t('forum') },
-  { href: '/chat-triz', label: t('chat_ai') },
   { href: '/packages', label: t('packages') },
+];
+
+const AUTH_NAV_LINKS = (t: (key: string) => string): Navbar03NavItem[] => [
+  { href: '/chat-triz', label: t('chat_ai') },
 ];
 
 // Configuration for Learn TRIZ dropdown links
@@ -97,12 +100,19 @@ const LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
   { href: '/course', labelKey: 'learn_triz.course', icon: GraduationCap },
   { href: '/games', labelKey: 'learn_triz.games', icon: Gamepad2 },
   { href: '/books', labelKey: 'learn_triz.books', icon: BookOpen },
+];
+
+const AUTH_LEARN_TRIZ_LINKS: LearnTrizNavItem[] = [
   { href: '/quiz', labelKey: 'learn_triz.quiz', icon: BookCheck },
 ];
 
 // Configuration for Tools dropdown links
 const TOOLS_LINKS: ToolsNavItem[] = [
-  { href: '/6-steps', labelKey: 'tools.six_steps', icon: Footprints },
+  {
+    href: '/6-steps',
+    labelKey: 'tools.six_steps',
+    icon: Footprints,
+  },
   { href: '/learn-triz', labelKey: 'tools.principles', icon: Lightbulb },
   { href: '/matrix-triz', labelKey: 'tools.matrix', icon: Grid3x3 },
 ];
@@ -128,9 +138,19 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
     const { data: wallet } = useGetWalletByUserQuery(user?.id);
 
     // Use provided links or fall back to default configuration
-    const navLinks =
+    const baseNavLinks =
       navigationLinks || MAIN_NAV_LINKS(t as (key: string) => string);
-    const learnTrizNavLinks = learnTrizLinks || LEARN_TRIZ_LINKS;
+    const authOnlyNavLinks = AUTH_NAV_LINKS(t as (key: string) => string);
+    const navLinks = isAuthenticated
+      ? [...baseNavLinks, ...authOnlyNavLinks]
+      : baseNavLinks;
+
+    const baseLearnTrizLinks = learnTrizLinks || LEARN_TRIZ_LINKS;
+    const authOnlyLearnTrizLinks = AUTH_LEARN_TRIZ_LINKS;
+    const learnTrizNavLinks = isAuthenticated
+      ? [...baseLearnTrizLinks, ...authOnlyLearnTrizLinks]
+      : baseLearnTrizLinks;
+
     const toolsNavLinks = toolsLinks || TOOLS_LINKS;
     const isMobile = useMediaQuery('(max-width: 767px)'); // 767px is md breakpoint
     const containerRef = React.useRef<HTMLElement>(null);
@@ -266,6 +286,15 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                               >
                                 <BookOpen className="mr-2 h-4 w-4" />
                                 {t('dropdown_menu.my_books')}
+                              </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className="w-full">
+                              <Link
+                                to="/course/my-course"
+                                className="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer no-underline"
+                              >
+                                <GraduationCap className="mr-2 h-4 w-4" />
+                                {t('dropdown_menu.my_courses')}
                               </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem className="w-full">
@@ -498,7 +527,7 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
               {isAuthenticated ? (
                 <div className="hidden sm:flex items-center space-x-4">
                   {/* Token Count Display */}
-                  <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent/50">
+                  <div className="flex items-center space-x-2 px-3 py-2 rounded-md">
                     <CircleDollarSign className="h-4 w-4 text-secondary" />
                     <span className="text-sm font-medium">
                       {formatTriziliumShort(wallet?.balance || 0)}
@@ -527,6 +556,12 @@ export const Navbar03 = React.forwardRef<HTMLElement, Navbar03Props>(
                         <Link to="/books/me" className="cursor-pointer">
                           <BookOpen className="mr-2 h-4 w-4" />
                           {t('dropdown_menu.my_books')}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/course/my-course" className="cursor-pointer">
+                          <GraduationCap className="mr-2 h-4 w-4" />
+                          {t('dropdown_menu.my_courses')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>

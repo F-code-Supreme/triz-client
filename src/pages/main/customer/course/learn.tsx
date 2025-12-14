@@ -28,11 +28,25 @@ const CourseLearnPage = () => {
   const { data: modulesData, isLoading: isLoadingModules } =
     useGetModuleByCourseQuery(courseId);
 
+  // Sort modules based on the orders array from courseData
+  const sortedModulesData =
+    modulesData && courseData?.orders
+      ? [...modulesData].sort((a, b) => {
+          const orderA = courseData.orders?.findIndex(
+            (order) => order.moduleId === a.id,
+          );
+          const orderB = courseData.orders?.findIndex(
+            (order) => order.moduleId === b.id,
+          );
+          return (orderA ?? -1) - (orderB ?? -1);
+        })
+      : modulesData;
+
   useEffect(() => {
-    if (modulesData && modulesData.length > 0 && !currentModuleId) {
-      setCurrentModuleId(modulesData[0].id);
+    if (sortedModulesData && sortedModulesData.length > 0 && !currentModuleId) {
+      setCurrentModuleId(sortedModulesData[0].id);
     }
-  }, [modulesData, currentModuleId]);
+  }, [sortedModulesData, currentModuleId]);
 
   const { data: lessonsData, isLoading: isLoadingLessons } =
     useGetLessonByModuleQuery(currentModuleId);
@@ -41,7 +55,7 @@ const CourseLearnPage = () => {
   const { data: quizzesData } = useGetQuizzByModulesQuery(currentModuleId);
 
   const { enhancedModules, currentModule } = useCourseContent({
-    modules: (modulesData as Module[]) || [],
+    modules: (sortedModulesData as Module[]) || [],
     lessonsData,
     assignmentsData,
     quizzesData,
@@ -50,22 +64,27 @@ const CourseLearnPage = () => {
 
   useEffect(() => {
     if (currentModule && currentModule.contents.length > 0) {
-      setCurrentItemId(currentModule.contents[0].id);
+      const isCurrentItemInModule = currentModule.contents.some(
+        (item) => item.id === currentItemId,
+      );
+      if (!isCurrentItemInModule) {
+        setCurrentItemId(currentModule.contents[0].id);
+      }
     }
-  }, [currentModule]);
+  }, [currentModule, currentItemId]);
 
   const handleModuleChange = (moduleId: string) => {
     setCurrentModuleId(moduleId);
   };
 
   const handleItemChange = (itemId: string, moduleId: string) => {
-    setCurrentItemId(itemId);
     if (moduleId !== currentModuleId) {
       setCurrentModuleId(moduleId);
     }
+    setCurrentItemId(itemId);
   };
 
-  if (!courseData || !modulesData) {
+  if (!courseData || !sortedModulesData) {
     if (isLoadingCourse || isLoadingModules) {
       return (
         <div className="h-screen flex items-center justify-center">

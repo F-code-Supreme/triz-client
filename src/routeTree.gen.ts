@@ -14,22 +14,32 @@ import { Route as MatrixTrizRouteImport } from './routes/matrix-triz'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnTrizRouteImport } from './routes/learn-triz'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as GamesRouteImport } from './routes/games'
 import { Route as ForumRouteImport } from './routes/forum'
 import { Route as FlashcardDeckRouteImport } from './routes/flashcard-deck'
+import { Route as R6StepsRouteImport } from './routes/6-steps'
+import { Route as ModeratorRouteRouteImport } from './routes/moderator/route'
+import { Route as ExpertRouteRouteImport } from './routes/expert/route'
+import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RegisterIndexRouteImport } from './routes/register.index'
 import { Route as PackagesIndexRouteImport } from './routes/packages.index'
+import { Route as ModeratorIndexRouteImport } from './routes/moderator/index'
 import { Route as ForgotPasswordIndexRouteImport } from './routes/forgot-password.index'
 import { Route as ExpertIndexRouteImport } from './routes/expert/index'
 import { Route as CourseIndexRouteImport } from './routes/course.index'
 import { Route as BooksIndexRouteImport } from './routes/books.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 import { Route as RegisterVerifyOtpRouteImport } from './routes/register.verify-otp'
 import { Route as ForgotPasswordVerifyOtpRouteImport } from './routes/forgot-password.verify-otp'
 import { Route as ForgotPasswordNewPasswordRouteImport } from './routes/forgot-password.new-password'
 import { Route as FlashcardDeckIdRouteImport } from './routes/flashcard.$deckId'
 import { Route as CourseSlugRouteImport } from './routes/course.$slug'
+import { Route as ModeratorReportsRouteRouteImport } from './routes/moderator/reports/route'
+import { Route as ModeratorForumRouteRouteImport } from './routes/moderator/forum/route'
+import { Route as ModeratorDashboardRouteRouteImport } from './routes/moderator/dashboard/route'
 import { Route as ExpertDashboardRouteRouteImport } from './routes/expert/dashboard/route'
 import { Route as ExpertAssignmentRouteRouteImport } from './routes/expert/assignment/route'
 import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/transactions/route'
@@ -42,17 +52,17 @@ import { Route as AdminCoursesRouteRouteImport } from './routes/admin/courses/ro
 import { Route as AdminBooksRouteRouteImport } from './routes/admin/books/route'
 import { Route as AdminAssignmentRouteRouteImport } from './routes/admin/assignment/route'
 import { Route as AdminArchiveRouteRouteImport } from './routes/admin/archive/route'
+import { Route as AdminAchievementsRouteRouteImport } from './routes/admin/achievements/route'
 import { Route as appWalletRouteRouteImport } from './routes/(app)/wallet/route'
 import { Route as appSubscriptionRouteRouteImport } from './routes/(app)/subscription/route'
 import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
-import { Route as app6StepsRouteRouteImport } from './routes/(app)/6-steps/route'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
-import { Route as appGamesIndexRouteImport } from './routes/(app)/games/index'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as appGamesSegmentationGameRouteImport } from './routes/(app)/games/segmentation-game'
 import { Route as appGamesPreliminaryGameRouteImport } from './routes/(app)/games/preliminary-game'
@@ -65,6 +75,7 @@ import { Route as appJournalsJournalIdRouteRouteImport } from './routes/(app)/jo
 import { Route as appCourseMyCourseRouteRouteImport } from './routes/(app)/course/my-course/route'
 import { Route as appBooksMeRouteRouteImport } from './routes/(app)/books/me/route'
 import { Route as AdminCoursesIndexRouteRouteImport } from './routes/admin/courses/index/route'
+import { Route as app6StepsWorkflowIndexRouteImport } from './routes/(app)/6-steps/workflow.index'
 import { Route as AdminCoursesEditCourseIdRouteImport } from './routes/admin/courses/edit/$courseId'
 import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
@@ -94,6 +105,11 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesRoute = GamesRouteImport.update({
+  id: '/games',
+  path: '/games',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForumRoute = ForumRouteImport.update({
   id: '/forum',
   path: '/forum',
@@ -102,6 +118,26 @@ const ForumRoute = ForumRouteImport.update({
 const FlashcardDeckRoute = FlashcardDeckRouteImport.update({
   id: '/flashcard-deck',
   path: '/flashcard-deck',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R6StepsRoute = R6StepsRouteImport.update({
+  id: '/6-steps',
+  path: '/6-steps',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModeratorRouteRoute = ModeratorRouteRouteImport.update({
+  id: '/moderator',
+  path: '/moderator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExpertRouteRoute = ExpertRouteRouteImport.update({
+  id: '/expert',
+  path: '/expert',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRouteRoute = AdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const appRouteRoute = appRouteRouteImport.update({
@@ -123,15 +159,20 @@ const PackagesIndexRoute = PackagesIndexRouteImport.update({
   path: '/packages/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModeratorIndexRoute = ModeratorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
 const ForgotPasswordIndexRoute = ForgotPasswordIndexRouteImport.update({
   id: '/forgot-password/',
   path: '/forgot-password/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExpertIndexRoute = ExpertIndexRouteImport.update({
-  id: '/expert/',
-  path: '/expert/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ExpertRouteRoute,
 } as any)
 const CourseIndexRoute = CourseIndexRouteImport.update({
   id: '/course/',
@@ -144,8 +185,13 @@ const BooksIndexRoute = BooksIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const UsersUserIdRoute = UsersUserIdRouteImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterVerifyOtpRoute = RegisterVerifyOtpRouteImport.update({
@@ -174,65 +220,85 @@ const CourseSlugRoute = CourseSlugRouteImport.update({
   path: '/course/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModeratorReportsRouteRoute = ModeratorReportsRouteRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const ModeratorForumRouteRoute = ModeratorForumRouteRouteImport.update({
+  id: '/forum',
+  path: '/forum',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const ModeratorDashboardRouteRoute = ModeratorDashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
 const ExpertDashboardRouteRoute = ExpertDashboardRouteRouteImport.update({
-  id: '/expert/dashboard',
-  path: '/expert/dashboard',
-  getParentRoute: () => rootRouteImport,
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ExpertRouteRoute,
 } as any)
 const ExpertAssignmentRouteRoute = ExpertAssignmentRouteRouteImport.update({
-  id: '/expert/assignment',
-  path: '/expert/assignment',
-  getParentRoute: () => rootRouteImport,
+  id: '/assignment',
+  path: '/assignment',
+  getParentRoute: () => ExpertRouteRoute,
 } as any)
 const AdminTransactionsRouteRoute = AdminTransactionsRouteRouteImport.update({
-  id: '/admin/transactions',
-  path: '/admin/transactions',
-  getParentRoute: () => rootRouteImport,
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminSubscriptionsRouteRoute = AdminSubscriptionsRouteRouteImport.update({
-  id: '/admin/subscriptions',
-  path: '/admin/subscriptions',
-  getParentRoute: () => rootRouteImport,
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminQuizzesRouteRoute = AdminQuizzesRouteRouteImport.update({
-  id: '/admin/quizzes',
-  path: '/admin/quizzes',
-  getParentRoute: () => rootRouteImport,
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminPackagesRouteRoute = AdminPackagesRouteRouteImport.update({
-  id: '/admin/packages',
-  path: '/admin/packages',
-  getParentRoute: () => rootRouteImport,
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminFlashcardsRouteRoute = AdminFlashcardsRouteRouteImport.update({
-  id: '/admin/flashcards',
-  path: '/admin/flashcards',
-  getParentRoute: () => rootRouteImport,
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminDashboardRouteRoute = AdminDashboardRouteRouteImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
-  getParentRoute: () => rootRouteImport,
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminCoursesRouteRoute = AdminCoursesRouteRouteImport.update({
-  id: '/admin/courses',
-  path: '/admin/courses',
-  getParentRoute: () => rootRouteImport,
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminBooksRouteRoute = AdminBooksRouteRouteImport.update({
-  id: '/admin/books',
-  path: '/admin/books',
-  getParentRoute: () => rootRouteImport,
+  id: '/books',
+  path: '/books',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminAssignmentRouteRoute = AdminAssignmentRouteRouteImport.update({
-  id: '/admin/assignment',
-  path: '/admin/assignment',
-  getParentRoute: () => rootRouteImport,
+  id: '/assignment',
+  path: '/assignment',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminArchiveRouteRoute = AdminArchiveRouteRouteImport.update({
-  id: '/admin/archive',
-  path: '/admin/archive',
-  getParentRoute: () => rootRouteImport,
+  id: '/archive',
+  path: '/archive',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAchievementsRouteRoute = AdminAchievementsRouteRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const appWalletRouteRoute = appWalletRouteRouteImport.update({
   id: '/wallet',
@@ -259,20 +325,20 @@ const appChatTrizRouteRoute = appChatTrizRouteRouteImport.update({
   path: '/chat-triz',
   getParentRoute: () => appRouteRoute,
 } as any)
-const app6StepsRouteRoute = app6StepsRouteRouteImport.update({
-  id: '/6-steps',
-  path: '/6-steps',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
-  id: '/admin/users/',
-  path: '/admin/users/',
-  getParentRoute: () => rootRouteImport,
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminForumIndexRoute = AdminForumIndexRouteImport.update({
+  id: '/forum/',
+  path: '/forum/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const appQuizIndexRoute = appQuizIndexRouteImport.update({
   id: '/quiz/',
@@ -284,15 +350,10 @@ const appJournalsIndexRoute = appJournalsIndexRouteImport.update({
   path: '/journals/',
   getParentRoute: () => appRouteRoute,
 } as any)
-const appGamesIndexRoute = appGamesIndexRouteImport.update({
-  id: '/games/',
-  path: '/games/',
-  getParentRoute: () => appRouteRoute,
-} as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
-  id: '/admin/users/$userId',
-  path: '/admin/users/$userId',
-  getParentRoute: () => rootRouteImport,
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const appGamesSegmentationGameRoute =
   appGamesSegmentationGameRouteImport.update({
@@ -351,6 +412,11 @@ const AdminCoursesIndexRouteRoute = AdminCoursesIndexRouteRouteImport.update({
   path: '',
   getParentRoute: () => AdminCoursesRouteRoute,
 } as any)
+const app6StepsWorkflowIndexRoute = app6StepsWorkflowIndexRouteImport.update({
+  id: '/6-steps/workflow/',
+  path: '/6-steps/workflow/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const AdminCoursesEditCourseIdRoute =
   AdminCoursesEditCourseIdRouteImport.update({
     id: '/edit/$courseId',
@@ -370,19 +436,24 @@ const appCourseLearnSlugRouteRoute = appCourseLearnSlugRouteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/expert': typeof ExpertRouteRouteWithChildren
+  '/moderator': typeof ModeratorRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
+  '/games': typeof GamesRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -395,16 +466,21 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
+  '/moderator/forum': typeof ModeratorForumRouteRoute
+  '/moderator/reports': typeof ModeratorReportsRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
-  '/admin': typeof AdminIndexRoute
+  '/users/$userId': typeof UsersUserIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
-  '/expert': typeof ExpertIndexRoute
+  '/expert/': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/moderator/': typeof ModeratorIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
   '/books/me': typeof appBooksMeRouteRoute
@@ -418,30 +494,33 @@ export interface FileRoutesByFullPath {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/games': typeof appGamesIndexRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
+  '/admin/forum': typeof AdminForumIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
+  '/games': typeof GamesRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/6-steps': typeof app6StepsRouteRoute
   '/chat-triz': typeof appChatTrizRouteRoute
   '/profile': typeof appProfileRouteRoute
   '/refund': typeof appRefundRouteRoute
   '/subscription': typeof appSubscriptionRouteRoute
   '/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -454,16 +533,21 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
+  '/moderator/forum': typeof ModeratorForumRouteRoute
+  '/moderator/reports': typeof ModeratorReportsRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/users/$userId': typeof UsersUserIdRoute
   '/admin': typeof AdminIndexRoute
   '/books': typeof BooksIndexRoute
   '/course': typeof CourseIndexRoute
   '/expert': typeof ExpertIndexRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/moderator': typeof ModeratorIndexRoute
   '/packages': typeof PackagesIndexRoute
   '/register': typeof RegisterIndexRoute
   '/books/me': typeof appBooksMeRouteRoute
@@ -477,32 +561,38 @@ export interface FileRoutesByTo {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/games': typeof appGamesIndexRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
+  '/admin/forum': typeof AdminForumIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(app)': typeof appRouteRouteWithChildren
+  '/admin': typeof AdminRouteRouteWithChildren
+  '/expert': typeof ExpertRouteRouteWithChildren
+  '/moderator': typeof ModeratorRouteRouteWithChildren
+  '/6-steps': typeof R6StepsRoute
   '/flashcard-deck': typeof FlashcardDeckRoute
   '/forum': typeof ForumRoute
+  '/games': typeof GamesRoute
   '/home': typeof HomeRoute
   '/learn-triz': typeof LearnTrizRoute
   '/login': typeof LoginRoute
   '/matrix-triz': typeof MatrixTrizRoute
   '/unauthorized': typeof UnauthorizedRoute
-  '/(app)/6-steps': typeof app6StepsRouteRoute
   '/(app)/chat-triz': typeof appChatTrizRouteRoute
   '/(app)/profile': typeof appProfileRouteRoute
   '/(app)/refund': typeof appRefundRouteRoute
   '/(app)/subscription': typeof appSubscriptionRouteRoute
   '/(app)/wallet': typeof appWalletRouteRoute
+  '/admin/achievements': typeof AdminAchievementsRouteRoute
   '/admin/archive': typeof AdminArchiveRouteRoute
   '/admin/assignment': typeof AdminAssignmentRouteRoute
   '/admin/books': typeof AdminBooksRouteRoute
@@ -515,16 +605,21 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
+  '/moderator/forum': typeof ModeratorForumRouteRoute
+  '/moderator/reports': typeof ModeratorReportsRouteRoute
   '/course/$slug': typeof CourseSlugRoute
   '/flashcard/$deckId': typeof FlashcardDeckIdRoute
   '/forgot-password/new-password': typeof ForgotPasswordNewPasswordRoute
   '/forgot-password/verify-otp': typeof ForgotPasswordVerifyOtpRoute
   '/register/verify-otp': typeof RegisterVerifyOtpRoute
+  '/users/$userId': typeof UsersUserIdRoute
   '/admin/': typeof AdminIndexRoute
   '/books/': typeof BooksIndexRoute
   '/course/': typeof CourseIndexRoute
   '/expert/': typeof ExpertIndexRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/moderator/': typeof ModeratorIndexRoute
   '/packages/': typeof PackagesIndexRoute
   '/register/': typeof RegisterIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRouteRoute
@@ -539,32 +634,38 @@ export interface FileRoutesById {
   '/(app)/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/(app)/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/(app)/games/': typeof appGamesIndexRoute
   '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
+  '/admin/forum/': typeof AdminForumIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
   '/admin/courses/edit/$courseId': typeof AdminCoursesEditCourseIdRoute
+  '/(app)/6-steps/workflow/': typeof app6StepsWorkflowIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/expert'
+    | '/moderator'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
+    | '/games'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
     | '/subscription'
     | '/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -577,16 +678,21 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/moderator/dashboard'
+    | '/moderator/forum'
+    | '/moderator/reports'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
-    | '/admin'
+    | '/users/$userId'
+    | '/admin/'
     | '/books'
     | '/course'
-    | '/expert'
+    | '/expert/'
     | '/forgot-password'
+    | '/moderator/'
     | '/packages'
     | '/register'
     | '/books/me'
@@ -600,30 +706,33 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/games'
     | '/journals'
     | '/quiz'
+    | '/admin/forum'
     | '/admin/users'
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/6-steps/workflow'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
+    | '/games'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/6-steps'
     | '/chat-triz'
     | '/profile'
     | '/refund'
     | '/subscription'
     | '/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -636,16 +745,21 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/moderator/dashboard'
+    | '/moderator/forum'
+    | '/moderator/reports'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/users/$userId'
     | '/admin'
     | '/books'
     | '/course'
     | '/expert'
     | '/forgot-password'
+    | '/moderator'
     | '/packages'
     | '/register'
     | '/books/me'
@@ -659,31 +773,37 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/games'
     | '/journals'
     | '/quiz'
+    | '/admin/forum'
     | '/admin/users'
     | '/books/$bookId'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/6-steps/workflow'
   id:
     | '__root__'
     | '/'
     | '/(app)'
+    | '/admin'
+    | '/expert'
+    | '/moderator'
+    | '/6-steps'
     | '/flashcard-deck'
     | '/forum'
+    | '/games'
     | '/home'
     | '/learn-triz'
     | '/login'
     | '/matrix-triz'
     | '/unauthorized'
-    | '/(app)/6-steps'
     | '/(app)/chat-triz'
     | '/(app)/profile'
     | '/(app)/refund'
     | '/(app)/subscription'
     | '/(app)/wallet'
+    | '/admin/achievements'
     | '/admin/archive'
     | '/admin/assignment'
     | '/admin/books'
@@ -696,16 +816,21 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/moderator/dashboard'
+    | '/moderator/forum'
+    | '/moderator/reports'
     | '/course/$slug'
     | '/flashcard/$deckId'
     | '/forgot-password/new-password'
     | '/forgot-password/verify-otp'
     | '/register/verify-otp'
+    | '/users/$userId'
     | '/admin/'
     | '/books/'
     | '/course/'
     | '/expert/'
     | '/forgot-password/'
+    | '/moderator/'
     | '/packages/'
     | '/register/'
     | '/admin/courses/'
@@ -720,52 +845,43 @@ export interface FileRouteTypes {
     | '/(app)/games/preliminary-game'
     | '/(app)/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/(app)/games/'
     | '/(app)/journals/'
     | '/(app)/quiz/'
+    | '/admin/forum/'
     | '/admin/users/'
     | '/books/$bookId/'
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
     | '/admin/courses/edit/$courseId'
+    | '/(app)/6-steps/workflow/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   appRouteRoute: typeof appRouteRouteWithChildren
+  AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  ExpertRouteRoute: typeof ExpertRouteRouteWithChildren
+  ModeratorRouteRoute: typeof ModeratorRouteRouteWithChildren
+  R6StepsRoute: typeof R6StepsRoute
   FlashcardDeckRoute: typeof FlashcardDeckRoute
   ForumRoute: typeof ForumRoute
+  GamesRoute: typeof GamesRoute
   HomeRoute: typeof HomeRoute
   LearnTrizRoute: typeof LearnTrizRoute
   LoginRoute: typeof LoginRoute
   MatrixTrizRoute: typeof MatrixTrizRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
-  AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
-  AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
-  AdminBooksRouteRoute: typeof AdminBooksRouteRoute
-  AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
-  AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
-  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRoute
-  AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
-  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
-  AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
-  AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
-  ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
-  ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
   CourseSlugRoute: typeof CourseSlugRoute
   FlashcardDeckIdRoute: typeof FlashcardDeckIdRoute
   ForgotPasswordNewPasswordRoute: typeof ForgotPasswordNewPasswordRoute
   ForgotPasswordVerifyOtpRoute: typeof ForgotPasswordVerifyOtpRoute
   RegisterVerifyOtpRoute: typeof RegisterVerifyOtpRoute
-  AdminIndexRoute: typeof AdminIndexRoute
+  UsersUserIdRoute: typeof UsersUserIdRoute
   BooksIndexRoute: typeof BooksIndexRoute
   CourseIndexRoute: typeof CourseIndexRoute
-  ExpertIndexRoute: typeof ExpertIndexRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   PackagesIndexRoute: typeof PackagesIndexRoute
   RegisterIndexRoute: typeof RegisterIndexRoute
-  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
-  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
   BooksBookIdIndexRoute: typeof BooksBookIdIndexRoute
 }
 
@@ -806,6 +922,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games': {
+      id: '/games'
+      path: '/games'
+      fullPath: '/games'
+      preLoaderRoute: typeof GamesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forum': {
       id: '/forum'
       path: '/forum'
@@ -818,6 +941,34 @@ declare module '@tanstack/react-router' {
       path: '/flashcard-deck'
       fullPath: '/flashcard-deck'
       preLoaderRoute: typeof FlashcardDeckRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/6-steps': {
+      id: '/6-steps'
+      path: '/6-steps'
+      fullPath: '/6-steps'
+      preLoaderRoute: typeof R6StepsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/moderator': {
+      id: '/moderator'
+      path: '/moderator'
+      fullPath: '/moderator'
+      preLoaderRoute: typeof ModeratorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/expert': {
+      id: '/expert'
+      path: '/expert'
+      fullPath: '/expert'
+      preLoaderRoute: typeof ExpertRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(app)': {
@@ -848,6 +999,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PackagesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/moderator/': {
+      id: '/moderator/'
+      path: '/'
+      fullPath: '/moderator/'
+      preLoaderRoute: typeof ModeratorIndexRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
     '/forgot-password/': {
       id: '/forgot-password/'
       path: '/forgot-password'
@@ -857,10 +1015,10 @@ declare module '@tanstack/react-router' {
     }
     '/expert/': {
       id: '/expert/'
-      path: '/expert'
-      fullPath: '/expert'
+      path: '/'
+      fullPath: '/expert/'
       preLoaderRoute: typeof ExpertIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/course/': {
       id: '/course/'
@@ -878,9 +1036,16 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin'
+      path: '/'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/users/$userId': {
+      id: '/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof UsersUserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register/verify-otp': {
@@ -918,89 +1083,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/moderator/reports': {
+      id: '/moderator/reports'
+      path: '/reports'
+      fullPath: '/moderator/reports'
+      preLoaderRoute: typeof ModeratorReportsRouteRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/moderator/forum': {
+      id: '/moderator/forum'
+      path: '/forum'
+      fullPath: '/moderator/forum'
+      preLoaderRoute: typeof ModeratorForumRouteRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/moderator/dashboard': {
+      id: '/moderator/dashboard'
+      path: '/dashboard'
+      fullPath: '/moderator/dashboard'
+      preLoaderRoute: typeof ModeratorDashboardRouteRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
     '/expert/dashboard': {
       id: '/expert/dashboard'
-      path: '/expert/dashboard'
+      path: '/dashboard'
       fullPath: '/expert/dashboard'
       preLoaderRoute: typeof ExpertDashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/expert/assignment': {
       id: '/expert/assignment'
-      path: '/expert/assignment'
+      path: '/assignment'
       fullPath: '/expert/assignment'
       preLoaderRoute: typeof ExpertAssignmentRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/admin/transactions': {
       id: '/admin/transactions'
-      path: '/admin/transactions'
+      path: '/transactions'
       fullPath: '/admin/transactions'
       preLoaderRoute: typeof AdminTransactionsRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/subscriptions': {
       id: '/admin/subscriptions'
-      path: '/admin/subscriptions'
+      path: '/subscriptions'
       fullPath: '/admin/subscriptions'
       preLoaderRoute: typeof AdminSubscriptionsRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/quizzes': {
       id: '/admin/quizzes'
-      path: '/admin/quizzes'
+      path: '/quizzes'
       fullPath: '/admin/quizzes'
       preLoaderRoute: typeof AdminQuizzesRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/packages': {
       id: '/admin/packages'
-      path: '/admin/packages'
+      path: '/packages'
       fullPath: '/admin/packages'
       preLoaderRoute: typeof AdminPackagesRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/flashcards': {
       id: '/admin/flashcards'
-      path: '/admin/flashcards'
+      path: '/flashcards'
       fullPath: '/admin/flashcards'
       preLoaderRoute: typeof AdminFlashcardsRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/dashboard': {
       id: '/admin/dashboard'
-      path: '/admin/dashboard'
+      path: '/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/courses': {
       id: '/admin/courses'
-      path: '/admin/courses'
+      path: '/courses'
       fullPath: '/admin/courses'
       preLoaderRoute: typeof AdminCoursesRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/books': {
       id: '/admin/books'
-      path: '/admin/books'
+      path: '/books'
       fullPath: '/admin/books'
       preLoaderRoute: typeof AdminBooksRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/assignment': {
       id: '/admin/assignment'
-      path: '/admin/assignment'
+      path: '/assignment'
       fullPath: '/admin/assignment'
       preLoaderRoute: typeof AdminAssignmentRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/archive': {
       id: '/admin/archive'
-      path: '/admin/archive'
+      path: '/archive'
       fullPath: '/admin/archive'
       preLoaderRoute: typeof AdminArchiveRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/achievements': {
+      id: '/admin/achievements'
+      path: '/achievements'
+      fullPath: '/admin/achievements'
+      preLoaderRoute: typeof AdminAchievementsRouteRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(app)/wallet': {
       id: '/(app)/wallet'
@@ -1037,13 +1230,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appChatTrizRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/6-steps': {
-      id: '/(app)/6-steps'
-      path: '/6-steps'
-      fullPath: '/6-steps'
-      preLoaderRoute: typeof app6StepsRouteRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -1053,10 +1239,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/users/': {
       id: '/admin/users/'
-      path: '/admin/users'
+      path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/forum/': {
+      id: '/admin/forum/'
+      path: '/forum'
+      fullPath: '/admin/forum'
+      preLoaderRoute: typeof AdminForumIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(app)/quiz/': {
       id: '/(app)/quiz/'
@@ -1072,19 +1265,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appJournalsIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/games/': {
-      id: '/(app)/games/'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof appGamesIndexRouteImport
-      parentRoute: typeof appRouteRoute
-    }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
-      path: '/admin/users/$userId'
+      path: '/users/$userId'
       fullPath: '/admin/users/$userId'
       preLoaderRoute: typeof AdminUsersUserIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/(app)/games/segmentation-game': {
       id: '/(app)/games/segmentation-game'
@@ -1163,6 +1349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesIndexRouteRouteImport
       parentRoute: typeof AdminCoursesRouteRoute
     }
+    '/(app)/6-steps/workflow/': {
+      id: '/(app)/6-steps/workflow/'
+      path: '/6-steps/workflow'
+      fullPath: '/6-steps/workflow'
+      preLoaderRoute: typeof app6StepsWorkflowIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/admin/courses/edit/$courseId': {
       id: '/admin/courses/edit/$courseId'
       path: '/edit/$courseId'
@@ -1188,7 +1381,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface appRouteRouteChildren {
-  app6StepsRouteRoute: typeof app6StepsRouteRoute
   appChatTrizRouteRoute: typeof appChatTrizRouteRoute
   appProfileRouteRoute: typeof appProfileRouteRoute
   appRefundRouteRoute: typeof appRefundRouteRoute
@@ -1203,15 +1395,14 @@ interface appRouteRouteChildren {
   appGamesMergingGameRoute: typeof appGamesMergingGameRoute
   appGamesPreliminaryGameRoute: typeof appGamesPreliminaryGameRoute
   appGamesSegmentationGameRoute: typeof appGamesSegmentationGameRoute
-  appGamesIndexRoute: typeof appGamesIndexRoute
   appJournalsIndexRoute: typeof appJournalsIndexRoute
   appQuizIndexRoute: typeof appQuizIndexRoute
   appCourseLearnSlugRouteRoute: typeof appCourseLearnSlugRouteRoute
   appCourseQuizSlugRouteRoute: typeof appCourseQuizSlugRouteRoute
+  app6StepsWorkflowIndexRoute: typeof app6StepsWorkflowIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
-  app6StepsRouteRoute: app6StepsRouteRoute,
   appChatTrizRouteRoute: appChatTrizRouteRoute,
   appProfileRouteRoute: appProfileRouteRoute,
   appRefundRouteRoute: appRefundRouteRoute,
@@ -1226,11 +1417,11 @@ const appRouteRouteChildren: appRouteRouteChildren = {
   appGamesMergingGameRoute: appGamesMergingGameRoute,
   appGamesPreliminaryGameRoute: appGamesPreliminaryGameRoute,
   appGamesSegmentationGameRoute: appGamesSegmentationGameRoute,
-  appGamesIndexRoute: appGamesIndexRoute,
   appJournalsIndexRoute: appJournalsIndexRoute,
   appQuizIndexRoute: appQuizIndexRoute,
   appCourseLearnSlugRouteRoute: appCourseLearnSlugRouteRoute,
   appCourseQuizSlugRouteRoute: appCourseQuizSlugRouteRoute,
+  app6StepsWorkflowIndexRoute: app6StepsWorkflowIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
@@ -1252,16 +1443,26 @@ const AdminCoursesRouteRouteChildren: AdminCoursesRouteRouteChildren = {
 const AdminCoursesRouteRouteWithChildren =
   AdminCoursesRouteRoute._addFileChildren(AdminCoursesRouteRouteChildren)
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  appRouteRoute: appRouteRouteWithChildren,
-  FlashcardDeckRoute: FlashcardDeckRoute,
-  ForumRoute: ForumRoute,
-  HomeRoute: HomeRoute,
-  LearnTrizRoute: LearnTrizRoute,
-  LoginRoute: LoginRoute,
-  MatrixTrizRoute: MatrixTrizRoute,
-  UnauthorizedRoute: UnauthorizedRoute,
+interface AdminRouteRouteChildren {
+  AdminAchievementsRouteRoute: typeof AdminAchievementsRouteRoute
+  AdminArchiveRouteRoute: typeof AdminArchiveRouteRoute
+  AdminAssignmentRouteRoute: typeof AdminAssignmentRouteRoute
+  AdminBooksRouteRoute: typeof AdminBooksRouteRoute
+  AdminCoursesRouteRoute: typeof AdminCoursesRouteRouteWithChildren
+  AdminDashboardRouteRoute: typeof AdminDashboardRouteRoute
+  AdminFlashcardsRouteRoute: typeof AdminFlashcardsRouteRoute
+  AdminPackagesRouteRoute: typeof AdminPackagesRouteRoute
+  AdminQuizzesRouteRoute: typeof AdminQuizzesRouteRoute
+  AdminSubscriptionsRouteRoute: typeof AdminSubscriptionsRouteRoute
+  AdminTransactionsRouteRoute: typeof AdminTransactionsRouteRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+  AdminForumIndexRoute: typeof AdminForumIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
+}
+
+const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+  AdminAchievementsRouteRoute: AdminAchievementsRouteRoute,
   AdminArchiveRouteRoute: AdminArchiveRouteRoute,
   AdminAssignmentRouteRoute: AdminAssignmentRouteRoute,
   AdminBooksRouteRoute: AdminBooksRouteRoute,
@@ -1272,22 +1473,76 @@ const rootRouteChildren: RootRouteChildren = {
   AdminQuizzesRouteRoute: AdminQuizzesRouteRoute,
   AdminSubscriptionsRouteRoute: AdminSubscriptionsRouteRoute,
   AdminTransactionsRouteRoute: AdminTransactionsRouteRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+  AdminForumIndexRoute: AdminForumIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
+}
+
+const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
+  AdminRouteRouteChildren,
+)
+
+interface ExpertRouteRouteChildren {
+  ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
+  ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
+  ExpertIndexRoute: typeof ExpertIndexRoute
+}
+
+const ExpertRouteRouteChildren: ExpertRouteRouteChildren = {
   ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
   ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
+  ExpertIndexRoute: ExpertIndexRoute,
+}
+
+const ExpertRouteRouteWithChildren = ExpertRouteRoute._addFileChildren(
+  ExpertRouteRouteChildren,
+)
+
+interface ModeratorRouteRouteChildren {
+  ModeratorDashboardRouteRoute: typeof ModeratorDashboardRouteRoute
+  ModeratorForumRouteRoute: typeof ModeratorForumRouteRoute
+  ModeratorReportsRouteRoute: typeof ModeratorReportsRouteRoute
+  ModeratorIndexRoute: typeof ModeratorIndexRoute
+}
+
+const ModeratorRouteRouteChildren: ModeratorRouteRouteChildren = {
+  ModeratorDashboardRouteRoute: ModeratorDashboardRouteRoute,
+  ModeratorForumRouteRoute: ModeratorForumRouteRoute,
+  ModeratorReportsRouteRoute: ModeratorReportsRouteRoute,
+  ModeratorIndexRoute: ModeratorIndexRoute,
+}
+
+const ModeratorRouteRouteWithChildren = ModeratorRouteRoute._addFileChildren(
+  ModeratorRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  appRouteRoute: appRouteRouteWithChildren,
+  AdminRouteRoute: AdminRouteRouteWithChildren,
+  ExpertRouteRoute: ExpertRouteRouteWithChildren,
+  ModeratorRouteRoute: ModeratorRouteRouteWithChildren,
+  R6StepsRoute: R6StepsRoute,
+  FlashcardDeckRoute: FlashcardDeckRoute,
+  ForumRoute: ForumRoute,
+  GamesRoute: GamesRoute,
+  HomeRoute: HomeRoute,
+  LearnTrizRoute: LearnTrizRoute,
+  LoginRoute: LoginRoute,
+  MatrixTrizRoute: MatrixTrizRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
   CourseSlugRoute: CourseSlugRoute,
   FlashcardDeckIdRoute: FlashcardDeckIdRoute,
   ForgotPasswordNewPasswordRoute: ForgotPasswordNewPasswordRoute,
   ForgotPasswordVerifyOtpRoute: ForgotPasswordVerifyOtpRoute,
   RegisterVerifyOtpRoute: RegisterVerifyOtpRoute,
-  AdminIndexRoute: AdminIndexRoute,
+  UsersUserIdRoute: UsersUserIdRoute,
   BooksIndexRoute: BooksIndexRoute,
   CourseIndexRoute: CourseIndexRoute,
-  ExpertIndexRoute: ExpertIndexRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   PackagesIndexRoute: PackagesIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
-  AdminUsersIndexRoute: AdminUsersIndexRoute,
   BooksBookIdIndexRoute: BooksBookIdIndexRoute,
 }
 export const routeTree = rootRouteImport

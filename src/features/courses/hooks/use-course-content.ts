@@ -64,8 +64,8 @@ export const useCourseContent = ({
         }
 
         // Process quizzes
-        if (quizzesData && Array.isArray(quizzesData)) {
-          quizzesData.forEach((quiz: any) => {
+        if (quizzesData?.content && Array.isArray(quizzesData.content)) {
+          quizzesData.content.forEach((quiz: any) => {
             const quizItem: QuizContentItem = {
               id: quiz.id,
               type: 'quiz',

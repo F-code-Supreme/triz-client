@@ -1,4 +1,6 @@
 import { LayoutDashboard, GraduationCap } from 'lucide-react';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { LucideIcon } from 'lucide-react';
 
@@ -24,33 +26,40 @@ export interface ExpertSidebarData {
   };
 }
 
-export const expertSidebarData: ExpertSidebarData = {
-  navGroups: [
-    {
-      title: 'Main',
-      items: [
+export const useExpertSidebarData = (): ExpertSidebarData => {
+  const { t } = useTranslation('sidebar');
+
+  return useMemo(
+    () => ({
+      navGroups: [
         {
-          title: 'Dashboard',
-          url: '/expert',
-          icon: LayoutDashboard,
-          isActive: true,
+          title: t('expert.main'),
+          items: [
+            {
+              title: t('expert.dashboard'),
+              url: '/expert',
+              icon: LayoutDashboard,
+              isActive: true,
+            },
+          ],
+        },
+        {
+          title: t('expert.assignments'),
+          items: [
+            {
+              title: t('expert.assignments'),
+              url: '/expert/assignment',
+              icon: GraduationCap,
+            },
+          ],
         },
       ],
-    },
-    {
-      title: 'Assignments',
-      items: [
-        {
-          title: 'Assignments',
-          url: '/expert/assignment',
-          icon: GraduationCap,
-        },
-      ],
-    },
-  ],
-  user: {
-    name: 'Expert',
-    email: 'expert@triz.com',
-    avatar: '/avatars/expert.jpg',
-  },
+      user: {
+        name: 'Expert',
+        email: 'expert@triz.com',
+        avatar: '/avatars/expert.jpg',
+      },
+    }),
+    [t],
+  );
 };

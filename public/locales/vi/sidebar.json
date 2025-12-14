@@ -70,10 +70,30 @@
     "courses": "Khóa học",
     "quizzes": "Bài kiểm tra",
     "assignments": "Bài tập",
+    "achievements": "Thành tựu",
+    "forum": "Diễn đàn",
     "packages": "Gói",
     "subscriptions": "Đăng ký",
     "transactions": "Giao dịch",
     "archive": "Lưu trữ"
+  },
+
+  "expert": {
+    "title": "TRIZ Chuyên gia",
+    "subtitle": "Bảng chuyên gia",
+    "main": "Chính",
+    "dashboard": "Bảng điều khiển",
+    "assignments": "Bài tập"
+  },
+
+  "moderator": {
+    "title": "TRIZ Kiểm duyệt",
+    "subtitle": "Bảng kiểm duyệt",
+    "main": "Chính",
+    "content": "Nội dung",
+    "dashboard": "Bảng điều khiển",
+    "forum": "Diễn đàn",
+    "reports": "Báo cáo"
   },
 
   "command_menu": {
