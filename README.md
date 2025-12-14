@@ -1,3 +1,113 @@
+# TRIZ — Client
+
+A modular, production-ready front-end for TRIZ built with Vite, React, and TypeScript.
+
+## Overview
+
+- Purpose: Single-page client for TRIZ features — courses, flashcards, forums, chat, quizzes, payments, and more.
+- Tech stack: Vite, React 18, TypeScript, Tailwind CSS, React Query, TanStack Router, and i18n.
+- Repo branches: active development on `develop` (default branch: `main`).
+
+## Quick Start
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start dev server:
+
+```bash
+npm run dev
+```
+
+3. Build for production:
+
+```bash
+npm run build
+```
+
+4. Preview production build:
+
+```bash
+npm run preview
+```
+
+## Important npm scripts
+
+- `dev` — `vite` (development)
+- `build` — `tsc && vite build --mode production` (production build)
+- `build:docker` — `tsc && vite build --mode docker`
+- `preview` — `vite preview`
+- `docker:build` — build a Docker image: `docker build -t triz-client .`
+- `docker:run` — run the Docker image locally (removes any existing container named `triz-client`)
+- `lint` / `lint:fix` — ESLint checks and autofix
+- `format` / `format:check` — Prettier formatting
+- `generate` — `plop` (scaffolding for pages/routes/components)
+- `test` / `test:coverage` / `test:ui` — run tests with Vitest
+- `type-check` — `tsc --noEmit`
+- `interface` — generate i18n TypeScript interface from `public/locales/en`
+
+See `package.json` for the full list of scripts and CI-related commands.
+
+## Local development notes
+
+- Use `npm run dev` to run Vite with HMR.
+- Run `npm run generate` to scaffold new pages or routes using `plop-templates/`.
+- Keep translations in `public/locales/`; use the `interface` script to regenerate `src/configs/i18next/resources.d.ts`.
+- Type checking: `npm run type-check`.
+
+## Testing & Quality
+
+- Tests: Vitest + Testing Library. Run `npm test` or `npm run test:coverage` for coverage.
+- Linting: ESLint + Prettier; pre-commit hooks are configured via Husky and `lint-staged`.
+
+## Docker
+
+- Build: `npm run docker:build` (creates image `triz-client`)
+- Run: `npm run docker:run` (runs container exposing port 80 mapped to app port 8082)
+
+## Project layout (high level)
+
+- `src/` — application source
+  - `components/` — reusable UI components
+  - `features/` — grouped feature modules (courses, flashcards, chat, etc.)
+  - `routes/` — route files and layouts
+  - `configs/` — axios, i18n, and other configuration
+  - `assets/`, `layouts/`, `utils/`, `hooks/`
+- `public/` — static assets and `locales/` for translations
+- `plop-templates/` — scaffolding templates for pages and routes
+
+## Internationalization
+
+- Uses `i18next` and `react-i18next` with resources in `public/locales/`.
+- Run `npm run interface` to regenerate TypeScript interfaces for translation resources.
+
+## Code generation
+
+- `plop` generators are used to scaffold new pages and routes. Run `npm run generate` and choose a template.
+
+## Contributing
+
+- Branching: create feature branches from `develop`.
+- Pull requests: open PRs against `develop`; include a clear summary and link to related issues.
+- Code style: follow ESLint + Prettier rules; run `npm run lint:fix` before committing.
+- Use `plop-templates/` to keep generated code consistent.
+
+## CI / Releases
+
+- See `CHANGELOG.md` and open PRs for release notes. Current active PRs and target branches are managed in the repo (example release PR: Release version 0.12.14.21).
+
+## Next steps & Suggestions
+
+- Add a CONTRIBUTING.md with branch/PR/commit guidance and reviewer checklist.
+- Add CI badges (build/test/coverage) to the header.
+- Add architecture or component diagrams if you want an onboarding section for new contributors.
+
+---
+
+If you want, I can add a `CONTRIBUTING.md`, update `README.md` with CI badges, or include an architecture diagram — tell me which and I'll implement it.
 # BaseJS - Modern React Application
 
 A modern, opinionated React application template with a robust development setup, designed for building scalable and interactive web applications.
