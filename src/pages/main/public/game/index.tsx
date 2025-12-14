@@ -1,12 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import {
-  BookOpen,
-  Brain,
-  Gamepad2,
-  Search,
-  Sparkles,
-  Target,
-} from 'lucide-react';
+import { BookOpen, Gamepad2, Search, Sparkles, Target } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,16 +22,6 @@ interface Game {
 }
 
 const GAMES: Game[] = [
-  {
-    id: 'memory-card',
-    name: 'Ghi Nhớ Thẻ Bài',
-    route: '/games/memory-card',
-    description: 'Trò chơi rèn luyện trí nhớ và khả năng ghi nhớ',
-    principleNumber: 10,
-    icon: <Brain className="w-8 h-8" />,
-    color: 'text-purple-600',
-    bgGradient: 'from-purple-500 to-indigo-600',
-  },
   {
     id: 'merging-game',
     name: 'Giả Kim Thuật',

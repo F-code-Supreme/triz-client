@@ -137,7 +137,7 @@ const SegmentationGamePage = () => {
             <div className="flex justify-between items-center mb-4 p-4 rounded-2xl ">
               <button
                 className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
-                onClick={() => navigate({ to: '/learn-triz' })}
+                onClick={() => navigate({ to: '/games' })}
               >
                 <ArrowLeft className="mr-2" size={24} /> Quay lại
               </button>

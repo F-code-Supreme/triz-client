@@ -378,7 +378,7 @@ const PreliminaryGamePage = () => {
               {/* TOP BAR */}
               <div className="w-full max-w-md flex justify-between items-center mb-6 mt-2">
                 <button
-                  onClick={() => navigate({ to: '/learn-triz' })}
+                  onClick={() => navigate({ to: '/games' })}
                   className="flex items-center text-gray-500 hover:text-gray-800 font-bold transition-colors"
                 >
                   <ArrowLeft className="mr-2" size={24} /> Thoát
