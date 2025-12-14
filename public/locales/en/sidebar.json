@@ -84,7 +84,9 @@
     "subtitle": "Expert Panel",
     "main": "Main",
     "dashboard": "Dashboard",
+    "review": "Review",
     "assignments": "Assignments",
+    "idea_assessment": "Idea Assessment",
     "configuration": "Configuration",
     "six_step_config": "Six Step Configuration"
   },

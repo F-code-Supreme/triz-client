@@ -40,6 +40,7 @@ import { Route as CourseSlugRouteImport } from './routes/course.$slug'
 import { Route as ModeratorReportsRouteRouteImport } from './routes/moderator/reports/route'
 import { Route as ModeratorForumRouteRouteImport } from './routes/moderator/forum/route'
 import { Route as ModeratorDashboardRouteRouteImport } from './routes/moderator/dashboard/route'
+import { Route as ExpertIdeaAssessmentRouteRouteImport } from './routes/expert/idea-assessment/route'
 import { Route as ExpertDashboardRouteRouteImport } from './routes/expert/dashboard/route'
 import { Route as ExpertAssignmentRouteRouteImport } from './routes/expert/assignment/route'
 import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/transactions/route'
@@ -237,6 +238,12 @@ const ModeratorDashboardRouteRoute = ModeratorDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => ModeratorRouteRoute,
 } as any)
+const ExpertIdeaAssessmentRouteRoute =
+  ExpertIdeaAssessmentRouteRouteImport.update({
+    id: '/idea-assessment',
+    path: '/idea-assessment',
+    getParentRoute: () => ExpertRouteRoute,
+  } as any)
 const ExpertDashboardRouteRoute = ExpertDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -479,6 +486,7 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/expert/idea-assessment': typeof ExpertIdeaAssessmentRouteRoute
   '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
   '/moderator/forum': typeof ModeratorForumRouteRoute
   '/moderator/reports': typeof ModeratorReportsRouteRoute
@@ -548,6 +556,7 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/expert/idea-assessment': typeof ExpertIdeaAssessmentRouteRoute
   '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
   '/moderator/forum': typeof ModeratorForumRouteRoute
   '/moderator/reports': typeof ModeratorReportsRouteRoute
@@ -622,6 +631,7 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
+  '/expert/idea-assessment': typeof ExpertIdeaAssessmentRouteRoute
   '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
   '/moderator/forum': typeof ModeratorForumRouteRoute
   '/moderator/reports': typeof ModeratorReportsRouteRoute
@@ -697,6 +707,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/expert/idea-assessment'
     | '/moderator/dashboard'
     | '/moderator/forum'
     | '/moderator/reports'
@@ -766,6 +777,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/expert/idea-assessment'
     | '/moderator/dashboard'
     | '/moderator/forum'
     | '/moderator/reports'
@@ -839,6 +851,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
+    | '/expert/idea-assessment'
     | '/moderator/dashboard'
     | '/moderator/forum'
     | '/moderator/reports'
@@ -1128,6 +1141,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/moderator/dashboard'
       preLoaderRoute: typeof ModeratorDashboardRouteRouteImport
       parentRoute: typeof ModeratorRouteRoute
+    }
+    '/expert/idea-assessment': {
+      id: '/expert/idea-assessment'
+      path: '/idea-assessment'
+      fullPath: '/expert/idea-assessment'
+      preLoaderRoute: typeof ExpertIdeaAssessmentRouteRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/expert/dashboard': {
       id: '/expert/dashboard'
@@ -1527,6 +1547,7 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 interface ExpertRouteRouteChildren {
   ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
   ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
+  ExpertIdeaAssessmentRouteRoute: typeof ExpertIdeaAssessmentRouteRoute
   ExpertIndexRoute: typeof ExpertIndexRoute
   ExpertSixStepConfigIndexRoute: typeof ExpertSixStepConfigIndexRoute
 }
@@ -1534,6 +1555,7 @@ interface ExpertRouteRouteChildren {
 const ExpertRouteRouteChildren: ExpertRouteRouteChildren = {
   ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
   ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
+  ExpertIdeaAssessmentRouteRoute: ExpertIdeaAssessmentRouteRoute,
   ExpertIndexRoute: ExpertIndexRoute,
   ExpertSixStepConfigIndexRoute: ExpertSixStepConfigIndexRoute,
 }
