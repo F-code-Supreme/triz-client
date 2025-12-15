@@ -1,0 +1,25 @@
+{
+  "dashboard": {
+    "title": "Expert Dashboard",
+    "description": "Welcome to the expert panel"
+  },
+  "six_step_config": {
+    "title": "Six Step Tool Configuration",
+    "description": "Manage settings for the TRIZ Six Step tool",
+    "save_changes": "Save Changes",
+    "step5": {
+      "title": "Step 5 Configuration",
+      "description": "Configure the number of top ideas to select from Step 5",
+      "top_ideas": "Top Ideas Count",
+      "top_ideas_hint": "Number of best ideas to display",
+      "min_ideas": "Minimum",
+      "max_ideas": "Maximum"
+    },
+    "auto_save": {
+      "title": "Auto Save",
+      "description": "Configure automatic progress saving",
+      "interval": "Auto Save Interval (seconds)",
+      "interval_hint": "How often to automatically save user progress"
+    }
+  }
+}

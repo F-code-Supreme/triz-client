@@ -1,0 +1,25 @@
+{
+  "dashboard": {
+    "title": "Bảng điều khiển Chuyên gia",
+    "description": "Chào mừng đến với bảng chuyên gia"
+  },
+  "six_step_config": {
+    "title": "Cấu hình Công cụ 6 Bước",
+    "description": "Quản lý cài đặt cho công cụ Six Step TRIZ",
+    "save_changes": "Lưu thay đổi",
+    "step5": {
+      "title": "Cấu hình Bước 5",
+      "description": "Cấu hình số lượng ý tưởng hàng đầu để chọn từ Bước 5",
+      "top_ideas": "Số ý tưởng hàng đầu",
+      "top_ideas_hint": "Số lượng ý tưởng tốt nhất để hiển thị",
+      "min_ideas": "Tối thiểu",
+      "max_ideas": "Tối đa"
+    },
+    "auto_save": {
+      "title": "Tự động lưu",
+      "description": "Cấu hình tính năng tự động lưu tiến trình",
+      "interval": "Khoảng thời gian tự động lưu (giây)",
+      "interval_hint": "Tần suất tự động lưu tiến trình của người dùng"
+    }
+  }
+}

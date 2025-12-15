@@ -12,12 +12,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useExpertReviewAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useGetAssignmentByIdQueryExpert } from '@/features/assignment/services/queries';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
 
 interface AssignmentSubmissionsDialogProps {
   open: boolean;

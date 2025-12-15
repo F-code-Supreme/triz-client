@@ -803,7 +803,6 @@ interface Resources {
         "description": "Create a new quiz with questions and options.",
         "form": {
           "course": "Course",
-          "course_module:": "Course & Module selection",
           "course_placeholder": "Select a course",
           "course_required": "Course is required",
           "description": "Description",
@@ -942,6 +941,47 @@ interface Resources {
         "cancel_error": "Failed to cancel subscription",
         "cancel_success": "Subscription cancelled successfully"
       }
+    },
+    "system_config": {
+      "description": "Manage system settings and Six Step tool configuration",
+      "save_changes": "Save Changes",
+      "six_step": {
+        "auto_save": {
+          "description": "Configure automatic progress saving",
+          "interval": "Auto Save Interval (seconds)",
+          "interval_hint": "How often to automatically save user progress",
+          "title": "Auto Save"
+        },
+        "step5": {
+          "description": "Configure the number of top ideas to select from Step 5",
+          "max_ideas": "Maximum",
+          "min_ideas": "Minimum",
+          "title": "Step 5 Configuration",
+          "top_ideas": "Top Ideas Count",
+          "top_ideas_hint": "Number of best ideas to display"
+        }
+      },
+      "system_wide": {
+        "general": {
+          "description": "Configure basic system settings",
+          "site_description": "Site Description",
+          "site_name": "Site Name",
+          "title": "General Settings"
+        },
+        "limits": {
+          "description": "Configure system limits and thresholds",
+          "max_upload_size": "Max Upload Size (MB)",
+          "max_upload_size_hint": "Maximum file size that can be uploaded",
+          "session_timeout": "Session Timeout (minutes)",
+          "session_timeout_hint": "Auto logout time when inactive",
+          "title": "System Limits"
+        }
+      },
+      "tabs": {
+        "six_step": "Six Step Tool",
+        "system_wide": "System Wide"
+      },
+      "title": "System Configuration"
     },
     "transactions": {
       "actions": {
@@ -1210,6 +1250,31 @@ interface Resources {
       },
       "submit": "Submit Quiz",
       "submit_confirm": "Are you sure you want to submit? You cannot change your answers after submission."
+    }
+  },
+  "pages.expert": {
+    "dashboard": {
+      "description": "Welcome to the expert panel",
+      "title": "Expert Dashboard"
+    },
+    "six_step_config": {
+      "auto_save": {
+        "description": "Configure automatic progress saving",
+        "interval": "Auto Save Interval (seconds)",
+        "interval_hint": "How often to automatically save user progress",
+        "title": "Auto Save"
+      },
+      "description": "Manage settings for the TRIZ Six Step tool",
+      "save_changes": "Save Changes",
+      "step5": {
+        "description": "Configure the number of top ideas to select from Step 5",
+        "max_ideas": "Maximum",
+        "min_ideas": "Minimum",
+        "title": "Step 5 Configuration",
+        "top_ideas": "Top Ideas Count",
+        "top_ideas_hint": "Number of best ideas to display"
+      },
+      "title": "Six Step Tool Configuration"
     }
   },
   "pages.forgot_password": {
@@ -1783,6 +1848,7 @@ interface Resources {
       "quizzes": "Quizzes",
       "subscriptions": "Subscriptions",
       "subtitle": "Management",
+      "system_config": "System Configuration",
       "title": "TRIZ Admin",
       "transactions": "Transactions",
       "users": "Users"
@@ -1816,8 +1882,12 @@ interface Resources {
     "events": "Events",
     "expert": {
       "assignments": "Assignments",
+      "configuration": "Configuration",
       "dashboard": "Dashboard",
+      "idea_assessment": "Idea Assessment",
       "main": "Main",
+      "review": "Review",
+      "six_step_config": "Six Step Configuration",
       "subtitle": "Expert Panel",
       "title": "TRIZ Expert"
     },

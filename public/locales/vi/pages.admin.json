@@ -852,5 +852,46 @@
       "close": "Đóng",
       "loading": "Đang tải..."
     }
+  },
+  "system_config": {
+    "title": "Cấu hình hệ thống",
+    "description": "Quản lý cấu hình hệ thống và công cụ Six Step",
+    "save_changes": "Lưu thay đổi",
+    "tabs": {
+      "system_wide": "Toàn hệ thống",
+      "six_step": "Công cụ 6 Bước"
+    },
+    "system_wide": {
+      "general": {
+        "title": "Cài đặt chung",
+        "description": "Cấu hình các thiết lập cơ bản của hệ thống",
+        "site_name": "Tên trang web",
+        "site_description": "Mô tả trang web"
+      },
+      "limits": {
+        "title": "Giới hạn hệ thống",
+        "description": "Cấu hình các giới hạn và ngưỡng của hệ thống",
+        "max_upload_size": "Kích thước tải lên tối đa (MB)",
+        "max_upload_size_hint": "Kích thước file tối đa có thể tải lên",
+        "session_timeout": "Thời gian chờ phiên (phút)",
+        "session_timeout_hint": "Thời gian tự động đăng xuất khi không hoạt động"
+      }
+    },
+    "six_step": {
+      "step5": {
+        "title": "Cấu hình Bước 5",
+        "description": "Cấu hình số lượng ý tưởng hàng đầu để chọn từ Bước 5",
+        "top_ideas": "Số ý tưởng hàng đầu",
+        "top_ideas_hint": "Số lượng ý tưởng tốt nhất để hiển thị",
+        "min_ideas": "Tối thiểu",
+        "max_ideas": "Tối đa"
+      },
+      "auto_save": {
+        "title": "Tự động lưu",
+        "description": "Cấu hình tính năng tự động lưu tiến trình",
+        "interval": "Khoảng thời gian tự động lưu (giây)",
+        "interval_hint": "Tần suất tự động lưu tiến trình của người dùng"
+      }
+    }
   }
 }

@@ -1,4 +1,9 @@
-import { LayoutDashboard, GraduationCap } from 'lucide-react';
+import {
+  LayoutDashboard,
+  GraduationCap,
+  Wrench,
+  Lightbulb,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -44,12 +49,27 @@ export const useExpertSidebarData = (): ExpertSidebarData => {
           ],
         },
         {
-          title: t('expert.assignments'),
+          title: t('expert.review'),
           items: [
             {
               title: t('expert.assignments'),
               url: '/expert/assignment',
               icon: GraduationCap,
+            },
+            {
+              title: t('expert.idea_assessment'),
+              url: '/expert/idea-assessment',
+              icon: Lightbulb,
+            },
+          ],
+        },
+        {
+          title: t('expert.configuration'),
+          items: [
+            {
+              title: t('expert.six_step_config'),
+              url: '/expert/six-step-config',
+              icon: Wrench,
             },
           ],
         },

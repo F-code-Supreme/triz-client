@@ -51,7 +51,7 @@ interface AssignmentsDataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export const ForumPostsDataTableRowActions = <TData,>({
+export const ReportPostsDataTableRowActions = <TData,>({
   row,
 }: AssignmentsDataTableRowActionsProps<TData>) => {
   const [isUpdateOpen, setIsUpdateOpen] = React.useState(false);
@@ -290,7 +290,7 @@ export const ForumPostsDataTableRowActions = <TData,>({
       </AlertDialog>
 
       <Dialog open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
-        <DialogContent className="max-w-3xl h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Chỉnh sửa bài viết</DialogTitle>
           </DialogHeader>
