@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { ModeratorHeader } from '@/components/layout/moderator-header';
@@ -27,7 +26,6 @@ export const ModeratorLayout = ({ children, meta }: ModeratorLayoutProps) => {
             <ModeratorHeader />
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">{children}</main>
-            <Analytics />
           </SidebarInset>
         </SidebarProvider>
       </LayoutProvider>

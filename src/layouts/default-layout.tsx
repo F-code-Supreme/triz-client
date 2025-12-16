@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import Footer from '@/components/ui/footer';
@@ -31,7 +30,6 @@ export const DefaultLayout = ({
         <Navbar03 />
         <main className={className}>{children}</main>
         {showFooter && <Footer showCTA={showFooterCTA} />}
-        <Analytics />
       </div>
     </HelmetProvider>
   );
