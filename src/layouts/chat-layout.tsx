@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { Navbar03 } from '@/components/ui/navbar';
@@ -26,6 +27,7 @@ export const ChatLayout = ({
         <main className="container h-[calc(100svh-4rem-1px)] mx-auto p-8">
           {children}
         </main>
+        <Analytics />
       </div>
     </HelmetProvider>
   );

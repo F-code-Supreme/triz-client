@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { Navbar03 } from '@/components/ui/navbar';
@@ -24,6 +25,7 @@ export const QuizLayout = ({
       <div>
         {showheader && <Navbar03 />}
         <main className="container mx-auto md:p-8 sm:p-4">{children}</main>
+        <Analytics />
       </div>
     </HelmetProvider>
   );

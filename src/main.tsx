@@ -1,7 +1,6 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
-import { Analytics } from '@vercel/analytics/next';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'sonner';
 
@@ -32,7 +31,6 @@ const App = () => {
         <ThemeProvider>
           <AuthProvider>
             <InnerApp />
-            <Analytics />
           </AuthProvider>
         </ThemeProvider>
         <Toaster />
