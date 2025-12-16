@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { AuroraBackground } from '@/components/ui/shadcn-io/aurora-background';
@@ -21,7 +20,6 @@ export const AuthLayout = ({ children, meta }: AuthLayoutProps) => {
         <AuroraBackground>
           <div className="relative z-10">
             <main className="container mx-auto p-8 h-screen">{children}</main>
-            <Analytics />
           </div>
         </AuroraBackground>
       </div>

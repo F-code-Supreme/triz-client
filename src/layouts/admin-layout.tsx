@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { AdminHeader } from '@/components/layout/admin-header';
@@ -27,7 +26,6 @@ export const AdminLayout = ({ children, meta }: AdminLayoutProps) => {
             <AdminHeader />
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">{children}</main>
-            <Analytics />
           </SidebarInset>
         </SidebarProvider>
       </LayoutProvider>

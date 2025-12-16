@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { ExpertHeader } from '@/components/layout/expert-header';
@@ -27,7 +26,6 @@ export const ExpertLayout = ({ children, meta }: ExpertLayoutProps) => {
             <ExpertHeader />
             {/* Main Content */}
             <main className="flex-1 overflow-y-auto">{children}</main>
-            <Analytics />
           </SidebarInset>
         </SidebarProvider>
       </LayoutProvider>
