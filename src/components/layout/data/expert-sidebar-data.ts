@@ -57,8 +57,8 @@ export const useExpertSidebarData = (): ExpertSidebarData => {
               icon: GraduationCap,
             },
             {
-              title: t('expert.idea_assessment'),
-              url: '/expert/idea-assessment',
+              title: t('expert.journal_reviews'),
+              url: '/expert/journal-reviews',
               icon: Lightbulb,
             },
           ],

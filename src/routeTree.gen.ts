@@ -40,7 +40,6 @@ import { Route as CourseSlugRouteImport } from './routes/course.$slug'
 import { Route as ModeratorReportsRouteRouteImport } from './routes/moderator/reports/route'
 import { Route as ModeratorForumRouteRouteImport } from './routes/moderator/forum/route'
 import { Route as ModeratorDashboardRouteRouteImport } from './routes/moderator/dashboard/route'
-import { Route as ExpertIdeaAssessmentRouteRouteImport } from './routes/expert/idea-assessment/route'
 import { Route as ExpertDashboardRouteRouteImport } from './routes/expert/dashboard/route'
 import { Route as ExpertAssignmentRouteRouteImport } from './routes/expert/assignment/route'
 import { Route as AdminTransactionsRouteRouteImport } from './routes/admin/transactions/route'
@@ -60,12 +59,14 @@ import { Route as appRefundRouteRouteImport } from './routes/(app)/refund/route'
 import { Route as appProfileRouteRouteImport } from './routes/(app)/profile/route'
 import { Route as appChatTrizRouteRouteImport } from './routes/(app)/chat-triz/route'
 import { Route as ExpertSixStepConfigIndexRouteImport } from './routes/expert/six-step-config/index'
+import { Route as ExpertJournalReviewsIndexRouteImport } from './routes/expert/journal-reviews/index'
 import { Route as BooksBookIdIndexRouteImport } from './routes/books.$bookId.index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminSystemConfigIndexRouteImport } from './routes/admin/system-config/index'
 import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
+import { Route as ExpertJournalReviewsJournalReviewIdRouteImport } from './routes/expert/journal-reviews/$journalReviewId'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as appGamesSegmentationGameRouteImport } from './routes/(app)/games/segmentation-game'
 import { Route as appGamesPreliminaryGameRouteImport } from './routes/(app)/games/preliminary-game'
@@ -238,12 +239,6 @@ const ModeratorDashboardRouteRoute = ModeratorDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => ModeratorRouteRoute,
 } as any)
-const ExpertIdeaAssessmentRouteRoute =
-  ExpertIdeaAssessmentRouteRouteImport.update({
-    id: '/idea-assessment',
-    path: '/idea-assessment',
-    getParentRoute: () => ExpertRouteRoute,
-  } as any)
 const ExpertDashboardRouteRoute = ExpertDashboardRouteRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -340,6 +335,12 @@ const ExpertSixStepConfigIndexRoute =
     path: '/six-step-config/',
     getParentRoute: () => ExpertRouteRoute,
   } as any)
+const ExpertJournalReviewsIndexRoute =
+  ExpertJournalReviewsIndexRouteImport.update({
+    id: '/journal-reviews/',
+    path: '/journal-reviews/',
+    getParentRoute: () => ExpertRouteRoute,
+  } as any)
 const BooksBookIdIndexRoute = BooksBookIdIndexRouteImport.update({
   id: '/books/$bookId/',
   path: '/books/$bookId/',
@@ -370,6 +371,12 @@ const appJournalsIndexRoute = appJournalsIndexRouteImport.update({
   path: '/journals/',
   getParentRoute: () => appRouteRoute,
 } as any)
+const ExpertJournalReviewsJournalReviewIdRoute =
+  ExpertJournalReviewsJournalReviewIdRouteImport.update({
+    id: '/journal-reviews/$journalReviewId',
+    path: '/journal-reviews/$journalReviewId',
+    getParentRoute: () => ExpertRouteRoute,
+  } as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/users/$userId',
   path: '/users/$userId',
@@ -486,7 +493,6 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
-  '/expert/idea-assessment': typeof ExpertIdeaAssessmentRouteRoute
   '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
   '/moderator/forum': typeof ModeratorForumRouteRoute
   '/moderator/reports': typeof ModeratorReportsRouteRoute
@@ -515,12 +521,14 @@ export interface FileRoutesByFullPath {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/expert/journal-reviews/$journalReviewId': typeof ExpertJournalReviewsJournalReviewIdRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
   '/admin/system-config': typeof AdminSystemConfigIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
+  '/expert/journal-reviews': typeof ExpertJournalReviewsIndexRoute
   '/expert/six-step-config': typeof ExpertSixStepConfigIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
@@ -556,7 +564,6 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
-  '/expert/idea-assessment': typeof ExpertIdeaAssessmentRouteRoute
   '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
   '/moderator/forum': typeof ModeratorForumRouteRoute
   '/moderator/reports': typeof ModeratorReportsRouteRoute
@@ -585,12 +592,14 @@ export interface FileRoutesByTo {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/expert/journal-reviews/$journalReviewId': typeof ExpertJournalReviewsJournalReviewIdRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
   '/admin/system-config': typeof AdminSystemConfigIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/books/$bookId': typeof BooksBookIdIndexRoute
+  '/expert/journal-reviews': typeof ExpertJournalReviewsIndexRoute
   '/expert/six-step-config': typeof ExpertSixStepConfigIndexRoute
   '/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
@@ -631,7 +640,6 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRouteRoute
   '/expert/assignment': typeof ExpertAssignmentRouteRoute
   '/expert/dashboard': typeof ExpertDashboardRouteRoute
-  '/expert/idea-assessment': typeof ExpertIdeaAssessmentRouteRoute
   '/moderator/dashboard': typeof ModeratorDashboardRouteRoute
   '/moderator/forum': typeof ModeratorForumRouteRoute
   '/moderator/reports': typeof ModeratorReportsRouteRoute
@@ -661,12 +669,14 @@ export interface FileRoutesById {
   '/(app)/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/(app)/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/expert/journal-reviews/$journalReviewId': typeof ExpertJournalReviewsJournalReviewIdRoute
   '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/forum/': typeof AdminForumIndexRoute
   '/admin/system-config/': typeof AdminSystemConfigIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/books/$bookId/': typeof BooksBookIdIndexRoute
+  '/expert/journal-reviews/': typeof ExpertJournalReviewsIndexRoute
   '/expert/six-step-config/': typeof ExpertSixStepConfigIndexRoute
   '/(app)/course/learn/$slug': typeof appCourseLearnSlugRouteRoute
   '/(app)/course/quiz/$slug': typeof appCourseQuizSlugRouteRoute
@@ -707,7 +717,6 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
-    | '/expert/idea-assessment'
     | '/moderator/dashboard'
     | '/moderator/forum'
     | '/moderator/reports'
@@ -736,12 +745,14 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
+    | '/expert/journal-reviews/$journalReviewId'
     | '/journals'
     | '/quiz'
     | '/admin/forum'
     | '/admin/system-config'
     | '/admin/users'
     | '/books/$bookId'
+    | '/expert/journal-reviews'
     | '/expert/six-step-config'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
@@ -777,7 +788,6 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
-    | '/expert/idea-assessment'
     | '/moderator/dashboard'
     | '/moderator/forum'
     | '/moderator/reports'
@@ -806,12 +816,14 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
+    | '/expert/journal-reviews/$journalReviewId'
     | '/journals'
     | '/quiz'
     | '/admin/forum'
     | '/admin/system-config'
     | '/admin/users'
     | '/books/$bookId'
+    | '/expert/journal-reviews'
     | '/expert/six-step-config'
     | '/course/learn/$slug'
     | '/course/quiz/$slug'
@@ -851,7 +863,6 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/expert/assignment'
     | '/expert/dashboard'
-    | '/expert/idea-assessment'
     | '/moderator/dashboard'
     | '/moderator/forum'
     | '/moderator/reports'
@@ -881,12 +892,14 @@ export interface FileRouteTypes {
     | '/(app)/games/preliminary-game'
     | '/(app)/games/segmentation-game'
     | '/admin/users/$userId'
+    | '/expert/journal-reviews/$journalReviewId'
     | '/(app)/journals/'
     | '/(app)/quiz/'
     | '/admin/forum/'
     | '/admin/system-config/'
     | '/admin/users/'
     | '/books/$bookId/'
+    | '/expert/journal-reviews/'
     | '/expert/six-step-config/'
     | '/(app)/course/learn/$slug'
     | '/(app)/course/quiz/$slug'
@@ -1142,13 +1155,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModeratorDashboardRouteRouteImport
       parentRoute: typeof ModeratorRouteRoute
     }
-    '/expert/idea-assessment': {
-      id: '/expert/idea-assessment'
-      path: '/idea-assessment'
-      fullPath: '/expert/idea-assessment'
-      preLoaderRoute: typeof ExpertIdeaAssessmentRouteRouteImport
-      parentRoute: typeof ExpertRouteRoute
-    }
     '/expert/dashboard': {
       id: '/expert/dashboard'
       path: '/dashboard'
@@ -1282,6 +1288,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExpertSixStepConfigIndexRouteImport
       parentRoute: typeof ExpertRouteRoute
     }
+    '/expert/journal-reviews/': {
+      id: '/expert/journal-reviews/'
+      path: '/journal-reviews'
+      fullPath: '/expert/journal-reviews'
+      preLoaderRoute: typeof ExpertJournalReviewsIndexRouteImport
+      parentRoute: typeof ExpertRouteRoute
+    }
     '/books/$bookId/': {
       id: '/books/$bookId/'
       path: '/books/$bookId'
@@ -1323,6 +1336,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/journals'
       preLoaderRoute: typeof appJournalsIndexRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    '/expert/journal-reviews/$journalReviewId': {
+      id: '/expert/journal-reviews/$journalReviewId'
+      path: '/journal-reviews/$journalReviewId'
+      fullPath: '/expert/journal-reviews/$journalReviewId'
+      preLoaderRoute: typeof ExpertJournalReviewsJournalReviewIdRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
@@ -1547,16 +1567,19 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 interface ExpertRouteRouteChildren {
   ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
   ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
-  ExpertIdeaAssessmentRouteRoute: typeof ExpertIdeaAssessmentRouteRoute
   ExpertIndexRoute: typeof ExpertIndexRoute
+  ExpertJournalReviewsJournalReviewIdRoute: typeof ExpertJournalReviewsJournalReviewIdRoute
+  ExpertJournalReviewsIndexRoute: typeof ExpertJournalReviewsIndexRoute
   ExpertSixStepConfigIndexRoute: typeof ExpertSixStepConfigIndexRoute
 }
 
 const ExpertRouteRouteChildren: ExpertRouteRouteChildren = {
   ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
   ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
-  ExpertIdeaAssessmentRouteRoute: ExpertIdeaAssessmentRouteRoute,
   ExpertIndexRoute: ExpertIndexRoute,
+  ExpertJournalReviewsJournalReviewIdRoute:
+    ExpertJournalReviewsJournalReviewIdRoute,
+  ExpertJournalReviewsIndexRoute: ExpertJournalReviewsIndexRoute,
   ExpertSixStepConfigIndexRoute: ExpertSixStepConfigIndexRoute,
 }
 

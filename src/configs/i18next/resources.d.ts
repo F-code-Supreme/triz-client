@@ -1884,7 +1884,7 @@ interface Resources {
       "assignments": "Assignments",
       "configuration": "Configuration",
       "dashboard": "Dashboard",
-      "idea_assessment": "Idea Assessment",
+      "journal_reviews": "Journal Reviews",
       "main": "Main",
       "review": "Review",
       "six_step_config": "Six Step Configuration",
