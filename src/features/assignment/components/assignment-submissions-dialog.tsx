@@ -159,7 +159,11 @@ const AssignmentSubmissionsDialog = ({
                   className="flex gap-4 mt-2"
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="pass" id="pass" />
+                    <RadioGroupItem
+                      value="pass"
+                      id="pass"
+                      disabled={submission?.status !== 'EXPERT_PENDING'}
+                    />
                     <Label
                       htmlFor="pass"
                       className="flex items-center gap-2 cursor-pointer"
@@ -169,7 +173,11 @@ const AssignmentSubmissionsDialog = ({
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="fail" id="fail" />
+                    <RadioGroupItem
+                      value="fail"
+                      id="fail"
+                      disabled={submission?.status !== 'EXPERT_PENDING'}
+                    />
                     <Label
                       htmlFor="fail"
                       className="flex items-center gap-2 cursor-pointer"
@@ -186,6 +194,7 @@ const AssignmentSubmissionsDialog = ({
                   Nhận xét
                 </Label>
                 <Textarea
+                  disabled={submission?.status !== 'EXPERT_PENDING'}
                   id="comment"
                   placeholder="Nhập nhận xét của bạn về bài nộp..."
                   value={comment}
