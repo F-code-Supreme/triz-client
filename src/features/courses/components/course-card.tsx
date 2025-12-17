@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 import type { CourseLevel, Course } from '@/features/courses/types';
+import { useTranslation } from 'react-i18next';
 
 interface CourseCardProps {
   course: Course;
@@ -21,6 +22,7 @@ const CourseCard = ({
   isEnrolled = false,
 }: CourseCardProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation('pages.courses');
 
   const getLevelColor = (level?: CourseLevel) => {
     switch (level) {
@@ -64,7 +66,8 @@ const CourseCard = ({
           {/* Course Level */}
           <div className="flex items-center justify-between">
             <Badge className={cn('text-xs', getLevelColor(course.level))}>
-              {course.level || 'Unknown'}
+              {t(`filters.${course.level?.toLowerCase() as string}` as any) ||
+                'Unknown'}
             </Badge>
           </div>
 

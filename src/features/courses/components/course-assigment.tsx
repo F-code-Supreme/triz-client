@@ -37,6 +37,10 @@ import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import useAuth from '@/features/auth/hooks/use-auth';
 
 import type { Content } from '@tiptap/react';
+import { Markdown } from '@/components/markdown/markdown';
+import { useTranslation } from 'react-i18next';
+import { formatDateHour } from '@/utils/date/date';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface CourseAssignmentProps {
   moduleId: string;
@@ -67,6 +71,8 @@ const CourseAssignment = ({
     useSubmitAssignmentMutation();
   const { data: submissionHistory, isLoading: isLoadingHistory } =
     useGetAssignmentSubmissionHistoryQuery(user?.id, assignmentId);
+
+  const { t } = useTranslation('pages.courses');
 
   const [attemptCount, setAttemptCount] = useState(0);
 
@@ -278,7 +284,7 @@ const CourseAssignment = ({
       </Card>
 
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl ">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="w-5 h-5" />
@@ -288,12 +294,18 @@ const CourseAssignment = ({
               View all your previous assignment submissions and their status.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 mt-4">
+          <div className="space-y-2 mt-2 max-h-[80vh] overflow-y-auto">
             {isLoadingHistory ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="text-center">
-                  <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-muted-foreground">Loading history...</p>
+              <div className="py-8 space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="lg:col-span-1 space-y-6">
+                    <Skeleton className="h-10 w-48" />
+                    <Skeleton className="h-24 w-full" />
+                  </div>
+                  <div className="lg:col-span-1 space-y-6">
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-32 w-full" />
+                  </div>
                 </div>
               </div>
             ) : submissionHistory?.content &&
@@ -307,21 +319,23 @@ const CourseAssignment = ({
                           Attempt #{submission.attemptNumber}
                         </CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          Submitted{' '}
-                          {formatDistanceToNow(new Date(submission.createdAt), {
-                            addSuffix: true,
-                          })}
+                          {t('assignments.submission_date')}:{' '}
+                          {formatDateHour(new Date(submission.createdAt))}
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <Badge
-                          variant={
-                            {
-                              APPROVED: 'default',
-                              REJECTED: 'destructive',
-                              PENDING: 'secondary',
-                              AI_PENDING: 'secondary',
-                            }[submission.status] as any
+                          className={
+                            submission.status === 'EXPERT_PENDING'
+                              ? 'bg-blue-100 text-blue-700 hover:bg-blue-100'
+                              : submission.status === 'AI_PENDING'
+                                ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100'
+                                : submission.status === 'APPROVED'
+                                  ? 'bg-green-100 text-green-700 hover:bg-green-100'
+                                  : submission.status === 'AI_REJECTED' ||
+                                      submission.status === 'REJECTED'
+                                    ? 'bg-red-100 text-red-700 hover:bg-red-100'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
                           }
                         >
                           {submission.status}
@@ -343,7 +357,9 @@ const CourseAssignment = ({
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <h4 className="font-medium text-sm mb-2">Your Answer:</h4>
+                      <h4 className="font-medium text-sm mb-2">
+                        {t('assignments.your_answer')}:
+                      </h4>
                       <div className="prose prose-sm max-w-none bg-muted p-4 rounded-lg">
                         <TooltipProvider>
                           <MinimalTiptapEditor
@@ -368,35 +384,109 @@ const CourseAssignment = ({
                         </div>
                       </div>
                     )}
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2 border-t">
-                      {submission.isAiPassed !== null && (
-                        <div className="flex items-center gap-1">
-                          <span>AI Review:</span>
-                          <Badge
-                            variant={
-                              submission.isAiPassed ? 'default' : 'secondary'
-                            }
-                            className="text-xs"
-                          >
-                            {submission.isAiPassed ? 'Passed' : 'Not Passed'}
-                          </Badge>
-                        </div>
-                      )}
-                      {submission.isExpertPassed !== null && (
-                        <div className="flex items-center gap-1">
-                          <span>Expert Review:</span>
-                          <Badge
-                            variant={
-                              submission.isExpertPassed
-                                ? 'default'
-                                : 'secondary'
-                            }
-                            className="text-xs"
-                          >
-                            {submission.isExpertPassed
-                              ? 'Passed'
-                              : 'Not Passed'}
-                          </Badge>
+                    <div className="flex flex-col gap-2 text-xs text-muted-foreground pt-2 border-t">
+                      <div className="flex items-center gap-4">
+                        {submission.isAiPassed !== null && (
+                          <div className="flex items-center gap-1">
+                            <span>{t('assignments.ai_review')}:</span>
+                            <Badge
+                              variant={
+                                submission.isAiPassed ? 'default' : 'secondary'
+                              }
+                              className="text-xs"
+                            >
+                              {submission.isAiPassed ? 'Passed' : 'Not Passed'}
+                            </Badge>
+                          </div>
+                        )}
+                        {submission.isExpertPassed !== null && (
+                          <div className="flex items-center gap-1">
+                            <span>{t('assignments.expert_review')}:</span>
+                            <Badge
+                              variant={
+                                submission.isExpertPassed
+                                  ? 'default'
+                                  : 'secondary'
+                              }
+                              className="text-xs"
+                            >
+                              {submission.isExpertPassed
+                                ? 'Passed'
+                                : 'Not Passed'}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                      {submission.aiAnalysis && (
+                        <div className="mt-2 space-y-3">
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.ai_analysis')}:
+                            </div>
+                            <div>{submission.aiAnalysis.assessmentSummary}</div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.overall_analysis')}
+                            </div>
+                            <div>{submission.aiAnalysis.overallAnalysis}</div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.resoning')}
+                            </div>
+                            <div>{submission.aiAnalysis.reasoning}</div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.criteria_analysis')}
+                            </div>
+                            <div>
+                              <Markdown
+                                content={submission.aiAnalysis.criteriaAnalysis}
+                                className="text-xs"
+                              />
+                            </div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.strengths')}
+                            </div>
+                            {submission.aiAnalysis.strengthsList &&
+                              submission.aiAnalysis.strengthsList.length >
+                                0 && (
+                                <ul className="list-disc ml-5 text-gray-700 mt-1">
+                                  {submission.aiAnalysis.strengthsList.map(
+                                    (item, idx) => (
+                                      <li key={idx}>{item}</li>
+                                    ),
+                                  )}
+                                </ul>
+                              )}
+                          </div>
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.improvements')}
+                            </div>
+
+                            {submission.aiAnalysis.areasForDevelopmentList &&
+                              submission.aiAnalysis.areasForDevelopmentList
+                                .length > 0 && (
+                                <ul className="list-disc ml-5 text-gray-700 mt-1">
+                                  {submission.aiAnalysis.areasForDevelopmentList.map(
+                                    (item, idx) => (
+                                      <li key={idx}>{item}</li>
+                                    ),
+                                  )}
+                                </ul>
+                              )}
+                          </div>
+                          <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                            <div className="font-semibold text-gray-800 mb-1">
+                              {t('assignments.suggested_focus')}
+                            </div>
+                            <div>{submission.aiAnalysis.suggestedFocus}</div>
+                          </div>
                         </div>
                       )}
                     </div>

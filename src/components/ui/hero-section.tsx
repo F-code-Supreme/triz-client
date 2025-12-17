@@ -5,9 +5,11 @@ import { useTranslation } from 'react-i18next';
 import HeroImg from '@/assets/images/Frame 1410086253.png';
 
 import { Button } from './button';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 const HeroSection = () => {
   const { t } = useTranslation('components');
+  const { isAuthenticated } = useAuth();
 
   return (
     <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -68,13 +70,15 @@ const HeroSection = () => {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-              <Button
-                asChild
-                size="lg"
-                className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 text-lg font-medium rounded-lg"
-              >
-                <Link to="/register">{t('hero_section.register')}</Link>
-              </Button>
+              {!isAuthenticated && (
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-4 text-lg font-medium rounded-lg"
+                >
+                  <Link to="/register">{t('hero_section.register')}</Link>
+                </Button>
+              )}
               <Button
                 asChild
                 variant="outline"
