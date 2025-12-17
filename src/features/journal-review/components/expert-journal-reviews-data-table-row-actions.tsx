@@ -1,14 +1,13 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useNavigate } from '@tanstack/react-router';
 import { type Row } from '@tanstack/react-table';
-import { Eye, MessageSquare } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -31,11 +30,6 @@ export const ExpertJournalReviewsDataTableRowActions = <TData,>({
     });
   };
 
-  const handleViewProblem = () => {
-    // Navigate to problem detail in a new tab
-    window.open(`/6-steps/${review.problemId}`, '_blank');
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,11 +45,6 @@ export const ExpertJournalReviewsDataTableRowActions = <TData,>({
         <DropdownMenuItem onClick={handleViewDetails}>
           <MessageSquare className="mr-2 h-4 w-4" />
           Xem chi tiết
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleViewProblem}>
-          <Eye className="mr-2 h-4 w-4" />
-          Xem vấn đề 6 bước
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

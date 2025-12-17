@@ -3,7 +3,6 @@ import type {
   ReviewStatus,
   RootReviewWithTimestamp,
 } from '../../types';
-import type { Response } from '@/types';
 
 // Payload types for mutations
 
@@ -13,7 +12,7 @@ export interface CreateRootReviewPayload {
   content: string;
 }
 
-export type CreateRootReviewResponse = Response<RootReviewWithTimestamp>;
+export type CreateRootReviewResponse = RootReviewWithTimestamp;
 
 // Create Child Review
 export interface CreateChildReviewPayload {
@@ -23,7 +22,7 @@ export interface CreateChildReviewPayload {
   rating?: number;
 }
 
-export type CreateChildReviewResponse = Response<ChildReviewWithTimestamp>;
+export type CreateChildReviewResponse = ChildReviewWithTimestamp;
 
 // Patch/Update Review
 export interface PatchReviewPayload {
@@ -35,12 +34,10 @@ export interface PatchReviewPayload {
   status?: ReviewStatus;
 }
 
-export type PatchReviewResponse = Response<ChildReviewWithTimestamp>;
+export type PatchReviewResponse = ChildReviewWithTimestamp;
 
 // Delete Review
 export interface DeleteReviewPayload {
   userId: string;
   problemReviewId: string;
 }
-
-export type DeleteReviewResponse = Response<null>;

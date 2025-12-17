@@ -66,11 +66,11 @@ export const ExpertJournalReviewsTable = () => {
   );
 
   const reviews = useMemo(() => {
-    return reviewsData?.data?.content || [];
+    return reviewsData?.content || [];
   }, [reviewsData]);
 
   const totalPages = useMemo(() => {
-    return reviewsData?.data?.page?.totalPages || 0;
+    return reviewsData?.page?.totalPages || 0;
   }, [reviewsData]);
 
   const table = useReactTable({

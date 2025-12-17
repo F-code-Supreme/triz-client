@@ -9,7 +9,6 @@ import type {
   CreateRootReviewPayload,
   CreateRootReviewResponse,
   DeleteReviewPayload,
-  DeleteReviewResponse,
   PatchReviewPayload,
   PatchReviewResponse,
 } from './types';
@@ -120,7 +119,7 @@ export const useDeleteReviewMutation = () => {
   return useMutation({
     mutationFn: async (payload: DeleteReviewPayload) => {
       const { userId, problemReviewId } = payload;
-      const response = await _request.delete<DeleteReviewResponse>(
+      const response = await _request.delete(
         `/users/${userId}/problem-reviews/${problemReviewId}`,
       );
       return response.data;

@@ -2,22 +2,21 @@ import type {
   ChildReviewWithTimestamp,
   RootReviewWithTimestamp,
 } from '../../types';
-import type { PaginatedResponse, Response } from '@/types';
+import type { PaginatedResponse } from '@/types';
 
 // Response types for API calls
-export type GetRootReviewsByProblemResponse = Response<
-  PaginatedResponse<RootReviewWithTimestamp>
->;
+export type GetRootReviewsByProblemResponse =
+  PaginatedResponse<RootReviewWithTimestamp>;
 
-export type GetRootReviewsByUserResponse = Response<
-  PaginatedResponse<RootReviewWithTimestamp>
->;
+export type GetRootReviewsByUserResponse =
+  PaginatedResponse<RootReviewWithTimestamp>;
 
-export type GetChildReviewsByRootResponse = Response<
-  PaginatedResponse<ChildReviewWithTimestamp>
->;
+export type GetChildReviewsByRootResponse =
+  PaginatedResponse<ChildReviewWithTimestamp>;
 
-export type GetReviewByIdResponse = Response<ChildReviewWithTimestamp>;
+export type GetReviewByIdResponse = RootReviewWithTimestamp & {
+  childReviews?: ChildReviewWithTimestamp[];
+};
 
 // Search payload for root reviews
 export interface SearchRootReviewsPayload {
@@ -25,12 +24,14 @@ export interface SearchRootReviewsPayload {
   statuses?: string[];
 }
 
-export type SearchRootReviewsResponse = Response<
-  PaginatedResponse<RootReviewWithTimestamp>
->;
+export type SearchRootReviewsResponse =
+  PaginatedResponse<RootReviewWithTimestamp>;
 
-// Search payload for child reviews (placeholder for future implementation)
+// Search payload for child reviews
 export interface SearchChildReviewsPayload {
-  stepNumber?: number;
+  stepNumber?: number | null;
   // Add more fields as needed
 }
+
+export type SearchChildReviewsResponse =
+  PaginatedResponse<ChildReviewWithTimestamp>;

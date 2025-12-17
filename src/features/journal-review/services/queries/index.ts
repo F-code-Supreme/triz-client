@@ -9,6 +9,8 @@ import type {
   GetReviewByIdResponse,
   GetRootReviewsByProblemResponse,
   GetRootReviewsByUserResponse,
+  SearchChildReviewsPayload,
+  SearchChildReviewsResponse,
   SearchRootReviewsPayload,
   SearchRootReviewsResponse,
 } from './types';
@@ -216,19 +218,50 @@ export const useSearchRootReviewsQuery = (
 };
 
 /**
- * Search all child reviews (placeholder - not yet implemented)
- * This function is initiated but not implemented yet as per requirements
+ * Search all child reviews (grouped by stepNumber if specified)
+ * POST /problem-reviews/{problemReviewId}/reviews/search
  * @param problemReviewId - The ID of the parent problem review
+ * @param payload - Search criteria (stepNumber: 1-6 or null for all)
+ * @param pagination - Pagination state
+ * @param sorting - Sorting state
  */
-export const useSearchChildReviewsQuery = (problemReviewId?: string) => {
+export const useSearchChildReviewsQuery = (
+  problemReviewId: string | undefined,
+  payload: SearchChildReviewsPayload,
+  pagination: PaginationState,
+  sorting: SortingState,
+) => {
+  const _request = useAxios();
   return useQuery({
-    queryKey: [JournalReviewKeys.SearchChildReviewsQuery, problemReviewId],
+    queryKey: [
+      JournalReviewKeys.SearchChildReviewsQuery,
+      problemReviewId,
+      payload,
+      pagination,
+      sorting,
+    ],
     queryFn: problemReviewId
-      ? async () => {
-          // TODO: Implement this endpoint
-          throw new Error('Not implemented yet');
+      ? async ({ signal }) => {
+          const response = await _request.post<SearchChildReviewsResponse>(
+            `/problem-reviews/${problemReviewId}/reviews/search`,
+            payload,
+            {
+              params: {
+                page: pagination.pageIndex,
+                size: pagination.pageSize,
+                sort:
+                  sorting.length > 0
+                    ? sorting
+                        .map(({ id, desc }) => `${id},${desc ? 'desc' : 'asc'}`)
+                        .join('&')
+                    : undefined,
+              },
+              signal,
+            },
+          );
+          return response.data;
         }
       : skipToken,
-    enabled: false, // Disabled until implemented
+    enabled: !!problemReviewId,
   });
 };

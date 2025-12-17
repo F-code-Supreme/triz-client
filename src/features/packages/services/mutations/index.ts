@@ -6,7 +6,6 @@ import { PackageKeys } from '../queries/keys';
 
 import type { CreatePackagePayload, UpdatePackagePayload } from './types';
 import type { Package } from '../../types';
-import type { Response } from '@/types';
 
 // ADMIN
 export const useCreatePackageMutation = () => {
@@ -14,10 +13,7 @@ export const useCreatePackageMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: CreatePackagePayload) => {
-      const response = await _request.post<Response<Package>>(
-        '/packages',
-        payload,
-      );
+      const response = await _request.post<Package>('/packages', payload);
       return response.data;
     },
     onSuccess: () => {
@@ -34,10 +30,7 @@ export const useUpdatePackageMutation = () => {
   return useMutation({
     mutationFn: async (payload: UpdatePackagePayload) => {
       const { id, ...data } = payload;
-      const response = await _request.patch<Response<Package>>(
-        `/packages/${id}`,
-        data,
-      );
+      const response = await _request.patch<Package>(`/packages/${id}`, data);
       return response.data;
     },
     onSuccess: () => {
@@ -72,7 +65,7 @@ export const useRestorePackageMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (packageId: string) => {
-      const response = await _request.patch<Response<Package>>(
+      const response = await _request.patch<Package>(
         `/packages/${packageId}/restore`,
       );
       return response.data;
