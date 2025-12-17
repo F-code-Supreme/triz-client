@@ -1068,6 +1068,10 @@ interface Resources {
         "user_information": "User Information"
       },
       "edit_user": "Edit User",
+      "filters": {
+        "role": "Role",
+        "status": "Status"
+      },
       "form": {
         "avatar": "Avatar",
         "create_user": "Create User",
@@ -1080,6 +1084,7 @@ interface Resources {
         "role": "Role",
         "role_admin": "Admin",
         "role_expert": "Expert",
+        "role_moderator": "Moderator",
         "role_user": "User",
         "status": "Status",
         "status_active": "Active",
@@ -1088,6 +1093,7 @@ interface Resources {
       },
       "new_user": "New User",
       "no_users": "No users found",
+      "search_placeholder": "Search by email or full name...",
       "title": "Users",
       "view_details": "View Details"
     }

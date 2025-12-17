@@ -700,9 +700,14 @@
     "description": "Quản lý người dùng hệ thống và xem chi tiết của họ",
     "new_user": "Người dùng mới",
     "no_users": "Không tìm thấy người dùng",
+    "search_placeholder": "Tìm theo email hoặc tên...",
     "view_details": "Xem chi tiết",
     "edit_user": "Chỉnh sửa người dùng",
     "create_user": "Tạo người dùng mới",
+    "filters": {
+      "role": "Vai trò",
+      "status": "Trạng thái"
+    },
     "form": {
       "avatar": "Ảnh đại diện",
       "email": "Email",
@@ -715,6 +720,7 @@
       "role_user": "Người dùng",
       "role_admin": "Quản trị viên",
       "role_expert": "Chuyên gia",
+      "role_moderator": "Kiểm duyệt viên",
       "status": "Trạng thái",
       "status_active": "Hoạt động",
       "status_inactive": "Không hoạt động",
