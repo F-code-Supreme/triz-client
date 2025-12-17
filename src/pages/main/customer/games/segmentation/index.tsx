@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, RefreshCw, Trophy, Star, ArrowRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
 import { GamesEnumId } from '@/features/game/services/mutations/enum';

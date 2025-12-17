@@ -6,7 +6,6 @@ import {
   MessageSquare,
   MoreHorizontal,
   Repeat2,
-  Share2,
   Trash2,
 } from 'lucide-react';
 import React from 'react';
