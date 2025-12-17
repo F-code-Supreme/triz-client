@@ -5,6 +5,7 @@ import {
   Heart,
   MessageSquare,
   MoreHorizontal,
+  Repeat2,
   Share2,
   Trash2,
 } from 'lucide-react';
@@ -645,15 +646,13 @@ export const PostCard: React.FC<PostCardProps> = ({
                       <MessageSquare /> <span>Bình luận</span>
                     </div>
                   </button>
-                </div>
-                <div className="flex items-center">
                   <button
                     aria-label="Share"
                     onClick={handleRepost}
-                    type="button"
+                    type="button" 
                   >
                     <div className="flex items-center gap-2">
-                      <Share2 /> <span>Đăng lại</span>
+                      <Repeat2 /> <span>Đăng lại</span>
                     </div>
                   </button>
                 </div>

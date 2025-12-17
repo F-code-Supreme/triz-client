@@ -1,7 +1,7 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { ChatBubbleIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Row } from '@tanstack/react-table';
-import { BookDashed, Trash2 } from 'lucide-react';
+import { MoreHorizontalIcon, PenIcon, Trash, Trash2 } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
@@ -25,12 +25,15 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import { Progress } from '@/components/ui/progress';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   useDeleteForumPostMutation,
@@ -44,6 +47,7 @@ import {
   useGetForumPostChildrenReplyByIdQuery,
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
+import { useUploadFileMutation } from '@/features/media/services/mutations';
 
 import type { Comment } from '@/features/forum/types';
 
@@ -59,17 +63,23 @@ export const ForumPostsDataTableRowActions = <TData,>({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const deleteForumPost = useDeleteForumPostMutation();
   const updateForumPostMutation = useUpdateForumPostMutation();
+  const uploadMutation = useUploadFileMutation();
 
   // reply management (admin)
   const [isRepliesOpen, setIsRepliesOpen] = React.useState(false);
   const queryClient = useQueryClient();
   const deleteReplyComment = useDeleteReplyCommentMutation();
   const createReplyComment = useCreateReplyCommentMutation();
+  const [confirmDeleteReplyId, setConfirmDeleteReplyId] = React.useState<
+    string | null
+  >(null);
 
   // Add editable local state
   const [postTitle, setPostTitle] = React.useState<string>('');
   const [postImage, setPostImage] = React.useState<string>('');
   const [answer, setAnswer] = React.useState<string>('');
+  const [titleError, setTitleError] = React.useState<string | null>(null);
+  const [contentError, setContentError] = React.useState<string | null>(null);
 
   // Populate fields when dialog opens
   React.useEffect(() => {
@@ -78,6 +88,8 @@ export const ForumPostsDataTableRowActions = <TData,>({
       setPostImage(forumPost.imgUrl ?? forumPost.image ?? '');
       // Prefer plain content string if available; fallback to empty string
       setAnswer(forumPost.content ?? forumPost.body ?? '');
+      setTitleError(null);
+      setContentError(null);
     }
   }, [isUpdateOpen, forumPost]);
 
@@ -110,13 +122,23 @@ export const ForumPostsDataTableRowActions = <TData,>({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => handleDeleteReply(c.id)}
-              >
-                Xóa
-              </Button>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" aria-label="Open menu">
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-40" align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={() => setConfirmDeleteReplyId(c.id)}
+                    >
+                      <Trash className="mr-2 h-4 w-4" />
+                      Xóa
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         ))}
@@ -128,28 +150,6 @@ export const ForumPostsDataTableRowActions = <TData,>({
     deleteForumPost.mutate(forumPost.id, {
       onSuccess: () => {
         toast.success('Đã xóa bài đăng thành công.');
-      },
-    });
-  };
-
-  const handleDeleteReply = (replyId: string) => {
-    deleteReplyComment.mutate(replyId, {
-      onSuccess: () => {
-        toast.success('Đã xóa bình luận thành công.');
-        queryClient.invalidateQueries({
-          queryKey: [ForumKeys.GetForumPostReplies, forumPost.id],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [ForumKeys.GetForumPostsByAdminQuery],
-        });
-        queryClient.invalidateQueries({
-          predicate: (query) =>
-            Array.isArray(query.queryKey) &&
-            query.queryKey[0] === ForumKeys.GetForumPostChildrenReplies,
-        });
-      },
-      onError: () => {
-        toast.error('Xóa bình luận thất bại.');
       },
     });
   };
@@ -209,16 +209,43 @@ export const ForumPostsDataTableRowActions = <TData,>({
 
   // Update handler
   const handleUpdate = () => {
+    const title = postTitle.trim();
+    const content = answer ?? '';
+    const plain = content
+      .replace(/<[^>]*>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .trim();
+
+    if (!title) {
+      setTitleError('Tiêu đề là bắt buộc');
+      return;
+    }
+    if (title.length < 3) {
+      setTitleError('Tiêu đề phải có ít nhất 3 ký tự');
+      return;
+    }
+    if (!plain) {
+      setContentError('Nội dung là bắt buộc');
+      return;
+    }
+    if (plain.length < 10) {
+      setContentError('Nội dung phải có ít nhất 10 ký tự');
+      return;
+    }
+
     const payload = {
       postId: forumPost.id,
-      title: postTitle.trim(),
-      content: answer ?? '',
+      title,
+      content,
       imgUrl: postImage ?? '',
     };
+
     updateForumPostMutation.mutate(payload, {
       onSuccess: () => {
         toast.success('Cập nhật bài đăng thành công.');
         setIsUpdateOpen(false);
+        setTitleError(null);
+        setContentError(null);
       },
       onError: (err) => {
         toast.error(
@@ -239,16 +266,15 @@ export const ForumPostsDataTableRowActions = <TData,>({
             className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
           >
             <DotsHorizontalIcon className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
-            <BookDashed className="mr-2 h-4 w-4" />
+            <PenIcon className="mr-2 h-4 w-4" />
             Chỉnh sửa
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsRepliesOpen(true)}>
-            <BookDashed className="mr-2 h-4 w-4" />
+            <ChatBubbleIcon className="mr-2 h-4 w-4" />
             Quản lý bình luận
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -289,33 +315,82 @@ export const ForumPostsDataTableRowActions = <TData,>({
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Edit forum post update dialog */}
       <Dialog open={isUpdateOpen} onOpenChange={setIsUpdateOpen}>
-        <DialogContent className="max-w-3xl h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Chỉnh sửa bài viết</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
-            <div>
-              <label className="text-sm text-slate-600">Tiêu đề</label>
+            <div className="grid gap-2">
+              <Label
+                htmlFor="title"
+                className="flex items-center justify-between"
+              >
+                <span>Tiêu đề {<span className="text-red-500">*</span>} </span>
+                <span className="text-xs text-gray-400">
+                  {postTitle.length}/200
+                </span>{' '}
+              </Label>
               <Input
                 value={postTitle}
-                onChange={(e) =>
-                  setPostTitle((e.target as HTMLInputElement).value)
-                }
+                onChange={(e) => {
+                  const v = (e.target as HTMLInputElement).value;
+                  setPostTitle(v);
+                  if (v.trim().length < 3) {
+                    setTitleError('Tiêu đề phải có ít nhất 3 ký tự');
+                  } else {
+                    setTitleError(null);
+                  }
+                }}
                 placeholder="Tiêu đề bài viết"
+                aria-invalid={!!titleError}
               />
+              {titleError && (
+                <p className="text-xs text-destructive mt-1">{titleError}</p>
+              )}
             </div>
 
             <div>
-              <label className="text-sm text-slate-600">Ảnh (URL)</label>
+              <label className="text-sm text-slate-600">Ảnh bài viết</label>
+
               <Input
-                value={postImage}
-                onChange={(e) =>
-                  setPostImage((e.target as HTMLInputElement).value)
-                }
-                placeholder="https://... (để trống nếu không có)"
+                id="picture"
+                type="file"
+                accept="image/*"
+                placeholder="Chọn ảnh cho bài viết"
+                onChange={(e) => {
+                  const file = (e.target as HTMLInputElement).files?.[0];
+                  if (!file) return;
+                  uploadMutation.mutate(
+                    { file },
+                    {
+                      onSuccess: (res: {
+                        flag: boolean;
+                        code: number;
+                        data: string;
+                      }) => {
+                        if (res.code === 200) {
+                          setPostImage(res.data);
+                        }
+                        toast.success('Tải ảnh lên thành công');
+                      },
+                      onError: () => {
+                        toast.error('Tải ảnh lên thất bại. Vui lòng thử lại.');
+                      },
+                    },
+                  );
+                }}
+                disabled={uploadMutation.isPending}
               />
+              {uploadMutation.progress > 0 && uploadMutation.isPending && (
+                <Progress
+                  value={uploadMutation.progress}
+                  className="w-full h-[10px] mt-2"
+                />
+              )}
+
               {postImage ? (
                 <div className="mt-2 w-full h-60 overflow-hidden rounded-md border bg-white">
                   <img
@@ -330,15 +405,40 @@ export const ForumPostsDataTableRowActions = <TData,>({
               ) : null}
             </div>
 
-            <div>
-              <label className="text-sm text-slate-600">Nội dung</label>
+            <div className="grid gap-2">
+              <Label
+                htmlFor="content"
+                className="flex items-center justify-between"
+              >
+                <span>Nội dung {<span className="text-red-500">*</span>} </span>
+              </Label>
 
               <TooltipProvider>
                 <MinimalTiptapEditor
                   key={forumPost.id}
-                  value={forumPost.content}
+                  output="html"
+                  value={answer}
+                  onChange={(v) => {
+                    const newVal =
+                      typeof v === 'string' ? v : JSON.stringify(v);
+                    setAnswer(newVal);
+                    const plain = newVal
+                      .replace(/<[^>]*>/g, '')
+                      .replace(/&nbsp;/g, ' ')
+                      .trim();
+                    if (plain.length < 10) {
+                      setContentError('Nội dung phải có ít nhất 10 ký tự');
+                    } else {
+                      setContentError(null);
+                    }
+                  }}
                   className="max-h-[500px] overflow-y-auto border rounded-md"
                 />
+                {contentError && (
+                  <p className="text-xs text-destructive mt-1">
+                    {contentError}
+                  </p>
+                )}
               </TooltipProvider>
             </div>
 
@@ -350,7 +450,13 @@ export const ForumPostsDataTableRowActions = <TData,>({
                 onClick={handleUpdate}
                 disabled={
                   !postTitle.trim() ||
-                  !(answer && answer.toString().trim()) ||
+                  !!titleError ||
+                  !answer ||
+                  !answer
+                    .replace(/<[^>]*>/g, '')
+                    .replace(/&nbsp;/g, ' ')
+                    .trim().length ||
+                  !!contentError ||
                   updateForumPostMutation.isPending
                 }
               >
@@ -360,6 +466,8 @@ export const ForumPostsDataTableRowActions = <TData,>({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Replies management dialog */}
       <Dialog open={isRepliesOpen} onOpenChange={setIsRepliesOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
@@ -396,13 +504,23 @@ export const ForumPostsDataTableRowActions = <TData,>({
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleDeleteReply(r.id)}
-                        >
-                          Xóa
-                        </Button>
+                        <DropdownMenu modal={false}>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" aria-label="Open menu">
+                              <MoreHorizontalIcon />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-40" align="end">
+                            <DropdownMenuGroup>
+                              <DropdownMenuItem
+                                onClick={() => setConfirmDeleteReplyId(r.id)}
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Xóa
+                              </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
 
@@ -433,24 +551,6 @@ export const ForumPostsDataTableRowActions = <TData,>({
               </div>
             )}
           </div>
-          <div className="pt-2">
-            <div className="text-sm text-slate-600">Tạo Bình luận mới</div>
-            <div className="mt-2 flex gap-2">
-              <Input
-                value={replyText}
-                onChange={(e) =>
-                  setReplyText((e.target as HTMLInputElement).value)
-                }
-                placeholder="Bình luận bài viết này..."
-              />
-              <Button
-                onClick={() => handleCreateReply(undefined)}
-                disabled={!replyText.trim()}
-              >
-                Gửi
-              </Button>
-            </div>
-          </div>
           <div className="flex justify-end mt-4">
             <Button variant="ghost" onClick={() => setIsRepliesOpen(false)}>
               Đóng
@@ -458,6 +558,59 @@ export const ForumPostsDataTableRowActions = <TData,>({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Confirm delete reply dialog */}
+      <AlertDialog
+        open={!!confirmDeleteReplyId}
+        onOpenChange={(open) => {
+          if (!open) setConfirmDeleteReplyId(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xác nhận xóa bình luận</AlertDialogTitle>
+            <AlertDialogDescription>
+              Bạn có chắc chắn muốn xóa bình luận này? Hành động không thể hoàn
+              tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteReplyComment.isPending}>
+              Hủy
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (!confirmDeleteReplyId) return;
+                deleteReplyComment.mutate(confirmDeleteReplyId, {
+                  onSuccess: () => {
+                    toast.success('Đã xóa bình luận thành công.');
+                    queryClient.invalidateQueries({
+                      queryKey: [ForumKeys.GetForumPostReplies, forumPost.id],
+                    });
+                    queryClient.invalidateQueries({
+                      queryKey: [ForumKeys.GetForumPostsByAdminQuery],
+                    });
+                    queryClient.invalidateQueries({
+                      predicate: (query) =>
+                        Array.isArray(query.queryKey) &&
+                        query.queryKey[0] ===
+                          ForumKeys.GetForumPostChildrenReplies,
+                    });
+                    setConfirmDeleteReplyId(null);
+                  },
+                  onError: () => {
+                    toast.error('Xóa bình luận thất bại.');
+                  },
+                });
+              }}
+              disabled={deleteReplyComment.isPending}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteReplyComment.isPending ? 'Đang xóa...' : 'Xóa'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

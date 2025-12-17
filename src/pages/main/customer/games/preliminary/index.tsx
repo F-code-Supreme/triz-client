@@ -271,7 +271,6 @@ const PreliminaryGamePage = () => {
       },
       {
         onSuccess: () => {
-          toast.success('Điểm số đã được cập nhật!');
           queryClient.invalidateQueries({
             queryKey: [
               GameKeys.GetGameLeaderboardById,

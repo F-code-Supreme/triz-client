@@ -183,10 +183,14 @@ const StepBasic: React.FC<Props> = ({
   const validate = () => {
     const e: Errors = {};
     if (!title.trim()) e.title = 'Tiêu đề là bắt buộc';
+    else if (title.trim().length >= 255)
+      e.title = 'Tiêu đề không được vượt quá 255 ký tự';
     if (!description.trim()) e.description = 'Mô tả ngắn là bắt buộc';
+    else if (description.trim().length >= 255)
+      e.description = 'Mô tả ngắn không được vượt quá 255 ký tự';
     if (!thumbnailUrl.trim()) e.thumbnail = 'Ảnh đại diện là bắt buộc';
     if (!(price > 0)) e.price = 'Giá phải lớn hơn 0';
-    if (dealPrice > 0 && dealPrice >= price) {
+    if (dealPrice > 0 && dealPrice > price) {
       e.dealPrice = 'Giá khuyến mãi phải nhỏ hơn giá gốc';
     }
     setLocalErrors(e);
@@ -199,7 +203,6 @@ const StepBasic: React.FC<Props> = ({
     const payload = {
       title: title.trim(),
       description: description.trim(),
-      shortDescription: description.trim(),
       durationInMinutes,
       level,
       price,
@@ -258,14 +261,14 @@ const StepBasic: React.FC<Props> = ({
         )}
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
         {/* Thumbnail */}
-        <div className="col-span-1">
+        <div className="col-span-1 h-full">
           <label className="block text-sm font-semibold text-gray-700">
             Ảnh đại diện khóa học <span className="text-red-500">*</span>
           </label>
 
-          <div className="mt-1 flex items-center gap-2 ">
+          <div className="mt-1 flex items-center gap-2 h-[300px]">
             <FileUpload
               value={coverFiles}
               onValueChange={(files) => {
@@ -293,11 +296,11 @@ const StepBasic: React.FC<Props> = ({
                   }
                 }
               }}
-              className="w-full "
+              className="w-full h-full"
               accept="image/*"
               maxFiles={1}
             >
-              <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
+              <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6 h-full">
                 {thumbnailUrl ? (
                   <div className="relative mt-2 w-full h-60 overflow-hidden rounded-md border bg-white group">
                     <img
@@ -335,7 +338,7 @@ const StepBasic: React.FC<Props> = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center">
+                  <div className="text-center h">
                     <div className="text-sm font-medium text-muted-foreground">
                       Kéo & thả ảnh vào đây để tải lên
                     </div>
@@ -361,15 +364,20 @@ const StepBasic: React.FC<Props> = ({
         </div>
 
         {/* Title + Description + meta */}
-        <div className="md:col-span-2 space-y-4">
+        <div className="md:col-span-2 space-y-4 h-full">
           <div>
-            <label className="block text-sm font-semibold text-gray-700">
-              Tiêu đề khóa học <span className="text-red-500">*</span>
+            <label className="flex items-center justify-between text-sm font-semibold text-gray-700">
+              <span>
+                Tiêu đề khóa học <span className="text-red-500">*</span>
+              </span>
+              <span className="text-xs text-gray-400">{title.length}/200</span>
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              maxLength={200}
+              minLength={3}
               className="mt-1 block w-full rounded-md border px-3 py-2 "
               placeholder="Nhập tiêu đề khóa học"
               disabled={loading}
@@ -382,12 +390,18 @@ const StepBasic: React.FC<Props> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700">
-              Mô tả ngắn <span className="text-red-500">*</span>
+            <label className="flex items-center justify-between text-sm font-semibold text-gray-700">
+              <span>
+                Mô tả khóa học <span className="text-red-500">*</span>
+              </span>
+              <span className="text-xs text-gray-400">
+                {description.length}/254
+              </span>{' '}
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              maxLength={254}
               rows={2}
               className="mt-1 block w-full rounded-md border px-3 py-2"
               placeholder="Mô tả ngắn cho khóa học"
@@ -473,6 +487,7 @@ const StepBasic: React.FC<Props> = ({
                 suffix=" Ƶ"
                 placeholder="Nhập giá ưu đãi"
                 disabled={loading}
+                disableIncrement={dealPrice >= price}
               />
               {localErrors.dealPrice && (
                 <p className="text-sm text-red-600 mt-2">
