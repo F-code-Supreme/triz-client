@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
+import { formatTriziliumShort } from '@/utils';
 
 import type {
   Transaction,
@@ -106,24 +107,10 @@ export const createAdminTransactionsColumns = (
           }
         >
           {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
-          {amount.toLocaleString()} VND
+          {formatTriziliumShort(amount)}
         </span>
       );
     },
-  }),
-
-  columnHelper.accessor('provider', {
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={t('transactions.columns.provider')}
-      />
-    ),
-    cell: (info) => (
-      <Badge variant="outline" className="capitalize">
-        {info.getValue()?.toLowerCase() || 'TRIZ'}
-      </Badge>
-    ),
   }),
 
   columnHelper.accessor('status', {
@@ -217,24 +204,10 @@ export const useTransactionsColumns = () => {
               }
             >
               {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
-              {amount.toLocaleString()} VND
+              {formatTriziliumShort(amount)}
             </span>
           );
         },
-      }),
-
-      columnHelper.accessor('provider', {
-        header: ({ column }) => (
-          <DataTableColumnHeader
-            column={column}
-            title={t('transactions.columns.provider')}
-          />
-        ),
-        cell: (info) => (
-          <Badge variant="outline" className="capitalize">
-            {info.getValue()?.toLowerCase() || 'TRIZ'}
-          </Badge>
-        ),
       }),
 
       columnHelper.accessor('status', {
