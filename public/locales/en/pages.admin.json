@@ -201,6 +201,8 @@
         "milestone_count_required": "Milestone count is required for BOOK_MILESTONE",
         "milestone_count_description": "Number of books required to unlock this achievement"
       },
+      "upload_icon_image": "Upload Package Icon Image",
+      "upload_image": "Upload Icon Image",
       "cancel": "Cancel",
       "saving": "Saving...",
       "update": "Update",
@@ -559,7 +561,9 @@
       "add_feature": "Add Feature",
       "cancel": "Cancel",
       "update_package": "Update Package",
-      "create_package": "Create Package"
+      "create_package": "Create Package",
+      "upload_icon_image": "Upload Package Icon Image",
+      "upload_image": "Upload Icon Image"
     },
     "delete_dialog": {
       "title": "Delete Package",

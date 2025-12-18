@@ -48,7 +48,6 @@ export const AssignmentsDataTableRowActions = <TData,>({
             <BookDashed className="mr-2 h-4 w-4" />
             Chi tiết bài
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
         </DropdownMenuContent>
       </DropdownMenu>
 

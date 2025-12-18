@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { AssignmentsDataTableRowActions } from '@/features/assignment/components/assignments-data-table-row-actions';
 
 import type { AssignmentSubmissionExpertReview } from '@/features/assignment/services/queries/types';
+import { formatDateHour } from '@/utils/date/date';
 
 export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
   [
@@ -72,7 +73,17 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
             }
           >
-            {status}
+            {status === 'EXPERT_PENDING'
+              ? 'Chờ chuyên gia đánh giá'
+              : status === 'AI_PENDING'
+                ? 'Chờ AI đánh giá'
+                : status === 'APPROVED'
+                  ? 'Đã duyệt'
+                  : status === 'AI_REJECTED'
+                    ? 'AI từ chối'
+                    : status === 'REJECTED'
+                      ? 'Chuyên gia từ chối'
+                      : 'Không xác định'}
           </Badge>
         );
       },
@@ -91,11 +102,7 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
 
         return (
           <div className="text-sm text-gray-600">
-            {new Date(date).toLocaleDateString('vi-VN', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })}
+            {formatDateHour(new Date(date))}
           </div>
         );
       },
@@ -111,11 +118,7 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
 
         return (
           <div className="text-sm text-gray-600">
-            {new Date(date).toLocaleDateString('vi-VN', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })}
+            {formatDateHour(new Date(date))}
           </div>
         );
       },

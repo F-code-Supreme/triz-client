@@ -559,7 +559,9 @@
       "add_feature": "Thêm tính năng",
       "cancel": "Hủy",
       "update_package": "Cập nhật gói",
-      "create_package": "Tạo gói"
+      "create_package": "Tạo gói",
+      "upload_icon_image": "Tải lên hình ảnh biểu tượng gói đăng ký",
+      "upload_image": "Tải lên hình ảnh biểu tượng"
     },
     "delete_dialog": {
       "title": "Xóa gói",

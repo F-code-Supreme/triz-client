@@ -65,6 +65,7 @@ export const useCourseProgress = ({
         const response = await _request.get<{ isCompleted: boolean }>(
           `/module/${moduleId}/progress`,
         );
+        console.log('Fetched module progress:', response.data);
         return response.data;
       },
       enabled: !!moduleId,
@@ -97,8 +98,12 @@ export const useCourseProgress = ({
     const map = new Map<string, boolean>();
     moduleIds.forEach((moduleId, index) => {
       const progress = moduleProgressQueries[index]?.data;
+      console.log('Module Progress:', moduleId, progress);
+      console.log('moduleProgressQueries', moduleProgressQueries);
       map.set(moduleId, progress?.isCompleted || false);
     });
+
+    console.log('Module Progress Map:', map);
     return map;
   }, [moduleIds, moduleProgressQueries]);
 

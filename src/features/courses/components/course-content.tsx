@@ -28,6 +28,8 @@ import {
   VideoPlayerVolumeRange,
 } from '@/components/ui/shadcn-io/video-player';
 import { useMarkLessonAsCompletedMutation } from '@/features/lesson/services/mutations';
+import { toast } from 'sonner';
+import { useGetLessonProgressQuery } from '@/features/lesson/services/queries';
 
 interface CourseContentProps {
   item: ModuleContentItem | null;
@@ -41,6 +43,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
   const markLessonAsCompletedMutation = useMarkLessonAsCompletedMutation(
     lessonId || '',
   );
+  const { data: lessonProgress } = useGetLessonProgressQuery(lessonId || '');
 
   if (!item) {
     return (
@@ -95,7 +98,8 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
           <div className="space-y-6">
             {/* Video Player */}
             {isVideo && (
-              <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
+              // <div className="relative aspect-video rounded-lg overflow-hidden">
+              <div className="relative w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-5xl aspect-video mx-auto bg-black rounded-lg overflow-hidden">
                 {isVideoLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-muted">
                     <div className="text-center">
@@ -104,14 +108,6 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                     </div>
                   </div>
                 )}
-                {/* <video
-                  className="w-full h-full"
-                  controls
-                  onLoadedData={() => setIsVideoLoading(false)}
-                >
-                  <source src={lessonData.videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video> */}
 
                 <VideoPlayer>
                   <VideoPlayerContent
@@ -144,29 +140,24 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
               </TooltipProvider>
             )}
 
-            {/* {!isVideo && !isPDF && (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="prose prose-slate max-w-none">
-                    <p className="text-muted-foreground">
-                      Material URL: {lessonData.materialUrl}
-                    </p>
-                    <a
-                      href={lessonData.materialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      Open Material
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            )} */}
-
-            <div className="text-right">
-              <Button onClick={() => markLessonAsCompletedMutation.mutate()}>
-                Đã hoàn thành
+            <div className="text-left">
+              <Button
+                onClick={async () => {
+                  try {
+                    await markLessonAsCompletedMutation.mutateAsync();
+                    toast.success('Đã đánh dấu hoàn thành bài học!');
+                  } catch (error: any) {
+                    toast.error(
+                      error?.response?.data?.message ||
+                        'Có lỗi xảy ra khi đánh dấu hoàn thành. Vui lòng thử lại.',
+                    );
+                  }
+                }}
+                disabled={lessonProgress?.isCompleted}
+              >
+                {lessonProgress?.isCompleted
+                  ? 'Bài học đã hoàn thành'
+                  : 'Xác nhận hoàn thành'}
               </Button>
             </div>
           </div>

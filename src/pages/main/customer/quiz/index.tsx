@@ -338,17 +338,16 @@ const QuizListPage = () => {
                   return (
                     <Card
                       key={quiz.id}
-                      className="group overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer h-fit"
+                      className="cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                      onClick={() => setSelectedQuizId(quiz.id)}
+                      tabIndex={0}
+                      role="button"
+                      aria-pressed={selectedQuizId === quiz.id}
                     >
                       <div
                         className={`h-24 sm:h-28 lg:h-32 bg-gradient-to-br ${gradientClass} p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden`}
                       >
                         <div className="flex items-center justify-between">
-                          <div
-                            className={`text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300`}
-                          >
-                            {/* {cardCount} Question */}
-                          </div>
                           <div
                             className={`text-[10px] sm:text-xs text-slate-600 dark:text-slate-400`}
                           >
@@ -383,15 +382,6 @@ const QuizListPage = () => {
                                 : new Date().toLocaleDateString('vi-VN')}
                             </div>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="primary h-6 sm:h-7 lg:h-8 px-2 sm:px-3 text-[10px] sm:text-xs"
-                            onClick={() => setSelectedQuizId(quiz.id)}
-                            disabled={isStarting}
-                          >
-                            Detail
-                          </Button>
                         </div>
                       </CardContent>
                     </Card>
