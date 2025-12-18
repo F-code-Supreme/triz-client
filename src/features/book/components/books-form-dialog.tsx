@@ -48,6 +48,7 @@ import {
 import { BookStatus } from '../types';
 
 import type { AdminBook } from '../types';
+import { Upload } from 'lucide-react';
 
 const bookFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -271,10 +272,14 @@ export const BooksFormDialog = ({
                           <div className="text-xs text-muted-foreground mt-2">
                             or
                           </div>
-                          <FileUploadTrigger asChild>
+                          {/* <FileUploadTrigger asChild>
                             <Button type="button" variant="link" size="sm">
                               Click to browse
                             </Button>
+                          </FileUploadTrigger> */}
+                          <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
+                            <Upload className="w-4 h-4" />
+                            Tải hình ảnh lên
                           </FileUploadTrigger>
                         </div>
 
@@ -353,10 +358,9 @@ export const BooksFormDialog = ({
                           <div className="text-xs text-muted-foreground mt-2">
                             or
                           </div>
-                          <FileUploadTrigger asChild>
-                            <Button type="button" variant="link" size="sm">
-                              Click to browse
-                            </Button>
+                          <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
+                            <Upload className="w-4 h-4" />
+                            Tải hình ảnh lên
                           </FileUploadTrigger>
                         </div>
 
@@ -415,7 +419,7 @@ export const BooksFormDialog = ({
                 <FormItem>
                   <FormLabel>{t('books.form.display_order')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="0" type="number" {...field} />
+                    <Input placeholder="0" type="number" {...field} min={0} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

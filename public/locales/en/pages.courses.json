@@ -80,6 +80,19 @@
       "submit_failed": "Failed to submit quiz"
     }
   },
+  "assignments": {
+    "expert_review": "Expert Review",
+    "ai_review": "AI Review",
+    "ai_analysis": "AI Analysis",
+    "overall_analysis": "Overall Analysis",
+    "resoning": "Reasoning",
+    "criteria_analysis": "Criteria Analysis",
+    "strengths": "Strengths",
+    "improvements": "Improvements",
+    "suggested_focus": "Suggested Focus",
+    "your_answer": "Your Answer",
+    "submission_date": "Submission Date"
+  },
   "filters": {
     "search_placeholder": "Search courses...",
     "level": "Level",
@@ -87,7 +100,10 @@
     "sort_by": "Sort by",
     "newest": "Newest",
     "oldest": "Oldest",
-    "most_popular": "Most Popular"
+    "most_popular": "Most Popular",
+    "starter": "Starter",
+    "intermediate": "Intermediate",
+    "expert": "Expert"
   },
   "loading": "Loading courses...",
   "error": "Failed to load courses."
