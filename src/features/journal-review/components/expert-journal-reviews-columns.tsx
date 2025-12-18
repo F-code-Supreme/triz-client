@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 import { ExpertJournalReviewsDataTableRowActions } from './expert-journal-reviews-data-table-row-actions';
 
-import type { RootReviewWithTimestamp } from '../types';
+import type { ReviewStatus, RootReviewWithTimestamp } from '../types';
 
 export const expertJournalReviewsColumns: ColumnDef<RootReviewWithTimestamp>[] =
   [
@@ -72,9 +72,9 @@ export const expertJournalReviewsColumns: ColumnDef<RootReviewWithTimestamp>[] =
         <DataTableColumnHeader column={column} title="Trạng thái" />
       ),
       cell: ({ row }) => {
-        const status = row.getValue('status') as string;
+        const status = row.getValue('status') as ReviewStatus;
 
-        const statusLabels: Record<string, string> = {
+        const statusLabels: Record<ReviewStatus, string> = {
           PENDING: 'Chờ xử lý',
           PROCESSING: 'Đang xử lý',
           REVIEWED: 'Đã đánh giá',
@@ -82,7 +82,7 @@ export const expertJournalReviewsColumns: ColumnDef<RootReviewWithTimestamp>[] =
           COMMENTED: 'Đã nhận xét',
         };
 
-        const statusColors: Record<string, string> = {
+        const statusColors: Record<ReviewStatus, string> = {
           PENDING: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100',
           PROCESSING: 'bg-blue-100 text-blue-700 hover:bg-blue-100',
           REVIEWED: 'bg-green-100 text-green-700 hover:bg-green-100',

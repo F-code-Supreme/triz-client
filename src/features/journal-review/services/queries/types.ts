@@ -1,5 +1,6 @@
 import type {
   ChildReviewWithTimestamp,
+  ReviewStatus,
   RootReviewWithTimestamp,
 } from '../../types';
 import type { PaginatedResponse } from '@/types';
@@ -21,7 +22,7 @@ export type GetReviewByIdResponse = RootReviewWithTimestamp & {
 // Search payload for root reviews
 export interface SearchRootReviewsPayload {
   creatorId?: string;
-  statuses?: string[];
+  statuses?: ReviewStatus[];
 }
 
 export type SearchRootReviewsResponse =

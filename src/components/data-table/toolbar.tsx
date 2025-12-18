@@ -96,12 +96,6 @@ export const DataTableToolbar = <TData,>({
 
   // Update table filter when debounced value changes
   useEffect(() => {
-    console.log(
-      'Something',
-      hasMultipleSearchKeys,
-      selectedSearchKey,
-      debouncedSearchValue,
-    );
     if (hasMultipleSearchKeys && selectedSearchKey) {
       table.getColumn(selectedSearchKey)?.setFilterValue(debouncedSearchValue);
     } else if (searchKey) {
@@ -116,8 +110,6 @@ export const DataTableToolbar = <TData,>({
     hasMultipleSearchKeys,
     table,
   ]);
-
-  console.log('Hi');
 
   return (
     <div className="flex items-center justify-between">
@@ -143,12 +135,14 @@ export const DataTableToolbar = <TData,>({
               </SelectContent>
             </Select>
           )}
-          <Input
-            placeholder={searchPlaceholder}
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.target.value)}
-            className="h-8 w-[150px] lg:w-[250px]"
-          />
+          {searchKey && (
+            <Input
+              placeholder={searchPlaceholder}
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
+              className="h-8 w-[150px] lg:w-[250px]"
+            />
+          )}
         </div>
         <div className="flex gap-x-2">
           {filters.map((filter) => {
