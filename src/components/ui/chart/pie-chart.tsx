@@ -45,7 +45,7 @@ export const PieChart = ({
   ],
   showLabel = true,
   innerRadius = 0,
-  outerRadius = 100,
+  outerRadius = 150,
 }: PieChartProps) => {
   // const renderLabel = (entry: any) => {
   //   return `${entry.name}: ${entry.value}`;
@@ -87,7 +87,7 @@ export const PieChart = ({
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
       )}
-      <CardContent>
+      <CardContent className="p-0">
         <ResponsiveContainer width="100%" height={height}>
           <RechartsPieChart>
             <Pie

@@ -300,7 +300,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
               </label>
 
               <Select value={amelior} onValueChange={(v) => setAmelior(v)}>
-                <SelectTrigger className="w-[320px] p-3 rounded-lg border border-gray-300 text-lg">
+                <SelectTrigger className="w-[300px] p-3 rounded-lg border border-gray-300 text-lg">
                   <SelectValue placeholder="Chọn thông số tăng" />
                 </SelectTrigger>
                 <SelectContent>
@@ -325,7 +325,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
               <Select value={preserv} onValueChange={(v) => setPreserv(v)}>
                 <SelectTrigger
                   id="preserv"
-                  className="w-[320px] p-3 rounded-lg border border-gray-300 text-lg"
+                  className="w-[300px] p-3 rounded-lg border border-gray-300 text-lg"
                 >
                   <SelectValue placeholder="Chọn thông số giảm" />
                 </SelectTrigger>
@@ -360,7 +360,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
           </p>
         </div>
       </div>
-      <div className="flex flex-col border border-slate-300 shadow-xl rounded-lg overflow-hidden mx-auto max-w-5xl h-[600px]">
+      <div className="flex flex-col border border-slate-300 shadow-xl rounded-lg overflow-hidden mx-auto max-w-3xl h-[430px] ">
         {/* Grid Container - Xử lý cuộn */}
         <div
           className="flex-1 overflow-auto relative"
@@ -371,11 +371,11 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
             className="grid"
             style={{
               // Cột đầu tiên 200px, 39 cột sau mỗi cột 80px
-              gridTemplateColumns: `200px repeat(${features.length}, 85px)`,
+              gridTemplateColumns: `150px repeat(${features.length}, 85px)`,
             }}
           >
             {/* --- TOP LEFT CORNER (Diagonal Header) --- */}
-            <div className="sticky left-0 top-0 z-30 bg-slate-100 border-b border-r border-slate-300 h-32  overflow-hidden shadow-sm">
+            <div className="sticky left-0 top-0 z-30 bg-slate-100 border-b border-r border-slate-300 h-28  overflow-hidden shadow-sm">
               <div className="absolute top-2 right-2 text-right font-bold text-xs text-red-600 w-1/2">
                 Thông Số
                 <br />
@@ -392,7 +392,7 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
             {features.map((feature, index) => (
               <div
                 key={`col-head-${index}`}
-                className="sticky top-0 z-20 bg-slate-50 border-b border-r border-slate-300 h-32 p-2 flex flex-col justify-end items-center text-center hover:bg-red-50 transition-colors group"
+                className="sticky top-0 z-20 bg-slate-50 border-b border-r border-slate-300 h-28 p-2 flex flex-col justify-end items-center text-center hover:bg-red-50 transition-colors group"
               >
                 <span
                   className="text-[10px] text-slate-500 font-medium leading-tight mb-2 rotate-180"
@@ -409,7 +409,6 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
             {/* --- MATRIX BODY --- */}
             {features.map((rowFeature, rIndex) => (
               <React.Fragment key={`row-${rIndex}`}>
-                {/* Row Header (Left Sticky) */}
                 <div className="sticky left-0 z-10 bg-slate-50 border-b border-r border-slate-300 p-2 flex flex-row items-center justify-between hover:bg-green-50 transition-colors group">
                   <div className="w-6 h-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-xs shrink-0 shadow-sm group-hover:bg-green-500 group-hover:text-white">
                     {rIndex + 1}
@@ -456,7 +455,6 @@ export const TrizMatrix: React.FC<TrizMatrixProps> = ({ data }) => {
                       }
                       onBlur={() => setHoveredCell(null)}
                     >
-                      {/* Tooltip hiển thị toạ độ khi hover */}
                       {isExactHover && !isDiagonal && (
                         <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-xs rounded shadow-lg whitespace-nowrap z-50 pointer-events-none">
                           {rIndex + 1} &rarr; {cIndex + 1}

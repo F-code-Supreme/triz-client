@@ -1,3 +1,4 @@
+import { Plus } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -138,7 +139,7 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[525px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[1000px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {viewMode
@@ -158,8 +159,17 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="title">
-              Tiêu đề {!viewMode && <span className="text-red-500">*</span>}
+            <Label
+              htmlFor="title"
+              className="flex items-center justify-between"
+            >
+              <span>
+                Tiêu đề{' '}
+                {!viewMode && <span className="text-red-500">*</span>}{' '}
+              </span>
+              <span className="text-xs text-gray-400">
+                {title.length}/200
+              </span>{' '}
             </Label>
             <Input
               id="title"
@@ -169,6 +179,8 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
               required={!viewMode}
               disabled={isDisabled}
               readOnly={viewMode}
+              maxLength={200}
+              minLength={3}
             />
           </div>
 
@@ -187,7 +199,7 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                   onClick={() => setCriteria([...criteria, ''])}
                   disabled={isDisabled}
                 >
-                  + Thêm
+                  <Plus /> Thêm
                 </Button>
               )}
             </div>
@@ -206,6 +218,7 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
                     placeholder={`Nhập tiêu chí ${idx + 1}`}
                     disabled={isDisabled}
                     readOnly={viewMode}
+                    maxLength={254}
                   />
                   {!viewMode && (
                     <Button
@@ -225,8 +238,16 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="description">
-              Mô tả {!viewMode && <span className="text-red-500">*</span>}
+            <Label
+              htmlFor="description"
+              className="flex items-center justify-between"
+            >
+              <span>
+                Mô tả {!viewMode && <span className="text-red-500">*</span>}
+              </span>
+              <span className="text-xs text-gray-400">
+                {description.length}/254
+              </span>{' '}
             </Label>
             <Textarea
               id="description"
@@ -237,6 +258,9 @@ export const AddAssignmentModal: React.FC<AddAssignmentModalProps> = ({
               required={!viewMode}
               disabled={isDisabled}
               readOnly={viewMode}
+              maxLength={254}
+              style={{ resize: 'none' }}
+              className="h-40"
             />
           </div>
 

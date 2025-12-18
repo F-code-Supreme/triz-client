@@ -97,17 +97,30 @@ export const useGetQuizAttemptRemainingTimeQuery = (attemptId: string) => {
   });
 };
 
-export const useGetUserQuizAttemptsQuery = (userId: string) => {
+// export const useGetUserQuizAttemptsQuery = (userId: string) => {
+//   const _request = useAxios();
+//   return useQuery({
+//     queryKey: ['userQuizAttempts', userId],
+//     queryFn: async () => {
+//       const res = await _request.get<GetUserQuizAttemptsResponse>(
+//         `/quiz-attempts/user/${userId}`,
+//       );
+//       return res.data;
+//     },
+//     enabled: !!userId,
+//   });
+// };
+
+//hỏi lại
+export const useGetUserQuizAttemptsQuery = () => {
   const _request = useAxios();
   return useQuery({
-    queryKey: ['userQuizAttempts', userId],
+    queryKey: ['userQuizAttempts'],
     queryFn: async () => {
-      const res = await _request.get<GetUserQuizAttemptsResponse>(
-        `/quiz-attempts/user/${userId}`,
-      );
+      const res =
+        await _request.get<GetUserQuizAttemptsResponse>(`/quiz-attempts/me`);
       return res.data;
     },
-    enabled: !!userId,
   });
 };
 

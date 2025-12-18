@@ -137,10 +137,10 @@ const CourseItem = ({ course }: { course: Course }) => {
               <img
                 src={thumbnail}
                 alt={course.title}
-                className="h-44 w-full object-cover"
+                className="h-72 w-full object-cover"
               />
             ) : (
-              <div className="flex h-44 w-full items-center justify-center text-sm text-muted-foreground">
+              <div className="flex h-72 w-full items-center justify-center text-sm text-muted-foreground">
                 No image
               </div>
             )}

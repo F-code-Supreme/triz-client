@@ -42,7 +42,7 @@ import { cn } from '@/lib/utils';
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const CourseQuizPage = () => {
   const search = useSearch({ from: `/(app)/course/quiz/$slug` });
-  const { id: moduleId } = search as { id: string };
+  const { quizId, moduleId } = search as { quizId: string; moduleId: string };
   const { user } = useAuth();
 
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
@@ -58,7 +58,7 @@ const CourseQuizPage = () => {
 
   const { data: quizDataArray, isLoading } =
     useGetQuizzByModulesQuery(moduleId);
-  const quizData = quizDataArray?.content?.[0];
+  const quizData = quizDataArray?.content?.find((quiz) => quiz.id === quizId);
   const startQuizAttemptMutation = useStartQuizAttemptMutation();
   const submitQuizAttemptMutation = useSubmitQuizAttemptMutation();
   const autoSaveQuizAnswerMutation = useAutoSaveQuizAnswerMutation();

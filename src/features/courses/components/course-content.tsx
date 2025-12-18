@@ -5,10 +5,23 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import { Badge } from '@/components/ui/badge';
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import {
+  VideoPlayer,
+  VideoPlayerContent,
+  VideoPlayerControlBar,
+  VideoPlayerPlayButton,
+  VideoPlayerSeekBackwardButton,
+  VideoPlayerSeekForwardButton,
+  VideoPlayerMuteButton,
+  VideoPlayerTimeRange,
+  VideoPlayerTimeDisplay,
+  VideoPlayerVolumeRange,
+} from '@/components/ui/shadcn-io/video-player';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useMarkLessonAsCompletedMutation } from '@/features/lesson/services/mutations';
 import { cn } from '@/lib/utils';
 
 import CourseAssignment from './course-assigment';
@@ -22,6 +35,11 @@ interface CourseContentProps {
 
 const CourseContent = ({ item, className }: CourseContentProps) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+
+  const lessonId = item?.type === 'lesson' ? item.lessonData?.id : undefined;
+  const markLessonAsCompletedMutation = useMarkLessonAsCompletedMutation(
+    lessonId || '',
+  );
 
   if (!item) {
     return (
@@ -85,14 +103,31 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                     </div>
                   </div>
                 )}
-                <video
+                {/* <video
                   className="w-full h-full"
                   controls
                   onLoadedData={() => setIsVideoLoading(false)}
                 >
                   <source src={lessonData.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
-                </video>
+                </video> */}
+
+                <VideoPlayer>
+                  <VideoPlayerContent
+                    slot="media"
+                    src={lessonData.videoUrl}
+                    onLoadedData={() => setIsVideoLoading(false)}
+                  />
+                  <VideoPlayerControlBar>
+                    <VideoPlayerPlayButton />
+                    <VideoPlayerSeekBackwardButton />
+                    <VideoPlayerSeekForwardButton />
+                    <VideoPlayerMuteButton />
+                    <VideoPlayerTimeRange />
+                    <VideoPlayerTimeDisplay />
+                    <VideoPlayerVolumeRange />
+                  </VideoPlayerControlBar>
+                </VideoPlayer>
               </div>
             )}
 
@@ -127,6 +162,12 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                 </CardContent>
               </Card>
             )} */}
+
+            <div className="text-right">
+              <Button onClick={() => markLessonAsCompletedMutation.mutate()}>
+                Đã hoàn thành
+              </Button>
+            </div>
           </div>
         );
 
@@ -176,7 +217,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
               <Link
                 to="/course/quiz/$slug"
                 params={{ slug: quizData.title as string }}
-                search={{ id: quizData.moduleId }}
+                search={{ quizId: quizData.id, moduleId: quizData.moduleId }}
                 mask={{ to: `/course/${quizData.title}/quizzes` as string }}
                 className={cn(
                   buttonVariants({

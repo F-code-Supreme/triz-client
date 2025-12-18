@@ -1,13 +1,15 @@
 import { Link, useSearch } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useGetAssignmentModuleQuery } from '@/features/assignment/services/queries';
+import { useGetMeQuery } from '@/features/auth/services/queries';
 import CourseContent from '@/features/courses/components/course-content';
 import CourseSidebar from '@/features/courses/components/course-sidebar';
 import { useCourseContent } from '@/features/courses/hooks/use-course-content';
+import { useCourseProgress } from '@/features/courses/hooks/use-course-progress';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetLessonByModuleQuery } from '@/features/lesson/services/queries';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
@@ -21,6 +23,9 @@ const CourseLearnPage = () => {
 
   const [currentItemId, setCurrentItemId] = useState<string>('');
   const [currentModuleId, setCurrentModuleId] = useState<string>('');
+
+  const { data: userData } = useGetMeQuery();
+  const userId = userData?.id;
 
   const { data: courseData, isLoading: isLoadingCourse } =
     useGetCourseByIdQuery(courseId);
@@ -54,12 +59,48 @@ const CourseLearnPage = () => {
     useGetAssignmentModuleQuery(currentModuleId);
   const { data: quizzesData } = useGetQuizzByModulesQuery(currentModuleId);
 
-  const { enhancedModules, currentModule } = useCourseContent({
+  // Collect all IDs for progress tracking
+  const lessonIds = useMemo(() => {
+    return lessonsData?.content?.map((lesson: any) => lesson.id) || [];
+  }, [lessonsData]);
+
+  const assignmentIds = useMemo(() => {
+    return (
+      assignmentsData?.content?.map((assignment: any) => assignment.id) || []
+    );
+  }, [assignmentsData]);
+
+  const moduleIds = useMemo(() => {
+    return sortedModulesData?.map((module) => module.id) || [];
+  }, [sortedModulesData]);
+
+  const {
+    lessonProgressMap,
+    assignmentProgressMap,
+    moduleProgressMap,
+    quizzProgressMap,
+  } = useCourseProgress({
+    lessonIds,
+    assignmentIds,
+    moduleIds,
+    userId,
+  });
+
+  const {
+    enhancedModules,
+    currentModule,
+    firstIncompleteItem,
+    completedItemIds,
+  } = useCourseContent({
     modules: (sortedModulesData as Module[]) || [],
     lessonsData,
     assignmentsData,
     quizzesData,
     currentModuleId,
+    lessonProgressMap,
+    assignmentProgressMap,
+    moduleProgressMap,
+    quizzProgressMap,
   });
 
   useEffect(() => {
@@ -67,11 +108,12 @@ const CourseLearnPage = () => {
       const isCurrentItemInModule = currentModule.contents.some(
         (item) => item.id === currentItemId,
       );
-      if (!isCurrentItemInModule) {
-        setCurrentItemId(currentModule.contents[0].id);
+
+      if (!isCurrentItemInModule && firstIncompleteItem) {
+        setCurrentItemId(firstIncompleteItem.id);
       }
     }
-  }, [currentModule, currentItemId]);
+  }, [currentModule, currentItemId, firstIncompleteItem]);
 
   const handleModuleChange = (moduleId: string) => {
     setCurrentModuleId(moduleId);
@@ -141,6 +183,7 @@ const CourseLearnPage = () => {
           currentModuleId={currentModuleId}
           onItemSelect={handleItemChange}
           onModuleSelect={handleModuleChange}
+          completedItemIds={completedItemIds}
         />
 
         <div className="flex-1 overflow-y-auto">

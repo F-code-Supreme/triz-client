@@ -5,19 +5,9 @@ import {
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
-import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -27,15 +17,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-} from '@/components/ui/tooltip';
+// tooltip not needed here; dialog extracted to CreatePostDialog
+import CreatePostDialog from '@/features/forum/components/create-post-dialog';
 import { forumpostsColumns } from '@/features/forum/components/forum-posts-columns';
-import { useCreateForumPostMutation } from '@/features/forum/services/mutations';
 import { useGetForumPostsByAdminQuery } from '@/features/forum/services/queries';
-import { useUploadFileMutation } from '@/features/media/services/mutations';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 import type { FilterOption } from '@/components/data-table';
@@ -46,9 +31,7 @@ import type {
 
 const AdminForumPostManage = () => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [postTitle, setPostTitle] = useState('');
-  const [postImage, setPostImage] = useState('');
-  const [answer, setAnswer] = useState<string>('');
+
   const [sorting, setSorting] = useState<
     Array<{
       id: string;
@@ -59,8 +42,6 @@ const AdminForumPostManage = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const uploadMutation = useUploadFileMutation();
-  const createForumPostMutation = useCreateForumPostMutation();
 
   // Build filters with date range
   const filters = useMemo(() => {
@@ -112,6 +93,8 @@ const AdminForumPostManage = () => {
     manualFiltering: true,
     rowCount: totalRowCount,
   });
+
+  // dialog handled by `CreatePostDialog`
 
   return (
     <AdminLayout meta={{ title: 'Forum Management' }}>
@@ -226,148 +209,7 @@ const AdminForumPostManage = () => {
           )}
         </div>
 
-        {/* Create post dialog */}
-        <Dialog
-          open={isCreateOpen}
-          onOpenChange={(open) => !open && setIsCreateOpen(false)}
-        >
-          <DialogContent className="max-w-3xl">
-            <DialogHeader>
-              <DialogTitle>Tạo bài viết mới</DialogTitle>
-            </DialogHeader>
-
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm text-slate-600">Tiêu đề</label>
-                <Input
-                  value={postTitle}
-                  onChange={(e) => setPostTitle(e.target.value)}
-                  placeholder="Tiêu đề bài viết"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-slate-600">Ảnh bài viết</label>
-
-                <Input
-                  id="picture"
-                  type="file"
-                  accept="image/*"
-                  placeholder="Chọn ảnh cho khóa học"
-                  onChange={(e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (!file) return;
-                    uploadMutation.mutate(
-                      { file },
-                      {
-                        onSuccess: (res: {
-                          flag: boolean;
-                          code: number;
-                          data: string;
-                        }) => {
-                          if (res.code === 200) {
-                            setPostImage(res.data);
-                          }
-                          toast.success('Tải ảnh lên thành công');
-                        },
-                        onError: () => {
-                          toast.error(
-                            'Tải ảnh lên thất bại. Vui lòng thử lại.',
-                          );
-                        },
-                      },
-                    );
-                  }}
-                  disabled={uploadMutation.isPending}
-                />
-                {uploadMutation.progress > 0 && uploadMutation.isPending && (
-                  <Progress
-                    value={uploadMutation.progress}
-                    className="w-full h-[10px] mt-2 "
-                  />
-                )}
-                {postImage && (
-                  <div className="mt-2 w-full h-60  overflow-hidden rounded-md border bg-white">
-                    <img
-                      src={postImage}
-                      alt="thumbnail preview"
-                      className="object-cover w-full h-60"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '';
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="text-sm text-slate-600">Nội dung</label>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <div>
-                      <MinimalTiptapEditor
-                        value={answer}
-                        onChange={(v) =>
-                          setAnswer(
-                            typeof v === 'string' ? v : JSON.stringify(v),
-                          )
-                        }
-                        output="html"
-                        placeholder="Nhập nội dung bài viết..."
-                        editorContentClassName="min-h-[200px] p-4"
-                      />
-                    </div>
-                    {!answer && (
-                      <TooltipContent side="bottom">
-                        <p>Nhấp vào đây để bắt đầu nhập câu trả lời của bạn</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-
-              <div className="flex items-center justify-end gap-2">
-                <Button variant="ghost" onClick={() => setIsCreateOpen(false)}>
-                  Hủy
-                </Button>
-                <Button
-                  onClick={() => {
-                    const payload = {
-                      title: postTitle.trim(),
-                      content: answer || '',
-                      imgUrl: postImage || '',
-                      tagIds: [],
-                    };
-                    createForumPostMutation.mutate(payload, {
-                      onSuccess: () => {
-                        setIsCreateOpen(false);
-                        setPostTitle('');
-                        setPostImage('');
-                        setAnswer('');
-                        toast.success('Đã tạo bài viết thành công.');
-                      },
-                      onError: (error) => {
-                        toast.error(
-                          error instanceof Error
-                            ? error.message
-                            : 'Không thể tạo bài viết. Vui lòng thử lại.',
-                        );
-                      },
-                    });
-                  }}
-                  disabled={
-                    !postTitle.trim() ||
-                    !(answer && answer.toString().trim()) ||
-                    createForumPostMutation.isPending
-                  }
-                >
-                  {createForumPostMutation.isPending ? 'Đang đăng...' : 'Đăng'}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <CreatePostDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
       </div>
     </AdminLayout>
   );
