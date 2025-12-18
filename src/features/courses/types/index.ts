@@ -82,20 +82,6 @@ export interface Course {
   modules?: Module[];
 }
 
-// interface CourseModule {
-//   id: string;
-//   name: string;
-//   durationInMinutes: number;
-//   level: string;
-//   lessonCount: number;
-// }
-
-// export interface CourseDetailResponse extends Course {
-//   modules: Module[];
-//   totalModules?: number;
-//   totalLessons?: number;
-// }
-
 export interface ModuleResponse {
   id: string;
   name: string;
@@ -132,6 +118,7 @@ export interface BaseContentItem {
   type: 'lesson' | 'assignment' | 'quiz';
   order: number;
   title: string;
+  isCompleted?: boolean;
 }
 
 export interface LessonContentItem extends BaseContentItem {
@@ -193,6 +180,7 @@ export interface EnhancedModule {
   totalItems: number;
   contents: ModuleContentItem[];
   order: number;
+  isCompleted?: boolean;
 }
 
 export interface CourseContentState {

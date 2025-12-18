@@ -1,4 +1,5 @@
 import { Search, FilterX } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/select';
 
 import type { CourseLevel, CourseFilters } from '../types';
-import { useTranslation } from 'react-i18next';
 
 interface CourseFiltersProps {
   filters: CourseFilters;

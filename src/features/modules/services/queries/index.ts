@@ -36,6 +36,7 @@ export const useGetModuleByCourseQuery = (courseId: string) => {
     enabled: !!courseId,
   });
 };
+
 export const useGetModulesByCourseQuery = (courseId: string) => {
   const _request = useAxios();
   return useQuery({
@@ -63,3 +64,17 @@ export const useGetModulesById = (moduleId: string) => {
     enabled: !!moduleId,
   });
 };
+
+// export const useGetModuleProgressQuery = (moduleId?: string) => {
+//   const _request = useAxios();
+//   return useQuery({
+//     queryKey: [ModuleKeys.GetModuleProgress, moduleId],
+//     queryFn: async () => {
+//       const response = await _request.get<{ isCompleted: boolean }>(
+//         `lessons/module/${moduleId}/progress`,
+//       );
+//       return response.data;
+//     },
+//     enabled: !!moduleId,
+//   });
+// };
