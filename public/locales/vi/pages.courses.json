@@ -80,6 +80,19 @@
       "submit_failed": "Không thể nộp bài kiểm tra"
     }
   },
+  "assignments": {
+    "expert_review": "Đánh giá của chuyên gia",
+    "ai_review": "Đánh giá của AI",
+    "ai_analysis": "Phân tích AI",
+    "overall_analysis": "Phân tích tổng thể",
+    "resoning": "Lý do",
+    "criteria_analysis": "Phân tích tiêu chí",
+    "strengths": "Điểm mạnh",
+    "improvements": "Điểm cần cải thiện",
+    "suggested_focus": "Trọng tâm được đề xuất",
+    "your_answer": "Câu trả lời của bạn",
+    "submission_date": "Ngày nộp bài"
+  },
   "filters": {
     "search_placeholder": "Tìm kiếm khóa học...",
     "level": "Cấp độ",
@@ -87,7 +100,10 @@
     "sort_by": "Sắp xếp theo",
     "newest": "Mới nhất",
     "oldest": "Cũ nhất",
-    "most_popular": "Phổ biến nhất"
+    "most_popular": "Phổ biến nhất",
+    "starter": "Cơ bản",
+    "intermediate": "Trung cấp",
+    "expert": "Nâng cao"
   },
   "loading": "Đang tải khóa học...",
   "error": "Không thể tải khóa học."

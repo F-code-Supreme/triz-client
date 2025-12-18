@@ -15,22 +15,6 @@ export interface Assignment {
   userId: string;
 }
 
-export interface AssignmentSubmission {
-  id: string;
-  title: string;
-  submissionContent: string;
-  attemptNumber: number;
-  isAiPassed: boolean;
-  isExpertPassed: boolean;
-  expertComment: string | null;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  gradedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  assignmentId: string;
-  userId: string;
-}
-
 export interface AssignmentSubmissionExpertReview {
   id: string;
   title: string;
@@ -55,12 +39,36 @@ export interface AssignmentSubmission {
   isAiPassed: boolean;
   isExpertPassed: boolean;
   expertComment: string | null;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  status:
+    | 'PENDING'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'AI_PENDING'
+    | 'EXPERT_PENDING'
+    | 'AI_REJECTED';
   gradedAt: string | null;
   createdAt: string;
   updatedAt: string;
   assignmentId: string;
   userId: string;
+}
+
+export interface AssignmentHistoryAiAnalysis {
+  areasForDevelopment: string;
+  areasForDevelopmentList: string[];
+  assessmentSummary: string;
+  criteriaAnalysis: string;
+  gradedAt: string;
+  isPassed: boolean;
+  overallAnalysis: string;
+  reasoning: string;
+  strengths: string;
+  strengthsList: string[];
+  suggestedFocus: string;
+}
+
+export interface AssignmentHistoryResponse extends AssignmentSubmission {
+  aiAnalysis?: AssignmentHistoryAiAnalysis;
 }
 
 export interface SubmitAssignmentPayload {
@@ -75,4 +83,4 @@ export type AssignmentResponse = PaginatedResponse<Assignment>;
 export type AssignmentSubmissionExpertReviewResponse =
   PaginatedResponse<AssignmentSubmissionExpertReview>;
 export type AssignmentSubmissionHistoryResponse =
-  PaginatedResponse<AssignmentSubmission>;
+  PaginatedResponse<AssignmentHistoryResponse>;

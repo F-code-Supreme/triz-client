@@ -1164,15 +1164,31 @@ interface Resources {
       "my_courses_button": "My Courses",
       "title": "All Courses"
     },
+    "assignments": {
+      "ai_analysis": "AI Analysis",
+      "ai_review": "AI Review",
+      "criteria_analysis": "Criteria Analysis",
+      "expert_review": "Expert Review",
+      "improvements": "Improvements",
+      "overall_analysis": "Overall Analysis",
+      "resoning": "Reasoning",
+      "strengths": "Strengths",
+      "submission_date": "Submission Date",
+      "suggested_focus": "Suggested Focus",
+      "your_answer": "Your Answer"
+    },
     "error": "Failed to load courses.",
     "filters": {
       "all_levels": "All Levels",
+      "expert": "Expert",
+      "intermediate": "Intermediate",
       "level": "Level",
       "most_popular": "Most Popular",
       "newest": "Newest",
       "oldest": "Oldest",
       "search_placeholder": "Search courses...",
-      "sort_by": "Sort by"
+      "sort_by": "Sort by",
+      "starter": "Starter"
     },
     "learn": {
       "back_to_my_courses": "Back to My Courses",

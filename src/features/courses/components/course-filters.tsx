@@ -1,4 +1,4 @@
-import { Search, Filter } from 'lucide-react';
+import { Search, FilterX } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 
 import type { CourseLevel, CourseFilters } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface CourseFiltersProps {
   filters: CourseFilters;
@@ -50,6 +51,8 @@ const CourseFiltersComponent = ({
   const hasActiveFilters =
     filters.search || filters.status || filters.category || filters.level;
 
+  const { t } = useTranslation('pages.courses');
+
   return (
     <div className={className}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -57,7 +60,7 @@ const CourseFiltersComponent = ({
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search courses..."
+            placeholder={t('filters.search_placeholder')}
             value={filters.search || ''}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-10"
@@ -66,6 +69,17 @@ const CourseFiltersComponent = ({
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2">
+          {/* Clear Filters */}
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={clearFilters}
+              className="shrink-0"
+            >
+              <FilterX className="h-4 w-4" />
+            </Button>
+          )}
           {/* Level Filter */}
           <Select
             value={filters.level || 'all'}
@@ -75,10 +89,12 @@ const CourseFiltersComponent = ({
               <SelectValue placeholder="Level" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Levels</SelectItem>
-              <SelectItem value="STARTER">Starter</SelectItem>
-              <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-              <SelectItem value="EXPERT">Expert</SelectItem>
+              <SelectItem value="all">{t('filters.all_levels')}</SelectItem>
+              <SelectItem value="STARTER">{t('filters.starter')}</SelectItem>
+              <SelectItem value="INTERMEDIATE">
+                {t('filters.intermediate')}
+              </SelectItem>
+              <SelectItem value="EXPERT">{t('filters.expert')}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -91,22 +107,14 @@ const CourseFiltersComponent = ({
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="title-asc">Title A-Z</SelectItem>
-              <SelectItem value="title-desc">Title Z-A</SelectItem>
+              <SelectItem value="title-asc">
+                {t('filters.sort_by')} A-Z
+              </SelectItem>
+              <SelectItem value="title-desc">
+                {t('filters.sort_by')} Z-A
+              </SelectItem>
             </SelectContent>
           </Select>
-
-          {/* Clear Filters */}
-          {hasActiveFilters && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={clearFilters}
-              className="shrink-0"
-            >
-              <Filter className="h-4 w-4" />
-            </Button>
-          )}
         </div>
       </div>
     </div>

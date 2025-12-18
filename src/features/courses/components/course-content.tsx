@@ -15,6 +15,19 @@ import CourseAssignment from './course-assigment';
 
 import type { ModuleContentItem } from '../types';
 
+import {
+  VideoPlayer,
+  VideoPlayerContent,
+  VideoPlayerControlBar,
+  VideoPlayerPlayButton,
+  VideoPlayerSeekBackwardButton,
+  VideoPlayerSeekForwardButton,
+  VideoPlayerMuteButton,
+  VideoPlayerTimeRange,
+  VideoPlayerTimeDisplay,
+  VideoPlayerVolumeRange,
+} from '@/components/ui/shadcn-io/video-player';
+
 interface CourseContentProps {
   item: ModuleContentItem | null;
   className?: string;
@@ -85,14 +98,31 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                     </div>
                   </div>
                 )}
-                <video
+                {/* <video
                   className="w-full h-full"
                   controls
                   onLoadedData={() => setIsVideoLoading(false)}
                 >
                   <source src={lessonData.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
-                </video>
+                </video> */}
+
+                <VideoPlayer>
+                  <VideoPlayerContent
+                    slot="media"
+                    src={lessonData.videoUrl}
+                    onLoadedData={() => setIsVideoLoading(false)}
+                  />
+                  <VideoPlayerControlBar>
+                    <VideoPlayerPlayButton />
+                    <VideoPlayerSeekBackwardButton />
+                    <VideoPlayerSeekForwardButton />
+                    <VideoPlayerMuteButton />
+                    <VideoPlayerTimeRange />
+                    <VideoPlayerTimeDisplay />
+                    <VideoPlayerVolumeRange />
+                  </VideoPlayerControlBar>
+                </VideoPlayer>
               </div>
             )}
 
