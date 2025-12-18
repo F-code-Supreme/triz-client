@@ -1,4 +1,4 @@
-import { PaginatedResponse } from '@/types';
+import type { PaginatedResponse } from '@/types';
 
 interface Order {
   subsetId: string;

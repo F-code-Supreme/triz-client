@@ -8,13 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-
-import CourseAssignment from './course-assigment';
-
-import type { ModuleContentItem } from '../types';
-
 import {
   VideoPlayer,
   VideoPlayerContent,
@@ -27,9 +20,15 @@ import {
   VideoPlayerTimeDisplay,
   VideoPlayerVolumeRange,
 } from '@/components/ui/shadcn-io/video-player';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useMarkLessonAsCompletedMutation } from '@/features/lesson/services/mutations';
 import { toast } from 'sonner';
 import { useGetLessonProgressQuery } from '@/features/lesson/services/queries';
+import { cn } from '@/lib/utils';
+
+import CourseAssignment from './course-assigment';
+
+import type { ModuleContentItem } from '../types';
 
 interface CourseContentProps {
   item: ModuleContentItem | null;

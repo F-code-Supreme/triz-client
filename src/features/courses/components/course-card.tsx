@@ -1,20 +1,21 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { Clock, Users, Play, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { cn } from '@/lib/utils';
 
-import type { CourseLevel, Course } from '@/features/courses/types';
-import { useTranslation } from 'react-i18next';
-import { Progress } from '@/components/ui/progress';
 import {
   useCourseProgressQuery,
   useGetMyEnrollmentsQuery,
 } from '../services/queries';
-import { Spinner } from '@/components/ui/shadcn-io/spinner';
+
+import type { CourseLevel, Course } from '@/features/courses/types';
 
 interface CourseCardProps {
   course: Course;

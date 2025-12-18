@@ -1,14 +1,14 @@
-import { useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 import { useAxios } from '@/configs/axios';
-import { LessonKeys } from '@/features/lesson/services/queries/keys';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
+import { LessonKeys } from '@/features/lesson/services/queries/keys';
 import { ModuleKeys } from '@/features/modules/services/queries/keys';
-
-import type { LessonProgressResponse } from '@/features/lesson/services/queries/types';
-import type { AssignmentSubmissionHistoryResponse } from '@/features/assignment/services/queries/types';
 import { useGetUserQuizAttemptsQuery } from '@/features/quiz/service/mutations';
+
+import type { AssignmentSubmissionHistoryResponse } from '@/features/assignment/services/queries/types';
+import type { LessonProgressResponse } from '@/features/lesson/services/queries/types';
 
 interface UseCourseProgressProps {
   lessonIds: string[];

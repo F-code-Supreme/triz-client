@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useGetAssignmentModuleQuery } from '@/features/assignment/services/queries';
 import { useGetMeQuery } from '@/features/auth/services/queries';
-
 import CourseContent from '@/features/courses/components/course-content';
 import CourseSidebar from '@/features/courses/components/course-sidebar';
 import { useCourseContent } from '@/features/courses/hooks/use-course-content';
