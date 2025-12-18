@@ -15,7 +15,6 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { toast } from 'sonner';
 
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
 import { GamesEnumId } from '@/features/game/services/mutations/enum';
@@ -271,7 +270,6 @@ const PreliminaryGamePage = () => {
       },
       {
         onSuccess: () => {
-          toast.success('Điểm số đã được cập nhật!');
           queryClient.invalidateQueries({
             queryKey: [
               GameKeys.GetGameLeaderboardById,

@@ -166,9 +166,7 @@ const Avatar = ({ name, src }: { name: string; src?: string | null }) => {
 
 const Leaderboard = ({ entries }: { entries?: GameLeaderboard[] }) => {
   // Recompute prepared entries whenever `entries` changes (levels update)
-  console.log('Leaderboard entries:', entries);
   const entriesToUse = useMemo(() => prepareEntries(entries, 8), [entries]);
-  console.log('entriesToUse', entriesToUse);
   const top = entriesToUse.slice(0, 3);
   const rest = entriesToUse.slice(3);
 

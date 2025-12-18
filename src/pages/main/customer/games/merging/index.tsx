@@ -16,7 +16,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
 
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
 import { GamesEnumId } from '@/features/game/services/mutations/enum';
@@ -208,7 +207,6 @@ const MergingGamePage = () => {
             },
             {
               onSuccess: () => {
-                toast.success('Điểm số đã được cập nhật!');
                 queryClient.invalidateQueries({
                   queryKey: [
                     GameKeys.GetGameLeaderboardById,
@@ -260,7 +258,7 @@ const MergingGamePage = () => {
       className=""
     >
       <section className="relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
-        <div className=" w-full max-w-8xl grid grid-cols-3 p-4 sm:p-16 mx-auto">
+        <div className=" w-full max-w-8xl grid grid-cols-3 p-4 sm:p-16 mx-auto h-svh">
           <div className=" col-span-2 max-w-4xl mx-auto w-full  relative z-10">
             {/* Header Navigation & Progress */}
             <div className=" flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
@@ -485,7 +483,7 @@ const MergingGamePage = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-1 mx-auto w-full  mt-auto">
+          <div className="col-span-1 mx-auto w-full flex-1 mt-20">
             <Leaderboard entries={data} />
           </div>
         </div>

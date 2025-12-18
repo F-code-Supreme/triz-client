@@ -8,11 +8,11 @@ const MatrixSection = () => {
 
   return (
     <section className="h-[calc(100svh-4rem-1px)] relative sm:overflow-hidden flex flex-col justify-center items-center bg-gradient-to-t from-blue-200 via-white to-white dark:bg-gradient-to-t dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 ">
-      <div className="w-full max-w-8xl p-4 mx-auto">
+      <div className="w-full max-w-8xl p-4 mx-auto h-full">
         <div className="text-center">
           <div className="space-y-6">
             <div className="relative inline-block">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+              <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
                 {t('title')}
                 <br />
                 <span className="relative ">
@@ -40,7 +40,7 @@ const MatrixSection = () => {
                 </span>
               </h1>
               <div>
-                <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-300 max-w-4xl mx-auto leading-relaxed mt-6">
+                <p className="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed mt-6">
                   {t('description')}
                 </p>
               </div>

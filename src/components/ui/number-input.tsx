@@ -23,6 +23,7 @@ export interface NumberInputProps extends Omit<
   onValueChange?: (value: number | undefined) => void;
   fixedDecimalScale?: boolean;
   decimalScale?: number;
+  disableIncrement?: boolean;
 }
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
@@ -145,7 +146,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             className="px-2 h-5 rounded-l-none rounded-br-none border-input border-l-0 border-b-[0.5px] focus-visible:relative"
             variant="outline"
             onClick={handleIncrement}
-            disabled={value === max}
+            disabled={value === max || props.disableIncrement}
           >
             <ChevronUp size={15} />
           </Button>
