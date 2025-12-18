@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import FallbackLoading from '@/components/fallback-loading';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   RevenueSection,
@@ -8,15 +9,39 @@ import {
   mockDashboardData,
   GameSection,
 } from '@/features/dashboard';
+import {
+  useGetAdminPaymentsRevenueTrendQuery,
+  useGetAdminPaymentsStatsQuery,
+  useGetAdminPaymentsStatusDistributionQuery,
+  useGetAdminPaymentsTopUsersQuery,
+} from '@/features/dashboard/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminDashboardPage = () => {
   const { t } = useTranslation('pages.admin');
-  const dashboardData = mockDashboardData;
+  const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
+  const mokdata = mockDashboardData;
+
+  const { data: paymentStatsStatistics, isLoading: statsLoading } =
+    useGetAdminPaymentsStatsQuery();
+
+  const { data: paymentRevenueTrend, isLoading: trendLoading } =
+    useGetAdminPaymentsRevenueTrendQuery(period);
+
+  const { data: paymentStatusDistribution, isLoading: distributionLoading } =
+    useGetAdminPaymentsStatusDistributionQuery();
+
+  const { data: topUsers, isLoading: topUsersLoading } =
+    useGetAdminPaymentsTopUsersQuery();
+
+  const isLoading =
+    statsLoading || trendLoading || distributionLoading || topUsersLoading;
+
   const [activeTab, setActiveTab] = useState('revenue');
 
   return (
     <AdminLayout meta={{ title: t('dashboard.title') }}>
+      {isLoading && <FallbackLoading isFullscreen isCenter />}
       <div className="space-y-8 p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="flex justify-between items-center">
@@ -39,13 +64,20 @@ const AdminDashboardPage = () => {
             </TabsList>
           </div>
           <TabsContent value="revenue" className="mt-6">
-            <RevenueSection data={dashboardData.revenue} />
+            <RevenueSection
+              paymentStatsStatistics={paymentStatsStatistics}
+              paymentRevenueTrend={paymentRevenueTrend}
+              paymentStatusDistribution={paymentStatusDistribution}
+              topUsers={topUsers}
+              period={period}
+              setPeriod={setPeriod}
+            />
           </TabsContent>
           <TabsContent value="chat" className="mt-6">
-            <ChatForumSection chat={dashboardData.chat} />
+            <ChatForumSection chat={mokdata.chat} />
           </TabsContent>
           <TabsContent value="games" className="mt-6">
-            <GameSection data={dashboardData.games} />
+            <GameSection data={mokdata.games} />
           </TabsContent>
         </Tabs>
       </div>

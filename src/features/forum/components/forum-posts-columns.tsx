@@ -65,7 +65,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
               : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
           }
         >
-          {status === 'ACTIVE' ? 'Công Khai' : 'Chưa Công Khai'}
+          {status === 'ACTIVE' ? 'Hoạt động' : 'Chưa Hoạt động'}
         </Badge>
       );
     },

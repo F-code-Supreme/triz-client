@@ -1,7 +1,16 @@
-import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
-import { AreaChart, BarChart, PieChart } from '@/components/ui/chart';
+import { PieChart } from '@/components/ui/chart';
 import {
   Table,
   TableBody,
@@ -10,38 +19,37 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { formatVND } from '@/utils';
 
 import { DashboardSection, ChartCard } from './dashboard-section';
-import { PeriodFilter } from './period-filter';
 import { StatCard } from './stat-card';
 
-import type { DashboardData } from '../types';
-
-interface RevenueSectionProps {
-  data: DashboardData['revenue'];
-}
-
-export const RevenueSection = ({ data }: RevenueSectionProps) => {
+export const RevenueSection = ({
+  paymentStatsStatistics,
+  paymentRevenueTrend,
+  paymentStatusDistribution,
+  topUsers,
+  period,
+  setPeriod,
+}: any) => {
   const { t } = useTranslation('pages.admin');
-  const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-    }).format(value);
+  const stats = paymentStatsStatistics ?? {
+    totalRevenue: 0,
+    totalTopupTransactions: 0,
+    successRate: 0,
+    successTransactions: 0,
+    failureRate: 0,
+    failedTransactions: 0,
   };
 
-  const filteredData = useMemo(() => {
-    if (period === 'day') {
-      return data.byPeriod.slice(-30);
-    } else if (period === 'month') {
-      return data.byPeriod.slice(-17);
-    } else {
-      return data.byPeriod.slice(-4);
-    }
-  }, [data.byPeriod, period]);
+  const trend = Array.isArray(paymentRevenueTrend) ? paymentRevenueTrend : [];
+
+  const distribution = Array.isArray(paymentStatusDistribution)
+    ? paymentStatusDistribution
+    : [];
+
+  const users = Array.isArray(topUsers) ? topUsers : [];
 
   const getPeriodLabel = () => {
     if (period === 'day') return t('dashboard.revenue.period_30_days');
@@ -57,26 +65,24 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title={t('dashboard.revenue.total_revenue')}
-          value={formatCurrency(data.total)}
-          trend={{ value: data.growth, isPositive: true }}
+          value={formatVND(stats.totalRevenue)}
         />
         <StatCard
           title={t('dashboard.revenue.total_packages_sold')}
-          value={data.transactions.total.toLocaleString()}
-          description={t('dashboard.revenue.packages_sold_desc')}
+          value={(stats.totalTopupTransactions || 0).toLocaleString()}
         />
         <StatCard
           title={t('dashboard.revenue.success_rate')}
-          value={`${data.transactions.successRate}%`}
+          value={`${stats.successRate ?? 0}%`}
           description={t('dashboard.revenue.success_transactions', {
-            count: data.transactions.success,
+            count: distribution[0]?.count ?? 0,
           })}
         />
         <StatCard
           title={t('dashboard.revenue.failure_rate')}
-          value={`${data.transactions.failureRate}%`}
+          value={`${stats.failureRate ?? 0}%`}
           description={t('dashboard.revenue.failed_transactions', {
-            count: data.transactions.failed,
+            count: distribution[1]?.count ?? 0,
           })}
         />
       </div>
@@ -87,42 +93,25 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
           description={t('dashboard.revenue.revenue_over_period', {
             period: getPeriodLabel(),
           })}
+          period={period}
+          onPeriodChange={setPeriod}
         >
           <div className="space-y-4">
-            <div className="flex justify-end">
-              <PeriodFilter value={period} onChange={setPeriod} />
-            </div>
-            <AreaChart
-              data={filteredData}
-              xKey="period"
-              areas={[
-                {
-                  dataKey: 'revenue',
-                  name: t('dashboard.revenue.total_revenue'),
-                  fill: '#8884d8',
-                },
-              ]}
-              height={300}
-            />
+            <ResponsiveContainer width="100%" height={370}>
+              <BarChart data={trend}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="amountVND"
+                  name={t('dashboard.revenue.total_revenue')}
+                  fill="#8884d8"
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
-        </ChartCard>
-
-        <ChartCard
-          title={t('dashboard.revenue.revenue_by_package')}
-          description={t('dashboard.revenue.revenue_by_package_desc')}
-        >
-          <BarChart
-            data={data.byPackage}
-            xKey="name"
-            bars={[
-              {
-                dataKey: 'revenue',
-                name: t('dashboard.revenue.total_revenue'),
-                fill: '#8884d8',
-              },
-            ]}
-            height={300}
-          />
         </ChartCard>
 
         <ChartCard
@@ -130,29 +119,11 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
           description={t('dashboard.revenue.purchases_distribution_desc')}
         >
           <PieChart
-            data={data.byPackage.map((pkg) => ({
-              name: pkg.name,
-              value: pkg.purchases,
+            data={distribution.map((pkg) => ({
+              name: pkg?.status ?? 'Unknown',
+              value: pkg?.count ?? 0,
             }))}
-            height={300}
-          />
-        </ChartCard>
-
-        <ChartCard
-          title={t('dashboard.revenue.success_rate_by_package')}
-          description={t('dashboard.revenue.success_rate_by_package_desc')}
-        >
-          <BarChart
-            data={data.byPackage}
-            xKey="name"
-            bars={[
-              {
-                dataKey: 'successRate',
-                name: `${t('dashboard.revenue.success_rate')} (%)`,
-                fill: '#82ca9d',
-              },
-            ]}
-            height={300}
+            height={400}
           />
         </ChartCard>
       </div>
@@ -170,25 +141,27 @@ export const RevenueSection = ({ data }: RevenueSectionProps) => {
                 </TableHead>
                 <TableHead>{t('dashboard.revenue.name')}</TableHead>
                 <TableHead>{t('dashboard.revenue.email')}</TableHead>
-                <TableHead className="text-right">
-                  {t('dashboard.revenue.purchases')}
-                </TableHead>
+
                 <TableHead className="text-right">
                   {t('dashboard.revenue.total_spent')}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.topSpenders.map((user, index) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{index + 1}</TableCell>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {user.email}
+              {users.map((user, index) => (
+                <TableRow key={user?.id ?? index}>
+                  <TableCell className="font-medium w-[100px]">
+                    {index + 1}
                   </TableCell>
-                  <TableCell className="text-right">{user.purchases}</TableCell>
+                  <TableCell className="font-medium">
+                    {user?.fullName ?? '—'}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {user?.email ?? '—'}
+                  </TableCell>
+
                   <TableCell className="text-right font-semibold">
-                    {formatCurrency(user.totalSpent)}
+                    {formatVND(user?.totalAmount ?? 0)}
                   </TableCell>
                 </TableRow>
               ))}
