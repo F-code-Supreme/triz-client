@@ -1,5 +1,5 @@
 import {
-  Clock,
+  // Clock,
   Calendar,
   CheckCircle,
   XCircle,
@@ -31,7 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import useAuth from '@/features/auth/hooks/use-auth';
+// import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetUserQuizAttemptsQuery } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
 
@@ -217,14 +217,14 @@ const HistoryPage = () => {
           ) : (
             filteredAttempts.map((attempt: QuizAttempt) => {
               const passed = (attempt.score || 0) >= 70;
-              const duration =
-                attempt.startTime && attempt.completedAt
-                  ? Math.round(
-                      (new Date(attempt.completedAt).getTime() -
-                        new Date(attempt.startTime).getTime()) /
-                        (1000 * 60),
-                    )
-                  : 0;
+              // const duration =
+              //   attempt.startTime && attempt.completedAt
+              //     ? Math.round(
+              //         (new Date(attempt.completedAt).getTime() -
+              //           new Date(attempt.startTime).getTime()) /
+              //           (1000 * 60),
+              //       )
+              //     : 0;
 
               return (
                 <Card
