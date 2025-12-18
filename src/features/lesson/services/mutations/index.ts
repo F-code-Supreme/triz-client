@@ -158,3 +158,18 @@ export const useDeleteLessonMutation = (lessonId: string) => {
     },
   });
 };
+
+export const useMarkLessonAsCompletedMutation = (lessonId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async () => {
+      await _request.post(`/lessons/${lessonId}/complete`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonProgress, lessonId],
+      });
+    },
+  });
+};

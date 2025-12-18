@@ -76,8 +76,7 @@ const HistoryPage = () => {
     null,
   );
 
-  const { user } = useAuth();
-  const { data, isLoading } = useGetUserQuizAttemptsQuery(user?.id || '');
+  const { data, isLoading } = useGetUserQuizAttemptsQuery();
 
   const displayAttempts: QuizAttempt[] = React.useMemo(() => {
     if (data && Array.isArray(data?.content)) {
@@ -244,21 +243,13 @@ const HistoryPage = () => {
                           </div>
                           <div className="flex-1">
                             <h3 className="text-lg font-semibold text-slate-900">
-                              Quiz ID: {attempt.quizId}
+                              {attempt.quizTitle}
                             </h3>
                             <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-slate-500">
                               <div className="flex items-center gap-1">
                                 <Calendar className="w-4 h-4" />
                                 <span>
                                   {formatDate(attempt.startTime || '')}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
-                                <span>
-                                  {duration > 0
-                                    ? formatDuration(duration)
-                                    : '--'}
                                 </span>
                               </div>
                             </div>
@@ -272,7 +263,7 @@ const HistoryPage = () => {
                           <div
                             className={`text-2xl font-bold ${getScoreColor(attempt.score || 0, passed)}`}
                           >
-                            {attempt.score.toFixed(2) || 0}%
+                            {Math.round(attempt.score || 0)}%
                           </div>
                         </div>
 
@@ -316,15 +307,16 @@ const HistoryPage = () => {
                                     {/* Quiz Summary */}
                                     <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
                                       <h3 className="font-semibold text-lg mb-2 text-slate-900">
-                                        Quiz ID: {selectedAttempt.quizId}
+                                        {selectedAttempt.quizTitle}
                                       </h3>
                                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                         <div className="text-center">
                                           <div
                                             className={`text-2xl font-bold ${getScoreColor(selectedAttempt.score || 0, (selectedAttempt.score || 0) >= 70)}`}
                                           >
-                                            {selectedAttempt.score.toFixed(2) ||
-                                              0}
+                                            {Math.round(
+                                              selectedAttempt.score,
+                                            ) || 0}
                                             %
                                           </div>
                                           <div className="text-xs text-slate-500">

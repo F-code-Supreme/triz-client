@@ -174,11 +174,13 @@ export interface QuizAttemptAnswer {
 
 export interface QuizAttempt {
   id: string;
+  quizTitle: string;
   score: number;
   startTime: string | null;
   completedAt: string | null;
   quizId: string;
   userId: string;
+  passingScore: number;
   answers: QuizAttemptAnswer[];
 }
 
