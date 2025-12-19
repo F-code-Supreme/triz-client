@@ -9,8 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
-
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import {
   useGetReportByIdQuery,
@@ -18,13 +24,6 @@ import {
 } from '@/features/report/services/queries';
 import { ReportStatus } from '@/features/report/types';
 import { formatDateHour } from '@/utils/date/date';
-import { Skeleton } from '@/components/ui/skeleton';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 interface ReviewPostReportDialogProps {
   open: boolean;
@@ -36,6 +35,7 @@ const ReviewPostReport = ({
   open,
   onOpenChange,
   reportId,
+  // eslint-disable-next-line sonarjs/cognitive-complexity
 }: ReviewPostReportDialogProps) => {
   const [selectedReportId, setSelectedReportId] = useState<string>('');
   const [status, setStatus] = useState<ReportStatus | ''>(
