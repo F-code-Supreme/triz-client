@@ -191,6 +191,10 @@
         "description_placeholder": "Achievement description",
         "description_required": "Description is required",
         "image": "Achievement Image",
+        "image_uploaded": "Image uploaded",
+        "image_upload": "Upload image",
+        "image_instruction": "PNG, JPG up to 2MB",
+        "image_error": "Image upload error(s)",
         "image_description": "Upload an achievement icon or badge (max 2MB)",
         "type": "Type",
         "type_placeholder": "Select achievement type",
@@ -820,8 +824,30 @@
       "role": "Role",
       "status": "Status"
     },
+    "columns": {
+      "avatar": "Avatar",
+      "email": "Email",
+      "full_name": "Full Name",
+      "roles": "Roles",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin",
+      "expert": "Expert",
+      "moderator": "Moderator"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "form": {
       "avatar": "Avatar",
+      "avatar_uploaded": "Avatar uploaded",
+      "avatar_upload": "Upload avatar",
+      "avatar_instruction": "PNG, JPG up to 2MB",
+      "avatar_error": "Avatar upload error(s)",
       "email": "Email",
       "password": "Password",
       "password_keep_current": "Leave empty to keep current",

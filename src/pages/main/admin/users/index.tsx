@@ -103,11 +103,12 @@ const AdminUsersPage = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Roles</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t('users.form.avatar')}</TableHead>
+                    <TableHead>{t('users.form.email')}</TableHead>
+                    <TableHead>{t('users.form.full_name')}</TableHead>
+                    <TableHead>{t('users.form.role')}</TableHead>
+                    <TableHead>{t('users.form.status')}</TableHead>
+                    <TableHead>{t('common.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

@@ -227,6 +227,10 @@ interface Resources {
           "description_required": "Description is required",
           "image": "Achievement Image",
           "image_description": "Upload an achievement icon or badge (max 2MB)",
+          "image_error": "Image upload error(s)",
+          "image_instruction": "PNG, JPG up to 2MB",
+          "image_upload": "Upload image",
+          "image_uploaded": "Image uploaded",
           "milestone_count": "Milestone Count",
           "milestone_count_description": "Number of books required to unlock this achievement",
           "milestone_count_placeholder": "e.g., 5",
@@ -1046,6 +1050,14 @@ interface Resources {
       }
     },
     "users": {
+      "columns": {
+        "actions": "Actions",
+        "avatar": "Avatar",
+        "email": "Email",
+        "full_name": "Full Name",
+        "roles": "Roles",
+        "status": "Status"
+      },
       "create_user": "Create New User",
       "description": "Manage system users and view their details",
       "detail": {
@@ -1074,6 +1086,10 @@ interface Resources {
       },
       "form": {
         "avatar": "Avatar",
+        "avatar_error": "Avatar upload error(s)",
+        "avatar_instruction": "PNG, JPG up to 2MB",
+        "avatar_upload": "Upload avatar",
+        "avatar_uploaded": "Avatar uploaded",
         "create_user": "Create User",
         "email": "Email",
         "full_name": "Full Name",
@@ -1093,7 +1109,17 @@ interface Resources {
       },
       "new_user": "New User",
       "no_users": "No users found",
+      "roles": {
+        "admin": "Admin",
+        "expert": "Expert",
+        "moderator": "Moderator",
+        "user": "User"
+      },
       "search_placeholder": "Search by email or full name...",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
       "title": "Users",
       "view_details": "View Details"
     }

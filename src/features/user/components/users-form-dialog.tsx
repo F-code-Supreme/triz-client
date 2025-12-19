@@ -194,6 +194,10 @@ export const UsersFormDialog = ({
                       }}
                       onRemove={handleRemoveAvatar}
                       maxSize={2 * 1024 * 1024}
+                      uploadedLabel={t('users.form.avatar_uploaded')}
+                      uploadLabel={t('users.form.avatar_upload')}
+                      uploadInstruction={t('users.form.avatar_instruction')}
+                      errorTitle={t('users.form.avatar_error')}
                     />
                   </FormControl>
                   <FormMessage />

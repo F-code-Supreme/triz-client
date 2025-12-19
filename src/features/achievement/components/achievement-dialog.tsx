@@ -206,6 +206,14 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                       }}
                       onRemove={handleRemoveImage}
                       maxSize={2 * 1024 * 1024}
+                      uploadedLabel={t(
+                        'achievements.dialog.form.image_uploaded',
+                      )}
+                      uploadLabel={t('achievements.dialog.form.image_upload')}
+                      uploadInstruction={t(
+                        'achievements.dialog.form.image_instruction',
+                      )}
+                      errorTitle={t('achievements.dialog.form.image_error')}
                     />
                   </FormControl>
                   <FormDescription>

@@ -23,6 +23,10 @@ interface AvatarUploadProps {
   onFileChange?: (file: FileWithPreview | null) => void;
   onRemove?: () => void;
   defaultAvatar?: string;
+  uploadInstruction?: string;
+  uploadedLabel?: string;
+  uploadLabel?: string;
+  errorTitle?: string;
 }
 
 // eslint-disable-next-line react/function-component-definition
@@ -32,6 +36,10 @@ export default function AvatarUpload({
   onFileChange,
   onRemove,
   defaultAvatar,
+  uploadInstruction,
+  uploadedLabel = 'Avatar uploaded',
+  uploadLabel = 'Upload avatar',
+  errorTitle = 'File upload error(s)',
 }: AvatarUploadProps) {
   const [
     { files, isDragging, errors },
@@ -111,13 +119,13 @@ export default function AvatarUpload({
         )}
       </div>
 
-      {/* Upload Instructions */}
+      {/* Upload InstructuploadedLabel : uploadLabel */}
       <div className="text-center space-y-0.5">
         <p className="text-sm font-medium">
-          {currentFile ? 'Avatar uploaded' : 'Upload avatar'}
+          {currentFile ? uploadedLabel : uploadLabel}
         </p>
         <p className="text-xs text-muted-foreground">
-          PNG, JPG up to {formatBytes(maxSize)}
+          {uploadInstruction || `PNG, JPG up to ${formatBytes(maxSize)}`}
         </p>
       </div>
 
@@ -128,7 +136,7 @@ export default function AvatarUpload({
             <TriangleAlert />
           </AlertIcon>
           <AlertContent>
-            <AlertTitle>File upload error(s)</AlertTitle>
+            <AlertTitle>{errorTitle}</AlertTitle>
             <AlertDescription>
               {errors.map((error, index) => (
                 <p key={index} className="last:mb-0">

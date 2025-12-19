@@ -191,6 +191,10 @@
         "description_placeholder": "Mô tả thành tựu",
         "description_required": "Mô tả là bắt buộc",
         "image": "Hình ảnh Thành tựu",
+        "image_uploaded": "Đã tải lên hình ảnh",
+        "image_upload": "Tải lên hình ảnh",
+        "image_instruction": "PNG, JPG tối đa 2MB",
+        "image_error": "Lỗi tải lên hình ảnh",
         "image_description": "Tải lên biểu tượng hoặc huy hiệu thành tựu (tối đa 2MB)",
         "type": "Loại",
         "type_placeholder": "Chọn loại thành tựu",
@@ -708,8 +712,30 @@
       "role": "Vai trò",
       "status": "Trạng thái"
     },
+    "columns": {
+      "avatar": "Ảnh đại diện",
+      "email": "Email",
+      "full_name": "Họ và tên",
+      "roles": "Vai trò",
+      "status": "Trạng thái",
+      "actions": "Hành động"
+    },
+    "roles": {
+      "user": "Người dùng",
+      "admin": "Quản trị viên",
+      "expert": "Chuyên gia",
+      "moderator": "Kiểm duyệt viên"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động"
+    },
     "form": {
       "avatar": "Ảnh đại diện",
+      "avatar_uploaded": "Đã tải lên ảnh đại diện",
+      "avatar_upload": "Tải lên ảnh đại diện",
+      "avatar_instruction": "PNG, JPG tối đa 2MB",
+      "avatar_error": "Lỗi tải lên ảnh đại diện",
       "email": "Email",
       "password": "Mật khẩu",
       "password_keep_current": "Để trống để giữ nguyên",
