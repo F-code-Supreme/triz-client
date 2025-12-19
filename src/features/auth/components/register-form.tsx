@@ -101,7 +101,11 @@ export const RegisterForm = () => {
                 t('form.submit')
               )}
             </SubmitButton>
-            <GoogleSignInButton />
+            <GoogleSignInButton
+              onSuccess={() => {
+                navigate({ to: redirect || '/' });
+              }}
+            />
           </div>
         </form>
       </Form>
