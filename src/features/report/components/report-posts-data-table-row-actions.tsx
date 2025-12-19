@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Row } from '@tanstack/react-table';
-import { BookDashed, Trash2 } from 'lucide-react';
+import { BookDashed } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 
@@ -26,7 +26,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -44,8 +43,10 @@ import {
   useGetForumPostChildrenReplyByIdQuery,
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
+import ReviewPostReport from '@/features/report/components/report-review-dialog';
 
 import type { Comment } from '@/features/forum/types';
+import type { Report } from '@/features/report/types';
 
 interface AssignmentsDataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -62,6 +63,7 @@ export const ReportPostsDataTableRowActions = <TData,>({
 
   // reply management (admin)
   const [isRepliesOpen, setIsRepliesOpen] = React.useState(false);
+  const [isReportReviewOpen, setIsReportReviewOpen] = React.useState(false);
   const queryClient = useQueryClient();
   const deleteReplyComment = useDeleteReplyCommentMutation();
   const createReplyComment = useCreateReplyCommentMutation();
@@ -243,21 +245,9 @@ export const ReportPostsDataTableRowActions = <TData,>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
-          <DropdownMenuItem onClick={() => setIsUpdateOpen(true)}>
+          <DropdownMenuItem onClick={() => setIsReportReviewOpen(true)}>
             <BookDashed className="mr-2 h-4 w-4" />
-            Chỉnh sửa
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsRepliesOpen(true)}>
-            <BookDashed className="mr-2 h-4 w-4" />
-            Quản lý bình luận
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => setIsDeleteDialogOpen(true)}
-            className="text-red-600 cursor-pointer"
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Xóa
+            Đánh giá báo cáo
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -458,6 +448,12 @@ export const ReportPostsDataTableRowActions = <TData,>({
           </div>
         </DialogContent>
       </Dialog>
+
+      <ReviewPostReport
+        open={isReportReviewOpen}
+        onOpenChange={setIsReportReviewOpen}
+        reportId={(forumPost as Report).forumPostId}
+      />
     </>
   );
 };
