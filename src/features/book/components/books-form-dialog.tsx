@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,6 @@ import {
   FileUploadItem,
   FileUploadItemPreview,
   FileUploadItemMetadata,
-  FileUploadItemProgress,
   FileUploadItemDelete,
   FileUploadTrigger,
 } from '@/components/ui/file-upload';
@@ -51,13 +50,21 @@ import { BookStatus } from '../types';
 import type { AdminBook } from '../types';
 
 const bookFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  author: z.string().optional().default(''),
-  publisher: z.string().optional().default(''),
+  title: z.string().min(1, 'Title is required').max(254, 'Title is too long'),
+  author: z.string().max(254, 'Author is too long').optional().default(''),
+  publisher: z
+    .string()
+    .max(254, 'Publisher is too long')
+    .optional()
+    .default(''),
   bCoverUrl: z.string().optional().default(''),
   bUrl: z.string().min(1, 'Book file is required'),
   status: z.enum([BookStatus.PUBLISHED, BookStatus.UNPUBLISHED]),
-  displayOrder: z.coerce.number().int().default(0),
+  displayOrder: z.coerce
+    .number()
+    .int()
+    .min(0, 'Display order must be non-negative')
+    .default(0),
 });
 
 type BookFormValues = z.infer<typeof bookFormSchema>;
@@ -125,31 +132,58 @@ export const BooksFormDialog = ({
   }, [initialData, open, form]);
 
   const onSubmit = async (values: BookFormValues) => {
-    if (initialData) {
-      await updateMutation.mutateAsync({
-        bookId: initialData.id,
-        title: values.title,
-        author: values.author,
-        publisher: values.publisher,
-        bCoverUrl: values.bCoverUrl,
-        bUrl: values.bUrl,
-        status: values.status,
-        displayOrder: values.displayOrder,
-        deletedAt: initialData.deletedAt,
-      });
-    } else {
-      await createMutation.mutateAsync({
-        title: values.title,
-        author: values.author,
-        publisher: values.publisher,
-        bCoverUrl: values.bCoverUrl,
-        bUrl: values.bUrl,
-        status: values.status,
-        displayOrder: values.displayOrder,
-        deletedAt: null,
-      });
+    try {
+      let bookUrl = values.bUrl;
+      let coverUrl = values.bCoverUrl;
+
+      // Upload book file if new file selected
+      if (bookFiles.length > 0) {
+        const response = await uploadMutation.mutateAsync({
+          file: bookFiles[0],
+        });
+        if (response.data) {
+          bookUrl = response.data;
+        }
+      }
+
+      // Upload cover file if new file selected
+      if (coverFiles.length > 0) {
+        const response = await uploadMutation.mutateAsync({
+          file: coverFiles[0],
+        });
+        if (response.data) {
+          coverUrl = response.data;
+        }
+      }
+
+      if (initialData) {
+        await updateMutation.mutateAsync({
+          bookId: initialData.id,
+          title: values.title,
+          author: values.author,
+          publisher: values.publisher,
+          bCoverUrl: coverUrl,
+          bUrl: bookUrl,
+          status: values.status,
+          displayOrder: values.displayOrder,
+          deletedAt: initialData.deletedAt,
+        });
+      } else {
+        await createMutation.mutateAsync({
+          title: values.title,
+          author: values.author,
+          publisher: values.publisher,
+          bCoverUrl: coverUrl,
+          bUrl: bookUrl,
+          status: values.status,
+          displayOrder: values.displayOrder,
+          deletedAt: null,
+        });
+      }
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
-    onOpenChange(false);
   };
 
   return (
@@ -173,11 +207,18 @@ export const BooksFormDialog = ({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('books.form.title')} *</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('books.form.title')} *</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/254
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('books.form.title_placeholder')}
                       {...field}
+                      maxLength={254}
+                      className="truncate"
                     />
                   </FormControl>
                   <FormMessage />
@@ -190,11 +231,17 @@ export const BooksFormDialog = ({
               name="author"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('books.form.author')}</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('books.form.author')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/254
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('books.form.author_placeholder')}
                       {...field}
+                      maxLength={254}
                     />
                   </FormControl>
                   <FormMessage />
@@ -207,11 +254,17 @@ export const BooksFormDialog = ({
               name="publisher"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('books.form.publisher')}</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('books.form.publisher')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/254
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('books.form.publisher_placeholder')}
                       {...field}
+                      maxLength={254}
                     />
                   </FormControl>
                   <FormMessage />
@@ -233,31 +286,8 @@ export const BooksFormDialog = ({
                         if (files.length > 0) {
                           const file = files[0];
                           form.setValue('bUrl', file.name);
-                        }
-                      }}
-                      onUpload={async (
-                        files,
-                        { onProgress, onSuccess, onError },
-                      ) => {
-                        for (const file of files) {
-                          try {
-                            onProgress(file, 0);
-                            const response = await uploadMutation.mutateAsync({
-                              file,
-                            });
-                            if (response.data) {
-                              form.setValue('bUrl', response.data);
-                              onProgress(file, 100);
-                              onSuccess(file);
-                            }
-                          } catch (error) {
-                            onError(
-                              file,
-                              error instanceof Error
-                                ? error
-                                : new Error('Upload failed'),
-                            );
-                          }
+                        } else {
+                          form.setValue('bUrl', '');
                         }
                       }}
                       accept=".epub"
@@ -267,32 +297,28 @@ export const BooksFormDialog = ({
                       <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
                         <div className="text-center">
                           <div className="text-sm font-medium text-muted-foreground">
-                            Drag and drop your book file here
+                            Kéo và thả tệp sách của bạn vào đây
                           </div>
-                          <div className="text-xs text-muted-foreground mt-2">
-                            or
+                          <div className="text-xs text-muted-foreground my-2">
+                            hoặc
                           </div>
-                          {/* <FileUploadTrigger asChild>
-                            <Button type="button" variant="link" size="sm">
-                              Click to browse
-                            </Button>
-                          </FileUploadTrigger> */}
                           <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
                             <Upload className="w-4 h-4" />
                             Tải hình ảnh lên
                           </FileUploadTrigger>
                         </div>
 
-                        <FileUploadList className="mt-4 space-y-2">
+                        <FileUploadList className="mt-4 space-y-2 w-full">
                           {bookFiles.map((file) => (
                             <FileUploadItem key={file.name} value={file}>
                               <div className="flex items-center gap-3 w-full">
-                                <FileUploadItemPreview />
-                                <div className="flex-1">
-                                  <FileUploadItemMetadata />
-                                  <FileUploadItemProgress />
+                                <FileUploadItemPreview className="truncate flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <FileUploadItemMetadata className="truncate" />
                                 </div>
-                                <FileUploadItemDelete />
+                                <FileUploadItemDelete className="flex-shrink-0 p-1 hover:bg-destructive/10 rounded-md transition-colors">
+                                  <X className="h-4 w-4 text-destructive" />
+                                </FileUploadItemDelete>
                               </div>
                             </FileUploadItem>
                           ))}
@@ -319,31 +345,8 @@ export const BooksFormDialog = ({
                         if (files.length > 0) {
                           const file = files[0];
                           form.setValue('bCoverUrl', file.name);
-                        }
-                      }}
-                      onUpload={async (
-                        files,
-                        { onProgress, onSuccess, onError },
-                      ) => {
-                        for (const file of files) {
-                          try {
-                            onProgress(file, 0);
-                            const response = await uploadMutation.mutateAsync({
-                              file,
-                            });
-                            if (response.data) {
-                              form.setValue('bCoverUrl', response.data);
-                              onProgress(file, 100);
-                              onSuccess(file);
-                            }
-                          } catch (error) {
-                            onError(
-                              file,
-                              error instanceof Error
-                                ? error
-                                : new Error('Upload failed'),
-                            );
-                          }
+                        } else {
+                          form.setValue('bCoverUrl', '');
                         }
                       }}
                       accept="image/*"
@@ -353,10 +356,10 @@ export const BooksFormDialog = ({
                       <FileUploadDropzone className="rounded-lg border-2 border-dashed p-6">
                         <div className="text-center">
                           <div className="text-sm font-medium text-muted-foreground">
-                            Drag and drop your cover image here
+                            Kéo và thả hình ảnh bìa của bạn vào đây
                           </div>
-                          <div className="text-xs text-muted-foreground mt-2">
-                            or
+                          <div className="text-xs text-muted-foreground my-2">
+                            hoặc
                           </div>
                           <FileUploadTrigger className="px-3 py-1.5 border rounded-md text-sm bg-background hover:bg-accent transition-colors inline-flex items-center gap-2">
                             <Upload className="w-4 h-4" />
@@ -364,16 +367,17 @@ export const BooksFormDialog = ({
                           </FileUploadTrigger>
                         </div>
 
-                        <FileUploadList className="mt-4 space-y-2">
+                        <FileUploadList className="mt-4 space-y-2 w-full">
                           {coverFiles.map((file) => (
                             <FileUploadItem key={file.name} value={file}>
                               <div className="flex items-center gap-3 w-full">
-                                <FileUploadItemPreview />
-                                <div className="flex-1">
-                                  <FileUploadItemMetadata />
-                                  <FileUploadItemProgress />
+                                <FileUploadItemPreview className="flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <FileUploadItemMetadata className="truncate p-1 hover:bg-destructive/10 rounded-md transition-colors" />
                                 </div>
-                                <FileUploadItemDelete />
+                                <FileUploadItemDelete className="flex-shrink-0 p-1 hover:bg-destructive/10 rounded-md transition-colors">
+                                  <X className="h-4 w-4 text-destructive" />
+                                </FileUploadItemDelete>
                               </div>
                             </FileUploadItem>
                           ))}

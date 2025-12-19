@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { booksColumns } from '@/features/book/components/books-columns';
+import { useAdminBooksColumns } from '@/features/book/components/books-columns';
 import { BooksFormDialog } from '@/features/book/components/books-form-dialog';
 import { bookStatuses } from '@/features/book/data/data';
 import { useGetAllBooksAdminQuery } from '@/features/book/services/queries';
@@ -54,6 +54,8 @@ const AdminBooksManagementPage = () => {
     const currentData = booksData;
     return currentData?.content || [];
   }, [booksData]);
+
+  const booksColumns = useAdminBooksColumns();
 
   const table = useReactTable({
     data: books,

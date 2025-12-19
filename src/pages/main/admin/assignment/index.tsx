@@ -24,7 +24,6 @@ import {
   // useGetAssignmentsQuery,
   useGetAssignmentsQueryExpert,
 } from '@/features/assignment/services/queries';
-import { booksColumns } from '@/features/book/components/books-columns';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminAssignmentsManagementPage = () => {
@@ -136,7 +135,7 @@ const AdminAssignmentsManagementPage = () => {
                 <TableBody>
                   {Array.from({ length: 10 }).map((_, idx) => (
                     <TableRow key={idx}>
-                      {booksColumns.map((_, cellIdx) => (
+                      {assignmentsColumns.map((_, cellIdx) => (
                         <TableCell key={cellIdx}>
                           <Skeleton className="h-8 w-full" />
                         </TableCell>
@@ -192,7 +191,7 @@ const AdminAssignmentsManagementPage = () => {
                     ) : (
                       <TableRow>
                         <TableCell
-                          colSpan={booksColumns.length}
+                          colSpan={assignmentsColumns.length}
                           className="h-24 text-center"
                         >
                           {t('assignments.no_results')}
