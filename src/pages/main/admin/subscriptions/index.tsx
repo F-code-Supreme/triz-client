@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
-  createAdminSubscriptionsColumns,
+  useCreateAdminSubscriptionsColumns,
   AdminSubscriptionsTable,
 } from '@/features/subscription/components';
 import { useEditAutoRenewalMutation } from '@/features/subscription/services/mutations';
@@ -87,10 +87,7 @@ const AdminSubscriptionsPage = () => {
   }, [selectedSubscription, editAutoRenewal]);
 
   // Create columns with auto-renewal callback
-  const columns = useMemo(
-    () => createAdminSubscriptionsColumns(t, handleAutoRenewalToggle),
-    [t, handleAutoRenewalToggle],
-  );
+  const columns = useCreateAdminSubscriptionsColumns(handleAutoRenewalToggle);
 
   // Create table instance with manual pagination
   const table = useReactTable({

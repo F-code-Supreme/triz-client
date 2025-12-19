@@ -44,8 +44,9 @@
     "status": {
       "ACTIVE": "Active",
       "EXPIRED": "Expired",
-      "CANCELED": "Canceled",
-      "PENDING": "Pending"
+      "CANCELLED": "Cancelled",
+      "PENDING": "Pending",
+      "REFUNDED": "Refunded"
     },
     "actions": {
       "view_details": "View Details",

@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { SubscriptionStatus } from '../types';
 import type { TFunction } from 'i18next';
 
-export const getSubscriptionStatusColor = (status: string): string => {
+export const getSubscriptionStatusColor = (
+  status: SubscriptionStatus,
+): string => {
   switch (status) {
     case 'ACTIVE':
       return 'bg-green-100 text-green-800 hover:bg-green-100/90';
@@ -18,11 +21,9 @@ export const getSubscriptionStatusColor = (status: string): string => {
   }
 };
 
-export const getSubscriptionStatusLabel = (
-  status: string,
-  t:
-    | TFunction<'pages.admin' | 'pages.subscription', undefined>
-    | ((key: string) => any),
+export const getAdminSubscriptionStatusLabel = (
+  status: SubscriptionStatus,
+  t: TFunction<'pages.admin', undefined>,
 ): string => {
   switch (status) {
     case 'ACTIVE':
@@ -35,6 +36,26 @@ export const getSubscriptionStatusLabel = (
       return t('subscriptions.status.canceled');
     case 'REFUNDED':
       return t('subscriptions.status.refunded');
+    default:
+      return status;
+  }
+};
+
+export const getSubscriptionStatusLabel = (
+  status: SubscriptionStatus,
+  t: TFunction<'pages.subscription', undefined>,
+): string => {
+  switch (status) {
+    case 'ACTIVE':
+      return t('subscription_history.status.ACTIVE');
+    case 'PENDING':
+      return t('subscription_history.status.PENDING');
+    case 'EXPIRED':
+      return t('subscription_history.status.EXPIRED');
+    case 'CANCELLED':
+      return t('subscription_history.status.CANCELLED');
+    case 'REFUNDED':
+      return t('subscription_history.status.REFUNDED');
     default:
       return status;
   }

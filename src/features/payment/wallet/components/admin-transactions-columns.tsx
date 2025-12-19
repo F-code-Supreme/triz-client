@@ -10,6 +10,7 @@ import { formatTriziliumShort } from '@/utils';
 
 import {
   getTransactionStatusColor,
+  getTransactionStatusLabel,
   getTransactionTypeColor,
   getTransactionTypeLabel,
   TRANSACTION_TYPE_COLORS,
@@ -78,7 +79,8 @@ export const useAdminTransactionsColumns = () => {
         cell: (info) => {
           const status = info.getValue();
           const colors = getTransactionStatusColor(status);
-          return <Badge className={colors}>{status}</Badge>;
+          const label = getTransactionStatusLabel(status, t);
+          return <Badge className={colors}>{label}</Badge>;
         },
       }),
 

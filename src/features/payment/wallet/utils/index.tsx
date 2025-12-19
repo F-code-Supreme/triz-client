@@ -1,4 +1,7 @@
-import type { TransactionType } from '../../transaction/types';
+import type {
+  TransactionStatus,
+  TransactionType,
+} from '../../transaction/types';
 import type { TFunction } from 'i18next';
 
 export const TRANSACTION_TYPE_COLORS = {
@@ -42,5 +45,21 @@ export const getTransactionStatusColor = (status: string): string => {
       return 'bg-red-100 text-red-800 hover:bg-red-100/90';
     default:
       return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
+  }
+};
+
+export const getTransactionStatusLabel = (
+  status: TransactionStatus,
+  t: TFunction<'pages.admin' | 'pages.wallet', undefined>,
+): string => {
+  switch (status) {
+    case 'COMPLETED':
+      return t('transactions.status.completed');
+    case 'PENDING':
+      return t('transactions.status.pending');
+    case 'CANCELLED':
+      return t('transactions.status.cancelled');
+    default:
+      return status;
   }
 };

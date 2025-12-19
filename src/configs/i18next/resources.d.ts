@@ -1758,9 +1758,10 @@ interface Resources {
       "no_subscriptions": "No subscriptions found",
       "status": {
         "ACTIVE": "Active",
-        "CANCELED": "Canceled",
+        "CANCELLED": "Cancelled",
         "EXPIRED": "Expired",
-        "PENDING": "Pending"
+        "PENDING": "Pending",
+        "REFUNDED": "Refunded"
       },
       "title": "Subscription History",
       "toggle_auto_renewal": "Toggle Auto Renewal"
