@@ -35,8 +35,8 @@ export const PieChart = ({
   description,
   height = 350,
   colors = [
-    '#8884d8',
-    '#82ca9d',
+    '#457b9d',
+    '#003566',
     '#ffc658',
     '#ff7c7c',
     '#8dd1e1',

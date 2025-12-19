@@ -151,7 +151,7 @@ export const RevenueSection = ({
                   <Bar
                     dataKey="amountVND"
                     name={t('dashboard.revenue.total_revenue')}
-                    fill="#8884d8"
+                    fill="#003566"
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -173,59 +173,6 @@ export const RevenueSection = ({
               height={400}
             />
           </ChartCard>
-        )}
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        {isLoading ? (
-          <>
-            <ChartCardSkeleton />
-            <ChartCardSkeleton />
-          </>
-        ) : (
-          <>
-            <ChartCard
-              title={'Thống kê trạng thái gói dịch vụ'}
-              description={'Số lượng người dùng theo từng gói dịch vụ'}
-            >
-              <div className="space-y-4">
-                <ResponsiveContainer width="100%" height={370}>
-                  <BarChart data={analytics}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="packagePlanName" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar
-                      dataKey="activeSubscribers"
-                      stackId="a"
-                      fill="#8884d8"
-                      name={'Số người dùng đang sử dụng'}
-                    />
-                    <Bar
-                      dataKey="autoRenewCount"
-                      stackId="a"
-                      fill="#1890ff"
-                      name={'Số người dùng đăng ký tự động'}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </ChartCard>
-
-            <ChartCard
-              title="Thống kê các gói dịch vụ"
-              description="Phân bố số lượng token theo các gói"
-            >
-              <PieChart
-                data={analytics.map((pkg) => ({
-                  name: pkg?.packagePlanName ?? 'Unknown',
-                  value: pkg?.totalTokensConsumed ?? 0,
-                }))}
-                height={400}
-              />
-              <Legend />
-            </ChartCard>
-          </>
         )}
       </div>
       <div>
@@ -275,6 +222,70 @@ export const RevenueSection = ({
               </Table>
             </div>
           </ChartCard>
+        )}
+      </div>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Gói dịch vụ</h2>
+            <p className="text-sm text-muted-foreground">
+              Theo dõi xu hướng doanh thu, số lượng người dùng theo gói dịch vụ
+            </p>
+          </div>
+          {/* {action && <div>{action}</div>} */}
+        </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        {isLoading ? (
+          <>
+            <ChartCardSkeleton />
+            <ChartCardSkeleton />
+          </>
+        ) : (
+          <>
+            <ChartCard
+              title={'Thống kê trạng thái gói dịch vụ'}
+              description={'Số lượng người dùng theo từng gói dịch vụ'}
+            >
+              <div className="space-y-4">
+                <ResponsiveContainer width="100%" height={370}>
+                  <BarChart data={analytics}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="packagePlanName" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar
+                      dataKey="activeSubscribers"
+                      stackId="a"
+                      fill="#003566"
+                      name={'Số người dùng đang sử dụng'}
+                    />
+                    <Bar
+                      dataKey="autoRenewCount"
+                      stackId="a"
+                      fill="#457b9d"
+                      name={'Số người dùng đăng ký tự động'}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </ChartCard>
+
+            <ChartCard
+              title="Thống kê các gói dịch vụ"
+              description="Phân bố số lượng token theo các gói"
+            >
+              <PieChart
+                data={analytics.map((pkg) => ({
+                  name: pkg?.packagePlanName ?? 'Unknown',
+                  value: pkg?.totalTokensConsumed ?? 0,
+                }))}
+                height={400}
+              />
+              <Legend />
+            </ChartCard>
+          </>
         )}
       </div>
     </DashboardSection>

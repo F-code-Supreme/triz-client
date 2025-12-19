@@ -306,8 +306,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
             )}
           </button>
           <h3 className="font-medium text-base">
-            {module.name} - Thời lượng: {module.durationInMinutes} phút - Mức
-            độ:{' '}
+            {module.name} - Cấp độ:{' '}
             {module.level === 'EASY'
               ? 'Sơ cấp'
               : module.level === 'MEDIUM'

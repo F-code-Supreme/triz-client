@@ -57,7 +57,6 @@ const StepBasic: React.FC<Props> = ({
   setCourseId,
   initialCourse,
 }) => {
-  const [durationInMinutes, setDurationInMinutes] = useState<number>(60);
   const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
     'STARTER',
   );
@@ -86,7 +85,6 @@ const StepBasic: React.FC<Props> = ({
     setCourseId?.(initialCourse.id as string);
     setTitle(initialCourse.title ?? '');
     setDescription(initialCourse.description ?? '');
-    setDurationInMinutes(initialCourse.durationInMinutes ?? 60);
     setLevel((initialCourse.level as any) ?? 'STARTER');
     setPrice(initialCourse.price ?? 0);
     setDealPrice(initialCourse.dealPrice ?? 0);
@@ -123,14 +121,9 @@ const StepBasic: React.FC<Props> = ({
         const val = payload[key];
         if (typeof val === 'string') setter(val);
       };
-      const setIfNumber = (key: string, setter: (v: number) => void) => {
-        const val = payload[key];
-        if (typeof val === 'number') setter(val);
-      };
 
       setIfString('title', setTitle);
       setIfString('description', setDescription);
-      setIfNumber('durationInMinutes', setDurationInMinutes);
 
       const levelVal = payload.level;
       if (['STARTER', 'INTERMEDIATE', 'ADVANCED'].includes(String(levelVal)))
@@ -165,7 +158,6 @@ const StepBasic: React.FC<Props> = ({
     setCourseId?.(existingCourse.id as string);
     setTitle(existingCourse.title ?? '');
     setDescription(existingCourse.description ?? '');
-    setDurationInMinutes(existingCourse.durationInMinutes ?? 60);
     setLevel((existingCourse.level as any) ?? 'STARTER');
     setPrice(existingCourse.price ?? 0);
     setDealPrice(existingCourse.dealPrice ?? 0);
@@ -203,7 +195,6 @@ const StepBasic: React.FC<Props> = ({
     const payload = {
       title: title.trim(),
       description: description.trim(),
-      durationInMinutes,
       level,
       price,
       dealPrice,
@@ -414,22 +405,7 @@ const StepBasic: React.FC<Props> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">
-                Thời lượng (phút)
-              </label>
-              <NumberInput
-                value={durationInMinutes}
-                onValueChange={(val) => setDurationInMinutes(val ?? 60)}
-                min={5}
-                stepper={1}
-                thousandSeparator=","
-                placeholder="Nhập thời lượng"
-                disabled={loading}
-              />
-            </div>
-
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700">
                 Mức độ
