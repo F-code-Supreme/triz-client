@@ -24,10 +24,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { useGetUserAchievementsQuery } from '@/features/achievement/services/queries';
 import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
 import {
-  AdminTransactionsTable,
+  TransactionsTable,
   useTransactionsColumns,
 } from '@/features/payment/wallet/components';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
@@ -48,6 +55,7 @@ import { formatTrizilium } from '@/utils';
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const AdminUserDetailPage = () => {
   const { t } = useTranslation('pages.admin');
+  const { t: tWallet } = useTranslation('pages.wallet');
   const navigate = useNavigate();
   const { userId } = useParams({ from: '/admin/users/$userId' });
 
@@ -70,6 +78,8 @@ const AdminUserDetailPage = () => {
   const [fromDate, setFromDate] = useState<Date | undefined>();
   const [toDate, setToDate] = useState<Date | undefined>();
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [achievementPagination] = useState({ pageIndex: 0, pageSize: 100 });
+  const [achievementSorting] = useState([{ id: 'earnedAt', desc: true }]);
 
   // Build filters with date range
   const filters = useMemo(() => {
@@ -90,8 +100,7 @@ const AdminUserDetailPage = () => {
     useGetUserByIdQuery(userId);
 
   // Fetch wallet data
-  const { data: walletData, isLoading: walletLoading } =
-    useGetWalletByUserQuery(userId);
+  const { data: walletData } = useGetWalletByUserQuery(userId);
 
   // Fetch transactions
   const { data: transactionsData, isLoading: transactionsLoading } =
@@ -107,6 +116,13 @@ const AdminUserDetailPage = () => {
 
   const { data: activeSubscription, isLoading: activeSubscriptionLoading } =
     useGetActiveSubscriptionByUserQuery(userId);
+
+  const { data: achievementsData, isLoading: achievementsLoading } =
+    useGetUserAchievementsQuery(
+      userId,
+      achievementPagination,
+      achievementSorting,
+    );
 
   const { mutate: cancelSubscription, isPending: isCancelingSubscription } =
     useCancelSubscriptionMutation();
@@ -258,7 +274,7 @@ const AdminUserDetailPage = () => {
           {/* Transaction Card Skeleton */}
           <Card>
             <CardHeader>
-              <CardTitle>Transaction History</CardTitle>
+              <CardTitle>{t('users.detail.transaction_history')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Skeleton className="h-96 w-full" />
@@ -373,15 +389,79 @@ const AdminUserDetailPage = () => {
                     Wallet Balance
                   </p>
                   <p className="text-base font-medium">
-                    {walletLoading
-                      ? 'Loading...'
-                      : walletData
-                        ? formatTrizilium(walletData.balance)
-                        : 'N/A'}
+                    {walletData ? formatTrizilium(walletData.balance) : 0}
                   </p>
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Achievements Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Thành tựu ({achievementsData?.page.totalElements || 0})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {achievementsLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton key={index} className="h-28 w-full" />
+                ))}
+              </div>
+            ) : achievementsData && achievementsData.content.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {achievementsData.content.map((achievement) => (
+                  <TooltipProvider key={achievement.achievementId}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
+                          {achievement.achievementImageUrl ? (
+                            <img
+                              src={achievement.achievementImageUrl}
+                              alt={achievement.achievementName}
+                              className="w-16 h-16 object-contain rounded-full hover:scale-105 transition-transform"
+                            />
+                          ) : (
+                            <div className="text-4xl">🏆</div>
+                          )}
+                          <p className="text-xs text-center line-clamp-2 font-medium">
+                            {achievement.achievementName}
+                          </p>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div className="space-y-1">
+                          <p className="font-semibold">
+                            {achievement.achievementName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {achievement.achievementDescription}
+                          </p>
+                          {achievement.bookTitle && (
+                            <p className="text-xs text-muted-foreground">
+                              Sách: {achievement.bookTitle}
+                            </p>
+                          )}
+                          <p className="text-xs text-muted-foreground">
+                            Đạt được:{' '}
+                            {new Date(
+                              achievement.earnedAt,
+                            ).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-sm text-muted-foreground py-8">
+                Chưa có thành tựu nào được đạt được.
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -491,11 +571,11 @@ const AdminUserDetailPage = () => {
             <CardTitle>{t('users.detail.transaction_history')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <AdminTransactionsTable
+            <TransactionsTable
               table={table}
               isLoading={transactionsLoading}
               totalRowCount={totalRowCount}
-              t={t}
+              t={tWallet}
               pageSize={pagination.pageSize}
               columnsLength={transactionColumns.length}
               filters={transactionFilters}
