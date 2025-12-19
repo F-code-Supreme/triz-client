@@ -152,12 +152,18 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
               rules={{ required: t('achievements.dialog.form.name_required') }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('achievements.dialog.form.name')}</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('achievements.dialog.form.name')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/100
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t(
                         'achievements.dialog.form.name_placeholder',
                       )}
+                      maxLength={100}
                       {...field}
                     />
                   </FormControl>
@@ -174,8 +180,11 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
               }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t('achievements.dialog.form.description')}
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('achievements.dialog.form.description')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/500
+                    </span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
@@ -183,6 +192,7 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                         'achievements.dialog.form.description_placeholder',
                       )}
                       rows={3}
+                      maxLength={500}
                       {...field}
                     />
                   </FormControl>
