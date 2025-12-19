@@ -11,10 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDateHour } from '@/utils/date/date';
 
 import type { ColumnDef } from '@tanstack/react-table';
 import type { TFunction } from 'i18next';
-import { formatDateHour } from '@/utils/date/date';
 
 export type Quiz = {
   id: string;

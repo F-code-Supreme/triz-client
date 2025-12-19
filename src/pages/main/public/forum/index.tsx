@@ -321,7 +321,7 @@ const ForumPage: React.FC = () => {
                             }
                             className="text-secondary mt-1"
                           >
-                            {expandedId === p.id ? 'Thu gọn' : 'xem thêm'}
+                            {expandedId === p.id ? 'Thu gọn' : 'Xem thêm'}
                           </button>
                         </div>
                       )}

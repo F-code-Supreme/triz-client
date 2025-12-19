@@ -1,4 +1,4 @@
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Upload } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,17 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { PackageStatus } from '@/features/packages/types';
-import { validateUrl } from '@/utils';
 import {
   FileUpload,
   FileUploadDropzone,
@@ -32,11 +21,21 @@ import {
   FileUploadItemDelete,
   FileUploadTrigger,
 } from '@/components/ui/file-upload';
-import { Upload } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { NumberInput } from '@/components/ui/number-input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useUploadFileMutation } from '@/features/book/services/mutations';
+import { PackageStatus } from '@/features/packages/types';
+import { validateUrl } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
-import { NumberInput } from '@/components/ui/number-input';
 
 interface Feature {
   iconUrl: string;

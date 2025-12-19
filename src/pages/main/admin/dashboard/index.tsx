@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import FallbackLoading from '@/components/fallback-loading';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   RevenueSection,
@@ -10,6 +9,7 @@ import {
   GameSection,
 } from '@/features/dashboard';
 import {
+  useGetAdminPackageAnalyticsQuery,
   useGetAdminPaymentsRevenueTrendQuery,
   useGetAdminPaymentsStatsQuery,
   useGetAdminPaymentsStatusDistributionQuery,
@@ -34,14 +34,19 @@ const AdminDashboardPage = () => {
   const { data: topUsers, isLoading: topUsersLoading } =
     useGetAdminPaymentsTopUsersQuery();
 
-  const isLoading =
-    statsLoading || trendLoading || distributionLoading || topUsersLoading;
+  const { data: paymentAnalytics, isLoading: paymentAnalyticsLoading } =
+    useGetAdminPackageAnalyticsQuery();
+
+  const isInitialLoading =
+    statsLoading ||
+    distributionLoading ||
+    topUsersLoading ||
+    paymentAnalyticsLoading;
 
   const [activeTab, setActiveTab] = useState('revenue');
 
   return (
     <AdminLayout meta={{ title: t('dashboard.title') }}>
-      {isLoading && <FallbackLoading isFullscreen isCenter />}
       <div className="space-y-8 p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <div className="flex justify-between items-center">
@@ -68,16 +73,19 @@ const AdminDashboardPage = () => {
               paymentStatsStatistics={paymentStatsStatistics}
               paymentRevenueTrend={paymentRevenueTrend}
               paymentStatusDistribution={paymentStatusDistribution}
+              paymentAnalytics={paymentAnalytics}
               topUsers={topUsers}
               period={period}
               setPeriod={setPeriod}
+              isLoading={isInitialLoading}
+              trendLoading={trendLoading}
             />
           </TabsContent>
           <TabsContent value="chat" className="mt-6">
-            <ChatForumSection chat={mokdata.chat} />
+            <ChatForumSection chat={mokdata.chat} isLoading={false} />
           </TabsContent>
           <TabsContent value="games" className="mt-6">
-            <GameSection data={mokdata.games} />
+            <GameSection data={mokdata.games} isLoading={false} />
           </TabsContent>
         </Tabs>
       </div>

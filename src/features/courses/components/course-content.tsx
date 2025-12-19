@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Clock } from 'lucide-react';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -22,7 +23,6 @@ import {
 } from '@/components/ui/shadcn-io/video-player';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useMarkLessonAsCompletedMutation } from '@/features/lesson/services/mutations';
-import { toast } from 'sonner';
 import { useGetLessonProgressQuery } from '@/features/lesson/services/queries';
 import { cn } from '@/lib/utils';
 
