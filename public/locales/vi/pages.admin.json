@@ -543,7 +543,7 @@
       "duration_days": "Thời hạn (Ngày)",
       "duration_placeholder": "30",
       "duration_required": "Thời hạn phải lớn hơn 0",
-      "daily_trizilium": "Trizilium hàng ngày",
+      "daily_trizilium": "Chat Token mỗi ngày",
       "daily_placeholder": "500",
       "daily_required": "Token trò chuyện mỗi ngày phải lớn hơn 0",
       "status": "Trạng thái",

@@ -33,8 +33,7 @@ import {
 } from '@/components/ui/select';
 import { useUploadFileMutation } from '@/features/book/services/mutations';
 import { PackageStatus } from '@/features/packages/types';
-import { validateUrl } from '@/utils';
-
+// import { validateUrl } from '@/utils';
 import type { Package } from '@/features/packages/types';
 
 interface Feature {
@@ -152,13 +151,13 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleIconUrlChange = (url: string) => {
-    setNewFeature({ ...newFeature, iconUrl: url });
-    // Validate URL with image requirement
-    const error = validateUrl(url, true);
-    setIconUrlError(error);
-    setIconFiles([]);
-  };
+  // const handleIconUrlChange = (url: string) => {
+  //   setNewFeature({ ...newFeature, iconUrl: url });
+  //   // Validate URL with image requirement
+  //   const error = validateUrl(url, true);
+  //   setIconUrlError(error);
+  //   setIconFiles([]);
+  // };
 
   const handleAddFeature = () => {
     if (newFeature.iconUrl && newFeature.description && !iconUrlError) {
@@ -405,12 +404,12 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
               </Label>
               <div className="grid gap-2">
                 <div className="space-y-1">
-                  <Input
+                  {/* <Input
                     placeholder={t('packages.dialog.icon_url_placeholder')}
                     value={newFeature.iconUrl}
                     onChange={(e) => handleIconUrlChange(e.target.value)}
                     className={iconUrlError ? ERROR_CLASS : ''}
-                  />
+                  /> */}
                   <div className="my-2">
                     <FileUpload
                       value={iconFiles}

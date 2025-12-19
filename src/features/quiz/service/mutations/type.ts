@@ -3,7 +3,10 @@ import type { PaginatedResponse } from '@/types';
 export type UpdateQuizPayload = {
   title: string;
   description: string;
-  moduleId: string;
+  passingScore?: number;
+  durationInMinutes?: number;
+  moduleId: string | null;
+  imageSource?: string | null;
   questions: Array<{
     content: string;
     questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
@@ -31,6 +34,7 @@ export interface CreateQuizPayload {
   description: string;
   durationInMinutes: number;
   moduleId: string | null;
+  passingScore: number;
   questions: Array<{
     content: string;
     questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
@@ -147,6 +151,7 @@ export interface GetQuizByIdResponse {
   title: string;
   description: string;
   durationInMinutes: string;
+  passingScore: number;
   imageSource?: string;
   moduleId?: string;
   createdAt: string;

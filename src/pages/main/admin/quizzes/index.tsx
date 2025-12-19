@@ -41,6 +41,7 @@ import {
 import { AdminLayout } from '@/layouts/admin-layout';
 
 import DetailQuizDialog from '../../../../features/quiz/components/quiz-detail-dialog';
+import { toast } from 'sonner';
 
 const AdminQuizzesPage = () => {
   const { t } = useTranslation('pages.admin');
@@ -88,6 +89,8 @@ const AdminQuizzesPage = () => {
       await deleteQuizMutation.mutateAsync(deletingQuiz.id);
       setDeleteDialogOpen(false);
       setDeletingQuiz(null);
+      toast.success('Xóa bài kiểm tra thành công!');
+
       refetch();
     } catch (error) {
       console.error('Failed to delete quiz:', error);

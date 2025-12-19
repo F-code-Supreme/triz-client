@@ -143,7 +143,7 @@ const CourseCard = ({
               className="w-full"
             >
               <BookOpen className="w-4 h-4 mr-2" />
-              Continue Learning
+              Tiếp tục khóa học
             </Button>
           ) : (
             <Link
@@ -160,7 +160,7 @@ const CourseCard = ({
               )}
             >
               <Play className="w-4 h-4 mr-2" />
-              View Details
+              Xem chi tiết khóa học
             </Link>
           )}
         </CardFooter>
