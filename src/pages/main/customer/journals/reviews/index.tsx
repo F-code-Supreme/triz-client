@@ -13,7 +13,6 @@ import { useMemo, useState } from 'react';
 
 import { DataTablePagination } from '@/components/data-table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -27,6 +26,7 @@ import {
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetRootReviewsByProblemQuery } from '@/features/journal-review/services/queries';
+import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/(app)/journals/$journalId/reviews';
 
@@ -82,16 +82,7 @@ const JournalReviewsPage = () => {
       }),
       columnHelper.accessor('status', {
         header: 'Trạng thái',
-        cell: (info) => {
-          const status = info.getValue();
-          const variant =
-            status === 'APPROVED'
-              ? 'default'
-              : status === 'REVIEWED'
-                ? 'secondary'
-                : 'outline';
-          return <Badge variant={variant}>{status}</Badge>;
-        },
+        cell: (info) => getReviewStatusBadge(info.getValue()),
       }),
       columnHelper.accessor('averageRating', {
         header: 'Đánh giá',

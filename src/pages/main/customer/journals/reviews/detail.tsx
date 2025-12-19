@@ -294,10 +294,11 @@ const JournalReviewDetailsPage = () => {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              {getReviewStatusBadge(rootReview.status)}
+              {getReviewStatusBadge(rootReview.status, 'md')}
               {!isReadOnly && isOwner && rootReview.status === 'REVIEWED' && (
                 <Button
                   variant="default"
+                  size="sm"
                   className="bg-green-600 hover:bg-green-700"
                   onClick={() => handleChangeStatus('APPROVED')}
                 >

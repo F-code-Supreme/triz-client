@@ -18,25 +18,52 @@ export const reviewStatusColors: Record<ReviewStatus, string> = {
   COMMENTED: 'bg-gray-100 text-gray-700 hover:bg-gray-100',
 };
 
-export const getReviewStatusBadge = (status: ReviewStatus) => {
+export const getReviewStatusBadge = (
+  status: ReviewStatus,
+  size: 'sm' | 'md' = 'sm',
+) => {
   switch (status) {
     case 'PENDING':
-      return <Badge variant="secondary">Chờ xử lý</Badge>;
+      return (
+        <Badge
+          variant="secondary"
+          className={
+            size === 'md' ? 'bg-yellow-600 h-9 rounded-md' : 'bg-yellow-600'
+          }
+        >
+          Chờ xử lý
+        </Badge>
+      );
     case 'PROCESSING':
       return (
-        <Badge variant="default" className="bg-blue-600">
+        <Badge
+          variant="default"
+          className={
+            size === 'md' ? 'bg-blue-600 h-9 rounded-md' : 'bg-blue-600'
+          }
+        >
           Đang xử lý
         </Badge>
       );
     case 'REVIEWED':
       return (
-        <Badge variant="default" className="bg-purple-600">
+        <Badge
+          variant="default"
+          className={
+            size === 'md' ? 'bg-purple-600 h-9 rounded-md' : 'bg-purple-600'
+          }
+        >
           Đã đánh giá
         </Badge>
       );
     case 'APPROVED':
       return (
-        <Badge variant="default" className="bg-green-600">
+        <Badge
+          variant="default"
+          className={
+            size === 'md' ? 'bg-green-600 h-9 rounded-md' : 'bg-green-600'
+          }
+        >
           Đã phê duyệt
         </Badge>
       );

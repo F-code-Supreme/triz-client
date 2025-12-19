@@ -285,7 +285,7 @@ const ExpertJournalReviewDetailPage = () => {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              {getReviewStatusBadge(rootReview.status)}
+              {getReviewStatusBadge(rootReview.status, 'md')}
               {!isReadOnly &&
                 canChangeStatus &&
                 rootReview.status === 'PROCESSING' && (
