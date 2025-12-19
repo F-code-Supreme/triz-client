@@ -60,13 +60,6 @@ export const useCreateChildReviewMutation = () => {
       return response.data;
     },
     onSuccess: (_, variables) => {
-      // Invalidate child reviews queries
-      queryClient.invalidateQueries({
-        queryKey: [
-          JournalReviewKeys.GetChildReviewsByRootQuery,
-          variables.problemReviewId,
-        ],
-      });
       // Invalidate SearchChildReviewsQuery with specific stepNumber
       const stepNumber = variables.stepNumber ?? null;
       queryClient.invalidateQueries({
@@ -113,6 +106,15 @@ export const usePatchReviewMutation = () => {
           variables.userId,
         ],
       });
+      // Invalidate SearchChildReviewsQuery with specific stepNumber using rootReviewId
+      const stepNumber = variables.stepNumber ?? null;
+      queryClient.invalidateQueries({
+        queryKey: [
+          JournalReviewKeys.SearchChildReviewsQuery,
+          variables.rootReviewId,
+          { stepNumber },
+        ],
+      });
     },
   });
 };
@@ -148,8 +150,14 @@ export const useDeleteReviewMutation = () => {
           variables.userId,
         ],
       });
+      // Invalidate SearchChildReviewsQuery with specific stepNumber using rootReviewId
+      const stepNumber = variables.stepNumber ?? null;
       queryClient.invalidateQueries({
-        queryKey: [JournalReviewKeys.GetChildReviewsByRootQuery],
+        queryKey: [
+          JournalReviewKeys.SearchChildReviewsQuery,
+          variables.rootReviewId,
+          { stepNumber },
+        ],
       });
     },
   });

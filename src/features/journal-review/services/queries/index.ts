@@ -256,8 +256,8 @@ export const useSearchChildReviewsQuery = (
                         .join('&')
                     : undefined,
               },
-              signal,
             },
+            signal,
           );
           return response.data;
         }

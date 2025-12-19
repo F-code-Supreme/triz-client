@@ -41,9 +41,10 @@ interface NestedReviewsProps {
   setReplyToReview: (id: string | null) => void;
   setReplyContent: (content: string) => void;
   setReplyRating: (rating: number) => void;
-  handleUpdateReview: (reviewId: string) => void;
-  handleDeleteReview: (reviewId: string) => void;
+  handleUpdateReview: (reviewId: string, stepNumber: number | null) => void;
+  handleDeleteReview: (reviewId: string, stepNumber: number | null) => void;
   handleCreateChildReview: (
+    parentReviewId: string,
     stepNumber: number | null,
     content: string,
     rating?: number,
@@ -122,12 +123,14 @@ export const NestedReviews = ({
     review: ChildReviewWithTimestamp & {
       children?: ChildReviewWithTimestamp[];
     },
+    depth: number = 0,
   ) => {
     const isEditing = editingReview === review.id;
     const canEdit =
       !isReadOnly && (review.creatorId === userId || isExpertOrAdmin);
     const canDeleteThis = !isReadOnly && canDelete(review.creatorId);
     const isReplying = replyToReview === review.id;
+    const showRating = depth === 0; // Only show rating for level 1 (direct children of root)
 
     return (
       <div key={review.id} className="border rounded-lg p-3">
@@ -165,7 +168,9 @@ export const NestedReviews = ({
                     )}
                     {canDeleteThis && (
                       <DropdownMenuItem
-                        onClick={() => handleDeleteReview(review.id)}
+                        onClick={() =>
+                          handleDeleteReview(review.id, review.stepNumber)
+                        }
                         className="text-red-600"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -184,7 +189,7 @@ export const NestedReviews = ({
                   onChange={(e) => setEditContent(e.target.value)}
                   className="min-h-[80px]"
                 />
-                {review.stepNumber !== null && (
+                {showRating && review.stepNumber !== null && (
                   <div className="flex items-center gap-2">
                     <span className="text-sm">Đánh giá:</span>
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -203,7 +208,9 @@ export const NestedReviews = ({
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    onClick={() => handleUpdateReview(review.id)}
+                    onClick={() =>
+                      handleUpdateReview(review.id, review.stepNumber)
+                    }
                   >
                     <Check className="h-4 w-4 mr-1" />
                     Lưu
@@ -227,7 +234,7 @@ export const NestedReviews = ({
                 <p className="mt-2 text-sm whitespace-pre-wrap">
                   {review.content}
                 </p>
-                {review.rating && (
+                {showRating && review.rating && (
                   <div className="flex items-center gap-1 mt-2">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm font-medium">
@@ -262,7 +269,7 @@ export const NestedReviews = ({
                   onChange={(e) => setReplyContent(e.target.value)}
                   className="min-h-[60px]"
                 />
-                {review.stepNumber !== null && (
+                {showRating && review.stepNumber !== null && (
                   <div className="flex items-center gap-2">
                     <span className="text-sm">Đánh giá:</span>
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -283,9 +290,10 @@ export const NestedReviews = ({
                     size="sm"
                     onClick={() =>
                       handleCreateChildReview(
+                        review.id,
                         review.stepNumber,
                         replyContent,
-                        replyRating || undefined,
+                        showRating ? replyRating || undefined : undefined,
                       ).then(() => {
                         setReplyToReview(null);
                         setReplyContent('');
@@ -321,6 +329,7 @@ export const NestedReviews = ({
                 child as ChildReviewWithTimestamp & {
                   children?: ChildReviewWithTimestamp[];
                 },
+                depth + 1,
               ),
             )}
           </div>
@@ -331,7 +340,7 @@ export const NestedReviews = ({
 
   return (
     <div className={level > 0 ? 'ml-8 mt-2 space-y-2' : 'space-y-3'}>
-      {tree.map((review) => renderReview(review))}
+      {tree.map((review) => renderReview(review, level))}
     </div>
   );
 };

@@ -28,8 +28,9 @@ export type CreateChildReviewResponse = ChildReviewWithTimestamp;
 export interface PatchReviewPayload {
   userId: string;
   problemReviewId: string;
+  rootReviewId: string; // For query invalidation
   content?: string;
-  stepNumber?: number;
+  stepNumber?: number | null;
   rating?: number;
   status?: ReviewStatus;
 }
@@ -40,4 +41,6 @@ export type PatchReviewResponse = ChildReviewWithTimestamp;
 export interface DeleteReviewPayload {
   userId: string;
   problemReviewId: string;
+  rootReviewId: string; // For query invalidation
+  stepNumber?: number | null; // For query invalidation only, not sent to API
 }

@@ -144,6 +144,7 @@ const ExpertJournalReviewDetailPage = () => {
 
   // Handle create child review
   const handleCreateChildReview = async (
+    parentReviewId: string,
     stepNumber: number | null,
     content: string,
     rating?: number,
@@ -155,7 +156,7 @@ const ExpertJournalReviewDetailPage = () => {
 
     try {
       await createChildReviewMutation.mutateAsync({
-        problemReviewId: journalReviewId,
+        problemReviewId: parentReviewId,
         content: content.trim(),
         stepNumber: stepNumber === null ? undefined : stepNumber,
         rating: rating || undefined,
@@ -175,7 +176,10 @@ const ExpertJournalReviewDetailPage = () => {
   };
 
   // Handle update review
-  const handleUpdateReview = async (reviewId: string) => {
+  const handleUpdateReview = async (
+    reviewId: string,
+    stepNumber: number | null,
+  ) => {
     if (!editContent.trim()) {
       toast.error('Vui lòng nhập nội dung');
       return;
@@ -183,10 +187,12 @@ const ExpertJournalReviewDetailPage = () => {
 
     try {
       await patchReviewMutation.mutateAsync({
-        userId: creatorId,
+        userId: user!.id,
         problemReviewId: reviewId,
+        rootReviewId: journalReviewId,
         content: editContent.trim(),
         rating: editRating === null ? undefined : editRating,
+        stepNumber: stepNumber,
       });
       toast.success('Cập nhật thành công');
       setEditingReview(null);
@@ -198,11 +204,16 @@ const ExpertJournalReviewDetailPage = () => {
   };
 
   // Handle delete review
-  const handleDeleteReview = async (reviewId: string) => {
+  const handleDeleteReview = async (
+    reviewId: string,
+    stepNumber: number | null,
+  ) => {
     try {
       await deleteReviewMutation.mutateAsync({
-        userId: creatorId,
+        userId: user!.id,
         problemReviewId: reviewId,
+        rootReviewId: journalReviewId,
+        stepNumber: stepNumber,
       });
       toast.success('Xóa thành công');
     } catch {
@@ -216,8 +227,9 @@ const ExpertJournalReviewDetailPage = () => {
 
     try {
       await patchReviewMutation.mutateAsync({
-        userId: creatorId,
+        userId: user!.id,
         problemReviewId: journalReviewId,
+        rootReviewId: journalReviewId,
         status: newStatus,
       });
       toast.success('Cập nhật trạng thái thành công');
@@ -431,6 +443,7 @@ const ExpertJournalReviewDetailPage = () => {
                         size="sm"
                         onClick={() =>
                           handleCreateChildReview(
+                            journalReviewId,
                             1,
                             stepComments[1] || '',
                             stepRatings[1],
@@ -546,6 +559,7 @@ const ExpertJournalReviewDetailPage = () => {
                         size="sm"
                         onClick={() =>
                           handleCreateChildReview(
+                            journalReviewId,
                             2,
                             stepComments[2] || '',
                             stepRatings[2],
@@ -673,6 +687,7 @@ const ExpertJournalReviewDetailPage = () => {
                         size="sm"
                         onClick={() =>
                           handleCreateChildReview(
+                            journalReviewId,
                             3,
                             stepComments[3] || '',
                             stepRatings[3],
@@ -802,6 +817,7 @@ const ExpertJournalReviewDetailPage = () => {
                         size="sm"
                         onClick={() =>
                           handleCreateChildReview(
+                            journalReviewId,
                             4,
                             stepComments[4] || '',
                             stepRatings[4],
@@ -936,6 +952,7 @@ const ExpertJournalReviewDetailPage = () => {
                         size="sm"
                         onClick={() =>
                           handleCreateChildReview(
+                            journalReviewId,
                             5,
                             stepComments[5] || '',
                             stepRatings[5],
@@ -1081,6 +1098,7 @@ const ExpertJournalReviewDetailPage = () => {
                         size="sm"
                         onClick={() =>
                           handleCreateChildReview(
+                            journalReviewId,
                             6,
                             stepComments[6] || '',
                             stepRatings[6],
@@ -1150,8 +1168,12 @@ const ExpertJournalReviewDetailPage = () => {
                           setEditContent('');
                           setEditRating(null);
                         }}
-                        onUpdateReview={() => handleUpdateReview(review.id)}
-                        onDelete={() => handleDeleteReview(review.id)}
+                        onUpdateReview={() =>
+                          handleUpdateReview(review.id, review.stepNumber)
+                        }
+                        onDelete={() =>
+                          handleDeleteReview(review.id, review.stepNumber)
+                        }
                         setEditContent={setEditContent}
                         setEditRating={setEditRating}
                       />
@@ -1170,7 +1192,11 @@ const ExpertJournalReviewDetailPage = () => {
                     />
                     <Button
                       onClick={() =>
-                        handleCreateChildReview(null, generalComment)
+                        handleCreateChildReview(
+                          journalReviewId,
+                          null,
+                          generalComment,
+                        )
                       }
                       disabled={!generalComment.trim()}
                     >

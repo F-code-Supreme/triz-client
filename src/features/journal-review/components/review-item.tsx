@@ -24,14 +24,14 @@ interface ReviewItemProps {
   editContent: string;
   editRating: number | null;
   onEdit: (reviewId: string, content: string, rating: number | null) => void;
-  onDelete: (reviewId: string) => void;
+  onDelete: (reviewId: string, stepNumber: number | null) => void;
   onStartEdit: (
     reviewId: string,
     content: string,
     rating: number | null,
   ) => void;
   onCancelEdit: () => void;
-  onUpdateReview: (reviewId: string) => void;
+  onUpdateReview: (reviewId: string, stepNumber: number | null) => void;
   setEditContent: (content: string) => void;
   setEditRating: (rating: number | null) => void;
 }
@@ -84,7 +84,7 @@ export const ReviewItem = ({
                 )}
                 {canDelete && (
                   <DropdownMenuItem
-                    onClick={() => onDelete(review.id)}
+                    onClick={() => onDelete(review.id, review.stepNumber)}
                     className="text-red-600"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
@@ -120,7 +120,10 @@ export const ReviewItem = ({
               </div>
             )}
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => onUpdateReview(review.id)}>
+              <Button
+                size="sm"
+                onClick={() => onUpdateReview(review.id, review.stepNumber)}
+              >
                 Lưu
               </Button>
               <Button size="sm" variant="outline" onClick={onCancelEdit}>
