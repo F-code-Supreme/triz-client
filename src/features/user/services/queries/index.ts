@@ -75,7 +75,9 @@ export const useSearchAllUsersQuery = (
       if (filter.value !== undefined && filter.value !== null) {
         // Convert 'true'/'false' strings to boolean for enabled field
         if (filter.id === 'enabled') {
-          acc[filter.id] = filter.value === 'true';
+          acc[filter.id] = Array.isArray(filter.value)
+            ? filter.value[0] === 'true'
+            : filter.value === 'true';
         } else if (filter.id === 'roles') {
           // Ensure roles is always a string, not an array
           acc[filter.id] = Array.isArray(filter.value)
@@ -95,8 +97,10 @@ export const useSearchAllUsersQuery = (
     queryFn: async ({ signal }) => {
       const response = await _request.post<
         PaginatedResponse<IUser & DataTimestamp>
-      >('/users/search', requestBody, {
-        params: {
+      >(
+        '/users/search',
+        requestBody,
+        {
           page: pagination.pageIndex,
           size: pagination.pageSize,
           sort:
@@ -107,7 +111,7 @@ export const useSearchAllUsersQuery = (
               : undefined,
         },
         signal,
-      });
+      );
       return response.data;
     },
   });

@@ -135,7 +135,7 @@ export const DataTableToolbar = <TData,>({
               </SelectContent>
             </Select>
           )}
-          {searchKey && (
+          {(searchKey || searchKeys) && (
             <Input
               placeholder={searchPlaceholder}
               value={searchValue}

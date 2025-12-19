@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { getUserFilters } from '@/features/user/components/user-filters';
-import { usersColumns } from '@/features/user/components/users-columns';
+import { useAdminUsersColumns } from '@/features/user/components/users-columns';
 import { UsersFormDialog } from '@/features/user/components/users-form-dialog';
 import { useSearchAllUsersQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
@@ -48,6 +48,8 @@ const AdminUsersPage = () => {
 
   // Get translated filters
   const userFilters = useMemo(() => getUserFilters(t), [t]);
+
+  const usersColumns = useAdminUsersColumns();
 
   const table = useReactTable({
     data: users,

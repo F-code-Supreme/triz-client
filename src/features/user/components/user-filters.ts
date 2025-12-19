@@ -15,10 +15,6 @@ export const getUserFilters = (
         value: RoleIUser.USER,
       },
       {
-        label: t('users.form.role_admin'),
-        value: RoleIUser.ADMIN,
-      },
-      {
         label: t('users.form.role_expert'),
         value: RoleIUser.EXPERT,
       },
