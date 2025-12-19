@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 
 import { ExpertJournalReviewsDataTableRowActions } from './expert-journal-reviews-data-table-row-actions';
 
@@ -74,27 +74,7 @@ export const expertJournalReviewsColumns: ColumnDef<RootReviewWithTimestamp>[] =
       cell: ({ row }) => {
         const status = row.getValue('status') as ReviewStatus;
 
-        const statusLabels: Record<ReviewStatus, string> = {
-          PENDING: 'Chờ xử lý',
-          PROCESSING: 'Đang xử lý',
-          REVIEWED: 'Đã đánh giá',
-          APPROVED: 'Đã duyệt',
-          COMMENTED: 'Đã nhận xét',
-        };
-
-        const statusColors: Record<ReviewStatus, string> = {
-          PENDING: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100',
-          PROCESSING: 'bg-blue-100 text-blue-700 hover:bg-blue-100',
-          REVIEWED: 'bg-green-100 text-green-700 hover:bg-green-100',
-          APPROVED: 'bg-purple-100 text-purple-700 hover:bg-purple-100',
-          COMMENTED: 'bg-gray-100 text-gray-700 hover:bg-gray-100',
-        };
-
-        return (
-          <Badge variant="secondary" className={statusColors[status] || ''}>
-            {statusLabels[status] || status}
-          </Badge>
-        );
+        return getReviewStatusBadge(status);
       },
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));

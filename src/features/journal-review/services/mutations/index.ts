@@ -67,6 +67,15 @@ export const useCreateChildReviewMutation = () => {
           variables.problemReviewId,
         ],
       });
+      // Invalidate SearchChildReviewsQuery with specific stepNumber
+      const stepNumber = variables.stepNumber ?? null;
+      queryClient.invalidateQueries({
+        queryKey: [
+          JournalReviewKeys.SearchChildReviewsQuery,
+          variables.problemReviewId,
+          { stepNumber },
+        ],
+      });
     },
   });
 };

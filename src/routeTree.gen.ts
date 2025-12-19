@@ -66,7 +66,6 @@ import { Route as AdminSystemConfigIndexRouteImport } from './routes/admin/syste
 import { Route as AdminForumIndexRouteImport } from './routes/admin/forum/index'
 import { Route as appQuizIndexRouteImport } from './routes/(app)/quiz/index'
 import { Route as appJournalsIndexRouteImport } from './routes/(app)/journals/index'
-import { Route as ExpertJournalReviewsJournalReviewIdRouteImport } from './routes/expert/journal-reviews/$journalReviewId'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users/$userId'
 import { Route as appGamesSegmentationGameRouteImport } from './routes/(app)/games/segmentation-game'
 import { Route as appGamesPreliminaryGameRouteImport } from './routes/(app)/games/preliminary-game'
@@ -84,6 +83,7 @@ import { Route as AdminCoursesEditCourseIdRouteImport } from './routes/admin/cou
 import { Route as appCourseQuizSlugRouteRouteImport } from './routes/(app)/course/quiz/$slug/route'
 import { Route as appCourseLearnSlugRouteRouteImport } from './routes/(app)/course/learn/$slug/route'
 import { Route as appJournalsJournalIdReviewsIndexRouteImport } from './routes/(app)/journals/$journalId/reviews/index'
+import { Route as ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRouteImport } from './routes/expert/journal-reviews/$problemId/$creatorId/$journalReviewId'
 import { Route as appJournalsJournalIdReviewsReviewIdRouteRouteImport } from './routes/(app)/journals/$journalId/reviews/$reviewId/route'
 
 const UnauthorizedRoute = UnauthorizedRouteImport.update({
@@ -373,12 +373,6 @@ const appJournalsIndexRoute = appJournalsIndexRouteImport.update({
   path: '/journals/',
   getParentRoute: () => appRouteRoute,
 } as any)
-const ExpertJournalReviewsJournalReviewIdRoute =
-  ExpertJournalReviewsJournalReviewIdRouteImport.update({
-    id: '/journal-reviews/$journalReviewId',
-    path: '/journal-reviews/$journalReviewId',
-    getParentRoute: () => ExpertRouteRoute,
-  } as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/users/$userId',
   path: '/users/$userId',
@@ -468,6 +462,12 @@ const appJournalsJournalIdReviewsIndexRoute =
     path: '/journals/$journalId/reviews/',
     getParentRoute: () => appRouteRoute,
   } as any)
+const ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute =
+  ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRouteImport.update({
+    id: '/journal-reviews/$problemId/$creatorId/$journalReviewId',
+    path: '/journal-reviews/$problemId/$creatorId/$journalReviewId',
+    getParentRoute: () => ExpertRouteRoute,
+  } as any)
 const appJournalsJournalIdReviewsReviewIdRouteRoute =
   appJournalsJournalIdReviewsReviewIdRouteRouteImport.update({
     id: '/journals/$journalId/reviews/$reviewId',
@@ -534,7 +534,6 @@ export interface FileRoutesByFullPath {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/expert/journal-reviews/$journalReviewId': typeof ExpertJournalReviewsJournalReviewIdRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
@@ -549,6 +548,7 @@ export interface FileRoutesByFullPath {
   '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
   '/journals/$journalId': typeof appJournalsJournalIdIndexRoute
   '/journals/$journalId/reviews/$reviewId': typeof appJournalsJournalIdReviewsReviewIdRouteRoute
+  '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId': typeof ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute
   '/journals/$journalId/reviews': typeof appJournalsJournalIdReviewsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -607,7 +607,6 @@ export interface FileRoutesByTo {
   '/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/expert/journal-reviews/$journalReviewId': typeof ExpertJournalReviewsJournalReviewIdRoute
   '/journals': typeof appJournalsIndexRoute
   '/quiz': typeof appQuizIndexRoute
   '/admin/forum': typeof AdminForumIndexRoute
@@ -622,6 +621,7 @@ export interface FileRoutesByTo {
   '/6-steps/workflow': typeof app6StepsWorkflowIndexRoute
   '/journals/$journalId': typeof appJournalsJournalIdIndexRoute
   '/journals/$journalId/reviews/$reviewId': typeof appJournalsJournalIdReviewsReviewIdRouteRoute
+  '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId': typeof ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute
   '/journals/$journalId/reviews': typeof appJournalsJournalIdReviewsIndexRoute
 }
 export interface FileRoutesById {
@@ -686,7 +686,6 @@ export interface FileRoutesById {
   '/(app)/games/preliminary-game': typeof appGamesPreliminaryGameRoute
   '/(app)/games/segmentation-game': typeof appGamesSegmentationGameRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
-  '/expert/journal-reviews/$journalReviewId': typeof ExpertJournalReviewsJournalReviewIdRoute
   '/(app)/journals/': typeof appJournalsIndexRoute
   '/(app)/quiz/': typeof appQuizIndexRoute
   '/admin/forum/': typeof AdminForumIndexRoute
@@ -701,6 +700,7 @@ export interface FileRoutesById {
   '/(app)/6-steps/workflow/': typeof app6StepsWorkflowIndexRoute
   '/(app)/journals/$journalId/': typeof appJournalsJournalIdIndexRoute
   '/(app)/journals/$journalId/reviews/$reviewId': typeof appJournalsJournalIdReviewsReviewIdRouteRoute
+  '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId': typeof ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute
   '/(app)/journals/$journalId/reviews/': typeof appJournalsJournalIdReviewsIndexRoute
 }
 export interface FileRouteTypes {
@@ -764,7 +764,6 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/expert/journal-reviews/$journalReviewId'
     | '/journals'
     | '/quiz'
     | '/admin/forum'
@@ -779,6 +778,7 @@ export interface FileRouteTypes {
     | '/6-steps/workflow'
     | '/journals/$journalId'
     | '/journals/$journalId/reviews/$reviewId'
+    | '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId'
     | '/journals/$journalId/reviews'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -837,7 +837,6 @@ export interface FileRouteTypes {
     | '/games/preliminary-game'
     | '/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/expert/journal-reviews/$journalReviewId'
     | '/journals'
     | '/quiz'
     | '/admin/forum'
@@ -852,6 +851,7 @@ export interface FileRouteTypes {
     | '/6-steps/workflow'
     | '/journals/$journalId'
     | '/journals/$journalId/reviews/$reviewId'
+    | '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId'
     | '/journals/$journalId/reviews'
   id:
     | '__root__'
@@ -915,7 +915,6 @@ export interface FileRouteTypes {
     | '/(app)/games/preliminary-game'
     | '/(app)/games/segmentation-game'
     | '/admin/users/$userId'
-    | '/expert/journal-reviews/$journalReviewId'
     | '/(app)/journals/'
     | '/(app)/quiz/'
     | '/admin/forum/'
@@ -930,6 +929,7 @@ export interface FileRouteTypes {
     | '/(app)/6-steps/workflow/'
     | '/(app)/journals/$journalId/'
     | '/(app)/journals/$journalId/reviews/$reviewId'
+    | '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId'
     | '/(app)/journals/$journalId/reviews/'
   fileRoutesById: FileRoutesById
 }
@@ -1363,13 +1363,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appJournalsIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/expert/journal-reviews/$journalReviewId': {
-      id: '/expert/journal-reviews/$journalReviewId'
-      path: '/journal-reviews/$journalReviewId'
-      fullPath: '/expert/journal-reviews/$journalReviewId'
-      preLoaderRoute: typeof ExpertJournalReviewsJournalReviewIdRouteImport
-      parentRoute: typeof ExpertRouteRoute
-    }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
       path: '/users/$userId'
@@ -1488,6 +1481,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/journals/$journalId/reviews'
       preLoaderRoute: typeof appJournalsJournalIdReviewsIndexRouteImport
       parentRoute: typeof appRouteRoute
+    }
+    '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId': {
+      id: '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId'
+      path: '/journal-reviews/$problemId/$creatorId/$journalReviewId'
+      fullPath: '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId'
+      preLoaderRoute: typeof ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRouteImport
+      parentRoute: typeof ExpertRouteRoute
     }
     '/(app)/journals/$journalId/reviews/$reviewId': {
       id: '/(app)/journals/$journalId/reviews/$reviewId'
@@ -1613,19 +1613,19 @@ interface ExpertRouteRouteChildren {
   ExpertAssignmentRouteRoute: typeof ExpertAssignmentRouteRoute
   ExpertDashboardRouteRoute: typeof ExpertDashboardRouteRoute
   ExpertIndexRoute: typeof ExpertIndexRoute
-  ExpertJournalReviewsJournalReviewIdRoute: typeof ExpertJournalReviewsJournalReviewIdRoute
   ExpertJournalReviewsIndexRoute: typeof ExpertJournalReviewsIndexRoute
   ExpertSixStepConfigIndexRoute: typeof ExpertSixStepConfigIndexRoute
+  ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute: typeof ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute
 }
 
 const ExpertRouteRouteChildren: ExpertRouteRouteChildren = {
   ExpertAssignmentRouteRoute: ExpertAssignmentRouteRoute,
   ExpertDashboardRouteRoute: ExpertDashboardRouteRoute,
   ExpertIndexRoute: ExpertIndexRoute,
-  ExpertJournalReviewsJournalReviewIdRoute:
-    ExpertJournalReviewsJournalReviewIdRoute,
   ExpertJournalReviewsIndexRoute: ExpertJournalReviewsIndexRoute,
   ExpertSixStepConfigIndexRoute: ExpertSixStepConfigIndexRoute,
+  ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute:
+    ExpertJournalReviewsProblemIdCreatorIdJournalReviewIdRoute,
 }
 
 const ExpertRouteRouteWithChildren = ExpertRouteRoute._addFileChildren(

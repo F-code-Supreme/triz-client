@@ -25,6 +25,7 @@ export interface RootReview {
 export interface ChildReview {
   id: string;
   parentProblemReviewId: string;
+  parentId?: string | null; // For nested replies (reply to review)
   creatorId: string;
   creatorAvatarUrl: string | null;
   creatorFullName: string;

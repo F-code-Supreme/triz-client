@@ -25,8 +25,12 @@ export const ExpertJournalReviewsDataTableRowActions = <TData,>({
 
   const handleViewDetails = () => {
     navigate({
-      to: '/expert/journal-reviews/$journalReviewId',
-      params: { journalReviewId: review.id },
+      to: '/expert/journal-reviews/$problemId/$creatorId/$journalReviewId',
+      params: {
+        problemId: review.problemId,
+        creatorId: review.creatorId,
+        journalReviewId: review.id,
+      },
     });
   };
 
