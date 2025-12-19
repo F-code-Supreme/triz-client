@@ -40,12 +40,15 @@ import { RoleIUser, type IUser } from '../types';
 import type { FileWithPreview } from '@/hooks/use-file-upload';
 
 const userFormSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z
+    .string()
+    .email('Invalid email address')
+    .max(255, 'Email is too long'),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
     .or(z.literal('')),
-  fullName: z.string().optional().default(''),
+  fullName: z.string().max(254, 'Full name is too long').optional().default(''),
   avatarUrl: z.string().optional().default(''),
   roles: z.nativeEnum(RoleIUser),
   enabled: z.boolean().default(true),
@@ -210,8 +213,13 @@ export const UsersFormDialog = ({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t('users.form.email')} {!initialData && '*'}
+                  <FormLabel className="flex items-center justify-between">
+                    <span>
+                      {t('users.form.email')} {!initialData && '*'}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/255
+                    </span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -219,6 +227,7 @@ export const UsersFormDialog = ({
                       type="email"
                       disabled={!!initialData}
                       {...field}
+                      maxLength={255}
                     />
                   </FormControl>
                   <FormMessage />
@@ -257,9 +266,14 @@ export const UsersFormDialog = ({
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('users.form.full_name')}</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('users.form.full_name')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/254
+                    </span>
+                  </FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder="John Doe" {...field} maxLength={254} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -287,6 +301,9 @@ export const UsersFormDialog = ({
                       </SelectItem>
                       <SelectItem value={RoleIUser.EXPERT}>
                         {t('users.form.role_expert')}
+                      </SelectItem>
+                      <SelectItem value={RoleIUser.MODERATOR}>
+                        {t('users.form.role_moderator')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
