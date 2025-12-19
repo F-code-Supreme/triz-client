@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as XLSX from 'xlsx';
 import * as z from 'zod';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -72,6 +73,10 @@ const createQuestionSchema = (t: any) =>
 const createQuizCreateFormSchema = (t: any) =>
   z.object({
     title: z.string().min(1, t('quizzes.create_dialog.form.title_required')),
+    passingScore: z
+      .number()
+      .min(50, t('quizzes.create_dialog.form.passing_score_min'))
+      .max(100, t('quizzes.create_dialog.form.passing_score_max')),
     description: z
       .string()
       .min(1, t('quizzes.create_dialog.form.description_required')),
@@ -120,8 +125,9 @@ export const QuizCreateDialog = ({
     mode: 'onSubmit',
     defaultValues: {
       title: '',
+      passingScore: 50,
       description: '',
-      durationInMinutes: undefined,
+      durationInMinutes: 1,
       moduleId: '',
       imageSource: '',
       questions: [
@@ -348,11 +354,12 @@ export const QuizCreateDialog = ({
         await createQuizMutation.mutateAsync(coursePayload);
       }
 
+      toast.success('Tạo bài kiểm tra thành công!');
       onSuccess?.();
       form.reset({
         title: '',
         description: '',
-        durationInMinutes: undefined,
+        durationInMinutes: 1,
         moduleId: '',
         imageSource: '',
         questions: [
@@ -368,6 +375,7 @@ export const QuizCreateDialog = ({
       });
       setSelectedCourseId('');
       setUploadedImageUrl('');
+
       setActiveTab('general');
       onOpenChange(false);
     } catch (error) {
@@ -437,10 +445,10 @@ export const QuizCreateDialog = ({
     >
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create New Quiz</DialogTitle>
+          <DialogTitle>Tạo bài kiểm tra</DialogTitle>
           <div className="flex items-start justify-between w-full">
             <DialogDescription>
-              Create a new quiz with questions and options.
+              Tạo bài kiểm tra mới với các câu hỏi và lựa chọn.
             </DialogDescription>
 
             <div className="items-end">
@@ -458,8 +466,8 @@ export const QuizCreateDialog = ({
                 }}
               >
                 <TabsList>
-                  <TabsTrigger value="general">General</TabsTrigger>
-                  <TabsTrigger value="course">Course</TabsTrigger>
+                  <TabsTrigger value="general">Ôn tập</TabsTrigger>
+                  <TabsTrigger value="course">Khóa học</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -526,6 +534,28 @@ export const QuizCreateDialog = ({
                         placeholder={t(
                           'quizzes.create_dialog.form.duration_placeholder',
                         )}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isLoading}
+                        stepper={1}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="passingScore"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Điểm đạt tối thiểu (%)</FormLabel>
+                    <FormControl>
+                      <NumberInput
+                        min={50}
+                        max={100}
+                        placeholder="Điểm đạt tối thiểu..."
                         value={field.value}
                         onValueChange={field.onChange}
                         disabled={isLoading}

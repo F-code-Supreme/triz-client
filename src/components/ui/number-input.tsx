@@ -145,7 +145,11 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             aria-label="Increase value"
             className="px-2 h-5 rounded-l-none rounded-br-none border-input border-l-0 border-b-[0.5px] focus-visible:relative"
             variant="outline"
-            onClick={handleIncrement}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleIncrement();
+            }}
             disabled={value === max || props.disableIncrement}
           >
             <ChevronUp size={15} />
@@ -154,7 +158,11 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
             aria-label="Decrease value"
             className="px-2 h-5 rounded-l-none rounded-tr-none border-input border-l-0 border-t-[0.5px] focus-visible:relative"
             variant="outline"
-            onClick={handleDecrement}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleDecrement();
+            }}
             disabled={value === min}
           >
             <ChevronDown size={15} />
