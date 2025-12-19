@@ -21,6 +21,7 @@ export type Quiz = {
   title: string;
   description: string;
   imageSource: string | null;
+  moduleId: string | null;
   durationInMinutes: number | null;
   createdAt: string;
   updatedAt: string;
@@ -61,11 +62,15 @@ export const createQuizColumns = ({
     header: () => t('quizzes.columns.title'),
     cell: ({ row }) => {
       const title = row.getValue('title') as string;
-      return (
-        <div className="max-w-[200px]">
-          <div className="font-medium">{title}</div>
-        </div>
-      );
+      return <div className="font-medium">{title}</div>;
+    },
+  },
+  {
+    accessorKey: 'type',
+    header: () => 'Thể loại',
+    cell: ({ row }) => {
+      const moduleId = row.original.moduleId as string;
+      return <div>{moduleId ? 'Khóa học' : 'Ôn tập'}</div>;
     },
   },
   {
@@ -118,6 +123,7 @@ export const createQuizColumns = ({
       return <div className="text-sm">{formatDateHour(new Date(date))}</div>;
     },
   },
+
   {
     id: 'actions',
     enableHiding: false,

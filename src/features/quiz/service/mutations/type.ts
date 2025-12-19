@@ -199,6 +199,8 @@ export type GetAdminQuizzes = {
   description: string;
   imageSource: string | null;
   durationInMinutes: number | null;
+  passingScore: number;
+  moduleId: string | null;
   createdAt: string;
   updatedAt: string;
   createdBy: string | null;
