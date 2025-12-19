@@ -42,7 +42,7 @@
       "revenue_by_package": "Doanh thu theo gói",
       "revenue_by_package_desc": "Tổng doanh thu được tạo ra cho mỗi loại gói",
       "purchases_distribution": "Thống kê trạng thái giao dịch",
-      "purchases_distribution_desc": "Số lượng mua theo loại gói",
+      "purchases_distribution_desc": "Số lượng trạng thái theo loại gói",
       "success_rate_by_package": "Tỷ lệ thành công theo gói",
       "success_rate_by_package_desc": "Tỷ lệ giao dịch thành công cho mỗi gói",
       "top_spenders": "Người dùng nạp nhiều nhất",
