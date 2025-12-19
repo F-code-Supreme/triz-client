@@ -87,7 +87,11 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
 
   const handleTopup = () => {
     onOpenChange(false);
-    navigate({ to: '/wallet' });
+    const neededAmount = priceInTokens - walletBalance;
+    navigate({
+      to: '/wallet',
+      search: { topup: 'open', amount: neededAmount },
+    });
   };
 
   return (
