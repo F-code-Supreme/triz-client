@@ -10,7 +10,7 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
+import { DataTablePagination } from '@/components/data-table';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/table';
 import { createQuizColumns } from '@/features/quiz/components/quiz-columns';
 import { QuizFormDialog } from '@/features/quiz/components/quiz-form-dialog';
-import { quizStatuses } from '@/features/quiz/data/data';
+
 import {
   useGetAdminQuizzesQuery,
   useDeleteQuizByIdMutation,
@@ -154,19 +154,6 @@ const AdminQuizzesPage = () => {
         </div>
 
         <div className="space-y-4">
-          <DataTableToolbar
-            table={table}
-            searchPlaceholder={t('quizzes.search_placeholder')}
-            searchKey="title"
-            filters={[
-              {
-                columnId: 'questionType',
-                title: t('quizzes.filter_type'),
-                options: quizStatuses,
-              },
-            ]}
-          />
-
           {isLoading ? (
             <div className="flex justify-center items-center h-64">
               <p className="text-muted-foreground">{t('quizzes.loading')}</p>
