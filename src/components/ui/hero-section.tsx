@@ -3,9 +3,9 @@ import { PlayCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import HeroImg from '@/assets/images/Frame 1410086253.png';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 import { Button } from './button';
-import useAuth from '@/features/auth/hooks/use-auth';
 
 const HeroSection = () => {
   const { t } = useTranslation('components');

@@ -69,3 +69,17 @@ export const useGetCourseByIdQuery = (courseId?: string) => {
     staleTime: 1000 * 60 * 5,
   });
 };
+
+export const useCourseProgressQuery = (courseId: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [CourseKeys.GetCourseProgress, courseId],
+    queryFn: async () => {
+      const response = await _request.get<{ percentCompleted: number }>(
+        `/enrollments/course/${courseId}/progress`,
+      );
+      return response.data;
+    },
+    enabled: !!courseId,
+  });
+};

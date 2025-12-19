@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from '@/types';
+
 interface Order {
   subsetId: string;
   type: 'lesson' | 'assignment';
@@ -15,8 +17,11 @@ export interface Module {
   quizCount: number;
   assignmentCount: number;
   orders: Order[];
+  isCompleted?: boolean;
 }
 
-export interface ModuleResponseData {
-  content: Module[];
-}
+// export interface ModuleResponseData {
+//   content: Module[];
+// }
+
+export type ModuleResponseData = PaginatedResponse<Module>;

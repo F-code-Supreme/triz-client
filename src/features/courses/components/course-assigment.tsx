@@ -8,9 +8,11 @@ import {
   History,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 
+import { Markdown } from '@/components/markdown/markdown';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +24,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
@@ -35,12 +38,9 @@ import {
 } from '@/features/assignment/services/queries';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { formatDateHour } from '@/utils/date/date';
 
 import type { Content } from '@tiptap/react';
-import { Markdown } from '@/components/markdown/markdown';
-import { useTranslation } from 'react-i18next';
-import { formatDateHour } from '@/utils/date/date';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface CourseAssignmentProps {
   moduleId: string;

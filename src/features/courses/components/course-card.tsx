@@ -1,14 +1,21 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { Clock, Users, Play, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { cn } from '@/lib/utils';
 
+import {
+  useCourseProgressQuery,
+  useGetMyEnrollmentsQuery,
+} from '../services/queries';
+
 import type { CourseLevel, Course } from '@/features/courses/types';
-import { useTranslation } from 'react-i18next';
 
 interface CourseCardProps {
   course: Course;
@@ -23,6 +30,12 @@ const CourseCard = ({
 }: CourseCardProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation('pages.courses');
+
+  const { data: enrollmentsData, isLoading } = useGetMyEnrollmentsQuery();
+
+  const checkEnrolled = enrollmentsData?.content.some(
+    (enrollment) => enrollment.courseId === course.id,
+  );
 
   const getLevelColor = (level?: CourseLevel) => {
     switch (level) {
@@ -43,6 +56,8 @@ const CourseCard = ({
     const m = minutes % 60;
     return h > 0 ? `${h}h${m > 0 ? ` ${m}m` : ''}` : `${m}m`;
   };
+
+  const { data: progressData } = useCourseProgressQuery(course.id || '');
 
   return (
     <motion.div
@@ -96,6 +111,22 @@ const CourseCard = ({
               <span>{course.learnerCount} students</span>
             </div>
           </div>
+
+          {isLoading ? (
+            <Spinner className="mr-2 h-4 w-4" />
+          ) : (
+            checkEnrolled && (
+              <div className="mt-2">
+                <span className="text-sm font-medium text-muted-foreground">
+                  Tiến độ khóa học: {progressData?.percentCompleted || 0}%
+                </span>
+                <Progress
+                  value={progressData?.percentCompleted || 0}
+                  className="h-3"
+                />
+              </div>
+            )
+          )}
         </CardContent>
 
         <CardFooter className="p-4 pt-0">

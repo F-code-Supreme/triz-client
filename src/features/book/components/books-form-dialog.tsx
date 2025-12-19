@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Upload } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +49,6 @@ import {
 import { BookStatus } from '../types';
 
 import type { AdminBook } from '../types';
-import { Upload } from 'lucide-react';
 
 const bookFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),

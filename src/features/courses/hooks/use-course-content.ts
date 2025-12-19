@@ -15,6 +15,10 @@ interface UseCourseContentProps {
   assignmentsData?: any;
   quizzesData?: any;
   currentModuleId: string;
+  lessonProgressMap?: Map<string, boolean>;
+  assignmentProgressMap?: Map<string, boolean>;
+  moduleProgressMap?: Map<string, boolean>;
+  quizzProgressMap?: Map<string, boolean>;
 }
 
 export const useCourseContent = ({
@@ -23,6 +27,10 @@ export const useCourseContent = ({
   assignmentsData,
   quizzesData,
   currentModuleId,
+  lessonProgressMap = new Map(),
+  assignmentProgressMap = new Map(),
+  moduleProgressMap = new Map(),
+  quizzProgressMap = new Map(),
 }: UseCourseContentProps) => {
   const enhancedModules: EnhancedModule[] = useMemo(() => {
     if (!modules || !Array.isArray(modules)) return [];
@@ -41,6 +49,7 @@ export const useCourseContent = ({
               order: 0,
               title: lesson.title,
               lessonData: lesson,
+              isCompleted: lessonProgressMap.get(lesson.id) || false,
             };
             contents.push(lessonItem);
           });
@@ -58,6 +67,7 @@ export const useCourseContent = ({
               order: 0,
               title: assignment.title,
               assignmentData: assignment,
+              isCompleted: assignmentProgressMap.get(assignment.id) || false,
             };
             contents.push(assignmentItem);
           });
@@ -72,6 +82,7 @@ export const useCourseContent = ({
               order: 0,
               title: quiz.title,
               quizData: quiz,
+              isCompleted: quizzProgressMap.get(quiz.id) || false,
             };
             contents.push(quizItem);
           });
@@ -98,9 +109,20 @@ export const useCourseContent = ({
           module.lessonCount + module.quizCount + module.assignmentCount,
         contents,
         order: index,
+        isCompleted: moduleProgressMap.get(module.id) || false,
       };
     });
-  }, [modules, lessonsData, assignmentsData, quizzesData, currentModuleId]);
+  }, [
+    modules,
+    lessonsData,
+    assignmentsData,
+    quizzesData,
+    currentModuleId,
+    lessonProgressMap,
+    assignmentProgressMap,
+    moduleProgressMap,
+    quizzProgressMap,
+  ]);
 
   const currentModule = useMemo(() => {
     return enhancedModules.find((m) => m.id === currentModuleId);
@@ -110,9 +132,36 @@ export const useCourseContent = ({
     return enhancedModules.flatMap((module) => module.contents);
   }, [enhancedModules]);
 
+  // Find the first incomplete item in the current module
+  const firstIncompleteItem = useMemo(() => {
+    if (!currentModule || !currentModule.contents.length) return null;
+
+    const incompleteItem = currentModule.contents.find(
+      (item) => !item.isCompleted,
+    );
+
+    // If all items are completed, return the first item
+    return incompleteItem || currentModule.contents[0];
+  }, [currentModule]);
+
+  // Get completed item IDs for the sidebar
+  const completedItemIds = useMemo(() => {
+    const ids: string[] = [];
+    enhancedModules.forEach((module) => {
+      module.contents.forEach((item) => {
+        if (item.isCompleted) {
+          ids.push(item.id);
+        }
+      });
+    });
+    return ids;
+  }, [enhancedModules]);
+
   return {
     enhancedModules,
     currentModule,
     allContentItems,
+    firstIncompleteItem,
+    completedItemIds,
   };
 };
