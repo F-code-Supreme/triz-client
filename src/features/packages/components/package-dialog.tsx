@@ -208,10 +208,15 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
 
         <div className="grid">
           <div className="space-y-1">
-            <Label htmlFor="name">
-              {t('packages.dialog.package_name')}{' '}
-              <span className="text-red-500">*</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="name">
+                {t('packages.dialog.package_name')}{' '}
+                <span className="text-red-500">*</span>
+              </Label>
+              <span className="text-xs text-gray-400">
+                {formData.name.length}/200
+              </span>
+            </div>
             <Input
               id="name"
               value={formData.name}
@@ -221,6 +226,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   setFormErrors({ ...formErrors, name: undefined });
                 }
               }}
+              maxLength={200}
+              minLength={3}
               placeholder={t('packages.dialog.package_name_placeholder')}
               className={formErrors.name ? 'border-red-500' : ''}
             />
