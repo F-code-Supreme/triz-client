@@ -213,7 +213,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                 <span className="text-red-500">*</span>
               </Label>
               <span className="text-xs text-gray-400">
-                {formData.name.length}/200
+                {formData.name.length}/254
               </span>
             </div>
             <Input
@@ -225,8 +225,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   setFormErrors({ ...formErrors, name: undefined });
                 }
               }}
-              maxLength={200}
-              minLength={3}
+              maxLength={254}
               placeholder={t('packages.dialog.package_name_placeholder')}
               className={formErrors.name ? 'border-red-500' : ''}
             />
@@ -326,7 +325,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                 min={1}
                 stepper={1}
                 thousandSeparator=","
-                suffix=" Ƶ"
+                suffix=" / ngày"
                 placeholder={
                   t('packages.dialog.daily_placeholder') || 'Nhập số token/ngày'
                 }

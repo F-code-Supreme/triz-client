@@ -374,9 +374,14 @@ export const QuizEditDialog = ({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t('quizzes.create_dialog.form.title')}
-                    </FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>
+                        {t('quizzes.create_dialog.form.title')}
+                      </FormLabel>
+                      <span className="text-xs text-gray-400">
+                        {form.getValues('title').length}/254
+                      </span>
+                    </div>
                     <FormControl>
                       <Input
                         placeholder={t(
@@ -395,9 +400,14 @@ export const QuizEditDialog = ({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t('quizzes.create_dialog.form.description')}
-                    </FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>
+                        {t('quizzes.create_dialog.form.description')}
+                      </FormLabel>
+                      <span className="text-xs text-gray-400">
+                        {form.getValues('description').length}/254
+                      </span>
+                    </div>
                     <FormControl>
                       <Textarea
                         placeholder={t(
