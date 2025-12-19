@@ -136,7 +136,7 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   // Show initial prompt input
   if (!hasSubmitted) {
     return (
-      <div className="max-w-4xl mx-auto h-full flex flex-col gap-8 mt-24">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-8 mt-24">
         <div className="self-stretch inline-flex flex-col justify-start items-center gap-4">
           <div className="self-stretch text-center justify-start">
             <div className="text-secondary text-4xl font-bold leading-[48px] tracking-tight">
@@ -176,7 +176,7 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
 
   // Show mini problems selection
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col">
       <div className="flex-1 flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Chọn bài toán mini để phân tích

@@ -140,7 +140,7 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Mục tiêu bạn muốn đạt được từ vấn đề là gì?

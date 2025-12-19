@@ -62,9 +62,6 @@ export const PrincipleNode = memo((props: NodeProps) => {
                   <div className="text-white text-sm font-semibold leading-tight">
                     {data.name}
                   </div>
-                  <div className="text-white/80 text-xs mt-1">
-                    Độ ưu tiên: {data.priority}
-                  </div>
                 </div>
               </div>
             </BaseNodeContent>

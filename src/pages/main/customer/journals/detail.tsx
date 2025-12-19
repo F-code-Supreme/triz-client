@@ -783,8 +783,6 @@ const JournalDetailPage = () => {
                                       <p className="text-xs font-medium text-muted-foreground">
                                         Nguyên tắc #{idea.principleUsed.id}:{' '}
                                         {idea.principleUsed.name}
-                                        {idea.principleUsed.priority &&
-                                          ` (Độ ưu tiên: ${idea.principleUsed.priority})`}
                                       </p>
                                     )}
                                     <p className="text-sm">
