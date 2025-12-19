@@ -58,7 +58,7 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
 
       const STATUS_MAP: Record<string, { label: string; className: string }> = {
         PENDING: {
-          label: 'Đang chờ xử lý',
+          label: 'Chờ xử lý',
           className: 'bg-yellow-100 text-yellow-800',
         },
         IN_REVIEW: {
@@ -152,14 +152,6 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
       const label = REASON_MAP[reason] || reason || 'N/A';
 
       return <div className="text-sm text-gray-600">{label}</div>;
-    },
-  },
-  {
-    accessorKey: 'description',
-    header: () => <span>Mô tả</span>,
-    cell: ({ row }) => {
-      const description = row.getValue('description') as string;
-      return <div className="text-sm text-gray-600">{description}</div>;
     },
   },
   {

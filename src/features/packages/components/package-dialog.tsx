@@ -1,4 +1,4 @@
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Upload } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,8 +10,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  FileUpload,
+  FileUploadDropzone,
+  FileUploadList,
+  FileUploadItem,
+  FileUploadItemPreview,
+  FileUploadItemMetadata,
+  FileUploadItemProgress,
+  FileUploadItemDelete,
+  FileUploadTrigger,
+} from '@/components/ui/file-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectContent,
@@ -19,9 +31,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useUploadFileMutation } from '@/features/book/services/mutations';
 import { PackageStatus } from '@/features/packages/types';
-import { validateUrl } from '@/utils';
-
+// import { validateUrl } from '@/utils';
 import type { Package } from '@/features/packages/types';
 
 interface Feature {
@@ -53,6 +65,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
     status: PackageStatus.ACTIVE,
     features: [] as Feature[],
   });
+  // For NumberInput price
+  const [price, setPrice] = useState<number>(0);
 
   const [newFeature, setNewFeature] = useState({
     iconUrl: '',
@@ -60,6 +74,8 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
   });
 
   const [iconUrlError, setIconUrlError] = useState<string>('');
+  const [iconFiles, setIconFiles] = useState<File[]>([]);
+  const uploadMutation = useUploadFileMutation();
   const [formErrors, setFormErrors] = useState<{
     name?: string;
     priceInTokens?: string;
@@ -78,6 +94,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
         status: editPackage.status,
         features: [...editPackage.features],
       });
+      setPrice(editPackage.priceInTokens || 0);
     } else {
       setFormData({
         name: '',
@@ -87,11 +104,19 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
         status: PackageStatus.ACTIVE,
         features: [],
       });
+      setPrice(0);
     }
     setNewFeature({ iconUrl: '', description: '' });
     setIconUrlError('');
     setFormErrors({});
+    setIconFiles([]);
   }, [editPackage, open]);
+
+  // Sync price to formData
+  useEffect(() => {
+    setFormData((prev) => ({ ...prev, priceInTokens: price }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [price]);
 
   const validateForm = () => {
     const errors: {
@@ -126,13 +151,13 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleIconUrlChange = (url: string) => {
-    setNewFeature({ ...newFeature, iconUrl: url });
-
-    // Validate URL with image requirement
-    const error = validateUrl(url, true);
-    setIconUrlError(error);
-  };
+  // const handleIconUrlChange = (url: string) => {
+  //   setNewFeature({ ...newFeature, iconUrl: url });
+  //   // Validate URL with image requirement
+  //   const error = validateUrl(url, true);
+  //   setIconUrlError(error);
+  //   setIconFiles([]);
+  // };
 
   const handleAddFeature = () => {
     if (newFeature.iconUrl && newFeature.description && !iconUrlError) {
@@ -182,10 +207,15 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
 
         <div className="grid">
           <div className="space-y-1">
-            <Label htmlFor="name">
-              {t('packages.dialog.package_name')}{' '}
-              <span className="text-red-500">*</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="name">
+                {t('packages.dialog.package_name')}{' '}
+                <span className="text-red-500">*</span>
+              </Label>
+              <span className="text-xs text-gray-400">
+                {formData.name.length}/254
+              </span>
+            </div>
             <Input
               id="name"
               value={formData.name}
@@ -195,6 +225,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   setFormErrors({ ...formErrors, name: undefined });
                 }
               }}
+              maxLength={254}
               placeholder={t('packages.dialog.package_name_placeholder')}
               className={formErrors.name ? 'border-red-500' : ''}
             />
@@ -211,22 +242,21 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                 {t('packages.dialog.price_trizilium')}{' '}
                 <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="priceInTokens"
-                type="number"
-                value={formData.priceInTokens}
-                min={0}
-                onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    priceInTokens: parseInt(e.target.value) || 0,
-                  });
+              <NumberInput
+                value={price}
+                onValueChange={(val) => {
+                  setPrice(val ?? 0);
                   if (formErrors.priceInTokens) {
                     setFormErrors({ ...formErrors, priceInTokens: undefined });
                   }
                 }}
-                placeholder={t('packages.dialog.price_placeholder')}
-                className={formErrors.priceInTokens ? ERROR_CLASS : ''}
+                min={1000}
+                stepper={1}
+                thousandSeparator=","
+                suffix=" Ƶ"
+                placeholder={
+                  t('packages.dialog.price_placeholder') || 'Nhập giá'
+                }
               />
               <div className="min-h-[20px]">
                 {formErrors.priceInTokens && (
@@ -278,16 +308,13 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                 {t('packages.dialog.daily_trizilium')}{' '}
                 <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="chatTokenPerDay"
-                min={0}
-                type="number"
+              <NumberInput
                 value={formData.chatTokenPerDay}
-                onChange={(e) => {
-                  setFormData({
-                    ...formData,
-                    chatTokenPerDay: parseInt(e.target.value) || 0,
-                  });
+                onValueChange={(val) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    chatTokenPerDay: val ?? 0,
+                  }));
                   if (formErrors.chatTokenPerDay) {
                     setFormErrors({
                       ...formErrors,
@@ -295,8 +322,13 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                     });
                   }
                 }}
-                placeholder={t('packages.dialog.daily_placeholder')}
-                className={formErrors.chatTokenPerDay ? ERROR_CLASS : ''}
+                min={1}
+                stepper={1}
+                thousandSeparator=","
+                suffix=" / ngày"
+                placeholder={
+                  t('packages.dialog.daily_placeholder') || 'Nhập số token/ngày'
+                }
               />
               <div className="min-h-[20px]">
                 {formErrors.chatTokenPerDay && (
@@ -371,12 +403,82 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
               </Label>
               <div className="grid gap-2">
                 <div className="space-y-1">
-                  <Input
+                  {/* <Input
                     placeholder={t('packages.dialog.icon_url_placeholder')}
                     value={newFeature.iconUrl}
                     onChange={(e) => handleIconUrlChange(e.target.value)}
                     className={iconUrlError ? ERROR_CLASS : ''}
-                  />
+                  /> */}
+                  <div className="my-2">
+                    <FileUpload
+                      value={iconFiles}
+                      onValueChange={(files) => {
+                        setIconFiles(files);
+                        if (files.length > 0) {
+                          setIconUrlError('');
+                        }
+                      }}
+                      onUpload={async (
+                        files,
+                        { onProgress, onSuccess, onError },
+                      ) => {
+                        for (const file of files) {
+                          try {
+                            onProgress(file, 0);
+                            const response = await uploadMutation.mutateAsync({
+                              file,
+                            });
+                            if (response.data) {
+                              setNewFeature((prev) => ({
+                                ...prev,
+                                iconUrl: response.data,
+                              }));
+                              setIconUrlError('');
+                              onProgress(file, 100);
+                              onSuccess(file);
+                            }
+                          } catch (error) {
+                            onError(
+                              file,
+                              error instanceof Error
+                                ? error
+                                : new Error('Upload failed'),
+                            );
+                          }
+                        }
+                      }}
+                      accept="image/*"
+                      maxFiles={1}
+                      maxSize={5 * 1024 * 1024}
+                    >
+                      <FileUploadDropzone className="rounded-lg border-2 border-dashed p-3 mt-2">
+                        <div className="text-center">
+                          <div className="text-xs text-muted-foreground">
+                            {t('packages.dialog.upload_image') ||
+                              'Kéo thả hoặc tải lên icon'}
+                          </div>
+                          <FileUploadTrigger className="px-2 py-1 border rounded-md text-xs bg-background hover:bg-accent transition-colors inline-flex items-center gap-2 mt-2">
+                            <Upload className="w-4 h-4" />
+                            {t('packages.dialog.upload_image') || 'Tải ảnh lên'}
+                          </FileUploadTrigger>
+                        </div>
+                        <FileUploadList className="mt-2 space-y-1">
+                          {iconFiles.map((file) => (
+                            <FileUploadItem key={file.name} value={file}>
+                              <div className="flex items-center gap-2 w-full">
+                                <FileUploadItemPreview />
+                                <div className="flex-1">
+                                  <FileUploadItemMetadata />
+                                  <FileUploadItemProgress />
+                                </div>
+                                <FileUploadItemDelete />
+                              </div>
+                            </FileUploadItem>
+                          ))}
+                        </FileUploadList>
+                      </FileUploadDropzone>
+                    </FileUpload>
+                  </div>
                   {iconUrlError && (
                     <p className="text-xs text-red-500">{iconUrlError}</p>
                   )}

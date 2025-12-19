@@ -54,6 +54,7 @@ export const useGetJournalsByUserQuery = (userId?: string) => {
           const response = await _request.get<IGetJournalsByUserDataResponse>(
             `/users/${userId}/problems`,
             {
+              params: { sort: 'createdAt,desc' },
               signal,
             },
           );

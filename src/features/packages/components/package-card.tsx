@@ -1,15 +1,16 @@
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { formatTrizilium, formatDailyTrizilium } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
@@ -43,6 +44,29 @@ const PackageCard: React.FC<PackageCardProps> = ({
             >
               {pkg.status}
             </Badge>
+          </div>
+          {/* Actions Dropdown - Top Right */}
+          <div className="ml-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon" className="h-8 w-8">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(pkg)}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  {t('packages.card.edit')}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => onDelete(pkg.id)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {t('packages.card.delete')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </CardHeader>
@@ -98,26 +122,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
         </div>
       </CardContent>
 
-      <CardFooter className="pt-4 border-t flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1"
-          onClick={() => onEdit(pkg)}
-        >
-          <Edit className="mr-2 h-4 w-4" />
-          {t('packages.card.edit')}
-        </Button>
-        <Button
-          variant="destructive"
-          size="sm"
-          className="flex-1"
-          onClick={() => onDelete(pkg.id)}
-        >
-          <Trash2 className="mr-2 h-4 w-4" />
-          {t('packages.card.delete')}
-        </Button>
-      </CardFooter>
+      {/* No CardFooter actions, actions moved to dropdown */}
     </Card>
   );
 };

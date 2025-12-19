@@ -47,15 +47,19 @@ type TopupFormValues = {
 interface TopupDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialAmount?: number;
 }
 
 export const TopupDialog: React.FC<TopupDialogProps> = ({
   open,
   onOpenChange,
+  initialAmount,
 }) => {
   const { t } = useTranslation('pages.wallet');
   const { mutate: topupWallet, isPending } = useTopupWalletMutation();
-  const [selectedPreset, setSelectedPreset] = useState<number>(10000);
+  const [selectedPreset, setSelectedPreset] = useState<number>(
+    initialAmount || 10000,
+  );
 
   const topupSchema = z.object({
     amount: z.coerce
@@ -79,13 +83,14 @@ export const TopupDialog: React.FC<TopupDialogProps> = ({
   // Reset form when dialog opens
   useEffect(() => {
     if (open) {
+      const amount = initialAmount || 10000;
       form.reset({
-        amount: 10000,
+        amount,
         provider: 'PAYOS',
       });
-      setSelectedPreset(10000);
+      setSelectedPreset(amount);
     }
-  }, [open, form]);
+  }, [open, form, initialAmount]);
 
   const handlePresetAmount = (preset: number) => {
     form.setValue('amount', preset);

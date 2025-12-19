@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { PaginatedResponse } from '@/types';
 
 export interface Assignment {
@@ -15,23 +16,8 @@ export interface Assignment {
   userId: string;
 }
 
-export interface AssignmentSubmission {
-  id: string;
-  title: string;
-  submissionContent: string;
-  attemptNumber: number;
-  isAiPassed: boolean;
-  isExpertPassed: boolean;
-  expertComment: string | null;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  gradedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  assignmentId: string;
-  userId: string;
-}
-
-export interface AssignmentSubmissionExpertReview {
+// Base interface cho các trường chung
+export interface AssignmentSubmissionBase {
   id: string;
   title: string;
   submissionContent: string;
@@ -39,7 +25,13 @@ export interface AssignmentSubmissionExpertReview {
   isAiPassed: boolean | null;
   isExpertPassed: boolean | null;
   expertComment: string | null;
-  status: 'AI_PENDING' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'EXPERT_PENDING';
+  status:
+    | 'PENDING'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'AI_PENDING'
+    | 'EXPERT_PENDING'
+    | 'AI_REJECTED';
   gradedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -47,20 +39,26 @@ export interface AssignmentSubmissionExpertReview {
   userId: string;
 }
 
-export interface AssignmentSubmission {
-  id: string;
-  title: string;
-  submissionContent: string;
-  attemptNumber: number;
-  isAiPassed: boolean;
-  isExpertPassed: boolean;
-  expertComment: string | null;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  gradedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  assignmentId: string;
-  userId: string;
+export interface AssignmentSubmission extends AssignmentSubmissionBase {}
+
+export interface AssignmentSubmissionExpertReview extends AssignmentSubmissionBase {}
+
+export interface AssignmentHistoryAiAnalysis {
+  areasForDevelopment: string;
+  areasForDevelopmentList: string[];
+  assessmentSummary: string;
+  criteriaAnalysis: string;
+  gradedAt: string;
+  isPassed: boolean;
+  overallAnalysis: string;
+  reasoning: string;
+  strengths: string;
+  strengthsList: string[];
+  suggestedFocus: string;
+}
+
+export interface AssignmentHistoryResponse extends AssignmentSubmissionBase {
+  aiAnalysis?: AssignmentHistoryAiAnalysis;
 }
 
 export interface SubmitAssignmentPayload {
@@ -75,4 +73,4 @@ export type AssignmentResponse = PaginatedResponse<Assignment>;
 export type AssignmentSubmissionExpertReviewResponse =
   PaginatedResponse<AssignmentSubmissionExpertReview>;
 export type AssignmentSubmissionHistoryResponse =
-  PaginatedResponse<AssignmentSubmission>;
+  PaginatedResponse<AssignmentHistoryResponse>;

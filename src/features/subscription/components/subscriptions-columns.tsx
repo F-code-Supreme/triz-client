@@ -6,6 +6,10 @@ import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 
 import { SubscriptionsDataTableRowActions } from './subscriptions-data-table-row-actions';
+import {
+  getSubscriptionStatusColor,
+  getSubscriptionStatusLabel,
+} from '../utils/status';
 
 import type { Subscription } from '../types';
 import type { DataTimestamp } from '@/types';
@@ -13,21 +17,6 @@ import type { DataTimestamp } from '@/types';
 type SubscriptionWithTimestamp = Subscription & DataTimestamp;
 
 const columnHelper = createColumnHelper<SubscriptionWithTimestamp>();
-
-export const getSubscriptionStatusColor = (status: string): string => {
-  switch (status) {
-    case 'ACTIVE':
-      return 'bg-green-100 text-green-800 hover:bg-green-100/90';
-    case 'PENDING':
-      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100/90';
-    case 'EXPIRED':
-      return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
-    case 'CANCELED':
-      return 'bg-red-100 text-red-800 hover:bg-red-100/90';
-    default:
-      return 'bg-gray-100 text-gray-800 hover:bg-gray-100/90';
-  }
-};
 
 export const useSubscriptionsColumns = () => {
   const { t } = useTranslation('pages.subscription');
@@ -80,7 +69,8 @@ export const useSubscriptionsColumns = () => {
       cell: (info) => {
         const status = info.getValue();
         const colors = getSubscriptionStatusColor(status);
-        return <Badge className={colors}>{status}</Badge>;
+        const label = getSubscriptionStatusLabel(status, t);
+        return <Badge className={colors}>{label}</Badge>;
       },
     }),
 
@@ -151,6 +141,7 @@ export const subscriptionsColumns = [
     cell: (info) => {
       const status = info.getValue();
       const colors = getSubscriptionStatusColor(status);
+      // Note: This uses hardcoded labels for backward compatibility
       return <Badge className={colors}>{status}</Badge>;
     },
   }),

@@ -3,7 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useAxios } from '@/configs/axios';
 import { LessonKeys } from '@/features/lesson/services/queries/keys';
 
-import type { LessonResponse } from '@/features/lesson/services/queries/types';
+import type {
+  LessonProgressResponse,
+  LessonResponse,
+} from '@/features/lesson/services/queries/types';
 import type { Lesson } from '@/features/lesson/types';
 
 export const useGetLessonsQuery = (page?: number, size?: number) => {
@@ -50,13 +53,27 @@ export const useGetLessonsByModuleQuery = (moduleId: string) => {
     enabled: !!moduleId,
   });
 };
-// New: fetch a single lesson by id
+
 export const useGetLessonById = (lessonId?: string) => {
   const _request = useAxios();
   return useQuery({
     queryKey: [LessonKeys.GetLessonQuery, lessonId],
     queryFn: async () => {
       const response = await _request.get<Lesson>(`/lessons/${lessonId}`);
+      return response.data;
+    },
+    enabled: !!lessonId,
+  });
+};
+
+export const useGetLessonProgressQuery = (lessonId?: string) => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [LessonKeys.GetLessonProgress, lessonId],
+    queryFn: async () => {
+      const response = await _request.get<LessonProgressResponse>(
+        `/lessons/${lessonId}/progress`,
+      );
       return response.data;
     },
     enabled: !!lessonId,

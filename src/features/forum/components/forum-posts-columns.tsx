@@ -20,7 +20,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 max-w-sm">
           <span className="max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]">
             {row.getValue('title') || 'N/A'}
           </span>
@@ -65,7 +65,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
               : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
           }
         >
-          {status === 'ACTIVE' ? 'Công Khai' : 'Chưa Công Khai'}
+          {status === 'ACTIVE' ? 'Hoạt động' : 'Chưa hoạt động'}
         </Badge>
       );
     },
@@ -82,14 +82,19 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
       const date = row.getValue('createdAt') as string;
       if (!date) return <div className="text-gray-400">N/A</div>;
 
+      const d = new Date(date);
+      const datePart = d.toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+      const timePart = d.toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
       return (
-        <div className="text-sm text-gray-600">
-          {new Date(date).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
-        </div>
+        <div className="text-sm text-gray-600">{`${datePart} ${timePart}`}</div>
       );
     },
   },
@@ -102,14 +107,19 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
       const date = row.getValue('updatedAt') as string;
       if (!date) return <div className="text-gray-400">N/A</div>;
 
+      const d = new Date(date);
+      const datePart = d.toLocaleDateString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+      const timePart = d.toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
       return (
-        <div className="text-sm text-gray-600">
-          {new Date(date).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
-        </div>
+        <div className="text-sm text-gray-600">{`${datePart} ${timePart}`}</div>
       );
     },
   },

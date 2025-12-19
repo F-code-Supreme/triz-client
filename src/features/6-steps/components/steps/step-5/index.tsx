@@ -178,7 +178,7 @@ export const Step5GenerateIdeas = ({
 
   if (step5Mutation.isPending) {
     return (
-      <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
         <div className="flex-1 flex flex-col gap-4">
           <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
             Phát các ý tưởng giải quyết ML
@@ -219,7 +219,7 @@ export const Step5GenerateIdeas = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Phát các ý tưởng giải quyết ML
@@ -256,9 +256,6 @@ export const Step5GenerateIdeas = ({
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold text-base">
                         Nguyên tắc #{principle.id}: {principle.name}
-                        <span className="text-sm text-muted-foreground ml-2">
-                          (Độ ưu tiên: {principle.priority})
-                        </span>
                       </h3>
                       <Button
                         variant="ghost"

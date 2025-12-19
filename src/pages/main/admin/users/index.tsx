@@ -2,6 +2,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type ColumnFiltersState,
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
@@ -9,7 +10,7 @@ import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DataTablePagination } from '@/components/data-table';
+import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -20,9 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { usersColumns } from '@/features/user/components/users-columns';
+import { getUserFilters } from '@/features/user/components/user-filters';
+import { useAdminUsersColumns } from '@/features/user/components/users-columns';
 import { UsersFormDialog } from '@/features/user/components/users-form-dialog';
-import { useGetAllUsersQuery } from '@/features/user/services/queries';
+import { useSearchAllUsersQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminUsersPage = () => {
@@ -32,15 +34,22 @@ const AdminUsersPage = () => {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const { data: usersData, isLoading } = useGetAllUsersQuery(
+  const { data: usersData, isLoading } = useSearchAllUsersQuery(
     pagination,
     sorting,
+    columnFilters,
   );
 
   const users = useMemo(() => usersData?.content || [], [usersData]);
   const totalRowCount = usersData?.page?.totalElements ?? 0;
+
+  // Get translated filters
+  const userFilters = useMemo(() => getUserFilters(t), [t]);
+
+  const usersColumns = useAdminUsersColumns();
 
   const table = useReactTable({
     data: users,
@@ -48,12 +57,15 @@ const AdminUsersPage = () => {
     state: {
       pagination,
       sorting,
+      columnFilters,
     },
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
+    manualFiltering: true,
     rowCount: totalRowCount,
   });
 
@@ -76,16 +88,27 @@ const AdminUsersPage = () => {
         </div>
 
         <div className="space-y-4">
+          <DataTableToolbar
+            table={table}
+            searchPlaceholder={t('users.search_placeholder')}
+            searchKeys={[
+              { value: 'email', label: t('users.form.email') },
+              { value: 'fullName', label: t('users.form.full_name') },
+            ]}
+            filters={userFilters}
+          />
+
           {isLoading ? (
             <div className="border rounded-md overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Full Name</TableHead>
-                    <TableHead>Roles</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t('users.form.avatar')}</TableHead>
+                    <TableHead>{t('users.form.email')}</TableHead>
+                    <TableHead>{t('users.form.full_name')}</TableHead>
+                    <TableHead>{t('users.form.role')}</TableHead>
+                    <TableHead>{t('users.form.status')}</TableHead>
+                    <TableHead>{t('common.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

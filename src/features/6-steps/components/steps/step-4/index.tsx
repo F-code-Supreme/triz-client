@@ -881,7 +881,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       data: {
         id: item.principle.id,
         name: item.principle.name,
-        priority: item.priority,
         status: 'success' as NodeStatus,
         isSelected: selectedPrinciples.includes(item.principle.id),
         onSelect: () => {
@@ -900,7 +899,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       source: matrixId,
       target: `principle-${tcId}-${item.principle.id}`,
       style: { stroke: '#94a3b8', strokeWidth: 2 },
-      label: `Ưu tiên ${item.priority}`,
     }));
 
     // Remove placeholder principles and add actual ones
@@ -1002,7 +1000,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
   return (
     <div className="h-full flex flex-col gap-4">
-      <div className="max-w-4xl mx-auto flex flex-col gap-4">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Trả lời các câu hỏi
         </div>
@@ -1110,7 +1108,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         </ReactFlow>
       </div>
 
-      <div className="max-w-4xl w-full mx-auto pb-4">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl w-full mx-auto pb-4">
         <ActionButtons
           onBack={onBack}
           onNext={handleNext}

@@ -6,6 +6,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Newspaper,
+  CheckCircle,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -28,6 +29,7 @@ interface CourseSidebarProps {
   onItemSelect: (itemId: string, moduleId: string) => void;
   onModuleSelect?: (moduleId: string) => void;
   className?: string;
+  completedItemIds?: string[];
 }
 
 const CourseSidebar = ({
@@ -37,6 +39,7 @@ const CourseSidebar = ({
   onItemSelect,
   onModuleSelect,
   className,
+  completedItemIds = [],
 }: CourseSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openModules, setOpenModules] = useState<Set<string>>(new Set());
@@ -46,6 +49,20 @@ const CourseSidebar = ({
       setOpenModules(new Set([currentModuleId]));
     }
   }, [currentModuleId]);
+
+  useEffect(() => {
+    if (!currentItemId && !currentModuleId && modules.length > 0) {
+      const firstModule = modules[0];
+      if (firstModule && firstModule.contents.length > 0) {
+        const sortedContents = sortContents(firstModule.contents);
+        const firstItem = sortedContents[0];
+        if (firstItem) {
+          onItemSelect(firstItem.id, firstModule.id);
+          setOpenModules(new Set([firstModule.id]));
+        }
+      }
+    }
+  }, [currentItemId, currentModuleId, modules, onItemSelect]);
 
   const getItemIcon = (type: string) => {
     switch (type) {
@@ -71,6 +88,16 @@ const CourseSidebar = ({
       default:
         return 'bg-gray-500/10 text-gray-600 border-gray-500/20';
     }
+  };
+
+  const sortContents = (contents: any[]) => {
+    const order = { lesson: 0, assignment: 1, quiz: 2 };
+    const maxOrder = Object.keys(order).length;
+    return [...contents].sort(
+      (a, b) =>
+        (order[a.type as keyof typeof order] ?? maxOrder) -
+        (order[b.type as keyof typeof order] ?? maxOrder),
+    );
   };
 
   return (
@@ -110,10 +137,10 @@ const CourseSidebar = ({
             {/* Header */}
             <div className="p-4 border-b">
               <h2 className="text-base font-semibold text-foreground">
-                Course Content
+                Mục lục khóa học
               </h2>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {modules.length} modules
+                {modules.length} Chương học
               </p>
             </div>
 
@@ -122,6 +149,7 @@ const CourseSidebar = ({
                 {modules.map((module, moduleIndex) => {
                   const isCurrentModule = module.id === currentModuleId;
                   const isOpen = openModules.has(module.id);
+                  const isModuleCompleted = module.isCompleted;
                   return (
                     <Collapsible
                       key={module.id}
@@ -165,9 +193,18 @@ const CourseSidebar = ({
                                 {moduleIndex + 1}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-medium text-sm text-foreground line-clamp-1">
-                                  {module.name}
-                                </h3>
+                                <div className="flex items-center gap-2">
+                                  <h3 className="font-medium text-sm text-foreground line-clamp-1">
+                                    {module.name}
+                                  </h3>
+                                  {isModuleCompleted && (
+                                    <CheckCircle
+                                      className="w-4 h-4 text-green-500 flex-shrink-0"
+                                      strokeWidth={2.2}
+                                      fill="none"
+                                    />
+                                  )}
+                                </div>
                                 <Badge
                                   variant="outline"
                                   className={cn(
@@ -186,51 +223,73 @@ const CourseSidebar = ({
 
                       <CollapsibleContent>
                         <div className="ml-2 mt-1 space-y-1">
-                          {module.contents.map((item, itemIndex) => {
-                            const Icon = getItemIcon(item.type);
-                            const isCurrentItem = item.id === currentItemId;
-                            return (
-                              <motion.button
-                                key={item.id}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{
-                                  duration: 0.2,
-                                  delay: itemIndex * 0.03,
-                                }}
-                                onClick={() => onItemSelect(item.id, module.id)}
-                                className={cn(
-                                  'w-full p-2.5 rounded-md text-left transition-all',
-                                  isCurrentItem
-                                    ? 'bg-primary text-primary-foreground shadow-sm'
-                                    : 'hover:bg-accent',
-                                )}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <Icon
-                                    className={cn(
-                                      'w-4 h-4 flex-shrink-0',
-                                      isCurrentItem
-                                        ? 'text-primary-foreground'
-                                        : 'text-muted-foreground',
+                          {sortContents(module.contents).map(
+                            (item, itemIndex) => {
+                              const Icon = getItemIcon(item.type);
+                              const isCurrentItem = item.id === currentItemId;
+                              const isCompleted = completedItemIds.includes(
+                                item.id,
+                              );
+                              return (
+                                <motion.button
+                                  key={item.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{
+                                    duration: 0.2,
+                                    delay: itemIndex * 0.03,
+                                  }}
+                                  onClick={() =>
+                                    onItemSelect(item.id, module.id)
+                                  }
+                                  className={cn(
+                                    'w-full p-2.5 rounded-md text-left transition-all',
+                                    isCurrentItem
+                                      ? 'bg-primary text-primary-foreground shadow-sm'
+                                      : 'hover:bg-accent',
+                                  )}
+                                >
+                                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                                    {isCompleted ? (
+                                      <CheckCircle
+                                        className="w-4 h-4 text-green-500 flex-shrink-0"
+                                        strokeWidth={2.2}
+                                        fill="none"
+                                      />
+                                    ) : (
+                                      <Icon
+                                        className={cn(
+                                          'w-4 h-4 flex-shrink-0',
+                                          isCurrentItem
+                                            ? 'text-primary-foreground'
+                                            : 'text-muted-foreground',
+                                        )}
+                                      />
                                     )}
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <h4
-                                      className={cn(
-                                        'font-medium text-xs line-clamp-2',
-                                        isCurrentItem
-                                          ? 'text-primary-foreground'
-                                          : 'text-foreground',
-                                      )}
-                                    >
-                                      {item.title}
-                                    </h4>
+                                    <div className="flex-1 min-w-0">
+                                      <h4
+                                        className={cn(
+                                          'font-medium text-xs line-clamp-2',
+                                          isCurrentItem
+                                            ? 'text-primary-foreground'
+                                            : 'text-foreground',
+                                        )}
+                                      >
+                                        {item.title}
+                                      </h4>
+                                    </div>
+                                    {/* {isCompleted && (
+                                      <CheckCircle
+                                        className="w-4 h-4 text-green-500 ml-2 flex-shrink-0"
+                                        strokeWidth={2.2}
+                                        fill="none"
+                                      />
+                                    )} */}
                                   </div>
-                                </div>
-                              </motion.button>
-                            );
-                          })}
+                                </motion.button>
+                              );
+                            },
+                          )}
                         </div>
                       </CollapsibleContent>
                     </Collapsible>
@@ -251,20 +310,29 @@ const CourseSidebar = ({
             <div className="flex flex-col items-center pt-16 gap-4">
               {modules.map((module, index) => {
                 const isCurrentModule = module.id === currentModuleId;
+                const isModuleCompleted = module.isCompleted;
                 return (
-                  <button
-                    key={module.id}
-                    onClick={() => onModuleSelect?.(module.id)}
-                    className={cn(
-                      'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer',
-                      isCurrentModule
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-muted-foreground hover:bg-accent',
+                  <div key={module.id} className="relative">
+                    <button
+                      onClick={() => onModuleSelect?.(module.id)}
+                      className={cn(
+                        'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer',
+                        isCurrentModule
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-muted text-muted-foreground hover:bg-accent',
+                      )}
+                      title={module.name}
+                    >
+                      {index + 1}
+                    </button>
+                    {isModuleCompleted && (
+                      <CheckCircle
+                        className="w-3 h-3 text-green-500 absolute -top-1 -right-1 bg-background rounded-full"
+                        strokeWidth={3}
+                        fill="none"
+                      />
                     )}
-                    title={module.name}
-                  >
-                    {index + 1}
-                  </button>
+                  </div>
                 );
               })}
             </div>

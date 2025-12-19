@@ -4,6 +4,7 @@ export enum RoleIUser {
   USER = 'user',
   ADMIN = 'admin',
   EXPERT = 'expert',
+  MODERATOR = 'moderator',
 }
 
 export type IUser = Omit<User, 'roles'> & {

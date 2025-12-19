@@ -8,6 +8,7 @@ import {
   X,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -47,6 +48,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
   package: pkg,
   walletBalance,
 }) => {
+  const { t } = useTranslation('components');
   const navigate = useNavigate();
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { mutate: purchasePackage, isPending } = usePurchasePackageMutation();
@@ -58,12 +60,12 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
 
   const handlePurchase = () => {
     if (!sufficiendBalance) {
-      toast.error('Insufficient wallet balance');
+      toast.error(t('purchase_invoice_dialog.insufficient_balance_error'));
       return;
     }
 
     if (!agreedToTerms) {
-      toast.error('Please agree to the terms and conditions');
+      toast.error(t('purchase_invoice_dialog.agree_terms_error'));
       return;
     }
 
@@ -71,14 +73,15 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
       { packageId: pkg.id, autoRenew: false },
       {
         onSuccess: () => {
-          toast.success('Package purchased successfully!');
+          toast.success(t('purchase_invoice_dialog.purchase_success'));
           onOpenChange(false);
           setAgreedToTerms(false);
         },
         onError: (error: unknown) => {
           const err = error as { response?: { data?: { message?: string } } };
           const errorMessage =
-            err?.response?.data?.message || 'Failed to purchase package';
+            err?.response?.data?.message ||
+            t('purchase_invoice_dialog.purchase_failed_error');
           toast.error(errorMessage);
         },
       },
@@ -87,16 +90,20 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
 
   const handleTopup = () => {
     onOpenChange(false);
-    navigate({ to: '/wallet' });
+    const neededAmount = priceInTokens - walletBalance;
+    navigate({
+      to: '/wallet',
+      search: { topup: 'open', amount: neededAmount },
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Purchase Invoice</DialogTitle>
+          <DialogTitle>{t('purchase_invoice_dialog.title')}</DialogTitle>
           <DialogDescription>
-            Review your purchase details before confirming
+            {t('purchase_invoice_dialog.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -107,10 +114,14 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
               <div>
                 <h3 className="text-lg font-semibold">{pkg.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Access duration: {pkg.durationInDays} days
+                  {t('purchase_invoice_dialog.access_duration', {
+                    days: pkg.durationInDays,
+                  })}
                 </p>
               </div>
-              <Badge className="bg-primary">Package</Badge>
+              <Badge className="bg-primary">
+                {t('purchase_invoice_dialog.package_badge')}
+              </Badge>
             </div>
           </div>
 
@@ -119,9 +130,11 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted">
-                  <TableHead className="font-semibold">Description</TableHead>
+                  <TableHead className="font-semibold">
+                    {t('purchase_invoice_dialog.table_description')}
+                  </TableHead>
                   <TableHead className="text-right font-semibold">
-                    Amount
+                    {t('purchase_invoice_dialog.table_amount')}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -129,9 +142,15 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 <TableRow>
                   <TableCell className="py-3">
                     <div>
-                      <p className="font-medium">{pkg.name} Package</p>
+                      <p className="font-medium">
+                        {t('purchase_invoice_dialog.package_name', {
+                          name: pkg.name,
+                        })}
+                      </p>
                       <p className="text-sm text-muted-foreground">
-                        {pkg.durationInDays} days access
+                        {t('purchase_invoice_dialog.days_access', {
+                          days: pkg.durationInDays,
+                        })}
                       </p>
                     </div>
                   </TableCell>
@@ -146,7 +165,9 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
 
             {/* Total */}
             <div className="bg-muted p-4 flex justify-between items-center border-t">
-              <p className="font-semibold text-lg">Total</p>
+              <p className="font-semibold text-lg">
+                {t('purchase_invoice_dialog.total')}
+              </p>
               <p className="text-2xl font-bold">
                 {formatTrizilium(priceInTokens)}
               </p>
@@ -170,7 +191,9 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
             />
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <p className="font-medium">Wallet Balance</p>
+                <p className="font-medium">
+                  {t('purchase_invoice_dialog.wallet_balance')}
+                </p>
                 <p
                   className={`text-lg font-semibold ${
                     sufficiendBalance
@@ -185,13 +208,14 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 {sufficiendBalance ? (
                   <span className="flex items-center gap-1 text-green-600 dark:text-green-500">
                     <CheckCircle className="h-4 w-4" />
-                    Sufficient balance to complete this purchase
+                    {t('purchase_invoice_dialog.sufficient_balance')}
                   </span>
                 ) : (
                   <span className="flex items-center gap-1 text-red-600 dark:text-red-500">
                     <AlertCircle className="h-4 w-4" />
-                    Insufficient balance. You need{' '}
-                    {formatTrizilium(priceInTokens - walletBalance)} more
+                    {t('purchase_invoice_dialog.insufficient_balance', {
+                      amount: formatTrizilium(priceInTokens - walletBalance),
+                    })}
                   </span>
                 )}
               </p>
@@ -203,8 +227,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Your wallet balance is insufficient to complete this purchase.
-                Please top up your wallet first.
+                {t('purchase_invoice_dialog.insufficient_balance_alert')}
               </AlertDescription>
             </Alert>
           )}
@@ -224,21 +247,34 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 htmlFor="terms"
                 className="text-sm leading-relaxed cursor-pointer flex-1"
               >
-                I agree to the{' '}
-                <span className="font-medium">Terms and Conditions</span> and
-                acknowledge that:
+                {t('purchase_invoice_dialog.terms_checkbox').split('<bold>')[0]}
+                <span className="font-medium">
+                  {
+                    t('purchase_invoice_dialog.terms_checkbox')
+                      .split('<bold>')[1]
+                      .split('</bold>')[0]
+                  }
+                </span>
+                {
+                  t('purchase_invoice_dialog.terms_checkbox').split(
+                    '</bold>',
+                  )[1]
+                }
                 <ul className="list-disc list-inside mt-2 space-y-1 ml-2">
                   <li>
-                    This purchase grants me {pkg.durationInDays} days of access
-                  </li>
-                  <li>
-                    I will receive{' '}
-                    {formatDailyTrizilium(pkg.chatTokenPerDay, {
-                      shortForm: true,
+                    {t('purchase_invoice_dialog.terms_duration', {
+                      days: pkg.durationInDays,
                     })}
                   </li>
-                  <li>Trizilium are non-refundable once consumed</li>
-                  <li>The subscription cannot be transferred</li>
+                  <li>
+                    {t('purchase_invoice_dialog.terms_tokens', {
+                      tokens: formatDailyTrizilium(pkg.chatTokenPerDay, {
+                        shortForm: true,
+                      }),
+                    })}
+                  </li>
+                  <li>{t('purchase_invoice_dialog.terms_non_refundable')}</li>
+                  <li>{t('purchase_invoice_dialog.terms_non_transferable')}</li>
                 </ul>
               </label>
             </div>
@@ -255,13 +291,13 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
               disabled={isPending}
             >
               <X className="h-4 w-4 mr-2" />
-              Cancel
+              {t('purchase_invoice_dialog.cancel_button')}
             </Button>
 
             {!sufficiendBalance ? (
               <Button onClick={handleTopup} className="gap-2">
                 <Wallet className="h-4 w-4" />
-                Go to Wallet
+                {t('purchase_invoice_dialog.go_to_wallet_button')}
               </Button>
             ) : (
               <Button
@@ -272,12 +308,12 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 {isPending ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing...
+                    {t('purchase_invoice_dialog.processing_button')}
                   </>
                 ) : (
                   <>
                     <ShoppingCart className="h-4 w-4" />
-                    Confirm Purchase
+                    {t('purchase_invoice_dialog.confirm_purchase_button')}
                   </>
                 )}
               </Button>

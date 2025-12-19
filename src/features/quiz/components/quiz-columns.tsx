@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { MoreHorizontal, Eye, Trash2, Edit } from 'lucide-react';
 
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { formatDateHour } from '@/utils/date/date';
 
 import type { ColumnDef } from '@tanstack/react-table';
 import type { TFunction } from 'i18next';
@@ -21,6 +21,7 @@ export type Quiz = {
   title: string;
   description: string;
   imageSource: string | null;
+  moduleId: string | null;
   durationInMinutes: number | null;
   createdAt: string;
   updatedAt: string;
@@ -56,38 +57,20 @@ export const createQuizColumns = ({
   onViewDetail,
   t,
 }: QuizColumnsProps): ColumnDef<Quiz>[] => [
-  // {
-  //   accessorKey: 'imageSource',
-  //   header: 'Image',
-  //   cell: ({ row }) => {
-  //     const imageSource = row.getValue('imageSource') as string | null;
-  //     return (
-  //       <Avatar className="h-10 w-10">
-  //         <AvatarImage
-  //           src={imageSource || undefined}
-  //           alt={row.original.title}
-  //         />
-  //         <AvatarFallback>
-  //           {row.original.title.slice(0, 2).toUpperCase()}
-  //         </AvatarFallback>
-  //       </Avatar>
-  //     );
-  //   },
-  //   enableSorting: false,
-  // },
   {
     accessorKey: 'title',
     header: () => t('quizzes.columns.title'),
     cell: ({ row }) => {
       const title = row.getValue('title') as string;
-      return (
-        <div className="max-w-[200px]">
-          <div className="font-medium">{title}</div>
-          {/* <div className="text-sm text-muted-foreground line-clamp-2">
-            {row.original.description}
-          </div> */}
-        </div>
-      );
+      return <div className="font-medium">{title}</div>;
+    },
+  },
+  {
+    accessorKey: 'type',
+    header: () => 'Thể loại',
+    cell: ({ row }) => {
+      const moduleId = row.original.moduleId as string;
+      return <div>{moduleId ? 'Khóa học' : 'Ôn tập'}</div>;
     },
   },
   {
@@ -129,12 +112,7 @@ export const createQuizColumns = ({
     header: () => t('quizzes.columns.created'),
     cell: ({ row }) => {
       const date = new Date(row.getValue('createdAt'));
-      return (
-        <div className="text-sm">
-          {format(date, 'MMM dd, yyyy')}
-          <div className="text-muted-foreground">{format(date, 'HH:mm')}</div>
-        </div>
-      );
+      return <div className="text-sm">{formatDateHour(new Date(date))}</div>;
     },
   },
   {
@@ -142,14 +120,10 @@ export const createQuizColumns = ({
     header: () => t('quizzes.columns.updated'),
     cell: ({ row }) => {
       const date = new Date(row.getValue('updatedAt'));
-      return (
-        <div className="text-sm">
-          {format(date, 'MMM dd, yyyy')}
-          <div className="text-muted-foreground">{format(date, 'HH:mm')}</div>
-        </div>
-      );
+      return <div className="text-sm">{formatDateHour(new Date(date))}</div>;
     },
   },
+
   {
     id: 'actions',
     enableHiding: false,

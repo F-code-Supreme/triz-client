@@ -14,6 +14,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MinimalTiptapEditor } from '@/components/ui/minimal-tiptap';
 import { isEditorEmpty } from '@/components/ui/minimal-tiptap/utils';
+import {
+  VideoPlayer,
+  VideoPlayerContent,
+  VideoPlayerControlBar,
+  VideoPlayerMuteButton,
+  VideoPlayerPlayButton,
+  VideoPlayerSeekBackwardButton,
+  VideoPlayerSeekForwardButton,
+  VideoPlayerTimeDisplay,
+  VideoPlayerTimeRange,
+  VideoPlayerVolumeRange,
+} from '@/components/ui/shadcn-io/video-player';
 import { Textarea } from '@/components/ui/textarea';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
@@ -56,6 +68,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
   const createVideoLessonMutation = useCreateVideoLessonMutation(moduleId);
   const updateLessonMutation = useUpdateLessonMutation(lessonId || '');
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isVideoLoading, setIsVideoLoading] = React.useState(false);
 
   const lessonQuery = useGetLessonById(lessonId);
   const isFetching = lessonQuery.isFetching;
@@ -331,7 +344,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[1000px] max-h-[80vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>
@@ -346,14 +359,23 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 ? 'Xem chi tiết bài học.'
                 : lessonId
                   ? 'Chỉnh sửa chi tiết bài học. Tải lên video mới chỉ khi bạn muốn thay thế.'
-                  : 'Tạo bài học mới cho chương này. Vui lòng điền tất cả các trường bắt buộc bên dưới.'}
+                  : 'Tạo bài học mới cho chương này. Vui lòng điền tất cả các trường bắt buộc.'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="title">
-                Tiêu đề {!viewMode && <span className="text-red-500">*</span>}
+              <Label
+                htmlFor="title"
+                className="flex items-center justify-between"
+              >
+                <span>
+                  Tiêu đề{' '}
+                  {!viewMode && <span className="text-red-500">*</span>}{' '}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {title.length}/200
+                </span>{' '}
               </Label>
               <Input
                 id="title"
@@ -363,12 +385,22 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 required={!viewMode}
                 disabled={isDisabled}
                 readOnly={viewMode}
+                maxLength={200}
+                minLength={3}
               />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="description">
-                Mô tả {!viewMode && <span className="text-red-500">*</span>}
+              <Label
+                htmlFor="description"
+                className="flex items-center justify-between"
+              >
+                <span>
+                  Mô tả {!viewMode && <span className="text-red-500">*</span>}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {description.length}/255
+                </span>{' '}
               </Label>
               <Textarea
                 id="description"
@@ -379,6 +411,8 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 required={!viewMode}
                 disabled={isDisabled}
                 readOnly={viewMode}
+                maxLength={255}
+                style={{ resize: 'none' }}
               />
             </div>
 
@@ -432,13 +466,15 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 </Label>
                 <TooltipProvider>
                   <MinimalTiptapEditor
+                    showToolbar={!viewMode}
                     key={lessonId ? `editor-${lessonId}` : 'editor-new'}
                     value={content}
                     onChange={setContent}
                     output="html"
                     placeholder={viewMode ? '' : 'Bắt đầu viết...'}
-                    editorContentClassName="min-h-64 p-4"
+                    editorContentClassName="min-h-64  p-4"
                     editable={!viewMode}
+                    className="max-h-96 overflow-y-auto"
                   />
                 </TooltipProvider>
               </div>
@@ -452,17 +488,39 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 </Label>
                 <div className="flex flex-col gap-2">
                   {existingVideoUrl && (
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="relative p-3 bg-blue-50 border border-blue-200 rounded-md">
                       <p className="text-sm font-medium text-blue-900 mb-2">
                         {viewMode ? 'Video:' : 'Video hiện tại:'}
                       </p>
-                      <video
-                        src={existingVideoUrl}
-                        controls
-                        className="w-full max-h-80 rounded"
-                      >
-                        Trình duyệt của bạn không hỗ trợ thẻ video.
-                      </video>
+                      <VideoPlayer key={existingVideoUrl}>
+                        <VideoPlayerContent
+                          src={existingVideoUrl}
+                          slot="media"
+                          preload="auto"
+                          onLoadStart={() => setIsVideoLoading(true)}
+                          onLoadedData={() => setIsVideoLoading(false)}
+                          onError={() => setIsVideoLoading(false)}
+                        />
+                        <VideoPlayerControlBar>
+                          <VideoPlayerPlayButton />
+                          <VideoPlayerSeekBackwardButton />
+                          <VideoPlayerSeekForwardButton />
+                          <VideoPlayerTimeRange />
+                          <VideoPlayerTimeDisplay showDuration />
+                          <VideoPlayerMuteButton />
+                          <VideoPlayerVolumeRange />
+                        </VideoPlayerControlBar>
+                      </VideoPlayer>
+                      {isVideoLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/60 rounded-md">
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                            <p className="text-sm text-blue-900">
+                              Đang tải video...
+                            </p>
+                          </div>
+                        </div>
+                      )}
                       {!viewMode && (
                         <p className="text-xs text-blue-700 mt-2">
                           Tải lên video mới bên dưới để thay thế
@@ -488,7 +546,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                       {videoFile && (
                         <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-md border">
                           <div className="flex-1">
-                            <p className="text-sm font-medium">
+                            <p className="text-sm font-medium white-space-nowrap overflow-hidden text-ellipsis">
                               {videoFile.name}
                             </p>
                             <p className="text-xs text-muted-foreground">

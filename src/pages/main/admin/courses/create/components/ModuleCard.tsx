@@ -306,8 +306,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
             )}
           </button>
           <h3 className="font-medium text-base">
-            {module.name} - Thời lượng: {module.durationInMinutes} phút - Mức
-            độ:{' '}
+            {module.name} - Cấp độ:{' '}
             {module.level === 'EASY'
               ? 'Sơ cấp'
               : module.level === 'MEDIUM'
@@ -330,7 +329,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" aria-label="Open menu" size="sm">
-                + Thêm <ChevronDown />
+                <Plus /> Thêm <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">

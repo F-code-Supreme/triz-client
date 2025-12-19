@@ -2,9 +2,11 @@ import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import CTAImage from '@/assets/images/Frame 1410086255.png';
+import useAuth from '@/features/auth/hooks/use-auth';
 
 const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
   const { t } = useTranslation('footer');
+  const { user } = useAuth();
 
   return (
     <div className="relative bg-slate-800 sm:20 md:mt-32">
@@ -16,12 +18,14 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
               {t('cta.title')}
             </h2>
             <div className="flex flex-col gap-4 md:flex-row md:gap-5 justify-center items-center">
-              <Link
-                to="/register"
-                className="bg-white text-blue-600 px-6 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition-colors w-full md:w-auto text-center"
-              >
-                {t('cta.register')}
-              </Link>
+              {!user && (
+                <Link
+                  to="/register"
+                  className="bg-white text-blue-600 px-6 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition-colors w-full md:w-auto text-center"
+                >
+                  {t('cta.register')}
+                </Link>
+              )}
               <Link
                 to="/course"
                 className="border border-slate-200 text-slate-50 px-6 py-4 rounded-xl font-medium text-lg hover:bg-white/10 transition-colors flex items-center gap-2 w-full md:w-auto justify-center"

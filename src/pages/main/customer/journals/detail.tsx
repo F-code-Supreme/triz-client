@@ -1,4 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router';
+import { format } from 'date-fns';
 import {
   ArrowLeft,
   BookOpen,
@@ -7,20 +8,37 @@ import {
   CheckCircle2,
   Star,
   Share2,
+  MessageSquare,
+  Plus,
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Textarea } from '@/components/ui/textarea';
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { useCreateRootReviewMutation } from '@/features/journal-review/services/mutations';
+import { useGetRootReviewsByProblemQuery } from '@/features/journal-review/services/queries';
+import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { Route } from '@/routes/(app)/journals/$journalId/route';
+import { Route } from '@/routes/(app)/journals/$journalId';
 
 import type { PhysicalContradiction } from '@/features/6-steps/types';
+import type { ReviewStatus } from '@/features/journal-review/types';
 
 const JournalDetailPage = () => {
   const { t } = useTranslation('pages.journals');
@@ -33,6 +51,51 @@ const JournalDetailPage = () => {
     isLoading,
     error,
   } = useGetJournalByIdQuery(user?.id, journalId);
+
+  // Get latest 5 root reviews for preview
+  const [reviewsPagination] = useState({ pageIndex: 0, pageSize: 5 });
+  const [reviewsSorting] = useState([{ id: 'createdAt', desc: true }]);
+  const { data: reviewsData, isLoading: reviewsLoading } =
+    useGetRootReviewsByProblemQuery(
+      reviewsPagination,
+      reviewsSorting,
+      journal?.id,
+    );
+
+  const latestReviews = useMemo(
+    () => reviewsData?.content || [],
+    [reviewsData],
+  );
+  const totalReviewsCount = reviewsData?.page?.totalElements ?? 0;
+
+  // Create review mutation
+  const createReviewMutation = useCreateRootReviewMutation();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [reviewContent, setReviewContent] = useState('');
+
+  const handleCreateReview = async () => {
+    if (!reviewContent.trim()) {
+      toast.error('Vui lòng nhập nội dung đánh giá');
+      return;
+    }
+
+    if (!journal?.id) {
+      toast.error('Không thể tạo đánh giá. Vui lòng thử lại.');
+      return;
+    }
+
+    try {
+      await createReviewMutation.mutateAsync({
+        problemId: journal.id,
+        content: reviewContent.trim(),
+      });
+      toast.success('Tạo đánh giá thành công');
+      setIsCreateDialogOpen(false);
+      setReviewContent('');
+    } catch {
+      toast.error('Có lỗi xảy ra khi tạo đánh giá');
+    }
+  };
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const formatJournalContentForForum = () => {
@@ -310,6 +373,150 @@ const JournalDetailPage = () => {
               </CardContent>
             </Card>
 
+            {/* Reviews Preview Card */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <Link
+                    to="/journals/$journalId/reviews"
+                    params={{ journalId }}
+                    className="font-semibold flex items-center gap-2 hover:text-primary transition-colors"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Đánh giá
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary">{totalReviewsCount}</Badge>
+                    <Dialog
+                      open={isCreateDialogOpen}
+                      onOpenChange={setIsCreateDialogOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button size="icon" variant="ghost" className="h-8 w-8">
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Tạo yêu cầu đánh giá mới</DialogTitle>
+                          <DialogDescription>
+                            Nhập nội dung yêu cầu đánh giá cho nhật ký của bạn
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <label className="text-sm font-medium">
+                                Nội dung
+                              </label>
+                              <span className="text-xs text-gray-400">
+                                {reviewContent.length}/2000
+                              </span>
+                            </div>
+                            <Textarea
+                              placeholder="Nhập nội dung đánh giá..."
+                              value={reviewContent}
+                              onChange={(e) => setReviewContent(e.target.value)}
+                              rows={6}
+                              maxLength={2000}
+                              className="resize-none"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setIsCreateDialogOpen(false);
+                              setReviewContent('');
+                            }}
+                          >
+                            Hủy
+                          </Button>
+                          <Button
+                            onClick={handleCreateReview}
+                            disabled={
+                              createReviewMutation.isPending ||
+                              !reviewContent.trim()
+                            }
+                          >
+                            {createReviewMutation.isPending
+                              ? 'Đang tạo...'
+                              : 'Tạo đánh giá'}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+                {reviewsLoading ? (
+                  <div className="space-y-3">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                      <Skeleton key={idx} className="h-16 w-full" />
+                    ))}
+                  </div>
+                ) : latestReviews.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground text-sm">
+                    <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>Chưa có đánh giá nào</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {latestReviews.map(
+                      (review: {
+                        id: string;
+                        creatorFullName: string;
+                        content: string;
+                        createdAt: string;
+                        status: string;
+                      }) => (
+                        <Link
+                          key={review.id}
+                          to="/journals/$journalId/reviews/$reviewId"
+                          params={{ journalId, reviewId: review.id }}
+                          className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                        >
+                          <div className="flex items-start gap-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {review.creatorFullName}
+                              </p>
+                              <p className="text-xs text-muted-foreground line-clamp-2">
+                                {review.content}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {format(
+                                  new Date(review.createdAt),
+                                  'dd/MM/yyyy HH:mm',
+                                )}
+                              </p>
+                            </div>
+                            {getReviewStatusBadge(
+                              review.status as ReviewStatus,
+                            )}
+                          </div>
+                        </Link>
+                      ),
+                    )}
+                    {totalReviewsCount > 5 && (
+                      <Link
+                        to="/journals/$journalId/reviews"
+                        params={{ journalId }}
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full mt-2"
+                          size="sm"
+                        >
+                          Xem tất cả {totalReviewsCount} đánh giá
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Progress Card */}
             <Card>
               <CardContent className="p-6">
@@ -582,8 +789,6 @@ const JournalDetailPage = () => {
                                       <p className="text-xs font-medium text-muted-foreground">
                                         Nguyên tắc #{idea.principleUsed.id}:{' '}
                                         {idea.principleUsed.name}
-                                        {idea.principleUsed.priority &&
-                                          ` (Độ ưu tiên: ${idea.principleUsed.priority})`}
                                       </p>
                                     )}
                                     <p className="text-sm">

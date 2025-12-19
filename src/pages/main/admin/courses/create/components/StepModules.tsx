@@ -28,7 +28,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectContent,
@@ -189,7 +188,6 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
     const isCreateDisabled = isPending;
     const createModule = useCreateModuleMutation(courseId ?? '');
     const [name, setName] = useState('');
-    const [duration, setDuration] = useState<number | undefined>(undefined);
     // start empty so placeholder is shown until user picks a level
     const [level, setLevel] = useState<'EASY' | 'MEDIUM' | 'HARD' | ''>('');
 
@@ -203,17 +201,13 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
         return;
       }
 
-      if (duration === undefined || duration <= 0) {
-        toast.error('Thời lượng phải lớn hơn 0');
-        return;
-      }
       if (!level) {
         toast.error('Độ khó là bắt buộc');
         return;
       }
 
       createModule.mutate(
-        { name: name.trim(), durationInMinutes: duration, level },
+        { name: name.trim(), level },
         {
           onSuccess: () => {
             toast.success('Tạo chương thành công');
@@ -245,15 +239,16 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={isCreateDisabled}
+            maxLength={255}
           />
-          <NumberInput
+          {/* <NumberInput
             min={1}
             placeholder="Nhập thời lượng (phút)"
             value={duration}
             onValueChange={setDuration}
             disabled={isCreateDisabled}
             stepper={1}
-          />
+          /> */}
 
           <Select
             onValueChange={(value) =>
@@ -294,14 +289,11 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
   const EditModuleForm: React.FC<{
     moduleId: string;
     initialName?: string;
-    durationInMinutes: number;
     level: 'EASY' | 'MEDIUM' | 'HARD';
-  }> = ({ moduleId, initialName, durationInMinutes, level }) => {
+  }> = ({ moduleId, initialName, level }) => {
     const updateModule = useUpdateModuleMutation(moduleId);
     const [name, setName] = useState(initialName ?? '');
-    const [duration, setDuration] = useState<number | undefined>(
-      durationInMinutes,
-    );
+
     const [levelModule, setLevelModule] = useState<'EASY' | 'MEDIUM' | 'HARD'>(
       level,
     );
@@ -311,10 +303,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
         toast.error('Tên chương là bắt buộc');
         return;
       }
-      if (duration === undefined || duration <= 0) {
-        toast.error('Thời lượng phải lớn hơn 0');
-        return;
-      }
+
       if (!levelModule) {
         toast.error('Độ khó là bắt buộc');
         return;
@@ -323,7 +312,6 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
         {
           id: moduleId,
           name: name.trim(),
-          durationInMinutes: duration,
           level: levelModule,
         },
         {
@@ -355,12 +343,6 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             className="border p-2 rounded flex-1"
             value={name}
             onChange={(e) => setName(e.target.value)}
-          />
-          <NumberInput
-            min={1}
-            value={duration}
-            onValueChange={setDuration}
-            stepper={1}
           />
 
           <Select

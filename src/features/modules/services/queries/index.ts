@@ -36,6 +36,7 @@ export const useGetModuleByCourseQuery = (courseId: string) => {
     enabled: !!courseId,
   });
 };
+
 export const useGetModulesByCourseQuery = (courseId: string) => {
   const _request = useAxios();
   return useQuery({

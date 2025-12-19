@@ -25,10 +25,7 @@ export const getTransactionFilters = (
   {
     columnId: 'provider',
     title: t('transactions.filters.provider'),
-    options: [
-      { label: t('transactions.providers.stripe'), value: 'STRIPE' },
-      { label: t('transactions.providers.payos'), value: 'PAYOS' },
-    ],
+    options: [{ label: t('transactions.providers.payos'), value: 'PAYOS' }],
   },
 ];
 
@@ -54,10 +51,7 @@ const transactionFilters: FilterOption[] = [
   {
     columnId: 'provider',
     title: 'Provider',
-    options: [
-      { label: 'Stripe', value: 'STRIPE' },
-      { label: 'PayOS', value: 'PAYOS' },
-    ],
+    options: [{ label: 'PayOS', value: 'PAYOS' }],
   },
 ];
 

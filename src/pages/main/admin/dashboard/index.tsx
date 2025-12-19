@@ -8,11 +8,41 @@ import {
   mockDashboardData,
   GameSection,
 } from '@/features/dashboard';
+import {
+  useGetAdminPackageAnalyticsQuery,
+  useGetAdminPaymentsRevenueTrendQuery,
+  useGetAdminPaymentsStatsQuery,
+  useGetAdminPaymentsStatusDistributionQuery,
+  useGetAdminPaymentsTopUsersQuery,
+} from '@/features/dashboard/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminDashboardPage = () => {
   const { t } = useTranslation('pages.admin');
-  const dashboardData = mockDashboardData;
+  const [period, setPeriod] = useState<'day' | 'month' | 'quarter'>('day');
+  const mokdata = mockDashboardData;
+
+  const { data: paymentStatsStatistics, isLoading: statsLoading } =
+    useGetAdminPaymentsStatsQuery();
+
+  const { data: paymentRevenueTrend, isLoading: trendLoading } =
+    useGetAdminPaymentsRevenueTrendQuery(period);
+
+  const { data: paymentStatusDistribution, isLoading: distributionLoading } =
+    useGetAdminPaymentsStatusDistributionQuery();
+
+  const { data: topUsers, isLoading: topUsersLoading } =
+    useGetAdminPaymentsTopUsersQuery();
+
+  const { data: paymentAnalytics, isLoading: paymentAnalyticsLoading } =
+    useGetAdminPackageAnalyticsQuery();
+
+  const isInitialLoading =
+    statsLoading ||
+    distributionLoading ||
+    topUsersLoading ||
+    paymentAnalyticsLoading;
+
   const [activeTab, setActiveTab] = useState('revenue');
 
   return (
@@ -39,13 +69,23 @@ const AdminDashboardPage = () => {
             </TabsList>
           </div>
           <TabsContent value="revenue" className="mt-6">
-            <RevenueSection data={dashboardData.revenue} />
+            <RevenueSection
+              paymentStatsStatistics={paymentStatsStatistics}
+              paymentRevenueTrend={paymentRevenueTrend}
+              paymentStatusDistribution={paymentStatusDistribution}
+              paymentAnalytics={paymentAnalytics}
+              topUsers={topUsers}
+              period={period}
+              setPeriod={setPeriod}
+              isLoading={isInitialLoading}
+              trendLoading={trendLoading}
+            />
           </TabsContent>
           <TabsContent value="chat" className="mt-6">
-            <ChatForumSection chat={dashboardData.chat} />
+            <ChatForumSection chat={mokdata.chat} isLoading={false} />
           </TabsContent>
           <TabsContent value="games" className="mt-6">
-            <GameSection data={dashboardData.games} />
+            <GameSection data={mokdata.games} isLoading={false} />
           </TabsContent>
         </Tabs>
       </div>

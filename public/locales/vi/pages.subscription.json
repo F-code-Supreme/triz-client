@@ -44,8 +44,9 @@
     "status": {
       "ACTIVE": "Đang hoạt động",
       "EXPIRED": "Hết hạn",
-      "CANCELED": "Đã hủy",
-      "PENDING": "Đang chờ"
+      "CANCELLED": "Đã hủy",
+      "PENDING": "Đang chờ",
+      "REFUNDED": "Đã hoàn tiền"
     },
     "actions": {
       "view_details": "Xem Chi Tiết",

@@ -92,7 +92,7 @@ export const SixStepsWorkflow = () => {
       <HorizontalStepper steps={STEPS} currentStep={currentStep} />
 
       {/* Step Content */}
-      <div className="h-[calc(100vh-230px)]">
+      <div className={currentStep === 4 ? 'h-[100vh]' : 'h-full'}>
         {currentStep === 1 && (
           <Step1UnderstandProblem onNext={(data) => handleStepNext(1, data)} />
         )}

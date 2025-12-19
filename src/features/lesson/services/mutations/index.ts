@@ -6,14 +6,13 @@ import { ModuleKeys } from '@/features/modules/services/queries/keys';
 
 import type { CreateLessonPayload } from '@/features/lesson/services/mutations/types';
 import type { Lesson } from '@/features/lesson/types';
-import type { Response } from '@/types';
 
 export const useCreateLessonMutation = (moduleId: string) => {
   const queryClient = useQueryClient();
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: CreateLessonPayload) => {
-      const response = await _request.post<Response<Lesson>>(
+      const response = await _request.post<Lesson>(
         `/modules/${moduleId}/lessons`,
         payload,
       );
@@ -59,7 +58,7 @@ export const useUpdateLessonMutation = (lessonId: string) => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: CreateLessonPayload) => {
-      const response = await _request.put<Response<Lesson>>(
+      const response = await _request.put<Lesson>(
         `/lessons/${lessonId}`,
         payload,
       );
@@ -83,7 +82,7 @@ export const useUpdateStatusLessonMutation = (lessonId: string) => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (status: 'ACTIVE' | 'INACTIVE') => {
-      const response = await _request.patch<Response<Lesson>>(
+      const response = await _request.patch<Lesson>(
         `/lessons/${lessonId}/status`,
         { status },
       );
@@ -140,9 +139,7 @@ export const useDeleteLessonMutation = (lessonId: string) => {
       if (!lessonId) {
         throw new Error('Lesson ID is required');
       }
-      const response = await _request.delete<Response<null>>(
-        `/lessons/${lessonId}`,
-      );
+      const response = await _request.delete(`/lessons/${lessonId}`);
       return response.data;
     },
     onSuccess: () => {
@@ -154,6 +151,21 @@ export const useDeleteLessonMutation = (lessonId: string) => {
       });
       queryClient.invalidateQueries({
         queryKey: [LessonKeys.GetLessonsByModuleQuery],
+      });
+    },
+  });
+};
+
+export const useMarkLessonAsCompletedMutation = (lessonId: string) => {
+  const queryClient = useQueryClient();
+  const _request = useAxios();
+  return useMutation({
+    mutationFn: async () => {
+      await _request.post(`/lessons/${lessonId}/complete`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [LessonKeys.GetLessonProgress, lessonId],
       });
     },
   });

@@ -27,9 +27,6 @@ const DetailQuizDialog = ({
     selectedQuizData?.moduleId || '',
   );
 
-  console.log('selectedQuizData', selectedQuizData);
-  console.log('moduleData', moduleData);
-
   const { data: courseData } = useGetCourseByIdQuery(
     moduleData?.courseId || '',
   );
@@ -55,6 +52,9 @@ const DetailQuizDialog = ({
                     duration: selectedQuizData.durationInMinutes,
                   })}
                 </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Điểm tối thiểu: {selectedQuizData.passingScore}
+                </p>
               </div>
             </div>
 
@@ -62,28 +62,26 @@ const DetailQuizDialog = ({
               <div className="border rounded-lg p-4 bg-muted/30">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">
-                      {t('quizzes.detail_dialog.course')}
-                    </p>
                     <p className="font-medium">
+                      {t('quizzes.detail_dialog.course')}:{' '}
                       {courseData?.title || t('quizzes.detail_dialog.loading')}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      {t('quizzes.detail_dialog.module')}
-                    </p>
-                    <p className="font-medium">
-                      {moduleData?.name || t('quizzes.detail_dialog.loading')}
                     </p>
                     {moduleData && (
                       <p className="text-xs text-muted-foreground mt-1">
-                        {t('quizzes.detail_dialog.module_info', {
-                          duration: moduleData.durationInMinutes,
-                          level: moduleData.level,
-                        })}
+                        Cấp độ:{' '}
+                        {moduleData.level === 'EASY'
+                          ? 'Dễ'
+                          : moduleData.level === 'MEDIUM'
+                            ? 'Trung bình'
+                            : 'Khó'}
                       </p>
                     )}
+                  </div>
+                  <div>
+                    <p className="font-medium">
+                      {t('quizzes.detail_dialog.module')}:{' '}
+                      {moduleData?.name || t('quizzes.detail_dialog.loading')}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -104,9 +102,10 @@ const DetailQuizDialog = ({
                     })}
                   </div>
                   <div className="text-sm text-muted-foreground mb-2">
-                    {t('quizzes.detail_dialog.question_type', {
-                      type: question.questionType.replace('_', ' '),
-                    })}
+                    Loại câu hỏi:{' '}
+                    {question.questionType === 'MULTIPLE_CHOICE'
+                      ? 'Chọn nhiều đáp án'
+                      : 'Chọn một đáp án'}
                   </div>
                   <div className="space-y-1">
                     {question.options?.map((option: any, optIdx: number) => (

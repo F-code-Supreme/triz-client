@@ -139,6 +139,34 @@ interface Resources {
       "start_learning": "Start learning now",
       "subtitle": "Systematic Creative Problem Solving",
       "title": "Discover TRIZ"
+    },
+    "purchase_invoice_dialog": {
+      "access_duration": "Access duration: {{days}} days",
+      "agree_terms_error": "Please agree to the terms and conditions",
+      "cancel_button": "Cancel",
+      "confirm_purchase_button": "Confirm Purchase",
+      "days_access": "{{days}} days access",
+      "description": "Review your purchase details before confirming",
+      "go_to_wallet_button": "Go to Wallet",
+      "insufficient_balance": "Insufficient balance. You need {{amount}} more",
+      "insufficient_balance_alert": "Your wallet balance is insufficient to complete this purchase. Please top up your wallet first.",
+      "insufficient_balance_error": "Insufficient wallet balance",
+      "package_badge": "Package",
+      "package_name": "{{name}} Package",
+      "processing_button": "Processing...",
+      "purchase_failed_error": "Failed to purchase package",
+      "purchase_success": "Package purchased successfully!",
+      "sufficient_balance": "Sufficient balance to complete this purchase",
+      "table_amount": "Amount",
+      "table_description": "Description",
+      "terms_checkbox": "I agree to the <bold>Terms and Conditions</bold> and acknowledge that:",
+      "terms_duration": "This purchase grants me {{days}} days of access",
+      "terms_non_refundable": "Trizilium are non-refundable once consumed",
+      "terms_non_transferable": "The subscription cannot be transferred",
+      "terms_tokens": "I will receive {{tokens}}",
+      "title": "Purchase Invoice",
+      "total": "Total",
+      "wallet_balance": "Wallet Balance"
     }
   },
   "datetime": {
@@ -227,6 +255,10 @@ interface Resources {
           "description_required": "Description is required",
           "image": "Achievement Image",
           "image_description": "Upload an achievement icon or badge (max 2MB)",
+          "image_error": "Image upload error(s)",
+          "image_instruction": "PNG, JPG up to 2MB",
+          "image_upload": "Upload image",
+          "image_uploaded": "Image uploaded",
           "milestone_count": "Milestone Count",
           "milestone_count_description": "Number of books required to unlock this achievement",
           "milestone_count_placeholder": "e.g., 5",
@@ -240,7 +272,9 @@ interface Resources {
           "type_placeholder": "Select achievement type"
         },
         "saving": "Saving...",
-        "update": "Update"
+        "update": "Update",
+        "upload_icon_image": "Upload Package Icon Image",
+        "upload_image": "Upload Icon Image"
       },
       "no_achievements": "No achievements found",
       "pagination": {
@@ -752,6 +786,8 @@ interface Resources {
         "status_inactive": "Inactive",
         "status_placeholder": "Select status",
         "update_package": "Update Package",
+        "upload_icon_image": "Upload Package Icon Image",
+        "upload_image": "Upload Icon Image",
         "valid_image_url": "✓ Valid image URL"
       },
       "no_packages": "No packages found",
@@ -933,8 +969,13 @@ interface Resources {
       "no_results": "No results.",
       "no_subscriptions": "No subscriptions found",
       "status": {
+        "active": "Active",
+        "canceled": "Canceled",
         "disabled": "Disabled",
-        "enabled": "Enabled"
+        "enabled": "Enabled",
+        "expired": "Expired",
+        "pending": "Pending",
+        "refunded": "Refunded"
       },
       "title": "Subscriptions",
       "toast": {
@@ -1001,6 +1042,7 @@ interface Resources {
         "date": "Date",
         "order_code": "Order Code",
         "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
         "status": "Status",
         "type": "Type"
       },
@@ -1018,6 +1060,7 @@ interface Resources {
       },
       "filters": {
         "provider": "Provider",
+        "search_placeholder": "Search by order code, provider ref...",
         "status": "Status",
         "transaction_type": "Transaction Type"
       },
@@ -1034,6 +1077,10 @@ interface Resources {
         "completed": "Completed",
         "pending": "Pending"
       },
+      "tabs": {
+        "in_app": "In-App Transactions",
+        "out_of_app": "Out-of-App Transactions"
+      },
       "title": "Transactions",
       "toast": {
         "cancel_error": "Failed to cancel transaction",
@@ -1046,6 +1093,14 @@ interface Resources {
       }
     },
     "users": {
+      "columns": {
+        "actions": "Actions",
+        "avatar": "Avatar",
+        "email": "Email",
+        "full_name": "Full Name",
+        "roles": "Roles",
+        "status": "Status"
+      },
       "create_user": "Create New User",
       "description": "Manage system users and view their details",
       "detail": {
@@ -1068,8 +1123,16 @@ interface Resources {
         "user_information": "User Information"
       },
       "edit_user": "Edit User",
+      "filters": {
+        "role": "Role",
+        "status": "Status"
+      },
       "form": {
         "avatar": "Avatar",
+        "avatar_error": "Avatar upload error(s)",
+        "avatar_instruction": "PNG, JPG up to 2MB",
+        "avatar_upload": "Upload avatar",
+        "avatar_uploaded": "Avatar uploaded",
         "create_user": "Create User",
         "email": "Email",
         "full_name": "Full Name",
@@ -1080,6 +1143,7 @@ interface Resources {
         "role": "Role",
         "role_admin": "Admin",
         "role_expert": "Expert",
+        "role_moderator": "Moderator",
         "role_user": "User",
         "status": "Status",
         "status_active": "Active",
@@ -1088,6 +1152,17 @@ interface Resources {
       },
       "new_user": "New User",
       "no_users": "No users found",
+      "roles": {
+        "admin": "Admin",
+        "expert": "Expert",
+        "moderator": "Moderator",
+        "user": "User"
+      },
+      "search_placeholder": "Search by email or full name...",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
       "title": "Users",
       "view_details": "View Details"
     }
@@ -1164,15 +1239,31 @@ interface Resources {
       "my_courses_button": "My Courses",
       "title": "All Courses"
     },
+    "assignments": {
+      "ai_analysis": "AI Analysis",
+      "ai_review": "AI Review",
+      "criteria_analysis": "Criteria Analysis",
+      "expert_review": "Expert Review",
+      "improvements": "Improvements",
+      "overall_analysis": "Overall Analysis",
+      "resoning": "Reasoning",
+      "strengths": "Strengths",
+      "submission_date": "Submission Date",
+      "suggested_focus": "Suggested Focus",
+      "your_answer": "Your Answer"
+    },
     "error": "Failed to load courses.",
     "filters": {
       "all_levels": "All Levels",
+      "expert": "Expert",
+      "intermediate": "Intermediate",
       "level": "Level",
       "most_popular": "Most Popular",
       "newest": "Newest",
       "oldest": "Oldest",
       "search_placeholder": "Search courses...",
-      "sort_by": "Sort by"
+      "sort_by": "Sort by",
+      "starter": "Starter"
     },
     "learn": {
       "back_to_my_courses": "Back to My Courses",
@@ -1705,9 +1796,10 @@ interface Resources {
       "no_subscriptions": "No subscriptions found",
       "status": {
         "ACTIVE": "Active",
-        "CANCELED": "Canceled",
+        "CANCELLED": "Cancelled",
         "EXPIRED": "Expired",
-        "PENDING": "Pending"
+        "PENDING": "Pending",
+        "REFUNDED": "Refunded"
       },
       "title": "Subscription History",
       "toggle_auto_renewal": "Toggle Auto Renewal"
@@ -1884,7 +1976,7 @@ interface Resources {
       "assignments": "Assignments",
       "configuration": "Configuration",
       "dashboard": "Dashboard",
-      "idea_assessment": "Idea Assessment",
+      "journal_reviews": "Journal Reviews",
       "main": "Main",
       "review": "Review",
       "six_step_config": "Six Step Configuration",
