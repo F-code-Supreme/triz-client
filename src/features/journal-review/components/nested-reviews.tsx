@@ -20,6 +20,7 @@ interface NestedReviewsProps {
   isReadOnly: boolean;
   userId?: string;
   canDelete: (reviewOwnerId: string) => boolean;
+  canRate?: boolean;
   editingReview: string | null;
   editContent: string;
   editRating: number | null;
@@ -35,6 +36,7 @@ export const NestedReviews = ({
   isReadOnly,
   userId,
   canDelete,
+  canRate = false,
   editingReview,
   editContent,
   editRating,
@@ -48,7 +50,8 @@ export const NestedReviews = ({
     const isEditing = editingReview === review.id;
     const canEdit = !isReadOnly && review.creatorId === userId;
     const canDeleteThis = !isReadOnly && canDelete(review.creatorId);
-    const showRating = true; // Always show rating for direct children
+    const showRatingInput = canRate && review.stepNumber !== null; // Allow rating input only if user can rate and it's a step review
+    const hasRating = review.stepNumber !== null && review.rating; // Show existing rating if it's a step review and rating exists
 
     return (
       <div key={review.id} className="border rounded-lg p-3">
@@ -102,12 +105,21 @@ export const NestedReviews = ({
 
             {isEditing ? (
               <div className="mt-2 space-y-2">
-                <Textarea
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  className="min-h-[80px]"
-                />
-                {showRating && review.stepNumber !== null && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Nội dung</label>
+                    <span className="text-xs text-gray-400">
+                      {editContent.length}/2000
+                    </span>
+                  </div>
+                  <Textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    maxLength={2000}
+                    className="min-h-[80px]"
+                  />
+                </div>
+                {showRatingInput && (
                   <div className="flex items-center gap-2">
                     <span className="text-sm">Đánh giá:</span>
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -152,7 +164,7 @@ export const NestedReviews = ({
                 <p className="mt-2 text-sm whitespace-pre-wrap">
                   {review.content}
                 </p>
-                {showRating && review.rating && (
+                {hasRating && (
                   <div className="flex items-center gap-1 mt-2">
                     <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm font-medium">

@@ -48,7 +48,12 @@ export const ExpertJournalReviewsTable = () => {
       id: string;
       desc: boolean;
     }>
-  >([]);
+  >([
+    {
+      id: 'createdAt',
+      desc: true,
+    },
+  ]);
   const [columnFilters, setColumnFilters] = useState<
     Array<{
       id: string;

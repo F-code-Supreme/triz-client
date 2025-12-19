@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { Role } from '@/features/auth/types';
 import { NestedReviews } from '@/features/journal-review/components/nested-reviews';
 import { ReviewItem } from '@/features/journal-review/components/review-item';
 import {
@@ -125,6 +126,8 @@ const JournalReviewDetailsPage = () => {
     {},
   );
 
+  const isExpertOrAdmin =
+    user?.roles?.includes(Role.EXPERT) || user?.roles?.includes(Role.ADMIN);
   const isOwner = user?.id === rootReview?.creatorId;
 
   // User can only interact when status is PROCESSING or REVIEWED
@@ -380,6 +383,7 @@ const JournalReviewDetailsPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -396,36 +400,49 @@ const JournalReviewDetailsPage = () => {
                   {/* Add review for step 1 */}
                   {canInteract && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 1..."
-                        value={stepComments[1] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            1: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[1] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
-                                ...prev,
-                                1: star,
-                              }))
-                            }
-                          />
-                        ))}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 1
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[1] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 1..."
+                          value={stepComments[1] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              1: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
                       </div>
+                      {isExpertOrAdmin && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[1] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  1: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() =>
@@ -487,6 +504,7 @@ const JournalReviewDetailsPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -503,36 +521,49 @@ const JournalReviewDetailsPage = () => {
                   {/* Add review for step 2 */}
                   {canInteract && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 2..."
-                        value={stepComments[2] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            2: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[2] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
-                                ...prev,
-                                2: star,
-                              }))
-                            }
-                          />
-                        ))}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 2
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[2] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 2..."
+                          value={stepComments[2] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              2: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
                       </div>
+                      {isExpertOrAdmin && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[2] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  2: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() =>
@@ -606,6 +637,7 @@ const JournalReviewDetailsPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -622,36 +654,49 @@ const JournalReviewDetailsPage = () => {
                   {/* Add review for step 3 */}
                   {canInteract && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 3..."
-                        value={stepComments[3] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            3: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[3] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
-                                ...prev,
-                                3: star,
-                              }))
-                            }
-                          />
-                        ))}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 3
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[3] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 3..."
+                          value={stepComments[3] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              3: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
                       </div>
+                      {isExpertOrAdmin && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[3] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  3: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() =>
@@ -727,6 +772,7 @@ const JournalReviewDetailsPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -743,36 +789,49 @@ const JournalReviewDetailsPage = () => {
                   {/* Add review for step 4 */}
                   {canInteract && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 4..."
-                        value={stepComments[4] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            4: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[4] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
-                                ...prev,
-                                4: star,
-                              }))
-                            }
-                          />
-                        ))}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 4
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[4] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 4..."
+                          value={stepComments[4] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              4: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
                       </div>
+                      {isExpertOrAdmin && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[4] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  4: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() =>
@@ -853,6 +912,7 @@ const JournalReviewDetailsPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -869,36 +929,49 @@ const JournalReviewDetailsPage = () => {
                   {/* Add review for step 5 */}
                   {canInteract && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 5..."
-                        value={stepComments[5] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            5: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[5] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
-                                ...prev,
-                                5: star,
-                              }))
-                            }
-                          />
-                        ))}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 5
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[5] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 5..."
+                          value={stepComments[5] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              5: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
                       </div>
+                      {isExpertOrAdmin && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[5] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  5: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() =>
@@ -990,6 +1063,7 @@ const JournalReviewDetailsPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -1006,36 +1080,49 @@ const JournalReviewDetailsPage = () => {
                   {/* Add review for step 6 */}
                   {canInteract && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 6..."
-                        value={stepComments[6] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            6: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[6] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
-                                ...prev,
-                                6: star,
-                              }))
-                            }
-                          />
-                        ))}
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 6
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[6] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 6..."
+                          value={stepComments[6] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              6: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
                       </div>
+                      {isExpertOrAdmin && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[6] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  6: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                      )}
                       <Button
                         size="sm"
                         onClick={() =>
@@ -1126,12 +1213,22 @@ const JournalReviewDetailsPage = () => {
                 {/* Add general comment */}
                 {canInteract && (
                   <div className="pt-4 border-t">
-                    <Textarea
-                      placeholder="Thêm đánh giá chung..."
-                      value={generalComment}
-                      onChange={(e) => setGeneralComment(e.target.value)}
-                      className="mb-2"
-                    />
+                    <div className="space-y-2 mb-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm font-medium">
+                          Đánh giá chung
+                        </label>
+                        <span className="text-xs text-gray-400">
+                          {generalComment.length}/2000
+                        </span>
+                      </div>
+                      <Textarea
+                        placeholder="Thêm đánh giá chung..."
+                        value={generalComment}
+                        onChange={(e) => setGeneralComment(e.target.value)}
+                        maxLength={2000}
+                      />
+                    </div>
                     <Button
                       onClick={() =>
                         handleCreateChildReview(reviewId, null, generalComment)

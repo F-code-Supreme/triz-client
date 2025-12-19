@@ -157,6 +157,8 @@ const ExpertJournalReviewDetailPage = () => {
         content: content.trim(),
         stepNumber: stepNumber === null ? undefined : stepNumber,
         rating: rating || undefined,
+        creatorId,
+        currentStatus: rootReview?.status,
       });
       toast.success('Thêm đánh giá thành công');
 
@@ -381,6 +383,7 @@ const ExpertJournalReviewDetailPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -397,17 +400,28 @@ const ExpertJournalReviewDetailPage = () => {
                   {/* Add review for step 1 */}
                   {!isReadOnly && isExpertOrAdmin && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 1..."
-                        value={stepComments[1] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            1: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 1
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[1] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 1..."
+                          value={stepComments[1] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              1: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">Đánh giá:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -488,6 +502,7 @@ const ExpertJournalReviewDetailPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -504,17 +519,28 @@ const ExpertJournalReviewDetailPage = () => {
                   {/* Add review for step 2 */}
                   {!isReadOnly && isExpertOrAdmin && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 2..."
-                        value={stepComments[2] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            2: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 2
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[2] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 2..."
+                          value={stepComments[2] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              2: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">Đánh giá:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -607,6 +633,7 @@ const ExpertJournalReviewDetailPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -623,17 +650,28 @@ const ExpertJournalReviewDetailPage = () => {
                   {/* Add review for step 3 */}
                   {!isReadOnly && isExpertOrAdmin && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 3..."
-                        value={stepComments[3] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            3: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 3
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[3] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 3..."
+                          value={stepComments[3] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              3: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">Đánh giá:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -728,6 +766,7 @@ const ExpertJournalReviewDetailPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -744,17 +783,28 @@ const ExpertJournalReviewDetailPage = () => {
                   {/* Add review for step 4 */}
                   {!isReadOnly && isExpertOrAdmin && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 4..."
-                        value={stepComments[4] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            4: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 4
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[4] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 4..."
+                          value={stepComments[4] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              4: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">Đánh giá:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -854,6 +904,7 @@ const ExpertJournalReviewDetailPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -870,17 +921,28 @@ const ExpertJournalReviewDetailPage = () => {
                   {/* Add review for step 5 */}
                   {!isReadOnly && isExpertOrAdmin && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 5..."
-                        value={stepComments[5] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            5: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 5
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[5] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 5..."
+                          value={stepComments[5] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              5: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">Đánh giá:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -991,6 +1053,7 @@ const ExpertJournalReviewDetailPage = () => {
                           isReadOnly={isReadOnly}
                           userId={user?.id}
                           canDelete={canDelete}
+                          canRate={isExpertOrAdmin}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
@@ -1007,17 +1070,28 @@ const ExpertJournalReviewDetailPage = () => {
                   {/* Add review for step 6 */}
                   {!isReadOnly && isExpertOrAdmin && (
                     <div className="space-y-2 pt-4 border-t">
-                      <Textarea
-                        placeholder="Đánh giá bước 6..."
-                        value={stepComments[6] || ''}
-                        onChange={(e) =>
-                          setStepComments((prev) => ({
-                            ...prev,
-                            6: e.target.value,
-                          }))
-                        }
-                        className="min-h-[60px]"
-                      />
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <label className="text-sm font-medium">
+                            Đánh giá bước 6
+                          </label>
+                          <span className="text-xs text-gray-400">
+                            {(stepComments[6] || '').length}/2000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Đánh giá bước 6..."
+                          value={stepComments[6] || ''}
+                          onChange={(e) =>
+                            setStepComments((prev) => ({
+                              ...prev,
+                              6: e.target.value,
+                            }))
+                          }
+                          maxLength={2000}
+                          className="min-h-[60px]"
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm">Đánh giá:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -1127,12 +1201,22 @@ const ExpertJournalReviewDetailPage = () => {
                 {/* Add general comment */}
                 {!isReadOnly && (
                   <div className="pt-4 border-t">
-                    <Textarea
-                      placeholder="Thêm đánh giá chung..."
-                      value={generalComment}
-                      onChange={(e) => setGeneralComment(e.target.value)}
-                      className="mb-2"
-                    />
+                    <div className="space-y-2 mb-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-sm font-medium">
+                          Đánh giá chung
+                        </label>
+                        <span className="text-xs text-gray-400">
+                          {generalComment.length}/2000
+                        </span>
+                      </div>
+                      <Textarea
+                        placeholder="Thêm đánh giá chung..."
+                        value={generalComment}
+                        onChange={(e) => setGeneralComment(e.target.value)}
+                        maxLength={2000}
+                      />
+                    </div>
                     <Button
                       onClick={() =>
                         handleCreateChildReview(

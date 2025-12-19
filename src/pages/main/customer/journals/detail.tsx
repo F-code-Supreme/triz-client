@@ -33,10 +33,12 @@ import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useCreateRootReviewMutation } from '@/features/journal-review/services/mutations';
 import { useGetRootReviewsByProblemQuery } from '@/features/journal-review/services/queries';
+import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/(app)/journals/$journalId';
 
 import type { PhysicalContradiction } from '@/features/6-steps/types';
+import type { ReviewStatus } from '@/features/journal-review/types';
 
 const JournalDetailPage = () => {
   const { t } = useTranslation('pages.journals');
@@ -402,13 +404,24 @@ const JournalDetailPage = () => {
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 py-4">
-                          <Textarea
-                            placeholder="Nhập nội dung đánh giá..."
-                            value={reviewContent}
-                            onChange={(e) => setReviewContent(e.target.value)}
-                            rows={6}
-                            className="resize-none"
-                          />
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <label className="text-sm font-medium">
+                                Nội dung
+                              </label>
+                              <span className="text-xs text-gray-400">
+                                {reviewContent.length}/2000
+                              </span>
+                            </div>
+                            <Textarea
+                              placeholder="Nhập nội dung đánh giá..."
+                              value={reviewContent}
+                              onChange={(e) => setReviewContent(e.target.value)}
+                              rows={6}
+                              maxLength={2000}
+                              className="resize-none"
+                            />
+                          </div>
                         </div>
                         <DialogFooter>
                           <Button
@@ -478,16 +491,9 @@ const JournalDetailPage = () => {
                                 )}
                               </p>
                             </div>
-                            <Badge
-                              variant={
-                                review.status === 'APPROVED'
-                                  ? 'default'
-                                  : 'secondary'
-                              }
-                              className="text-xs flex-shrink-0"
-                            >
-                              {review.status}
-                            </Badge>
+                            {getReviewStatusBadge(
+                              review.status as ReviewStatus,
+                            )}
                           </div>
                         </Link>
                       ),

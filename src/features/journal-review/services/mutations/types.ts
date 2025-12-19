@@ -20,6 +20,8 @@ export interface CreateChildReviewPayload {
   content: string;
   stepNumber?: number;
   rating?: number;
+  creatorId?: string; // For query invalidation
+  currentStatus?: ReviewStatus; // For query invalidation
 }
 
 export type CreateChildReviewResponse = ChildReviewWithTimestamp;

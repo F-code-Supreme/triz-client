@@ -69,6 +69,16 @@ export const useCreateChildReviewMutation = () => {
           { stepNumber },
         ],
       });
+
+      if (variables.currentStatus === 'PENDING') {
+        queryClient.invalidateQueries({
+          queryKey: [
+            JournalReviewKeys.GetReviewByIdQuery,
+            variables.creatorId,
+            variables.problemReviewId,
+          ],
+        });
+      }
     },
   });
 };
