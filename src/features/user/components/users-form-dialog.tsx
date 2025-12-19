@@ -48,7 +48,7 @@ const userFormSchema = z.object({
     .string()
     .min(8, 'Password must be at least 8 characters')
     .or(z.literal('')),
-  fullName: z.string().max(254, 'Full name is too long').optional().default(''),
+  fullName: z.string().max(255, 'Full name is too long').optional().default(''),
   avatarUrl: z.string().optional().default(''),
   roles: z.nativeEnum(RoleIUser),
   enabled: z.boolean().default(true),
@@ -269,11 +269,11 @@ export const UsersFormDialog = ({
                   <FormLabel className="flex items-center justify-between">
                     <span>{t('users.form.full_name')}</span>
                     <span className="text-xs text-gray-400">
-                      {field.value?.length || 0}/254
+                      {field.value?.length || 0}/255
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} maxLength={254} />
+                    <Input placeholder="John Doe" {...field} maxLength={255} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -126,9 +126,6 @@ const ExpertJournalReviewDetailPage = () => {
   const [expandedSteps, setExpandedSteps] = useState<Record<number, boolean>>(
     {},
   );
-  const [replyToReview, setReplyToReview] = useState<string | null>(null);
-  const [replyContent, setReplyContent] = useState('');
-  const [replyRating, setReplyRating] = useState<number>(0);
 
   const isExpertOrAdmin =
     user?.roles?.includes(Role.EXPERT) || user?.roles?.includes(Role.ADMIN);
@@ -227,7 +224,7 @@ const ExpertJournalReviewDetailPage = () => {
 
     try {
       await patchReviewMutation.mutateAsync({
-        userId: user!.id,
+        userId: creatorId,
         problemReviewId: journalReviewId,
         rootReviewId: journalReviewId,
         status: newStatus,
@@ -381,26 +378,17 @@ const ExpertJournalReviewDetailPage = () => {
                       {expandedSteps[1] && (
                         <NestedReviews
                           reviews={step1Reviews.content}
-                          level={0}
                           isReadOnly={isReadOnly}
-                          isExpertOrAdmin={isExpertOrAdmin || false}
                           userId={user?.id}
                           canDelete={canDelete}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
-                          replyToReview={replyToReview}
-                          replyContent={replyContent}
-                          replyRating={replyRating}
                           setEditingReview={setEditingReview}
                           setEditContent={setEditContent}
                           setEditRating={setEditRating}
-                          setReplyToReview={setReplyToReview}
-                          setReplyContent={setReplyContent}
-                          setReplyRating={setReplyRating}
                           handleUpdateReview={handleUpdateReview}
                           handleDeleteReview={handleDeleteReview}
-                          handleCreateChildReview={handleCreateChildReview}
                         />
                       )}
                     </div>
@@ -497,26 +485,17 @@ const ExpertJournalReviewDetailPage = () => {
                       {expandedSteps[2] && (
                         <NestedReviews
                           reviews={step2Reviews.content}
-                          level={0}
                           isReadOnly={isReadOnly}
-                          isExpertOrAdmin={isExpertOrAdmin || false}
                           userId={user?.id}
                           canDelete={canDelete}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
-                          replyToReview={replyToReview}
-                          replyContent={replyContent}
-                          replyRating={replyRating}
                           setEditingReview={setEditingReview}
                           setEditContent={setEditContent}
                           setEditRating={setEditRating}
-                          setReplyToReview={setReplyToReview}
-                          setReplyContent={setReplyContent}
-                          setReplyRating={setReplyRating}
                           handleUpdateReview={handleUpdateReview}
                           handleDeleteReview={handleDeleteReview}
-                          handleCreateChildReview={handleCreateChildReview}
                         />
                       )}
                     </div>
@@ -625,26 +604,17 @@ const ExpertJournalReviewDetailPage = () => {
                       {expandedSteps[3] && (
                         <NestedReviews
                           reviews={step3Reviews.content}
-                          level={0}
                           isReadOnly={isReadOnly}
-                          isExpertOrAdmin={isExpertOrAdmin || false}
                           userId={user?.id}
                           canDelete={canDelete}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
-                          replyToReview={replyToReview}
-                          replyContent={replyContent}
-                          replyRating={replyRating}
                           setEditingReview={setEditingReview}
                           setEditContent={setEditContent}
                           setEditRating={setEditRating}
-                          setReplyToReview={setReplyToReview}
-                          setReplyContent={setReplyContent}
-                          setReplyRating={setReplyRating}
                           handleUpdateReview={handleUpdateReview}
                           handleDeleteReview={handleDeleteReview}
-                          handleCreateChildReview={handleCreateChildReview}
                         />
                       )}
                     </div>
@@ -755,26 +725,17 @@ const ExpertJournalReviewDetailPage = () => {
                       {expandedSteps[4] && (
                         <NestedReviews
                           reviews={step4Reviews.content}
-                          level={0}
                           isReadOnly={isReadOnly}
-                          isExpertOrAdmin={isExpertOrAdmin || false}
                           userId={user?.id}
                           canDelete={canDelete}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
-                          replyToReview={replyToReview}
-                          replyContent={replyContent}
-                          replyRating={replyRating}
                           setEditingReview={setEditingReview}
                           setEditContent={setEditContent}
                           setEditRating={setEditRating}
-                          setReplyToReview={setReplyToReview}
-                          setReplyContent={setReplyContent}
-                          setReplyRating={setReplyRating}
                           handleUpdateReview={handleUpdateReview}
                           handleDeleteReview={handleDeleteReview}
-                          handleCreateChildReview={handleCreateChildReview}
                         />
                       )}
                     </div>
@@ -890,26 +851,17 @@ const ExpertJournalReviewDetailPage = () => {
                       {expandedSteps[5] && (
                         <NestedReviews
                           reviews={step5Reviews.content}
-                          level={0}
                           isReadOnly={isReadOnly}
-                          isExpertOrAdmin={isExpertOrAdmin || false}
                           userId={user?.id}
                           canDelete={canDelete}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
-                          replyToReview={replyToReview}
-                          replyContent={replyContent}
-                          replyRating={replyRating}
                           setEditingReview={setEditingReview}
                           setEditContent={setEditContent}
                           setEditRating={setEditRating}
-                          setReplyToReview={setReplyToReview}
-                          setReplyContent={setReplyContent}
-                          setReplyRating={setReplyRating}
                           handleUpdateReview={handleUpdateReview}
                           handleDeleteReview={handleDeleteReview}
-                          handleCreateChildReview={handleCreateChildReview}
                         />
                       )}
                     </div>
@@ -1036,26 +988,17 @@ const ExpertJournalReviewDetailPage = () => {
                       {expandedSteps[6] && (
                         <NestedReviews
                           reviews={step6Reviews.content}
-                          level={0}
                           isReadOnly={isReadOnly}
-                          isExpertOrAdmin={isExpertOrAdmin || false}
                           userId={user?.id}
                           canDelete={canDelete}
                           editingReview={editingReview}
                           editContent={editContent}
                           editRating={editRating}
-                          replyToReview={replyToReview}
-                          replyContent={replyContent}
-                          replyRating={replyRating}
                           setEditingReview={setEditingReview}
                           setEditContent={setEditContent}
                           setEditRating={setEditRating}
-                          setReplyToReview={setReplyToReview}
-                          setReplyContent={setReplyContent}
-                          setReplyRating={setReplyRating}
                           handleUpdateReview={handleUpdateReview}
                           handleDeleteReview={handleDeleteReview}
-                          handleCreateChildReview={handleCreateChildReview}
                         />
                       )}
                     </div>

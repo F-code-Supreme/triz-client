@@ -50,11 +50,11 @@ import { BookStatus } from '../types';
 import type { AdminBook } from '../types';
 
 const bookFormSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(254, 'Title is too long'),
-  author: z.string().max(254, 'Author is too long').optional().default(''),
+  title: z.string().min(1, 'Title is required').max(255, 'Title is too long'),
+  author: z.string().max(255, 'Author is too long').optional().default(''),
   publisher: z
     .string()
-    .max(254, 'Publisher is too long')
+    .max(255, 'Publisher is too long')
     .optional()
     .default(''),
   bCoverUrl: z.string().optional().default(''),
@@ -210,14 +210,14 @@ export const BooksFormDialog = ({
                   <FormLabel className="flex items-center justify-between">
                     <span>{t('books.form.title')} *</span>
                     <span className="text-xs text-gray-400">
-                      {field.value?.length || 0}/254
+                      {field.value?.length || 0}/255
                     </span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('books.form.title_placeholder')}
                       {...field}
-                      maxLength={254}
+                      maxLength={255}
                       className="truncate"
                     />
                   </FormControl>
@@ -234,14 +234,14 @@ export const BooksFormDialog = ({
                   <FormLabel className="flex items-center justify-between">
                     <span>{t('books.form.author')}</span>
                     <span className="text-xs text-gray-400">
-                      {field.value?.length || 0}/254
+                      {field.value?.length || 0}/255
                     </span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('books.form.author_placeholder')}
                       {...field}
-                      maxLength={254}
+                      maxLength={255}
                     />
                   </FormControl>
                   <FormMessage />
@@ -257,14 +257,14 @@ export const BooksFormDialog = ({
                   <FormLabel className="flex items-center justify-between">
                     <span>{t('books.form.publisher')}</span>
                     <span className="text-xs text-gray-400">
-                      {field.value?.length || 0}/254
+                      {field.value?.length || 0}/255
                     </span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t('books.form.publisher_placeholder')}
                       {...field}
-                      maxLength={254}
+                      maxLength={255}
                     />
                   </FormControl>
                   <FormMessage />

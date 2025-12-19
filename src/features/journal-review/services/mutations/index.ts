@@ -83,7 +83,8 @@ export const usePatchReviewMutation = () => {
 
   return useMutation({
     mutationFn: async (payload: PatchReviewPayload) => {
-      const { userId, problemReviewId, ...data } = payload;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { userId, problemReviewId, rootReviewId, ...data } = payload;
       const response = await _request.patch<PatchReviewResponse>(
         `/users/${userId}/problem-reviews/${problemReviewId}`,
         data,

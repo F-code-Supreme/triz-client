@@ -395,13 +395,13 @@ const StepBasic: React.FC<Props> = ({
                 Mô tả khóa học <span className="text-red-500">*</span>
               </span>
               <span className="text-xs text-gray-400">
-                {description.length}/254
+                {description.length}/255
               </span>{' '}
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              maxLength={254}
+              maxLength={255}
               rows={2}
               className="mt-1 block w-full rounded-md border px-3 py-2"
               placeholder="Mô tả ngắn cho khóa học"
