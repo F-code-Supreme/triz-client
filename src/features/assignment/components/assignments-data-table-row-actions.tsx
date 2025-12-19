@@ -8,7 +8,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -48,7 +47,6 @@ export const AssignmentsDataTableRowActions = <TData,>({
             <BookDashed className="mr-2 h-4 w-4" />
             Chi tiết bài
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
         </DropdownMenuContent>
       </DropdownMenu>
 

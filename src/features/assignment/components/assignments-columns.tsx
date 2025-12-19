@@ -3,6 +3,7 @@ import { type ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Badge } from '@/components/ui/badge';
 import { AssignmentsDataTableRowActions } from '@/features/assignment/components/assignments-data-table-row-actions';
+import { formatDateHour } from '@/utils/date/date';
 
 import type { AssignmentSubmissionExpertReview } from '@/features/assignment/services/queries/types';
 
@@ -54,6 +55,7 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Trạng thái" />
       ),
+      // eslint-disable-next-line sonarjs/cognitive-complexity
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
 
@@ -72,7 +74,17 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
             }
           >
-            {status}
+            {status === 'EXPERT_PENDING'
+              ? 'Chờ chuyên gia đánh giá'
+              : status === 'AI_PENDING'
+                ? 'Chờ AI đánh giá'
+                : status === 'APPROVED'
+                  ? 'Đã duyệt'
+                  : status === 'AI_REJECTED'
+                    ? 'AI từ chối'
+                    : status === 'REJECTED'
+                      ? 'Chuyên gia từ chối'
+                      : 'Không xác định'}
           </Badge>
         );
       },
@@ -91,11 +103,7 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
 
         return (
           <div className="text-sm text-gray-600">
-            {new Date(date).toLocaleDateString('vi-VN', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })}
+            {formatDateHour(new Date(date))}
           </div>
         );
       },
@@ -111,11 +119,7 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
 
         return (
           <div className="text-sm text-gray-600">
-            {new Date(date).toLocaleDateString('vi-VN', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })}
+            {formatDateHour(new Date(date))}
           </div>
         );
       },

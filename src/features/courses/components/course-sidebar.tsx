@@ -137,10 +137,10 @@ const CourseSidebar = ({
             {/* Header */}
             <div className="p-4 border-b">
               <h2 className="text-base font-semibold text-foreground">
-                Table of contents
+                Mục lục khóa học
               </h2>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {modules.length} modules
+                {modules.length} Chương học
               </p>
             </div>
 

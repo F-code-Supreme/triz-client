@@ -240,7 +240,9 @@ interface Resources {
           "type_placeholder": "Select achievement type"
         },
         "saving": "Saving...",
-        "update": "Update"
+        "update": "Update",
+        "upload_icon_image": "Upload Package Icon Image",
+        "upload_image": "Upload Icon Image"
       },
       "no_achievements": "No achievements found",
       "pagination": {
@@ -752,6 +754,8 @@ interface Resources {
         "status_inactive": "Inactive",
         "status_placeholder": "Select status",
         "update_package": "Update Package",
+        "upload_icon_image": "Upload Package Icon Image",
+        "upload_image": "Upload Icon Image",
         "valid_image_url": "✓ Valid image URL"
       },
       "no_packages": "No packages found",

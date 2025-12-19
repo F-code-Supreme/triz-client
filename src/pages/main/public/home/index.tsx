@@ -216,7 +216,7 @@ const HomePage = () => {
                 </div>
               </div>
 
-              <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200 hover:scale-105 hover:shadow-inherit">
+              <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200">
                 {/* <img
                 src="./src/assets/images/Frame 1410086138.png"
                 alt="TRIZ Overview"
@@ -233,7 +233,7 @@ const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
               {/* Hình ảnh */}
               <div className="relative framework-visualization order-2 md:order-1">
-                <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200 hover:scale-105 hover:shadow-inherit">
+                <div className="relative mt-14 knowledge-cloud-container transition-transform duration-200">
                   {/* <img
                   src="./src/assets/images/Frame 1410086139.png"
                   alt="TRIZ Introduction"
@@ -291,7 +291,7 @@ const HomePage = () => {
             {coreValues.map((value, index) => (
               <div
                 key={index}
-                className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-md text-start space-y-4 transition-transform duration-200 hover:scale-105 hover:shadow-xl"
+                className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-md text-start space-y-4 transition-transform duration-200"
                 style={{ border: '1px solid #e0e7ef' }}
               >
                 <img src={value.iconUrl} alt={value.tile} />
