@@ -308,6 +308,15 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                   required: t(
                     'achievements.dialog.form.milestone_count_required',
                   ),
+                  min: {
+                    value: 1,
+                    message: 'Cột mốc phải là số nguyên dương',
+                  },
+                  validate: (value) =>
+                    value === null ||
+                    value === undefined ||
+                    (Number.isInteger(value) && value > 0) ||
+                    'Cột mốc phải là số nguyên dương',
                 }}
                 render={({ field }) => (
                   <FormItem>
@@ -317,6 +326,8 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                     <FormControl>
                       <Input
                         type="number"
+                        min={1}
+                        step={1}
                         placeholder={t(
                           'achievements.dialog.form.milestone_count_placeholder',
                         )}
