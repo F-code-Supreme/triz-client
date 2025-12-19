@@ -12,7 +12,7 @@ import { getTransactionFilters } from '@/features/payment/transaction/components
 import { useSearchAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
 import {
   AdminTransactionsTable,
-  createAdminTransactionsColumns,
+  useAdminTransactionsColumns,
 } from '@/features/payment/wallet/components';
 import { AdminLayout } from '@/layouts/admin-layout';
 
@@ -56,7 +56,7 @@ const AdminTransactionsPage = () => {
 
   // Get translated filters and columns
   const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
-  const columns = useMemo(() => createAdminTransactionsColumns(t), [t]);
+  const columns = useAdminTransactionsColumns();
 
   // Create table instance with manual pagination
   const table = useReactTable({

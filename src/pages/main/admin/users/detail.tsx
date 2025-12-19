@@ -28,7 +28,7 @@ import { getTransactionFilters } from '@/features/payment/transaction/components
 import { useSearchAllTransactionsByUserQuery } from '@/features/payment/transaction/services/queries';
 import {
   AdminTransactionsTable,
-  createAdminTransactionsColumns,
+  useTransactionsColumns,
 } from '@/features/payment/wallet/components';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import {
@@ -128,10 +128,7 @@ const AdminUserDetailPage = () => {
 
   // Get translated filters and columns
   const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
-  const transactionColumns = useMemo(
-    () => createAdminTransactionsColumns(t),
-    [t],
-  );
+  const transactionColumns = useTransactionsColumns();
 
   const handleCancelSubscription = () => {
     if (!userId || !activeSubscription) return;

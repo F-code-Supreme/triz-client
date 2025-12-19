@@ -23,7 +23,7 @@ type TransactionWithTimestamp = Transaction & DataTimestamp;
 const columnHelper = createColumnHelper<TransactionWithTimestamp>();
 
 // Customer transactions columns
-export const useTransactionsColumns = () => {
+export const useAdminTransactionsColumns = () => {
   const { t } = useTranslation('pages.wallet');
 
   return useMemo(
@@ -61,14 +61,7 @@ export const useTransactionsColumns = () => {
           const amount = info.getValue();
           const type = info.row.original.type;
           return (
-            <span
-              className={
-                type === 'TOPUP' || type === 'REFUND'
-                  ? TRANSACTION_TYPE_COLORS.TOPUP
-                  : TRANSACTION_TYPE_COLORS.SPEND
-              }
-            >
-              {type === 'TOPUP' || type === 'REFUND' ? '+' : '-'}
+            <span className={TRANSACTION_TYPE_COLORS[type]}>
               {formatTriziliumShort(amount)}
             </span>
           );
