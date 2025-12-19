@@ -1,0 +1,135 @@
+import { createColumnHelper } from '@tanstack/react-table';
+import { format } from 'date-fns';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { DataTableColumnHeader } from '@/components/data-table';
+import { Badge } from '@/components/ui/badge';
+import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
+import { formatTriziliumShort } from '@/utils';
+
+import {
+  getTransactionStatusColor,
+  getTransactionStatusLabel,
+  TRANSACTION_TYPE_COLORS,
+} from '../utils';
+
+import type { Transaction } from '@/features/payment/transaction/types';
+import type { DataTimestamp } from '@/types';
+
+type TransactionWithTimestamp = Transaction & DataTimestamp;
+
+const columnHelper = createColumnHelper<TransactionWithTimestamp>();
+
+// Out-of-app transactions columns (no type column, added provider & providerTxRef)
+export const useAdminOutOfAppTransactionsColumns = () => {
+  const { t } = useTranslation('pages.admin');
+
+  return useMemo(
+    () => [
+      columnHelper.accessor('orderCode', {
+        header: t('transactions.columns.order_code'),
+        cell: (info) => (
+          <span className="font-mono text-sm">{info.getValue()}</span>
+        ),
+      }),
+
+      columnHelper.accessor('provider', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.provider')}
+          />
+        ),
+        cell: (info) => {
+          const provider = info.getValue();
+          return (
+            <span className="font-medium">
+              {provider || <span className="text-muted-foreground">N/A</span>}
+            </span>
+          );
+        },
+      }),
+
+      columnHelper.accessor('providerTxRef', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.provider_tx_ref')}
+          />
+        ),
+        cell: (info) => {
+          const ref = info.getValue();
+          return (
+            <span className="font-mono text-xs">
+              {ref || <span className="text-muted-foreground">N/A</span>}
+            </span>
+          );
+        },
+      }),
+
+      columnHelper.accessor('amount', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.amount')}
+          />
+        ),
+        cell: (info) => {
+          const amount = info.getValue();
+          const type = info.row.original.type;
+          return (
+            <span className={TRANSACTION_TYPE_COLORS[type]}>
+              {formatTriziliumShort(amount)}
+            </span>
+          );
+        },
+      }),
+
+      columnHelper.accessor('status', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.status')}
+          />
+        ),
+        cell: (info) => {
+          const status = info.getValue();
+          const colors = getTransactionStatusColor(status);
+          const label = getTransactionStatusLabel(status, t);
+          return <Badge className={colors}>{label}</Badge>;
+        },
+      }),
+
+      columnHelper.accessor('createdAt', {
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.date')}
+          />
+        ),
+        cell: (info) => (
+          <span className="text-sm">
+            {format(new Date(info.getValue()), 'MMM dd, yyyy HH:mm')}
+          </span>
+        ),
+      }),
+
+      columnHelper.display({
+        id: 'actions',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('transactions.columns.actions')}
+          />
+        ),
+        cell: ({ row }) => (
+          <TransactionsDataTableRowActions row={row} namespace="pages.wallet" />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      }),
+    ],
+    [t],
+  );
+};

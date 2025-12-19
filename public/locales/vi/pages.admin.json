@@ -648,11 +648,16 @@
     "search_placeholder": "Tìm kiếm giao dịch...",
     "no_transactions": "Không tìm thấy giao dịch",
     "no_results": "Không có kết quả.",
+    "tabs": {
+      "in_app": "Giao dịch trong ứng dụng",
+      "out_of_app": "Giao dịch ngoài ứng dụng"
+    },
     "columns": {
       "order_code": "Mã đơn hàng",
       "type": "Loại",
       "amount": "Số tiền",
       "provider": "Nhà cung cấp",
+      "provider_tx_ref": "Mã tham chiếu NCC",
       "status": "Trạng thái",
       "date": "Ngày",
       "actions": "Hành động"
@@ -675,7 +680,8 @@
     "filters": {
       "transaction_type": "Loại giao dịch",
       "status": "Trạng thái",
-      "provider": "Nhà cung cấp"
+      "provider": "Nhà cung cấp",
+      "search_placeholder": "Tìm kiếm theo mã đơn hàng, mã NCC..."
     },
     "actions": {
       "view_details": "Xem chi tiết",

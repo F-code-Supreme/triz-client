@@ -51,12 +51,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
 }) => (
   <div className="space-y-4">
     <div className="flex flex-col gap-2">
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder={t('transactions.search_placeholder')}
-        searchKey="orderCode"
-        filters={filters}
-      />
+      <DataTableToolbar table={table} filters={filters} />
       {onFromDateChange && onToDateChange && (
         <DateRangeFilter
           fromDate={fromDate}

@@ -16,7 +16,7 @@ import type { Transaction } from '@/features/payment/transaction/types';
 import type { DataTimestamp } from '@/types';
 import type { TFunction } from 'i18next';
 
-interface AdminTransactionsTableProps {
+interface AdminOutOfAppTransactionsTableProps {
   table: ReactTable<Transaction & DataTimestamp>;
   isLoading: boolean;
   totalRowCount: number;
@@ -34,7 +34,7 @@ interface AdminTransactionsTableProps {
   onToDateChange?: (date?: Date) => void;
 }
 
-export const AdminTransactionsTable = ({
+export const AdminOutOfAppTransactionsTable = ({
   table,
   isLoading,
   totalRowCount,
@@ -46,10 +46,10 @@ export const AdminTransactionsTable = ({
   toDate,
   onFromDateChange,
   onToDateChange,
-}: AdminTransactionsTableProps) => {
+}: AdminOutOfAppTransactionsTableProps) => {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2">
         {onFromDateChange && onToDateChange && (
           <DateRangeFilter
             fromDate={fromDate}
@@ -58,8 +58,15 @@ export const AdminTransactionsTable = ({
             onToDateChange={onToDateChange}
           />
         )}
-        <div className="flex-1">
-          <DataTableToolbar table={table} filters={filters} />
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <DataTableToolbar
+              table={table}
+              searchKey="orderCode"
+              searchPlaceholder={t('transactions.filters.search_placeholder')}
+              filters={filters}
+            />
+          </div>
         </div>
       </div>
 

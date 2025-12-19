@@ -229,6 +229,7 @@ export const useSearchAllTransactionsQuery = (
         statuses: filters?.find((filter) => filter.id === 'status')?.value,
         types: filters?.find((filter) => filter.id === 'type')?.value,
         providers: filters?.find((filter) => filter.id === 'provider')?.value,
+        searchTerm: filters?.find((filter) => filter.id === 'orderCode')?.value,
       };
 
       if (fromDateValue && toDateValue) {

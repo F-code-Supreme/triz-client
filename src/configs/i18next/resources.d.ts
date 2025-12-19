@@ -1038,6 +1038,7 @@ interface Resources {
         "date": "Date",
         "order_code": "Order Code",
         "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
         "status": "Status",
         "type": "Type"
       },
@@ -1055,6 +1056,7 @@ interface Resources {
       },
       "filters": {
         "provider": "Provider",
+        "search_placeholder": "Search by order code, provider ref...",
         "status": "Status",
         "transaction_type": "Transaction Type"
       },
@@ -1070,6 +1072,10 @@ interface Resources {
         "cancelled": "Cancelled",
         "completed": "Completed",
         "pending": "Pending"
+      },
+      "tabs": {
+        "in_app": "In-App Transactions",
+        "out_of_app": "Out-of-App Transactions"
       },
       "title": "Transactions",
       "toast": {

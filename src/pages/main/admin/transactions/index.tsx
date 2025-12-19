@@ -8,73 +8,151 @@ import {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getTransactionFilters } from '@/features/payment/transaction/components/transaction-filters';
 import { useSearchAllTransactionsQuery } from '@/features/payment/transaction/services/queries';
 import {
   AdminTransactionsTable,
+  AdminOutOfAppTransactionsTable,
   useAdminTransactionsColumns,
+  useAdminOutOfAppTransactionsColumns,
 } from '@/features/payment/wallet/components';
 import { AdminLayout } from '@/layouts/admin-layout';
 
 const AdminTransactionsPage = () => {
   const { t } = useTranslation('pages.admin');
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
+  const [activeTab, setActiveTab] = useState<'in-app' | 'out-of-app'>('in-app');
+
+  // In-app state
+  const [inAppColumnFilters, setInAppColumnFilters] =
+    useState<ColumnFiltersState>([]);
+  const [inAppPagination, setInAppPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [fromDate, setFromDate] = useState<Date | undefined>();
-  const [toDate, setToDate] = useState<Date | undefined>();
+  const [inAppSorting, setInAppSorting] = useState<SortingState>([]);
+  const [inAppFromDate, setInAppFromDate] = useState<Date | undefined>();
+  const [inAppToDate, setInAppToDate] = useState<Date | undefined>();
 
-  // Build filters with date range
-  const filters = useMemo(() => {
-    // Remove existing fromDate and toDate filters
-    const f = columnFilters.filter(
+  // Out-of-app state
+  const [outOfAppColumnFilters, setOutOfAppColumnFilters] =
+    useState<ColumnFiltersState>([]);
+  const [outOfAppPagination, setOutOfAppPagination] = useState<PaginationState>(
+    {
+      pageIndex: 0,
+      pageSize: 10,
+    },
+  );
+  const [outOfAppSorting, setOutOfAppSorting] = useState<SortingState>([]);
+  const [outOfAppFromDate, setOutOfAppFromDate] = useState<Date | undefined>();
+  const [outOfAppToDate, setOutOfAppToDate] = useState<Date | undefined>();
+
+  // Build in-app filters with date range
+  const inAppFilters = useMemo(() => {
+    const f = inAppColumnFilters.filter(
       (filter) => filter.id !== 'fromDate' && filter.id !== 'toDate',
     );
-    // Add updated date range filters
-    if (fromDate && toDate) {
+    if (inAppFromDate && inAppToDate) {
       f.push(
-        { id: 'fromDate', value: fromDate },
-        { id: 'toDate', value: toDate },
+        { id: 'fromDate', value: inAppFromDate },
+        { id: 'toDate', value: inAppToDate },
       );
     }
     return f;
-  }, [columnFilters, fromDate, toDate]);
+  }, [inAppColumnFilters, inAppFromDate, inAppToDate]);
 
-  const { data: transactionsData, isLoading: transactionsLoading } =
-    useSearchAllTransactionsQuery(pagination, sorting, filters);
+  // Build out-of-app filters with date range and hardcoded TOPUP type
+  const outOfAppFilters = useMemo(() => {
+    const f = outOfAppColumnFilters.filter(
+      (filter) =>
+        filter.id !== 'fromDate' &&
+        filter.id !== 'toDate' &&
+        filter.id !== 'type',
+    );
+    // Always filter by TOPUP for out-of-app
+    f.push({ id: 'type', value: ['TOPUP'] });
+    if (outOfAppFromDate && outOfAppToDate) {
+      f.push(
+        { id: 'fromDate', value: outOfAppFromDate },
+        { id: 'toDate', value: outOfAppToDate },
+      );
+    }
+    return f;
+  }, [outOfAppColumnFilters, outOfAppFromDate, outOfAppToDate]);
 
-  // Get transactions from current page response
-  const transactions = useMemo(
-    () => transactionsData?.content || [],
-    [transactionsData],
+  // Queries
+  const { data: inAppTransactionsData, isLoading: inAppTransactionsLoading } =
+    useSearchAllTransactionsQuery(inAppPagination, inAppSorting, inAppFilters);
+
+  const {
+    data: outOfAppTransactionsData,
+    isLoading: outOfAppTransactionsLoading,
+  } = useSearchAllTransactionsQuery(
+    outOfAppPagination,
+    outOfAppSorting,
+    outOfAppFilters,
   );
 
-  const totalRowCount = transactionsData?.page?.totalElements ?? 0;
+  // Data
+  const inAppTransactions = useMemo(
+    () => inAppTransactionsData?.content || [],
+    [inAppTransactionsData],
+  );
+  const outOfAppTransactions = useMemo(
+    () => outOfAppTransactionsData?.content || [],
+    [outOfAppTransactionsData],
+  );
+
+  const inAppTotalRowCount = inAppTransactionsData?.page?.totalElements ?? 0;
+  const outOfAppTotalRowCount =
+    outOfAppTransactionsData?.page?.totalElements ?? 0;
 
   // Get translated filters and columns
-  const transactionFilters = useMemo(() => getTransactionFilters(t), [t]);
-  const columns = useAdminTransactionsColumns();
+  const inAppTransactionFilters = useMemo(() => getTransactionFilters(t), [t]);
+  // Remove type filter for out-of-app
+  const outOfAppTransactionFilters = useMemo(
+    () => getTransactionFilters(t).filter((f) => f.columnId !== 'type'),
+    [t],
+  );
 
-  // Create table instance with manual pagination
-  const table = useReactTable({
-    data: transactions,
-    columns,
+  const inAppColumns = useAdminTransactionsColumns();
+  const outOfAppColumns = useAdminOutOfAppTransactionsColumns();
+
+  // Create table instances
+  const inAppTable = useReactTable({
+    data: inAppTransactions,
+    columns: inAppColumns,
     state: {
-      columnFilters,
-      pagination,
-      sorting,
+      columnFilters: inAppColumnFilters,
+      pagination: inAppPagination,
+      sorting: inAppSorting,
     },
-    onColumnFiltersChange: setColumnFilters,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
+    onColumnFiltersChange: setInAppColumnFilters,
+    onPaginationChange: setInAppPagination,
+    onSortingChange: setInAppSorting,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    rowCount: totalRowCount,
+    rowCount: inAppTotalRowCount,
+  });
+
+  const outOfAppTable = useReactTable({
+    data: outOfAppTransactions,
+    columns: outOfAppColumns,
+    state: {
+      columnFilters: outOfAppColumnFilters,
+      pagination: outOfAppPagination,
+      sorting: outOfAppSorting,
+    },
+    onColumnFiltersChange: setOutOfAppColumnFilters,
+    onPaginationChange: setOutOfAppPagination,
+    onSortingChange: setOutOfAppSorting,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    rowCount: outOfAppTotalRowCount,
   });
 
   return (
@@ -89,21 +167,53 @@ const AdminTransactionsPage = () => {
           </p>
         </div>
 
-        <div>
-          <AdminTransactionsTable
-            table={table}
-            isLoading={transactionsLoading}
-            totalRowCount={totalRowCount}
-            t={t}
-            pageSize={pagination.pageSize}
-            columnsLength={columns.length}
-            filters={transactionFilters}
-            fromDate={fromDate}
-            toDate={toDate}
-            onFromDateChange={setFromDate}
-            onToDateChange={setToDate}
-          />
-        </div>
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) =>
+            setActiveTab(value as 'in-app' | 'out-of-app')
+          }
+        >
+          <TabsList>
+            <TabsTrigger value="in-app">
+              {t('transactions.tabs.in_app')}
+            </TabsTrigger>
+            <TabsTrigger value="out-of-app">
+              {t('transactions.tabs.out_of_app')}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="in-app" className="mt-6">
+            <AdminTransactionsTable
+              table={inAppTable}
+              isLoading={inAppTransactionsLoading}
+              totalRowCount={inAppTotalRowCount}
+              t={t}
+              pageSize={inAppPagination.pageSize}
+              columnsLength={inAppColumns.length}
+              filters={inAppTransactionFilters}
+              fromDate={inAppFromDate}
+              toDate={inAppToDate}
+              onFromDateChange={setInAppFromDate}
+              onToDateChange={setInAppToDate}
+            />
+          </TabsContent>
+
+          <TabsContent value="out-of-app" className="mt-6">
+            <AdminOutOfAppTransactionsTable
+              table={outOfAppTable}
+              isLoading={outOfAppTransactionsLoading}
+              totalRowCount={outOfAppTotalRowCount}
+              t={t}
+              pageSize={outOfAppPagination.pageSize}
+              columnsLength={outOfAppColumns.length}
+              filters={outOfAppTransactionFilters}
+              fromDate={outOfAppFromDate}
+              toDate={outOfAppToDate}
+              onFromDateChange={setOutOfAppFromDate}
+              onToDateChange={setOutOfAppToDate}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </AdminLayout>
   );

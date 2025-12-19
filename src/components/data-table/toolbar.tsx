@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useDebounce } from '@/hooks';
+import { cn } from '@/lib/utils';
 
 import { DataTableFacetedFilter } from './faceted-filter';
 import { DataTableViewOptions } from './view-options';
@@ -113,7 +114,11 @@ export const DataTableToolbar = <TData,>({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2">
+      <div
+        className={cn(
+          'flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2',
+        )}
+      >
         <div className="flex items-center gap-x-2">
           {hasMultipleSearchKeys && (
             <Select

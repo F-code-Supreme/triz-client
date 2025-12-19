@@ -760,11 +760,16 @@
     "search_placeholder": "Search transactions...",
     "no_transactions": "No transactions found",
     "no_results": "No results.",
+    "tabs": {
+      "in_app": "In-App Transactions",
+      "out_of_app": "Out-of-App Transactions"
+    },
     "columns": {
       "order_code": "Order Code",
       "type": "Type",
       "amount": "Amount",
       "provider": "Provider",
+      "provider_tx_ref": "Provider Tx Ref",
       "status": "Status",
       "date": "Date",
       "actions": "Actions"
@@ -787,7 +792,8 @@
     "filters": {
       "transaction_type": "Transaction Type",
       "status": "Status",
-      "provider": "Provider"
+      "provider": "Provider",
+      "search_placeholder": "Search by order code, provider ref..."
     },
     "actions": {
       "view_details": "View Details",
