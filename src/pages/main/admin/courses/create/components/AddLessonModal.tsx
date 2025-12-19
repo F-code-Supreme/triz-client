@@ -399,7 +399,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                   Mô tả {!viewMode && <span className="text-red-500">*</span>}
                 </span>
                 <span className="text-xs text-gray-400">
-                  {description.length}/254
+                  {description.length}/255
                 </span>{' '}
               </Label>
               <Textarea
@@ -411,7 +411,7 @@ export const AddLessonModal: React.FC<AddLessonModalProps> = ({
                 required={!viewMode}
                 disabled={isDisabled}
                 readOnly={viewMode}
-                maxLength={254}
+                maxLength={255}
                 style={{ resize: 'none' }}
               />
             </div>

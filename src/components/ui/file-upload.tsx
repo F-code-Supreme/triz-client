@@ -1335,6 +1335,7 @@ const FileUploadItemDelete = (props: FileUploadItemDeleteProps) => {
 
   const onClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
       onClickProp?.(event);
 
       if (!itemContext.fileState || event.defaultPrevented) return;

@@ -216,7 +216,7 @@ export const Step6MakeDecision = ({
     uniqueEvaluations.every((e) => !e.isLoading);
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Ra quyết định
@@ -411,7 +411,7 @@ export const Step6MakeDecision = ({
                         </div>
                       ) : (
                         <>
-                          {/* AI Evaluation Scores */}
+                          {/* AI Evaluation Reasoning */}
                           <div className="space-y-3">
                             <h4 className="text-sm font-semibold">
                               Đánh giá của AI:
@@ -447,12 +447,6 @@ export const Step6MakeDecision = ({
                                     </PopoverContent>
                                   </Popover>
                                 </div>
-                                <div className="flex items-center justify-center h-10 px-3 py-2 bg-muted rounded-md border border-input">
-                                  <span className="text-lg font-semibold">
-                                    {evaluation.evaluation.scores.mlResolution}
-                                    /10
-                                  </span>
-                                </div>
                               </div>
 
                               {/* Feasibility */}
@@ -484,12 +478,6 @@ export const Step6MakeDecision = ({
                                       </div>
                                     </PopoverContent>
                                   </Popover>
-                                </div>
-                                <div className="flex items-center justify-center h-10 px-3 py-2 bg-muted rounded-md border border-input">
-                                  <span className="text-lg font-semibold">
-                                    {evaluation.evaluation.scores.feasibility}
-                                    /10
-                                  </span>
                                 </div>
                               </div>
 
@@ -523,21 +511,7 @@ export const Step6MakeDecision = ({
                                     </PopoverContent>
                                   </Popover>
                                 </div>
-                                <div className="flex items-center justify-center h-10 px-3 py-2 bg-muted rounded-md border border-input">
-                                  <span className="text-lg font-semibold">
-                                    {evaluation.evaluation.scores.systemImpact}
-                                    /10
-                                  </span>
-                                </div>
                               </div>
-                            </div>
-
-                            {/* Total Score */}
-                            <div className="flex items-center gap-4 bg-muted/50 rounded-lg">
-                              <span className="font-medium">Tổng điểm:</span>
-                              <span className="text-2xl font-bold text-secondary">
-                                {evaluation.evaluation.scores.total}/30
-                              </span>
                             </div>
 
                             {/* AI Message */}

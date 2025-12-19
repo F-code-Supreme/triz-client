@@ -152,12 +152,18 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
               rules={{ required: t('achievements.dialog.form.name_required') }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('achievements.dialog.form.name')}</FormLabel>
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('achievements.dialog.form.name')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/100
+                    </span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t(
                         'achievements.dialog.form.name_placeholder',
                       )}
+                      maxLength={100}
                       {...field}
                     />
                   </FormControl>
@@ -174,8 +180,11 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
               }}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t('achievements.dialog.form.description')}
+                  <FormLabel className="flex items-center justify-between">
+                    <span>{t('achievements.dialog.form.description')}</span>
+                    <span className="text-xs text-gray-400">
+                      {field.value?.length || 0}/500
+                    </span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
@@ -183,6 +192,7 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                         'achievements.dialog.form.description_placeholder',
                       )}
                       rows={3}
+                      maxLength={500}
                       {...field}
                     />
                   </FormControl>
@@ -206,6 +216,14 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                       }}
                       onRemove={handleRemoveImage}
                       maxSize={2 * 1024 * 1024}
+                      uploadedLabel={t(
+                        'achievements.dialog.form.image_uploaded',
+                      )}
+                      uploadLabel={t('achievements.dialog.form.image_upload')}
+                      uploadInstruction={t(
+                        'achievements.dialog.form.image_instruction',
+                      )}
+                      errorTitle={t('achievements.dialog.form.image_error')}
                     />
                   </FormControl>
                   <FormDescription>
@@ -290,6 +308,15 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                   required: t(
                     'achievements.dialog.form.milestone_count_required',
                   ),
+                  min: {
+                    value: 1,
+                    message: 'Cột mốc phải là số nguyên dương',
+                  },
+                  validate: (value) =>
+                    value === null ||
+                    value === undefined ||
+                    (Number.isInteger(value) && value > 0) ||
+                    'Cột mốc phải là số nguyên dương',
                 }}
                 render={({ field }) => (
                   <FormItem>
@@ -299,6 +326,8 @@ const AchievementDialog: React.FC<AchievementDialogProps> = ({
                     <FormControl>
                       <Input
                         type="number"
+                        min={1}
+                        step={1}
                         placeholder={t(
                           'achievements.dialog.form.milestone_count_placeholder',
                         )}

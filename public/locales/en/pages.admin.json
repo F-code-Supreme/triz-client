@@ -191,6 +191,10 @@
         "description_placeholder": "Achievement description",
         "description_required": "Description is required",
         "image": "Achievement Image",
+        "image_uploaded": "Image uploaded",
+        "image_upload": "Upload image",
+        "image_instruction": "PNG, JPG up to 2MB",
+        "image_error": "Image upload error(s)",
         "image_description": "Upload an achievement icon or badge (max 2MB)",
         "type": "Type",
         "type_placeholder": "Select achievement type",
@@ -710,7 +714,12 @@
     },
     "status": {
       "enabled": "Enabled",
-      "disabled": "Disabled"
+      "disabled": "Disabled",
+      "active": "Active",
+      "pending": "Pending",
+      "expired": "Expired",
+      "canceled": "Canceled",
+      "refunded": "Refunded"
     },
     "actions": {
       "view_details": "View Details",
@@ -755,11 +764,16 @@
     "search_placeholder": "Search transactions...",
     "no_transactions": "No transactions found",
     "no_results": "No results.",
+    "tabs": {
+      "in_app": "In-App Transactions",
+      "out_of_app": "Out-of-App Transactions"
+    },
     "columns": {
       "order_code": "Order Code",
       "type": "Type",
       "amount": "Amount",
       "provider": "Provider",
+      "provider_tx_ref": "Provider Tx Ref",
       "status": "Status",
       "date": "Date",
       "actions": "Actions"
@@ -782,7 +796,8 @@
     "filters": {
       "transaction_type": "Transaction Type",
       "status": "Status",
-      "provider": "Provider"
+      "provider": "Provider",
+      "search_placeholder": "Search by order code, provider ref..."
     },
     "actions": {
       "view_details": "View Details",
@@ -816,11 +831,38 @@
     "description": "Manage system users and view their details",
     "new_user": "New User",
     "no_users": "No users found",
+    "search_placeholder": "Search by email or full name...",
     "view_details": "View Details",
     "edit_user": "Edit User",
     "create_user": "Create New User",
+    "filters": {
+      "role": "Role",
+      "status": "Status"
+    },
+    "columns": {
+      "avatar": "Avatar",
+      "email": "Email",
+      "full_name": "Full Name",
+      "roles": "Roles",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "roles": {
+      "user": "User",
+      "admin": "Admin",
+      "expert": "Expert",
+      "moderator": "Moderator"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "form": {
       "avatar": "Avatar",
+      "avatar_uploaded": "Avatar uploaded",
+      "avatar_upload": "Upload avatar",
+      "avatar_instruction": "PNG, JPG up to 2MB",
+      "avatar_error": "Avatar upload error(s)",
       "email": "Email",
       "password": "Password",
       "password_keep_current": "Leave empty to keep current",
@@ -831,6 +873,7 @@
       "role_user": "User",
       "role_admin": "Admin",
       "role_expert": "Expert",
+      "role_moderator": "Moderator",
       "status": "Status",
       "status_active": "Active",
       "status_inactive": "Inactive",

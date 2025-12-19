@@ -60,9 +60,9 @@ const ForumPage: React.FC = () => {
   const [selectedPostId, setSelectedPostId] = React.useState<string | null>(
     null,
   );
-  const [_title, setPostTitle] = React.useState('');
-  const [_postImage, setPostImage] = React.useState<string>('');
-  const [_answer, setAnswer] = React.useState<string>('');
+  const [draftTitle, setDraftTitle] = React.useState('');
+  const [draftContent, setDraftContent] = React.useState('');
+  const [draftImage, setDraftImage] = React.useState('');
   const myPostsTab = React.useMemo(
     () => myPosts?.pages.flatMap((page) => page?.content || []) ?? [],
     [myPosts],
@@ -90,13 +90,13 @@ const ForumPage: React.FC = () => {
           fromJournal?: boolean;
           title: string;
           content: string;
-          imgUrl: string;
+          imgUrl?: string;
         };
 
         if (parsed.fromJournal) {
-          setPostTitle(parsed.title);
-          setAnswer(parsed.content);
-          setPostImage(parsed.imgUrl);
+          setDraftTitle(parsed.title);
+          setDraftContent(parsed.content);
+          setDraftImage(parsed.imgUrl || '');
           setShowCreateDialog(true);
 
           // Clear sessionStorage to prevent re-opening on refresh
@@ -252,6 +252,14 @@ const ForumPage: React.FC = () => {
                 <CreatePostDialog
                   open={showCreateDialog}
                   onOpenChange={setShowCreateDialog}
+                  initialTitle={draftTitle}
+                  initialContent={draftContent}
+                  initialImage={draftImage}
+                  onCreated={() => {
+                    setDraftTitle('');
+                    setDraftContent('');
+                    setDraftImage('');
+                  }}
                 />
               </div>
             )}

@@ -191,6 +191,10 @@
         "description_placeholder": "Mô tả thành tựu",
         "description_required": "Mô tả là bắt buộc",
         "image": "Hình ảnh Thành tựu",
+        "image_uploaded": "Đã tải lên hình ảnh",
+        "image_upload": "Tải lên hình ảnh",
+        "image_instruction": "PNG, JPG tối đa 2MB",
+        "image_error": "Lỗi tải lên hình ảnh",
         "image_description": "Tải lên biểu tượng hoặc huy hiệu thành tựu (tối đa 2MB)",
         "type": "Loại",
         "type_placeholder": "Chọn loại thành tựu",
@@ -596,7 +600,12 @@
     },
     "status": {
       "enabled": "Đã bật",
-      "disabled": "Đã tắt"
+      "disabled": "Đã tắt",
+      "active": "Hoạt động",
+      "pending": "Đang chờ",
+      "expired": "Hết hạn",
+      "canceled": "Đã hủy",
+      "refunded": "Đã hoàn tiền"
     },
     "actions": {
       "view_details": "Xem chi tiết",
@@ -641,11 +650,16 @@
     "search_placeholder": "Tìm kiếm giao dịch...",
     "no_transactions": "Không tìm thấy giao dịch",
     "no_results": "Không có kết quả.",
+    "tabs": {
+      "in_app": "Giao dịch trong ứng dụng",
+      "out_of_app": "Giao dịch ngoài ứng dụng"
+    },
     "columns": {
       "order_code": "Mã đơn hàng",
       "type": "Loại",
       "amount": "Số tiền",
       "provider": "Nhà cung cấp",
+      "provider_tx_ref": "Mã tham chiếu NCC",
       "status": "Trạng thái",
       "date": "Ngày",
       "actions": "Hành động"
@@ -668,7 +682,8 @@
     "filters": {
       "transaction_type": "Loại giao dịch",
       "status": "Trạng thái",
-      "provider": "Nhà cung cấp"
+      "provider": "Nhà cung cấp",
+      "search_placeholder": "Tìm kiếm theo mã đơn hàng, mã NCC..."
     },
     "actions": {
       "view_details": "Xem chi tiết",
@@ -702,11 +717,38 @@
     "description": "Quản lý người dùng hệ thống và xem chi tiết của họ",
     "new_user": "Người dùng mới",
     "no_users": "Không tìm thấy người dùng",
+    "search_placeholder": "Tìm theo email hoặc tên...",
     "view_details": "Xem chi tiết",
     "edit_user": "Chỉnh sửa người dùng",
     "create_user": "Tạo người dùng mới",
+    "filters": {
+      "role": "Vai trò",
+      "status": "Trạng thái"
+    },
+    "columns": {
+      "avatar": "Ảnh đại diện",
+      "email": "Email",
+      "full_name": "Họ và tên",
+      "roles": "Vai trò",
+      "status": "Trạng thái",
+      "actions": "Hành động"
+    },
+    "roles": {
+      "user": "Người dùng",
+      "admin": "Quản trị viên",
+      "expert": "Chuyên gia",
+      "moderator": "Kiểm duyệt viên"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động"
+    },
     "form": {
       "avatar": "Ảnh đại diện",
+      "avatar_uploaded": "Đã tải lên ảnh đại diện",
+      "avatar_upload": "Tải lên ảnh đại diện",
+      "avatar_instruction": "PNG, JPG tối đa 2MB",
+      "avatar_error": "Lỗi tải lên ảnh đại diện",
       "email": "Email",
       "password": "Mật khẩu",
       "password_keep_current": "Để trống để giữ nguyên",
@@ -717,6 +759,7 @@
       "role_user": "Người dùng",
       "role_admin": "Quản trị viên",
       "role_expert": "Chuyên gia",
+      "role_moderator": "Kiểm duyệt viên",
       "status": "Trạng thái",
       "status_active": "Hoạt động",
       "status_inactive": "Không hoạt động",

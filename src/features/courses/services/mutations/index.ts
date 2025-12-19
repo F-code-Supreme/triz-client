@@ -9,7 +9,6 @@ import type {
   Enrollment,
 } from '@/features/courses/services/mutations/types';
 import type { Course } from '@/features/courses/types';
-import type { Response } from '@/types';
 
 export const useCreateCourseMutation = () => {
   const queryClient = useQueryClient();
@@ -32,10 +31,9 @@ export const useEnrollCourseMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (courseId: string) => {
-      const response = await _request.post<Response<Enrollment>>(
-        '/enrollments',
-        { courseId },
-      );
+      const response = await _request.post<Enrollment>('/enrollments', {
+        courseId,
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -51,7 +49,7 @@ export const useUpdateCourseMutation = (courseId: string) => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: Partial<CreateCoursePayload>) => {
-      const response = await _request.put<Response<Course>>(
+      const response = await _request.put<Course>(
         `/courses/${courseId}`,
         payload,
       );
@@ -72,7 +70,7 @@ export const usePublishCourseMutation = (courseId: string) => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: { status: 'INACTIVE' | 'ACTIVE' }) => {
-      const response = await _request.patch<Response<Course>>(
+      const response = await _request.patch<Course>(
         `/courses/${courseId}/status`,
         payload,
       );
@@ -93,9 +91,7 @@ export const useDeleteCourseMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (courseId: string) => {
-      const response = await _request.delete<Response<null>>(
-        `/courses/${courseId}`,
-      );
+      const response = await _request.delete(`/courses/${courseId}`);
       return response.data;
     },
     onSuccess: () => {

@@ -105,7 +105,7 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
     }
   };
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Tóm tắt</CardTitle>
@@ -361,8 +361,7 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                           <div className="flex-1 space-y-1">
                             <p className="text-xs font-medium text-muted-foreground">
                               Nguyên tắc #{idea.principleUsed.id}:{' '}
-                              {idea.principleUsed.name} (Độ ưu tiên:{' '}
-                              {idea.principleUsed.priority})
+                              {idea.principleUsed.name}
                             </p>
                             <p className="text-sm">{idea.ideaStatement}</p>
                             {idea.howItAddresses && (
