@@ -437,10 +437,10 @@ export const QuizCreateDialog = ({
     >
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create New Quiz</DialogTitle>
+          <DialogTitle>Tạo bài kiểm tra</DialogTitle>
           <div className="flex items-start justify-between w-full">
             <DialogDescription>
-              Create a new quiz with questions and options.
+              Tạo bài kiểm tra mới với các câu hỏi và lựa chọn.
             </DialogDescription>
 
             <div className="items-end">
@@ -458,8 +458,8 @@ export const QuizCreateDialog = ({
                 }}
               >
                 <TabsList>
-                  <TabsTrigger value="general">General</TabsTrigger>
-                  <TabsTrigger value="course">Course</TabsTrigger>
+                  <TabsTrigger value="general">Ôn tập</TabsTrigger>
+                  <TabsTrigger value="course">Khóa học</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
