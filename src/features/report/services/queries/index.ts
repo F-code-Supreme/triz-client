@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAxios } from '@/configs/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Report, ReportResponse } from '@/features/report/types';
+import type { ReportResponse } from '@/features/report/types';
 import { ReportKeys } from './keys';
 
 export const useGetAllReportsQuery = () => {
