@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
-import { formatTriziliumShort } from '@/utils';
+import { formatVND } from '@/utils';
 
 import {
   getTransactionStatusColor,
@@ -80,7 +80,7 @@ export const useAdminOutOfAppTransactionsColumns = () => {
           const type = info.row.original.type;
           return (
             <span className={TRANSACTION_TYPE_COLORS[type]}>
-              {formatTriziliumShort(amount)}
+              +{formatVND(amount)}
             </span>
           );
         },
