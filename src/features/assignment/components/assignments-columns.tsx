@@ -3,9 +3,9 @@ import { type ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Badge } from '@/components/ui/badge';
 import { AssignmentsDataTableRowActions } from '@/features/assignment/components/assignments-data-table-row-actions';
+import { formatDateHour } from '@/utils/date/date';
 
 import type { AssignmentSubmissionExpertReview } from '@/features/assignment/services/queries/types';
-import { formatDateHour } from '@/utils/date/date';
 
 export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
   [
@@ -55,6 +55,7 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Trạng thái" />
       ),
+      // eslint-disable-next-line sonarjs/cognitive-complexity
       cell: ({ row }) => {
         const status = row.getValue('status') as string;
 
