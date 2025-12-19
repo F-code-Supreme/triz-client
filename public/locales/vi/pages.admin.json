@@ -598,7 +598,12 @@
     },
     "status": {
       "enabled": "Đã bật",
-      "disabled": "Đã tắt"
+      "disabled": "Đã tắt",
+      "active": "Hoạt động",
+      "pending": "Đang chờ",
+      "expired": "Hết hạn",
+      "canceled": "Đã hủy",
+      "refunded": "Đã hoàn tiền"
     },
     "actions": {
       "view_details": "Xem chi tiết",

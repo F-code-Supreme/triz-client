@@ -937,8 +937,13 @@ interface Resources {
       "no_results": "No results.",
       "no_subscriptions": "No subscriptions found",
       "status": {
+        "active": "Active",
+        "canceled": "Canceled",
         "disabled": "Disabled",
-        "enabled": "Enabled"
+        "enabled": "Enabled",
+        "expired": "Expired",
+        "pending": "Pending",
+        "refunded": "Refunded"
       },
       "title": "Subscriptions",
       "toast": {
