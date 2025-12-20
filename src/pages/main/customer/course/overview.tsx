@@ -145,7 +145,7 @@ const CourseOverviewPage = () => {
           <Link to="/course">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to All Courses
+              Quay lại khóa học
             </Button>
           </Link>
         </div>

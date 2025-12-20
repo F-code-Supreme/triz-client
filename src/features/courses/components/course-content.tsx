@@ -218,7 +218,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                   'w-full',
                 )}
               >
-                Start Quiz
+                Bắt đầu làm bài
               </Link>
             </CardContent>
           </Card>

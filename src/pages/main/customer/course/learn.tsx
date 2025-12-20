@@ -145,7 +145,7 @@ const CourseLearnPage = () => {
           </p>
           <Link to="/course/my-course">
             <Button variant="outline" className="mt-4">
-              Back to My Courses
+              Quay lại khóa học của tôi
             </Button>
           </Link>
         </div>
@@ -161,7 +161,7 @@ const CourseLearnPage = () => {
             <Link to="/course/my-course">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to My Courses
+                Quay lại khóa học của tôi
               </Button>
             </Link>
           </div>
