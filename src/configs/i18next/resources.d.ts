@@ -766,7 +766,7 @@ interface Resources {
         "create_title": "Create New Package",
         "daily_placeholder": "500",
         "daily_required": "Chat tokens per day must be greater than 0",
-        "daily_trizilium": "Daily Trizilium",
+        "daily_trizilium": "Daily Chat Tokens",
         "duration_days": "Duration (Days)",
         "duration_placeholder": "30",
         "duration_required": "Duration must be greater than 0",
@@ -1168,6 +1168,10 @@ interface Resources {
     }
   },
   "pages.books": {
+    "copyright": {
+      "book_title": "\"Innovation and Creativity\" by Phan Dũng",
+      "notice": "All book copyrights belong to Mr. Phan Dũng"
+    },
     "description": "Explore our collection of educational books about TRIZ principles and innovation",
     "empty": {
       "description": "The book library is currently empty. Please check back later for new additions.",

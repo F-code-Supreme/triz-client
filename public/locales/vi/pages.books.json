@@ -12,5 +12,9 @@
   "empty": {
     "title": "Không có sách",
     "description": "Thư viện sách hiện đang trống. Vui lòng quay lại sau để xem sách mới."
+  },
+  "copyright": {
+    "notice": "Bản quyền của sách đều thuộc về thầy Phan Dũng",
+    "book_title": "\"Sáng tạo và đổi mới\" của Phan Dũng"
   }
 }
