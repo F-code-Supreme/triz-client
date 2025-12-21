@@ -1,7 +1,7 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
-import { formatDateUTC } from '@/utils/date/date';
+import { formatDateUTC } from '@/utils';
 
 import { TransactionKeys } from './keys';
 

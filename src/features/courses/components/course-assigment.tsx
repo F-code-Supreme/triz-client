@@ -38,7 +38,7 @@ import {
 } from '@/features/assignment/services/queries';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import useAuth from '@/features/auth/hooks/use-auth';
-import { formatDateHour } from '@/utils/date/date';
+import { formatDateHour } from '@/utils';
 
 import type { Content } from '@tiptap/react';
 

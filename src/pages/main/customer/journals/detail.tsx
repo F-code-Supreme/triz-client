@@ -27,6 +27,7 @@ import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/(app)/journals/$journalId';
+import { formatDate } from '@/utils';
 
 import type { PhysicalContradiction } from '@/features/6-steps/types';
 import type { ReviewStatus } from '@/features/journal-review/types';
@@ -311,9 +312,7 @@ const JournalDetailPage = () => {
                           {t('created_date')}
                         </p>
                         <p className="font-medium">
-                          {new Date(journal.createdAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.createdAt))}
                         </p>
                       </div>
                     </div>
@@ -324,9 +323,7 @@ const JournalDetailPage = () => {
                           {t('updated_date')}
                         </p>
                         <p className="font-medium">
-                          {new Date(journal.updatedAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.updatedAt))}
                         </p>
                       </div>
                     </div>

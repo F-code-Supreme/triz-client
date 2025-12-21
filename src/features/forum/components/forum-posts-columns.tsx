@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ForumPostsDataTableRowActions } from '@/features/forum/components/forum-posts-data-table-row-actions';
+import { formatDate } from '@/utils';
 
 import type { ForumPost } from '@/features/forum/types';
 
@@ -82,19 +83,10 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
       const date = row.getValue('createdAt') as string;
       if (!date) return <div className="text-gray-400">N/A</div>;
 
-      const d = new Date(date);
-      const datePart = d.toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
-      const timePart = d.toLocaleTimeString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-
       return (
-        <div className="text-sm text-gray-600">{`${datePart} ${timePart}`}</div>
+        <div className="text-sm text-gray-600">
+          {formatDate(new Date(date), 'DD/MM/YYYY HH:mm')}
+        </div>
       );
     },
   },
@@ -107,19 +99,10 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
       const date = row.getValue('updatedAt') as string;
       if (!date) return <div className="text-gray-400">N/A</div>;
 
-      const d = new Date(date);
-      const datePart = d.toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      });
-      const timePart = d.toLocaleTimeString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-
       return (
-        <div className="text-sm text-gray-600">{`${datePart} ${timePart}`}</div>
+        <div className="text-sm text-gray-600">
+          {formatDate(new Date(date), 'DD/MM/YYYY HH:mm')}
+        </div>
       );
     },
   },

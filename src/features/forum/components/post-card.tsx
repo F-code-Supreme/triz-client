@@ -51,6 +51,7 @@ import {
   useGetForumPostChildrenReplyByIdQuery,
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
+import { formatDate } from '@/utils';
 
 import type { User } from '@/features/auth/types';
 import type { Comment } from '@/features/forum/types';
@@ -122,7 +123,10 @@ const ReplyChildrenExternal: React.FC<{
                       <div className="text-sm text-slate-700">{c.content}</div>
                       <div className="text-xs text-slate-400 mt-1">
                         {c.createdAt
-                          ? new Date(c.createdAt).toLocaleString()
+                          ? formatDate(
+                              new Date(c.createdAt),
+                              'DD/MM/YYYY HH:mm',
+                            )
                           : ''}
                       </div>
                       {isAuthenticated && (
@@ -400,7 +404,7 @@ export const PostCard: React.FC<PostCardProps> = ({
         time: t.createdAt
           ? (() => {
               try {
-                return new Date(t.createdAt).toLocaleString();
+                return formatDate(new Date(t.createdAt), 'DD/MM/YYYY HH:mm');
               } catch {
                 return t.createdAt;
               }

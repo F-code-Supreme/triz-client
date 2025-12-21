@@ -48,6 +48,7 @@ import {
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
 import { useUploadFileMutation } from '@/features/media/services/mutations';
+import { formatDate } from '@/utils';
 
 import type { Comment } from '@/features/forum/types';
 
@@ -118,7 +119,9 @@ export const ForumPostsDataTableRowActions = <TData,>({
               </div>
               <div className="text-sm text-slate-600">{c.content}</div>
               <div className="text-xs text-slate-400 mt-1">
-                {c.createdAt ? new Date(c.createdAt).toLocaleString() : ''}
+                {c.createdAt
+                  ? formatDate(new Date(c.createdAt), 'DD/MM/YYYY HH:mm')
+                  : ''}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -499,7 +502,10 @@ export const ForumPostsDataTableRowActions = <TData,>({
                         </div>
                         <div className="text-xs text-slate-400 mt-1">
                           {r.createdAt
-                            ? new Date(r.createdAt).toLocaleString()
+                            ? formatDate(
+                                new Date(r.createdAt),
+                                'DD/MM/YYYY HH:mm',
+                              )
                             : ''}
                         </div>
                       </div>

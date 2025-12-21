@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useGetJournalsByUserQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { DefaultLayout } from '@/layouts/default-layout';
+import { formatDate } from '@/utils';
 
 const JournalsPage = () => {
   const { t } = useTranslation('pages.journals');
@@ -155,18 +156,14 @@ const JournalsPage = () => {
                         <Clock className="h-4 w-4" />
                         <span>
                           {t('created_date')}:{' '}
-                          {new Date(journal.createdAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.createdAt))}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
                         <span>
                           {t('updated_date')}:{' '}
-                          {new Date(journal.updatedAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.updatedAt))}
                         </span>
                       </div>
                     </div>

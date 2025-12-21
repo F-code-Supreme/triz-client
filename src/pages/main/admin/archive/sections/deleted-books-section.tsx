@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { formatDate } from '@/utils';
 
 import type { AdminBook } from '@/features/book/types';
 
@@ -102,13 +103,7 @@ export const DeletedBooksSection = ({
             {book.deletedAt && (
               <p className="text-xs text-muted-foreground">
                 {t('archive.books.deleted_at')}:{' '}
-                {new Date(book.deletedAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {formatDate(new Date(book.deletedAt), 'DD/MM/YYYY HH:mm')}
               </p>
             )}
           </div>

@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { formatDateHour } from '@/utils/date/date';
+import { formatDateHour } from '@/utils';
 
 import type { ColumnDef } from '@tanstack/react-table';
 import type { TFunction } from 'i18next';
