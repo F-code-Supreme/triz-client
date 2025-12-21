@@ -3,6 +3,7 @@ import { Plus, Trash2, Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectContent,
@@ -50,9 +52,8 @@ import {
   useUpdateQuizMutation,
   useGetQuizByIdMutationAdmin,
 } from '@/features/quiz/service/mutations';
-import { UpdateQuizPayload } from '../service/mutations/type';
-import { toast } from 'sonner';
-import { NumberInput } from '@/components/ui/number-input';
+
+import type { UpdateQuizPayload } from '../service/mutations/type';
 
 const createQuestionSchema = (t: any) =>
   z.object({

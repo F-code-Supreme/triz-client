@@ -9,6 +9,7 @@ import {
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 
 import { DataTablePagination } from '@/components/data-table';
 import {
@@ -32,7 +33,6 @@ import {
 } from '@/components/ui/table';
 import { createQuizColumns } from '@/features/quiz/components/quiz-columns';
 import { QuizFormDialog } from '@/features/quiz/components/quiz-form-dialog';
-
 import {
   useGetAdminQuizzesQuery,
   useDeleteQuizByIdMutation,
@@ -41,7 +41,6 @@ import {
 import { AdminLayout } from '@/layouts/admin-layout';
 
 import DetailQuizDialog from '../../../../features/quiz/components/quiz-detail-dialog';
-import { toast } from 'sonner';
 
 const AdminQuizzesPage = () => {
   const { t } = useTranslation('pages.admin');
