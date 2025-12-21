@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+import useAuth from '@/features/auth/hooks/use-auth';
 import { JournalReviewKeys } from '@/features/journal-review/services/queries/keys';
+import { WalletKeys } from '@/features/payment/wallet/services/queries/keys';
 
 import type {
   CreateChildReviewPayload,
@@ -18,6 +20,7 @@ import type {
  * POST /problems/{problemId}/problem-reviews
  */
 export const useCreateRootReviewMutation = () => {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const _request = useAxios();
 
@@ -37,6 +40,11 @@ export const useCreateRootReviewMutation = () => {
           JournalReviewKeys.GetRootReviewsByProblemQuery,
           variables.problemId,
         ],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [WalletKeys.GetWalletByUserQuery, user?.id],
+        exact: false,
       });
     },
   });

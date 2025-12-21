@@ -18,22 +18,13 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Textarea } from '@/components/ui/textarea';
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
-import { useCreateRootReviewMutation } from '@/features/journal-review/services/mutations';
+import { ReviewRequestDialog } from '@/features/journal-review/components';
 import { useGetRootReviewsByProblemQuery } from '@/features/journal-review/services/queries';
 import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
+import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/(app)/journals/$journalId';
 
@@ -68,34 +59,13 @@ const JournalDetailPage = () => {
   );
   const totalReviewsCount = reviewsData?.page?.totalElements ?? 0;
 
-  // Create review mutation
-  const createReviewMutation = useCreateRootReviewMutation();
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [reviewContent, setReviewContent] = useState('');
+  // Get wallet balance for review request
+  const { data: wallet } = useGetWalletByUserQuery(user?.id);
+  const walletBalance = useMemo(() => wallet?.balance || 0, [wallet]);
 
-  const handleCreateReview = async () => {
-    if (!reviewContent.trim()) {
-      toast.error('Vui lòng nhập nội dung đánh giá');
-      return;
-    }
-
-    if (!journal?.id) {
-      toast.error('Không thể tạo đánh giá. Vui lòng thử lại.');
-      return;
-    }
-
-    try {
-      await createReviewMutation.mutateAsync({
-        problemId: journal.id,
-        content: reviewContent.trim(),
-      });
-      toast.success('Tạo đánh giá thành công');
-      setIsCreateDialogOpen(false);
-      setReviewContent('');
-    } catch {
-      toast.error('Có lỗi xảy ra khi tạo đánh giá');
-    }
-  };
+  // Review request dialog state
+  const [isReviewRequestDialogOpen, setIsReviewRequestDialogOpen] =
+    useState(false);
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const formatJournalContentForForum = () => {
@@ -387,66 +357,14 @@ const JournalDetailPage = () => {
                   </Link>
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">{totalReviewsCount}</Badge>
-                    <Dialog
-                      open={isCreateDialogOpen}
-                      onOpenChange={setIsCreateDialogOpen}
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8"
+                      onClick={() => setIsReviewRequestDialogOpen(true)}
                     >
-                      <DialogTrigger asChild>
-                        <Button size="icon" variant="ghost" className="h-8 w-8">
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Tạo yêu cầu đánh giá mới</DialogTitle>
-                          <DialogDescription>
-                            Nhập nội dung yêu cầu đánh giá cho nhật ký của bạn
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <label className="text-sm font-medium">
-                                Nội dung
-                              </label>
-                              <span className="text-xs text-gray-400">
-                                {reviewContent.length}/2000
-                              </span>
-                            </div>
-                            <Textarea
-                              placeholder="Nhập nội dung đánh giá..."
-                              value={reviewContent}
-                              onChange={(e) => setReviewContent(e.target.value)}
-                              rows={6}
-                              maxLength={2000}
-                              className="resize-none"
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              setIsCreateDialogOpen(false);
-                              setReviewContent('');
-                            }}
-                          >
-                            Hủy
-                          </Button>
-                          <Button
-                            onClick={handleCreateReview}
-                            disabled={
-                              createReviewMutation.isPending ||
-                              !reviewContent.trim()
-                            }
-                          >
-                            {createReviewMutation.isPending
-                              ? 'Đang tạo...'
-                              : 'Tạo đánh giá'}
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                      <Plus className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
                 {reviewsLoading ? (
@@ -936,6 +854,15 @@ const JournalDetailPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Request Dialog */}
+      <ReviewRequestDialog
+        open={isReviewRequestDialogOpen}
+        onOpenChange={setIsReviewRequestDialogOpen}
+        journalId={journal?.id || null}
+        journalTitle={journal?.title}
+        walletBalance={walletBalance}
+      />
     </DefaultLayout>
   );
 };
