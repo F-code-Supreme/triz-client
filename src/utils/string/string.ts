@@ -87,17 +87,3 @@ export function htmlExcerpt(html = '', limit = 400): string {
   if (cleaned.length <= limit) return cleaned;
   return cleaned.slice(0, limit) + '...';
 }
-
-/**
- * Formats an ISO date string to locale date string
- * @param isoDate - ISO date string
- * @returns Formatted date string or original value if invalid
- */
-export function formatISODate(isoDate?: string): string {
-  if (!isoDate) return '';
-  try {
-    return new Date(isoDate).toLocaleDateString();
-  } catch {
-    return isoDate;
-  }
-}

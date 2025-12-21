@@ -20,7 +20,7 @@ import {
   useDeleteForumPostMutation,
 } from '@/features/forum/services/mutations';
 import { useGetForumPostsByUserIdQuery } from '@/features/forum/services/queries';
-import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
+import { cleanHtml, formatDate, htmlExcerpt } from '@/utils';
 
 import type { UserAchievementResponse } from '@/features/achievement/types';
 import type { User } from '@/features/auth/types';
@@ -366,7 +366,7 @@ export const ProfileView = ({
                     href: `/users/${post.createdBy}`,
                     avatar: post.avtUrl || '',
                   }}
-                  time={formatISODate(post.createdAt)}
+                  time={formatDate(new Date(post.createdAt))}
                   excerpt={
                     <>
                       <div
