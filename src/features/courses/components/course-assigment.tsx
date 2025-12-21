@@ -309,6 +309,7 @@ const CourseAssignment = ({
               </div>
             ) : submissionHistory?.content &&
               submissionHistory.content.length > 0 ? (
+              // eslint-disable-next-line sonarjs/cognitive-complexity
               submissionHistory.content.map((submission) => (
                 <Card key={submission.id}>
                   <CardHeader>
