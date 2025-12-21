@@ -1,7 +1,6 @@
-import { Link, useSearch } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft,
   Clock,
   CheckCircle2,
   XCircle,
@@ -366,51 +365,52 @@ const CourseQuizPage = () => {
 
     return (
       <div className="min-h-screen bg-background">
-        <div className="bg-card border-b px-6 py-4">
-          <div className="max-w-4xl mx-auto">
-            <Link to="/course/my-course">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Quay lại khóa học của tôi
-              </Button>
-            </Link>
-          </div>
-        </div>
-
         <div className="max-w-4xl mx-auto px-6 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
+            className="text-center mb-8 "
           >
-            <div
-              className={cn(
-                'w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center',
-                score >= quizResults.passingScore
-                  ? 'bg-green-100'
-                  : 'bg-red-100',
-              )}
-            >
-              {score >= quizResults.passingScore ? (
-                <CheckCircle2 className="w-12 h-12 text-green-600" />
-              ) : (
-                <XCircle className="w-12 h-12 text-red-600" />
-              )}
+            <h2 className="text-3xl font-bold mb-10">Kết quả bài kiểm tra</h2>
+            <div className="flex flex-col md:flex-row md:justify-evenly md:items-center gap-6">
+              <div>
+                <h1 className="text-xl font-bold mb-2">{quizData.title}</h1>
+                <p className="text-muted-foreground">
+                  Thời gian hoàn thành:{' '}
+                  {formatDateHour(new Date(quizResults.completedAt))}
+                </p>
+              </div>
+              <div className="flex flex-row items-center justify-center gap-6">
+                <div
+                  className={cn(
+                    'w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center',
+                    score >= quizResults.passingScore
+                      ? 'bg-green-100'
+                      : 'bg-red-100',
+                  )}
+                >
+                  {score >= quizResults.passingScore ? (
+                    <CheckCircle2 className="w-12 h-12 text-green-600" />
+                  ) : (
+                    <XCircle className="w-12 h-12 text-red-600" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">
+                    {score >= quizResults.passingScore ? 'Đạt' : 'Không đạt'}
+                  </h3>
+                  <p className="text-3xl font-bold text-primary mb-2">
+                    {Math.round(score)}%
+                  </p>
+                </div>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold mb-2">
-              {score >= quizResults.passingScore ? 'Đạt' : 'Không đạt'}
-            </h1>
-            <p className="text-5xl font-bold text-primary mb-2">
-              {Math.round(score)}%
-            </p>
-            <p className="text-muted-foreground">
-              Thời gian hoàn thành:{' '}
-              {formatDateHour(new Date(quizResults.completedAt))}
-            </p>
           </motion.div>
 
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Đánh giá câu trả lời</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Đánh giá câu trả lời:
+            </h2>
             {quizResults.answers?.map((answer: any, index: number) => {
               const question = quizData?.questions.find(
                 (q) => q.id === answer.questionId,
@@ -496,7 +496,7 @@ const CourseQuizPage = () => {
 
           <div className="flex gap-4 mt-8">
             <Button onClick={() => window.location.reload()} className="flex-1">
-              Làm lại bài quiz
+              Làm lại bài kiểm tra
             </Button>
             <Button
               onClick={() => window.history.back()}
