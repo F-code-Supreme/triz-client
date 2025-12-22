@@ -79,12 +79,9 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-6">
             {/* Logo and Company Name */}
             <div className="flex items-center gap-4">
-              <img src="/logo.svg" alt="TRIZ Logo" className="w-11 h-11" />
-              <div>
-                <h3 className="text-white font-semibold text-base uppercase leading-tight text-center md:text-left">
-                  {t('company_name')}
-                </h3>
-              </div>
+              <h3 className="text-white font-semibold text-base uppercase leading-tight text-center md:text-left">
+                {t('company_name')}
+              </h3>
             </div>
             {/* Navigation Links */}
             <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
@@ -119,7 +116,13 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
                 {t('nav.packages')}
               </Link>
             </div>
-            {/* Social Media Icons */}
+            <div className="flex gap-2">
+              <div className="bg-white flex items-center justify-center">
+                <img src="/logo.svg" alt="TRIZ Logo" className="w-24" />
+              </div>
+              <img src="/tsk-logo.png" alt="TSK CSTC Logo" className="w-24" />
+            </div>
+            {/* Social Media Icons
             <div className="flex items-center gap-4 md:gap-6">
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -147,7 +150,7 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
                   />
                 </svg>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="border-t border-slate-700 mb-8"></div>
           <div className="text-slate-300 text-base text-center">
