@@ -176,7 +176,7 @@ export const Step6MakeDecision = ({
   return (
     <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start items-center gap-2 inline-flex">
+        <div className="self-stretch text-center justify-center items-center gap-2 inline-flex">
           <div className="text-4xl font-bold leading-[48px] tracking-tight">
             Ra quyết định
           </div>

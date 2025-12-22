@@ -108,7 +108,7 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
   return (
     <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto space-y-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle className="text-2xl">Tóm tắt</CardTitle>
           <p className="text-muted-foreground mt-2">
             Tổng hợp toàn bộ quá trình giải quyết vấn đề 6 bước
