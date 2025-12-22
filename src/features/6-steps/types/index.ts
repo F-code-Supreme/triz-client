@@ -1,3 +1,5 @@
+export type ObjectType = 'Moving' | 'Stationary';
+
 export interface Principle {
   id: number;
   name: string;
