@@ -10,7 +10,6 @@ import {
   Archive,
   Award,
   MessageSquare,
-  Settings,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -118,11 +117,6 @@ export const useAdminSidebarData = (): AdminSidebarData => {
               title: t('admin.archive'),
               url: '/admin/archive',
               icon: Archive,
-            },
-            {
-              title: t('admin.system_config'),
-              url: '/admin/system-config',
-              icon: Settings,
             },
           ],
         },
