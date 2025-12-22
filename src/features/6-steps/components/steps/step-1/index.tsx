@@ -32,6 +32,19 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   const [understanding, setUnderstanding] = useState(
     initialData?.understanding || '',
   );
+  const [understandingSummary, setUnderstandingSummary] = useState(
+    initialData?.understandingSummary || '',
+  );
+  const [systemContext, setSystemContext] = useState<{
+    mainObject: string;
+    environment: string;
+  }>(initialData?.systemContext || { mainObject: '', environment: '' });
+  const [psychologicalInertia, setPsychologicalInertia] = useState<string[]>(
+    initialData?.psychologicalInertia || [],
+  );
+  const [clarificationNeeded, setClarificationNeeded] = useState<
+    string[] | null
+  >(initialData?.clarificationNeeded || null);
   const [miniProblems, setMiniProblems] = useState<MiniProblem[]>(
     initialData?.miniProblems || [],
   );
@@ -50,6 +63,12 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   useEffect(() => {
     if (initialData) {
       setUnderstanding(initialData.understanding || '');
+      setUnderstandingSummary(initialData.understandingSummary || '');
+      setSystemContext(
+        initialData.systemContext || { mainObject: '', environment: '' },
+      );
+      setPsychologicalInertia(initialData.psychologicalInertia || []);
+      setClarificationNeeded(initialData.clarificationNeeded || null);
       setMiniProblems(initialData.miniProblems || []);
       setHasSubmitted(
         !!initialData.miniProblems && initialData.miniProblems.length > 0,
@@ -65,6 +84,12 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
         const response = await step1Mutation.mutateAsync({
           rawProblem: understanding,
         });
+
+        // Store all response data
+        setUnderstandingSummary(response.understandingSummary);
+        setSystemContext(response.systemContext);
+        setPsychologicalInertia(response.psychologicalInertia);
+        setClarificationNeeded(response.clarificationNeeded);
 
         // Convert API response mini problems to our format
         const problems: MiniProblem[] = response.miniProblems.map(
@@ -126,8 +151,12 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
       if (selectedProblem) {
         onNext({
           understanding,
-          selectedMiniProblem: selectedProblem.text,
+          understandingSummary,
+          systemContext,
+          psychologicalInertia,
           miniProblems,
+          selectedMiniProblem: selectedProblem.text,
+          clarificationNeeded,
         });
       }
     }

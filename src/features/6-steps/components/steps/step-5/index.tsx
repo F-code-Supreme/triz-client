@@ -26,6 +26,7 @@ export const Step5GenerateIdeas = ({
 }: Step5Props) => {
   const { stepData } = useSixStepDataStore();
   const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [targetML, setTargetML] = useState<string>('');
 
   const step5Mutation = useStep5SuggestionMutation();
 
@@ -50,10 +51,9 @@ export const Step5GenerateIdeas = ({
 
       try {
         const response = await step5Mutation.mutateAsync({
-          miniProblem: step1Data.selectedMiniProblem,
-          goal: step2Data.selectedGoal?.text || '',
-          systemIdentified: step3Data.systemIdentified,
-          physicalContradictions: step4Data.physicalContradictions,
+          step5Data: {
+            technicalContradictions: step4Data.technicalContradictions || [],
+          },
           trizPrinciples:
             step4Data.selectedPrinciples?.map((p) => ({
               priority: p.priority,
@@ -66,6 +66,7 @@ export const Step5GenerateIdeas = ({
             })) || [],
         });
 
+        setTargetML(response.ideaGenerationSession.targetML);
         setIdeas(response.ideaGenerationSession.ideas);
       } catch (error) {
         console.error('Failed to get step 5 suggestions:', error);
@@ -91,18 +92,13 @@ export const Step5GenerateIdeas = ({
 
     // Sort ideas within each group by priority
     Object.keys(groups).forEach((principleId) => {
-      groups[Number(principleId)].sort((a, b) => {
-        return (
-          (a.principleUsed.priority || 999) - (b.principleUsed.priority || 999)
-        );
-      });
+      // Sort by idea id as fallback since priority is not available
+      groups[Number(principleId)].sort((a, b) => a.id - b.id);
     });
 
-    // Convert to array of [principleId, ideas] pairs and sort by priority
+    // Convert to array of [principleId, ideas] pairs and sort by principle id
     const sortedEntries = Object.entries(groups).sort((a, b) => {
-      const priorityA = a[1][0]?.principleUsed.priority || 999;
-      const priorityB = b[1][0]?.principleUsed.priority || 999;
-      return priorityA - priorityB; // Lower priority number comes first
+      return Number(a[0]) - Number(b[0]); // Sort by principle ID
     });
 
     // Convert back to object while maintaining order
@@ -135,7 +131,6 @@ export const Step5GenerateIdeas = ({
       principleUsed: principle,
       ideaStatement: 'Ý tưởng mới...',
       howItAddresses: '',
-      abstractionLevel: 'concept',
     };
 
     setIdeas((prev) => [...prev, newIdea]);
@@ -167,13 +162,13 @@ export const Step5GenerateIdeas = ({
       return;
     }
 
-    if (selectedIdeaIds.size !== 3) {
+    if (selectedIdeaIds.size > 3) {
       toast.error('Vui lòng chọn đúng 3 ý tưởng để tiếp tục');
       return;
     }
 
     const selectedIdeas = ideas.filter((idea) => selectedIdeaIds.has(idea.id));
-    onNext({ ideas, selectedIdeas });
+    onNext({ ideas, selectedIdeas, targetML });
   };
 
   if (step5Mutation.isPending) {
@@ -235,7 +230,7 @@ export const Step5GenerateIdeas = ({
 
         <div className="self-stretch justify-start text-sm font-semibold leading-6 text-slate-600">
           Xem lại và chỉnh sửa các ý tưởng được tạo từ các nguyên tắc TRIZ. Chọn
-          3 ý tưởng tốt nhất để đánh giá:
+          nhiều nhất 3 ý tưởng tốt nhất để đánh giá:
         </div>
 
         {selectedIdeaIds.size > 0 && (
@@ -304,7 +299,7 @@ export const Step5GenerateIdeas = ({
       <ActionButtons
         onBack={onBack}
         onNext={handleNext}
-        disableNext={ideas.length === 0 || selectedIdeaIds.size !== 3}
+        disableNext={ideas.length === 0 || selectedIdeaIds.size > 3}
         nextLabel="Đánh giá ý tưởng"
       />
     </div>

@@ -143,7 +143,7 @@ export interface IStep6SuggestionPayload {
 
 export interface IStep6EvaluatedIdea {
   ideaId: number;
-  status: 'SELECTED' | 'RESERVE';
+  status: 'SELECTED' | 'RESERVE' | 'REJECTED';
   analysis: {
     screening: string;
     resourcesAndInertia: string;

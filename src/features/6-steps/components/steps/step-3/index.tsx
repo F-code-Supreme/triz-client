@@ -32,11 +32,14 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
     stepData.step1?.selectedMiniProblem ||
     'Khả năng lưu trữ năng lượng hóa học của các cell pin bị suy giảm (hiện tượng lão hóa vật liệu).';
   const selectedGoal =
-    stepData.step2?.selectedGoal?.text ||
+    stepData.step2?.goal ||
     'Khả năng lưu trữ năng lượng của các cell pin được duy trì nguyên vẹn ở mức tối ưu bất chấp thời gian hoạt động.';
 
   const [systemIdentified, setSystemIdentified] = useState(
     initialData?.systemIdentified || '',
+  );
+  const [objectType, setObjectType] = useState<'Moving' | 'Stationary'>(
+    initialData?.objectType || 'Moving',
   );
   const [elements, setElements] = useState<string[]>(
     initialData?.elements || [],
@@ -55,7 +58,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
   // Fetch suggestions when component mounts
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (!selectedMiniProblem || !selectedGoal) return;
+      if (!selectedMiniProblem || !selectedGoal || !stepData.step2) return;
 
       // Check if we need to fetch new suggestions
       // Fetch if: no system identified OR no initial data exists
@@ -67,11 +70,14 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
       if (shouldFetch) {
         try {
           const response = await step3Mutation.mutateAsync({
-            miniProblem: selectedMiniProblem,
-            goal: selectedGoal,
+            goal: stepData.step2.goal,
+            constraints: stepData.step2.constraints || [],
+            scope: stepData.step2.scope || '',
+            idealFinalResult: stepData.step2.idealFinalResult || '',
           });
 
           setSystemIdentified(response.systemIdentified);
+          setObjectType(response.objectType);
           setElements(response.elements);
 
           // Convert requiredStates to the format with IDs
@@ -117,7 +123,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
     }
 
     if (systemIdentified && elements.length > 0) {
-      onNext({ systemIdentified, elements, requiredStates });
+      onNext({ systemIdentified, elements, objectType, requiredStates });
     }
   };
 
@@ -236,7 +242,32 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
-            Mục tiêu: {stepData.step2?.selectedGoal?.text}
+            Mục tiêu: {stepData.step2?.goal}
+          </div>
+        </div>
+
+        {/* Object Type Selector */}
+        <div className="flex flex-col gap-2">
+          <div className="text-sm font-semibold text-slate-600">
+            Loại đối tượng:
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant={objectType === 'Moving' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setObjectType('Moving')}
+              disabled={step3Mutation.isPending}
+            >
+              Chuyển động
+            </Button>
+            <Button
+              variant={objectType === 'Stationary' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setObjectType('Stationary')}
+              disabled={step3Mutation.isPending}
+            >
+              Tĩnh
+            </Button>
           </div>
         </div>
 

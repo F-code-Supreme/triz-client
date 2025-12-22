@@ -38,11 +38,12 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
           selectedMiniProblem: stepData.step1.selectedMiniProblem,
         },
         step2Objectives: {
-          goal: stepData.step2.selectedGoal?.text || '',
+          goal: stepData.step2.goal,
         },
         step3Analysis: {
           systemIdentified: stepData.step3.systemIdentified,
           elements: stepData.step3.elements,
+          objectType: stepData.step3.objectType,
           requiredStates: Object.entries(stepData.step3.requiredStates).reduce(
             (acc, [key, states]) => {
               acc[key] = states.map((state) => state.text);
@@ -79,7 +80,7 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
             return {
               ideaId: evaluation.ideaId,
               ideaStatement: idea?.ideaStatement || '',
-              aiComment: evaluation.message || '',
+              aiComment: evaluation.decisionMessage || '',
               userComment: evaluation.userComment || '',
               userRating: evaluation.userRating || 0,
             };
@@ -150,24 +151,27 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
               <div className="bg-muted/50 rounded-lg p-4 space-y-3">
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground">
-                    Tất cả mục tiêu:
+                    Mục tiêu:
                   </p>
-                  {stepData.step2.goals.map((goal, index) => (
-                    <div key={goal.id} className="text-sm">
-                      {index + 1}. {goal.text}
-                    </div>
-                  ))}
-                </div>
-                {stepData.step2.selectedGoal && (
-                  <div className="space-y-2 pt-2 border-t">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      Mục tiêu đã chọn:
-                    </p>
-                    <div className="text-sm font-semibold text-primary">
-                      {stepData.step2.selectedGoal.text}
-                    </div>
+                  <div className="text-sm font-semibold text-primary">
+                    {stepData.step2.goal}
                   </div>
-                )}
+                </div>
+                {stepData.step2.constraints &&
+                  stepData.step2.constraints.length > 0 && (
+                    <div className="space-y-2 pt-2 border-t">
+                      <p className="text-xs font-medium text-muted-foreground">
+                        Ràng buộc:
+                      </p>
+                      <ul className="list-disc list-inside space-y-1">
+                        {stepData.step2.constraints.map((constraint, index) => (
+                          <li key={index} className="text-sm">
+                            {constraint}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
               </div>
             </div>
           )}
@@ -274,16 +278,16 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                             <div className="space-y-1">
                               <p className="text-xs font-medium">MK1:</p>
                               <p className="text-sm">
-                                {tc.MK1.contradictionStatement}
+                                {tc.mk1.contradictionStatement}
                               </p>
                               <div className="flex gap-4 text-xs mt-2">
                                 <span className="text-green-600">
-                                  ↑ #{tc.MK1.improvingParameter.number}{' '}
-                                  {tc.MK1.improvingParameter.name}
+                                  ↑ #{tc.mk1.improvingParameter.number}{' '}
+                                  {tc.mk1.improvingParameter.name}
                                 </span>
                                 <span className="text-red-600">
-                                  ↓ #{tc.MK1.worseningParameter.number}{' '}
-                                  {tc.MK1.worseningParameter.name}
+                                  ↓ #{tc.mk1.worseningParameter.number}{' '}
+                                  {tc.mk1.worseningParameter.name}
                                 </span>
                               </div>
                             </div>
@@ -292,16 +296,16 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                             <div className="space-y-1 pt-2 border-t">
                               <p className="text-xs font-medium">MK2:</p>
                               <p className="text-sm">
-                                {tc.MK2.contradictionStatement}
+                                {tc.mk2.contradictionStatement}
                               </p>
                               <div className="flex gap-4 text-xs mt-2">
                                 <span className="text-green-600">
-                                  ↑ #{tc.MK2.improvingParameter.number}{' '}
-                                  {tc.MK2.improvingParameter.name}
+                                  ↑ #{tc.mk2.improvingParameter.number}{' '}
+                                  {tc.mk2.improvingParameter.name}
                                 </span>
                                 <span className="text-red-600">
-                                  ↓ #{tc.MK2.worseningParameter.number}{' '}
-                                  {tc.MK2.worseningParameter.name}
+                                  ↓ #{tc.mk2.worseningParameter.number}{' '}
+                                  {tc.mk2.worseningParameter.name}
                                 </span>
                               </div>
                             </div>
@@ -396,16 +400,18 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                   const idea = stepData.step5?.selectedIdeas?.find(
                     (i) => i.id === evaluation.ideaId,
                   );
-                  const isRejected =
-                    evaluation.status === 'rejected' || !evaluation.evaluation;
+                  const isRejected = evaluation.status === 'REJECTED';
+                  const isSelected = evaluation.status === 'SELECTED';
 
                   return (
                     <div
                       key={evaluation.ideaId}
                       className={`p-3 rounded-lg ${
                         isRejected
-                          ? 'bg-yellow-50/50 dark:bg-yellow-950/20 border border-yellow-500/50'
-                          : 'bg-primary/10 border border-primary'
+                          ? 'bg-red-50/50 dark:bg-red-950/20 border border-red-500/50'
+                          : isSelected
+                            ? 'bg-green-50/50 dark:bg-green-950/20 border border-green-500/50'
+                            : 'bg-yellow-50/50 dark:bg-yellow-950/20 border border-yellow-500/50'
                       }`}
                     >
                       <div className="space-y-2">
@@ -416,111 +422,87 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                           <span
                             className={`text-xs font-medium px-2 py-0.5 rounded ${
                               isRejected
-                                ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500 border border-yellow-500/50'
-                                : 'bg-primary/20 text-primary'
+                                ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-500 border border-red-500/50'
+                                : isSelected
+                                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-500 border border-green-500/50'
+                                  : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500 border border-yellow-500/50'
                             }`}
                           >
-                            {isRejected ? 'Không khả thi' : 'Đạt'}
+                            {isRejected
+                              ? 'Loại bỏ'
+                              : isSelected
+                                ? 'Được chọn'
+                                : 'Dự phòng'}
                           </span>
                         </div>
                         {idea && (
                           <p className="text-sm">{idea.ideaStatement}</p>
                         )}
 
-                        {/* Show scores only for passing ideas */}
-                        {!isRejected && evaluation.evaluation && (
-                          <>
-                            <div className="grid grid-cols-4 gap-2 pt-2 border-t">
-                              <div className="text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  ML
-                                </p>
-                                <p className="text-sm font-semibold">
-                                  {evaluation.evaluation.scores.mlResolution}
-                                  /10
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  Khả thi
-                                </p>
-                                <p className="text-sm font-semibold">
-                                  {evaluation.evaluation.scores.feasibility}/10
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  Tác động
-                                </p>
-                                <p className="text-sm font-semibold">
-                                  {evaluation.evaluation.scores.systemImpact}
-                                  /10
-                                </p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-muted-foreground">
-                                  Tổng
-                                </p>
-                                <p className="text-sm font-bold text-primary">
-                                  {evaluation.evaluation.scores.total}/30
-                                </p>
-                              </div>
-                            </div>
-                            <div className="pt-2 border-t space-y-2">
+                        {/* Show analysis for all evaluated ideas */}
+                        {evaluation.analysis && (
+                          <div className="pt-2 border-t space-y-3">
+                            {/* Screening */}
+                            {evaluation.analysis.screening && (
                               <div>
                                 <p className="text-xs font-medium mb-1">
-                                  Đánh giá AI:{' '}
-                                  <span className="capitalize">
-                                    {evaluation.evaluation.category ===
-                                    'excellent'
-                                      ? 'Xuất sắc'
-                                      : evaluation.evaluation.category ===
-                                          'good'
-                                        ? 'Tốt'
-                                        : evaluation.evaluation.category ===
-                                            'average'
-                                          ? 'Trung bình'
-                                          : 'Kém'}
-                                  </span>
+                                  Lọc ý tưởng:
                                 </p>
-                                {evaluation.message && (
-                                  <p className="text-xs text-muted-foreground">
-                                    {evaluation.message}
-                                  </p>
-                                )}
+                                <p className="text-xs text-muted-foreground">
+                                  {evaluation.analysis.screening}
+                                </p>
                               </div>
-                            </div>
-                          </>
+                            )}
+
+                            {/* Resources and Inertia - only for non-rejected */}
+                            {!isRejected &&
+                              evaluation.analysis.resourcesAndInertia && (
+                                <div>
+                                  <p className="text-xs font-medium mb-1">
+                                    Tài nguyên & Quán tính:
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {evaluation.analysis.resourcesAndInertia}
+                                  </p>
+                                </div>
+                              )}
+
+                            {/* Overall Benefit - only for non-rejected */}
+                            {!isRejected &&
+                              evaluation.analysis.overallBenefit && (
+                                <div>
+                                  <p className="text-xs font-medium mb-1">
+                                    Lợi ích tổng thể:
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {evaluation.analysis.overallBenefit}
+                                  </p>
+                                </div>
+                              )}
+                          </div>
                         )}
 
-                        {/* Show rejection info for rejected ideas */}
-                        {isRejected && (
-                          <div className="pt-2 border-t space-y-2">
-                            {evaluation.rejectionReason && (
-                              <div>
-                                <p className="text-xs font-medium text-yellow-800 dark:text-yellow-600 mb-1">
-                                  Lý do:
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {evaluation.rejectionReason}
-                                </p>
-                              </div>
-                            )}
-                            {evaluation.suggestion && (
-                              <div>
-                                <p className="text-xs font-medium mb-1">
-                                  Gợi ý:
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {evaluation.suggestion}
-                                </p>
-                              </div>
-                            )}
-                            {evaluation.message && (
-                              <p className="text-xs text-muted-foreground">
-                                {evaluation.message}
-                              </p>
-                            )}
+                        {/* Decision Message */}
+                        {evaluation.decisionMessage && (
+                          <div className="pt-2 border-t">
+                            <p className="text-xs font-medium mb-1">
+                              Quyết định:
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {evaluation.decisionMessage}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Action Suggestion */}
+                        {evaluation.actionSuggestion && (
+                          <div className="pt-2 border-t">
+                            <p className="text-xs font-medium mb-1">
+                              Gợi ý hành động:
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {evaluation.actionSuggestion}
+                            </p>
                           </div>
                         )}
 

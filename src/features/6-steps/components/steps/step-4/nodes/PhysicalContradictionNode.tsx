@@ -13,7 +13,6 @@ import {
 
 interface PhysicalContradictionNodeData {
   element: string;
-  propertyDimension: string;
   stateA: string;
   stateB: string;
   benefitA: string;
@@ -57,10 +56,6 @@ export const PhysicalContradictionNode = memo((props: NodeProps) => {
           </div>
 
           <div className="space-y-2 text-xs text-white/90">
-            <div>
-              <span className="font-semibold">Thuộc tính: </span>
-              {data.propertyDimension}
-            </div>
             <div className="bg-white/20 p-2 rounded text-white font-medium">
               {data.contradictionStatement}
             </div>

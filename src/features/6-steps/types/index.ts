@@ -9,7 +9,6 @@ export interface Principle {
 
 export interface PhysicalContradiction {
   element: string;
-  propertyDimension: string;
   stateA: string;
   stateB: string;
   benefitA: string;
@@ -42,6 +41,7 @@ export interface Step2Objectives {
 export interface Step3Analysis {
   systemIdentified: string;
   elements: string[];
+  objectType: ObjectType;
   requiredStates: Record<string, string[]>;
 }
 
