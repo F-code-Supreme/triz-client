@@ -6,7 +6,7 @@ export const reviewStatusLabels: Record<ReviewStatus, string> = {
   PENDING: 'Chờ xử lý',
   PROCESSING: 'Đang xử lý',
   REVIEWED: 'Đã đánh giá',
-  APPROVED: 'Đã phê duyệt',
+  APPROVED: 'Đã kết thúc',
   COMMENTED: 'Đã nhận xét',
 };
 
@@ -31,7 +31,7 @@ export const getReviewStatusBadge = (
             size === 'md' ? 'bg-yellow-600 h-9 rounded-md' : 'bg-yellow-600'
           }
         >
-          Chờ xử lý
+          {reviewStatusLabels[status]}
         </Badge>
       );
     case 'PROCESSING':
@@ -42,7 +42,7 @@ export const getReviewStatusBadge = (
             size === 'md' ? 'bg-blue-600 h-9 rounded-md' : 'bg-blue-600'
           }
         >
-          Đang xử lý
+          {reviewStatusLabels[status]}
         </Badge>
       );
     case 'REVIEWED':
@@ -53,7 +53,7 @@ export const getReviewStatusBadge = (
             size === 'md' ? 'bg-purple-600 h-9 rounded-md' : 'bg-purple-600'
           }
         >
-          Đã đánh giá
+          {reviewStatusLabels[status]}
         </Badge>
       );
     case 'APPROVED':
@@ -64,11 +64,11 @@ export const getReviewStatusBadge = (
             size === 'md' ? 'bg-green-600 h-9 rounded-md' : 'bg-green-600'
           }
         >
-          Đã phê duyệt
+          {reviewStatusLabels[status]}
         </Badge>
       );
     case 'COMMENTED':
-      return <Badge variant="outline">Đã nhận xét</Badge>;
+      return <Badge variant="outline">{reviewStatusLabels[status]}</Badge>;
     default:
       return null;
   }

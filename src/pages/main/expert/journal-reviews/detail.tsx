@@ -140,7 +140,7 @@ const ExpertJournalReviewDetailPage = () => {
   const isReadOnly = rootReview?.status === 'APPROVED';
 
   // Handle create child review
-  const handleCreateChildReview = async (
+  const handleCreateChildReview = (
     parentReviewId: string,
     stepNumber: number | null,
     content: string,
@@ -151,27 +151,32 @@ const ExpertJournalReviewDetailPage = () => {
       return;
     }
 
-    try {
-      await createChildReviewMutation.mutateAsync({
+    createChildReviewMutation.mutateAsync(
+      {
         problemReviewId: parentReviewId,
         content: content.trim(),
         stepNumber: stepNumber === null ? undefined : stepNumber,
         rating: rating || undefined,
         creatorId,
         currentStatus: rootReview?.status,
-      });
-      toast.success('Thêm đánh giá thành công');
+      },
+      {
+        onSuccess: () => {
+          toast.success('Thêm đánh giá thành công');
 
-      // Clear input
-      if (stepNumber === null) {
-        setGeneralComment('');
-      } else {
-        setStepComments((prev) => ({ ...prev, [stepNumber]: '' }));
-        setStepRatings((prev) => ({ ...prev, [stepNumber]: 0 }));
-      }
-    } catch {
-      toast.error('Có lỗi xảy ra');
-    }
+          // Clear input
+          if (stepNumber === null) {
+            setGeneralComment('');
+          } else {
+            setStepComments((prev) => ({ ...prev, [stepNumber]: '' }));
+            setStepRatings((prev) => ({ ...prev, [stepNumber]: 0 }));
+          }
+        },
+        onError: (error) => {
+          toast.error(error?.response?.data?.message || 'Có lỗi xảy ra');
+        },
+      },
+    );
   };
 
   // Handle update review
@@ -276,39 +281,42 @@ const ExpertJournalReviewDetailPage = () => {
             Quay lại danh sách
           </Button>
 
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">{journal.title}</h1>
-              <p className="text-muted-foreground mt-2">
-                Người yêu cầu: {rootReview.creatorFullName}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Ngày tạo: {format(new Date(rootReview.createdAt), DATE_FORMAT)}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              {getReviewStatusBadge(rootReview.status, 'md')}
-              {!isReadOnly &&
-                canChangeStatus &&
-                rootReview.status === 'PROCESSING' && (
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-bold">{journal.title}</h1>
+            <div className="flex items-center justify-between gap-3 mt-2">
+              <div>
+                <p className="text-muted-foreground">
+                  Người yêu cầu: {rootReview.creatorFullName}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Ngày tạo:{' '}
+                  {format(new Date(rootReview.createdAt), DATE_FORMAT)}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {getReviewStatusBadge(rootReview.status, 'md')}
+                {!isReadOnly &&
+                  canChangeStatus &&
+                  rootReview.status === 'PROCESSING' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleChangeStatus('REVIEWED')}
+                    >
+                      Đánh dấu Đã đánh giá
+                    </Button>
+                  )}
+                {!isReadOnly && isOwner && rootReview.status === 'REVIEWED' && (
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleChangeStatus('REVIEWED')}
+                    variant="default"
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={() => handleChangeStatus('APPROVED')}
                   >
-                    Đánh dấu Đã đánh giá
+                    <Check className="mr-2 h-4 w-4" />
+                    Kết thúc đánh giá
                   </Button>
                 )}
-              {!isReadOnly && isOwner && rootReview.status === 'REVIEWED' && (
-                <Button
-                  variant="default"
-                  className="bg-green-600 hover:bg-green-700"
-                  onClick={() => handleChangeStatus('APPROVED')}
-                >
-                  <Check className="mr-2 h-4 w-4" />
-                  Phê duyệt & Đóng
-                </Button>
-              )}
+              </div>
             </div>
           </div>
 

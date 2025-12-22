@@ -286,29 +286,32 @@ const JournalReviewDetailsPage = () => {
             Quay lại danh sách đánh giá
           </Button>
 
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">{journal.title}</h1>
-              <p className="text-muted-foreground mt-2">
-                Người đánh giá: {rootReview.creatorFullName}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Ngày tạo: {format(new Date(rootReview.createdAt), DATE_FORMAT)}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              {getReviewStatusBadge(rootReview.status, 'md')}
-              {!isReadOnly && isOwner && rootReview.status === 'REVIEWED' && (
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="bg-green-600 hover:bg-green-700"
-                  onClick={() => handleChangeStatus('APPROVED')}
-                >
-                  <Check className="mr-2 h-4 w-4" />
-                  Phê duyệt & Đóng
-                </Button>
-              )}
+          <div className="flex flex-col">
+            <h1 className="text-3xl font-bold">{journal.title}</h1>
+            <div className="flex items-center justify-between gap-3 mt-2">
+              <div>
+                <p className="text-muted-foreground">
+                  Người đánh giá: {rootReview.creatorFullName}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Ngày tạo:{' '}
+                  {format(new Date(rootReview.createdAt), DATE_FORMAT)}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {getReviewStatusBadge(rootReview.status, 'md')}
+                {!isReadOnly && isOwner && rootReview.status === 'REVIEWED' && (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-green-600 hover:bg-green-700"
+                    onClick={() => handleChangeStatus('APPROVED')}
+                  >
+                    <Check className="mr-2 h-4 w-4" />
+                    Kết thúc đánh giá
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
