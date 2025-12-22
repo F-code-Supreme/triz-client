@@ -344,799 +344,888 @@ const ExpertJournalReviewDetailPage = () => {
           <div className="space-y-6">
             {/* Step 1 */}
             {journal.stepData.step1Understand && (
-              <Card id="step-1">
-                <CardHeader>
-                  <CardTitle>Bước 1: Hiểu vấn đề</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold">Vấn đề ban đầu:</h4>
-                    <p>{journal.stepData.step1Understand.rawProblem}</p>
-                  </div>
-                  {journal.stepData.step1Understand.selectedMiniProblem && (
-                    <div>
-                      <h4 className="font-semibold">Vấn đề nhỏ đã chọn:</h4>
-                      <p className="italic">
-                        {journal.stepData.step1Understand.selectedMiniProblem}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Step-based reviews */}
-                  {step1Reviews?.content && step1Reviews.content.length > 0 && (
-                    <div className="mt-6 pt-4 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setExpandedSteps((prev) => ({
-                            ...prev,
-                            1: !prev[1],
-                          }))
-                        }
-                        className="flex items-center gap-2 mb-3"
-                      >
-                        {expandedSteps[1] ? (
-                          <Minus className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        <span className="font-medium">
-                          Đánh giá ({step1Reviews.content.length})
-                        </span>
-                      </Button>
-                      {expandedSteps[1] && (
-                        <NestedReviews
-                          reviews={step1Reviews.content}
-                          isReadOnly={isReadOnly}
-                          userId={user?.id}
-                          canDelete={canDelete}
-                          canRate={isExpertOrAdmin}
-                          editingReview={editingReview}
-                          editContent={editContent}
-                          editRating={editRating}
-                          setEditingReview={setEditingReview}
-                          setEditContent={setEditContent}
-                          setEditRating={setEditRating}
-                          handleUpdateReview={handleUpdateReview}
-                          handleDeleteReview={handleDeleteReview}
-                        />
+              <div className="flex gap-6">
+                {/* Left: Step Content */}
+                <Card id="step-1" className="flex-[3]">
+                  <CardHeader>
+                    <CardTitle>Bước 1: Hiểu vấn đề</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold">Vấn đề ban đầu:</h4>
+                        <p>{journal.stepData.step1Understand.rawProblem}</p>
+                      </div>
+                      {journal.stepData.step1Understand.selectedMiniProblem && (
+                        <div>
+                          <h4 className="font-semibold">Vấn đề nhỏ đã chọn:</h4>
+                          <p className="italic">
+                            {
+                              journal.stepData.step1Understand
+                                .selectedMiniProblem
+                            }
+                          </p>
+                        </div>
                       )}
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
 
+                {/* Right: Reviews */}
+                <div className="flex-[2] space-y-4">
                   {/* Add review for step 1 */}
                   {!isReadOnly && isExpertOrAdmin && (
-                    <div className="space-y-2 pt-4 border-t">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium">
-                            Đánh giá bước 1
-                          </label>
-                          <span className="text-xs text-gray-400">
-                            {(stepComments[1] || '').length}/2000
-                          </span>
-                        </div>
-                        <Textarea
-                          placeholder="Đánh giá bước 1..."
-                          value={stepComments[1] || ''}
-                          onChange={(e) =>
-                            setStepComments((prev) => ({
-                              ...prev,
-                              1: e.target.value,
-                            }))
-                          }
-                          maxLength={2000}
-                          className="min-h-[60px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[1] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                              Đánh giá bước 1
+                            </label>
+                            <span className="text-xs text-gray-400">
+                              {(stepComments[1] || '').length}/2000
+                            </span>
+                          </div>
+                          <Textarea
+                            placeholder="Đánh giá bước 1..."
+                            value={stepComments[1] || ''}
+                            onChange={(e) =>
+                              setStepComments((prev) => ({
                                 ...prev,
-                                1: star,
+                                1: e.target.value,
                               }))
                             }
+                            maxLength={2000}
+                            className="min-h-[60px]"
                           />
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleCreateChildReview(
-                            journalReviewId,
-                            1,
-                            stepComments[1] || '',
-                            stepRatings[1],
-                          )
-                        }
-                        disabled={!stepComments[1]?.trim()}
-                      >
-                        Gửi đánh giá
-                      </Button>
-                    </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[1] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  1: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            handleCreateChildReview(
+                              journalReviewId,
+                              1,
+                              stepComments[1] || '',
+                              stepRatings[1],
+                            )
+                          }
+                          disabled={!stepComments[1]?.trim()}
+                        >
+                          Gửi đánh giá
+                        </Button>
+                      </CardContent>
+                    </Card>
                   )}
-                </CardContent>
-              </Card>
+
+                  {/* Step 1 Reviews */}
+                  {step1Reviews?.content && step1Reviews.content.length > 0 && (
+                    <Card>
+                      <CardContent className="pt-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setExpandedSteps((prev) => ({
+                              ...prev,
+                              1: !prev[1],
+                            }))
+                          }
+                          className="flex items-center gap-2 mb-3"
+                        >
+                          {expandedSteps[1] ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">
+                            Đánh giá Bước 1 ({step1Reviews.content.length})
+                          </span>
+                        </Button>
+                        {expandedSteps[1] && (
+                          <NestedReviews
+                            reviews={step1Reviews.content}
+                            isReadOnly={isReadOnly}
+                            userId={user?.id}
+                            canDelete={canDelete}
+                            canRate={isExpertOrAdmin}
+                            editingReview={editingReview}
+                            editContent={editContent}
+                            editRating={editRating}
+                            setEditingReview={setEditingReview}
+                            setEditContent={setEditContent}
+                            setEditRating={setEditRating}
+                            handleUpdateReview={handleUpdateReview}
+                            handleDeleteReview={handleDeleteReview}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Step 2 */}
             {journal.stepData.step2Objectives && (
-              <Card id="step-2">
-                <CardHeader>
-                  <CardTitle>Bước 2: Đề ra mục đích cần đạt</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold">Mục tiêu:</h4>
-                    <p>{journal.stepData.step2Objectives.goal}</p>
-                  </div>
-
-                  {/* Step-based reviews */}
-                  {step2Reviews?.content && step2Reviews.content.length > 0 && (
-                    <div className="mt-6 pt-4 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setExpandedSteps((prev) => ({
-                            ...prev,
-                            2: !prev[2],
-                          }))
-                        }
-                        className="flex items-center gap-2 mb-3"
-                      >
-                        {expandedSteps[2] ? (
-                          <Minus className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        <span className="font-medium">
-                          Đánh giá ({step2Reviews.content.length})
-                        </span>
-                      </Button>
-                      {expandedSteps[2] && (
-                        <NestedReviews
-                          reviews={step2Reviews.content}
-                          isReadOnly={isReadOnly}
-                          userId={user?.id}
-                          canDelete={canDelete}
-                          canRate={isExpertOrAdmin}
-                          editingReview={editingReview}
-                          editContent={editContent}
-                          editRating={editRating}
-                          setEditingReview={setEditingReview}
-                          setEditContent={setEditContent}
-                          setEditRating={setEditRating}
-                          handleUpdateReview={handleUpdateReview}
-                          handleDeleteReview={handleDeleteReview}
-                        />
-                      )}
+              <div className="flex gap-6">
+                {/* Left: Step Content */}
+                <Card id="step-2" className="flex-[3]">
+                  <CardHeader>
+                    <CardTitle>Bước 2: Đề ra mục đích cần đạt</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold">Mục tiêu:</h4>
+                        <p>{journal.stepData.step2Objectives.goal}</p>
+                      </div>
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
 
+                {/* Right: Reviews */}
+                <div className="flex-[2] space-y-4">
                   {/* Add review for step 2 */}
                   {!isReadOnly && isExpertOrAdmin && (
-                    <div className="space-y-2 pt-4 border-t">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium">
-                            Đánh giá bước 2
-                          </label>
-                          <span className="text-xs text-gray-400">
-                            {(stepComments[2] || '').length}/2000
-                          </span>
-                        </div>
-                        <Textarea
-                          placeholder="Đánh giá bước 2..."
-                          value={stepComments[2] || ''}
-                          onChange={(e) =>
-                            setStepComments((prev) => ({
-                              ...prev,
-                              2: e.target.value,
-                            }))
-                          }
-                          maxLength={2000}
-                          className="min-h-[60px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[2] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                              Đánh giá bước 2
+                            </label>
+                            <span className="text-xs text-gray-400">
+                              {(stepComments[2] || '').length}/2000
+                            </span>
+                          </div>
+                          <Textarea
+                            placeholder="Đánh giá bước 2..."
+                            value={stepComments[2] || ''}
+                            onChange={(e) =>
+                              setStepComments((prev) => ({
                                 ...prev,
-                                2: star,
+                                2: e.target.value,
                               }))
                             }
+                            maxLength={2000}
+                            className="min-h-[60px]"
                           />
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleCreateChildReview(
-                            journalReviewId,
-                            2,
-                            stepComments[2] || '',
-                            stepRatings[2],
-                          )
-                        }
-                        disabled={!stepComments[2]?.trim()}
-                      >
-                        Gửi đánh giá
-                      </Button>
-                    </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[2] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  2: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            handleCreateChildReview(
+                              journalReviewId,
+                              2,
+                              stepComments[2] || '',
+                              stepRatings[2],
+                            )
+                          }
+                          disabled={!stepComments[2]?.trim()}
+                        >
+                          Gửi đánh giá
+                        </Button>
+                      </CardContent>
+                    </Card>
                   )}
-                </CardContent>
-              </Card>
+
+                  {/* Step 2 Reviews */}
+                  {step2Reviews?.content && step2Reviews.content.length > 0 && (
+                    <Card>
+                      <CardContent className="pt-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setExpandedSteps((prev) => ({
+                              ...prev,
+                              2: !prev[2],
+                            }))
+                          }
+                          className="flex items-center gap-2 mb-3"
+                        >
+                          {expandedSteps[2] ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">
+                            Đánh giá Bước 2 ({step2Reviews.content.length})
+                          </span>
+                        </Button>
+                        {expandedSteps[2] && (
+                          <NestedReviews
+                            reviews={step2Reviews.content}
+                            isReadOnly={isReadOnly}
+                            userId={user?.id}
+                            canDelete={canDelete}
+                            canRate={isExpertOrAdmin}
+                            editingReview={editingReview}
+                            editContent={editContent}
+                            editRating={editRating}
+                            setEditingReview={setEditingReview}
+                            setEditContent={setEditContent}
+                            setEditRating={setEditRating}
+                            handleUpdateReview={handleUpdateReview}
+                            handleDeleteReview={handleDeleteReview}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Step 3 */}
             {journal.stepData.step3Analysis && (
-              <Card id="step-3">
-                <CardHeader>
-                  <CardTitle>Bước 3: Phân tích hệ thống</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold">Hệ thống xác định:</h4>
-                    <p>{journal.stepData.step3Analysis.systemIdentified}</p>
-                  </div>
-                  {journal.stepData.step3Analysis.elements?.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold">Các yếu tố:</h4>
-                      <ul className="list-disc list-inside space-y-1">
-                        {journal.stepData.step3Analysis.elements.map(
-                          (element: string, idx: number) => (
-                            <li key={idx}>{element}</li>
-                          ),
-                        )}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Step-based reviews */}
-                  {step3Reviews?.content && step3Reviews.content.length > 0 && (
-                    <div className="mt-6 pt-4 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setExpandedSteps((prev) => ({
-                            ...prev,
-                            3: !prev[3],
-                          }))
-                        }
-                        className="flex items-center gap-2 mb-3"
-                      >
-                        {expandedSteps[3] ? (
-                          <Minus className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        <span className="font-medium">
-                          Đánh giá ({step3Reviews.content.length})
-                        </span>
-                      </Button>
-                      {expandedSteps[3] && (
-                        <NestedReviews
-                          reviews={step3Reviews.content}
-                          isReadOnly={isReadOnly}
-                          userId={user?.id}
-                          canDelete={canDelete}
-                          canRate={isExpertOrAdmin}
-                          editingReview={editingReview}
-                          editContent={editContent}
-                          editRating={editRating}
-                          setEditingReview={setEditingReview}
-                          setEditContent={setEditContent}
-                          setEditRating={setEditRating}
-                          handleUpdateReview={handleUpdateReview}
-                          handleDeleteReview={handleDeleteReview}
-                        />
+              <div className="flex gap-6">
+                {/* Left: Step Content */}
+                <Card id="step-3" className="flex-[3]">
+                  <CardHeader>
+                    <CardTitle>Bước 3: Phân tích hệ thống</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold">Hệ thống xác định:</h4>
+                        <p>{journal.stepData.step3Analysis.systemIdentified}</p>
+                      </div>
+                      {journal.stepData.step3Analysis.elements?.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold">Các yếu tố:</h4>
+                          <ul className="list-disc list-inside space-y-1">
+                            {journal.stepData.step3Analysis.elements.map(
+                              (element: string, idx: number) => (
+                                <li key={idx}>{element}</li>
+                              ),
+                            )}
+                          </ul>
+                        </div>
                       )}
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
 
+                {/* Right: Reviews */}
+                <div className="flex-[2] space-y-4">
                   {/* Add review for step 3 */}
                   {!isReadOnly && isExpertOrAdmin && (
-                    <div className="space-y-2 pt-4 border-t">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium">
-                            Đánh giá bước 3
-                          </label>
-                          <span className="text-xs text-gray-400">
-                            {(stepComments[3] || '').length}/2000
-                          </span>
-                        </div>
-                        <Textarea
-                          placeholder="Đánh giá bước 3..."
-                          value={stepComments[3] || ''}
-                          onChange={(e) =>
-                            setStepComments((prev) => ({
-                              ...prev,
-                              3: e.target.value,
-                            }))
-                          }
-                          maxLength={2000}
-                          className="min-h-[60px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[3] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                              Đánh giá bước 3
+                            </label>
+                            <span className="text-xs text-gray-400">
+                              {(stepComments[3] || '').length}/2000
+                            </span>
+                          </div>
+                          <Textarea
+                            placeholder="Đánh giá bước 3..."
+                            value={stepComments[3] || ''}
+                            onChange={(e) =>
+                              setStepComments((prev) => ({
                                 ...prev,
-                                3: star,
+                                3: e.target.value,
                               }))
                             }
+                            maxLength={2000}
+                            className="min-h-[60px]"
                           />
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleCreateChildReview(
-                            journalReviewId,
-                            3,
-                            stepComments[3] || '',
-                            stepRatings[3],
-                          )
-                        }
-                        disabled={!stepComments[3]?.trim()}
-                      >
-                        Gửi đánh giá
-                      </Button>
-                    </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[3] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  3: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            handleCreateChildReview(
+                              journalReviewId,
+                              3,
+                              stepComments[3] || '',
+                              stepRatings[3],
+                            )
+                          }
+                          disabled={!stepComments[3]?.trim()}
+                        >
+                          Gửi đánh giá
+                        </Button>
+                      </CardContent>
+                    </Card>
                   )}
-                </CardContent>
-              </Card>
+
+                  {/* Step 3 Reviews */}
+                  {step3Reviews?.content && step3Reviews.content.length > 0 && (
+                    <Card>
+                      <CardContent className="pt-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setExpandedSteps((prev) => ({
+                              ...prev,
+                              3: !prev[3],
+                            }))
+                          }
+                          className="flex items-center gap-2 mb-3"
+                        >
+                          {expandedSteps[3] ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">
+                            Đánh giá Bước 3 ({step3Reviews.content.length})
+                          </span>
+                        </Button>
+                        {expandedSteps[3] && (
+                          <NestedReviews
+                            reviews={step3Reviews.content}
+                            isReadOnly={isReadOnly}
+                            userId={user?.id}
+                            canDelete={canDelete}
+                            canRate={isExpertOrAdmin}
+                            editingReview={editingReview}
+                            editContent={editContent}
+                            editRating={editRating}
+                            setEditingReview={setEditingReview}
+                            setEditContent={setEditContent}
+                            setEditRating={setEditRating}
+                            handleUpdateReview={handleUpdateReview}
+                            handleDeleteReview={handleDeleteReview}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Step 4 */}
             {journal.stepData.step4Contradiction && (
-              <Card id="step-4">
-                <CardHeader>
-                  <CardTitle>Bước 4: Phát biểu mâu thuẫn</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {journal.stepData.step4Contradiction.physicalContradictions
-                    ?.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold">Mâu thuẫn vật lý:</h4>
-                      <div className="space-y-3 mt-2">
-                        {journal.stepData.step4Contradiction.physicalContradictions.map(
-                          (pc: PhysicalContradiction, index: number) => (
-                            <div key={index} className="p-3 border rounded-lg">
-                              <p className="font-medium">{pc.element}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {pc.contradictionStatement}
-                              </p>
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Step-based reviews */}
-                  {step4Reviews?.content && step4Reviews.content.length > 0 && (
-                    <div className="mt-6 pt-4 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setExpandedSteps((prev) => ({
-                            ...prev,
-                            4: !prev[4],
-                          }))
-                        }
-                        className="flex items-center gap-2 mb-3"
-                      >
-                        {expandedSteps[4] ? (
-                          <Minus className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        <span className="font-medium">
-                          Đánh giá ({step4Reviews.content.length})
-                        </span>
-                      </Button>
-                      {expandedSteps[4] && (
-                        <NestedReviews
-                          reviews={step4Reviews.content}
-                          isReadOnly={isReadOnly}
-                          userId={user?.id}
-                          canDelete={canDelete}
-                          canRate={isExpertOrAdmin}
-                          editingReview={editingReview}
-                          editContent={editContent}
-                          editRating={editRating}
-                          setEditingReview={setEditingReview}
-                          setEditContent={setEditContent}
-                          setEditRating={setEditRating}
-                          handleUpdateReview={handleUpdateReview}
-                          handleDeleteReview={handleDeleteReview}
-                        />
+              <div className="flex gap-6">
+                {/* Left: Step Content */}
+                <Card id="step-4" className="flex-[3]">
+                  <CardHeader>
+                    <CardTitle>Bước 4: Phát biểu mâu thuẫn</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {journal.stepData.step4Contradiction
+                        .physicalContradictions?.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold">Mâu thuẫn vật lý:</h4>
+                          <div className="space-y-3 mt-2">
+                            {journal.stepData.step4Contradiction.physicalContradictions.map(
+                              (pc: PhysicalContradiction, index: number) => (
+                                <div
+                                  key={index}
+                                  className="p-3 border rounded-lg"
+                                >
+                                  <p className="font-medium">{pc.element}</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {pc.contradictionStatement}
+                                  </p>
+                                </div>
+                              ),
+                            )}
+                          </div>
+                        </div>
                       )}
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
 
+                {/* Right: Reviews */}
+                <div className="flex-[2] space-y-4">
                   {/* Add review for step 4 */}
                   {!isReadOnly && isExpertOrAdmin && (
-                    <div className="space-y-2 pt-4 border-t">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium">
-                            Đánh giá bước 4
-                          </label>
-                          <span className="text-xs text-gray-400">
-                            {(stepComments[4] || '').length}/2000
-                          </span>
-                        </div>
-                        <Textarea
-                          placeholder="Đánh giá bước 4..."
-                          value={stepComments[4] || ''}
-                          onChange={(e) =>
-                            setStepComments((prev) => ({
-                              ...prev,
-                              4: e.target.value,
-                            }))
-                          }
-                          maxLength={2000}
-                          className="min-h-[60px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[4] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                              Đánh giá bước 4
+                            </label>
+                            <span className="text-xs text-gray-400">
+                              {(stepComments[4] || '').length}/2000
+                            </span>
+                          </div>
+                          <Textarea
+                            placeholder="Đánh giá bước 4..."
+                            value={stepComments[4] || ''}
+                            onChange={(e) =>
+                              setStepComments((prev) => ({
                                 ...prev,
-                                4: star,
+                                4: e.target.value,
                               }))
                             }
+                            maxLength={2000}
+                            className="min-h-[60px]"
                           />
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleCreateChildReview(
-                            journalReviewId,
-                            4,
-                            stepComments[4] || '',
-                            stepRatings[4],
-                          )
-                        }
-                        disabled={!stepComments[4]?.trim()}
-                      >
-                        Gửi đánh giá
-                      </Button>
-                    </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[4] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  4: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            handleCreateChildReview(
+                              journalReviewId,
+                              4,
+                              stepComments[4] || '',
+                              stepRatings[4],
+                            )
+                          }
+                          disabled={!stepComments[4]?.trim()}
+                        >
+                          Gửi đánh giá
+                        </Button>
+                      </CardContent>
+                    </Card>
                   )}
-                </CardContent>
-              </Card>
+
+                  {/* Step 4 Reviews */}
+                  {step4Reviews?.content && step4Reviews.content.length > 0 && (
+                    <Card>
+                      <CardContent className="pt-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setExpandedSteps((prev) => ({
+                              ...prev,
+                              4: !prev[4],
+                            }))
+                          }
+                          className="flex items-center gap-2 mb-3"
+                        >
+                          {expandedSteps[4] ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">
+                            Đánh giá Bước 4 ({step4Reviews.content.length})
+                          </span>
+                        </Button>
+                        {expandedSteps[4] && (
+                          <NestedReviews
+                            reviews={step4Reviews.content}
+                            isReadOnly={isReadOnly}
+                            userId={user?.id}
+                            canDelete={canDelete}
+                            canRate={isExpertOrAdmin}
+                            editingReview={editingReview}
+                            editContent={editContent}
+                            editRating={editRating}
+                            setEditingReview={setEditingReview}
+                            setEditContent={setEditContent}
+                            setEditRating={setEditRating}
+                            handleUpdateReview={handleUpdateReview}
+                            handleDeleteReview={handleDeleteReview}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Step 5 */}
             {journal.stepData.step5Ideas && (
-              <Card id="step-5">
-                <CardHeader>
-                  <CardTitle>Bước 5: Ý tưởng giải quyết</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {journal.stepData.step5Ideas.selectedIdeas?.length > 0 && (
-                    <ol className="space-y-3 list-decimal list-inside">
-                      {journal.stepData.step5Ideas.selectedIdeas.map(
-                        (
-                          idea: {
-                            ideaStatement: string;
-                            principleUsed?: { id: number; name: string };
-                          },
-                          index: number,
-                        ) => (
-                          <li key={index} className="p-3 border rounded-lg">
-                            {idea.principleUsed && (
-                              <p className="text-sm font-semibold text-blue-600">
-                                Nguyên tắc #{idea.principleUsed.id}:{' '}
-                                {idea.principleUsed.name}
-                              </p>
-                            )}
-                            <p className="mt-1">{idea.ideaStatement}</p>
-                          </li>
-                        ),
-                      )}
-                    </ol>
-                  )}
-
-                  {/* Step-based reviews */}
-                  {step5Reviews?.content && step5Reviews.content.length > 0 && (
-                    <div className="mt-6 pt-4 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setExpandedSteps((prev) => ({
-                            ...prev,
-                            5: !prev[5],
-                          }))
-                        }
-                        className="flex items-center gap-2 mb-3"
-                      >
-                        {expandedSteps[5] ? (
-                          <Minus className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        <span className="font-medium">
-                          Đánh giá ({step5Reviews.content.length})
-                        </span>
-                      </Button>
-                      {expandedSteps[5] && (
-                        <NestedReviews
-                          reviews={step5Reviews.content}
-                          isReadOnly={isReadOnly}
-                          userId={user?.id}
-                          canDelete={canDelete}
-                          canRate={isExpertOrAdmin}
-                          editingReview={editingReview}
-                          editContent={editContent}
-                          editRating={editRating}
-                          setEditingReview={setEditingReview}
-                          setEditContent={setEditContent}
-                          setEditRating={setEditRating}
-                          handleUpdateReview={handleUpdateReview}
-                          handleDeleteReview={handleDeleteReview}
-                        />
+              <div className="flex gap-6">
+                {/* Left: Step Content */}
+                <Card id="step-5" className="flex-[3]">
+                  <CardHeader>
+                    <CardTitle>Bước 5: Ý tưởng giải quyết</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {journal.stepData.step5Ideas.selectedIdeas?.length >
+                        0 && (
+                        <ol className="space-y-3 list-decimal list-inside">
+                          {journal.stepData.step5Ideas.selectedIdeas.map(
+                            (
+                              idea: {
+                                ideaStatement: string;
+                                principleUsed?: { id: number; name: string };
+                              },
+                              index: number,
+                            ) => (
+                              <li key={index} className="p-3 border rounded-lg">
+                                {idea.principleUsed && (
+                                  <p className="text-sm font-semibold text-blue-600">
+                                    Nguyên tắc #{idea.principleUsed.id}:{' '}
+                                    {idea.principleUsed.name}
+                                  </p>
+                                )}
+                                <p className="mt-1">{idea.ideaStatement}</p>
+                              </li>
+                            ),
+                          )}
+                        </ol>
                       )}
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
 
+                {/* Right: Reviews */}
+                <div className="flex-[2] space-y-4">
                   {/* Add review for step 5 */}
                   {!isReadOnly && isExpertOrAdmin && (
-                    <div className="space-y-2 pt-4 border-t">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium">
-                            Đánh giá bước 5
-                          </label>
-                          <span className="text-xs text-gray-400">
-                            {(stepComments[5] || '').length}/2000
-                          </span>
-                        </div>
-                        <Textarea
-                          placeholder="Đánh giá bước 5..."
-                          value={stepComments[5] || ''}
-                          onChange={(e) =>
-                            setStepComments((prev) => ({
-                              ...prev,
-                              5: e.target.value,
-                            }))
-                          }
-                          maxLength={2000}
-                          className="min-h-[60px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[5] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                              Đánh giá bước 5
+                            </label>
+                            <span className="text-xs text-gray-400">
+                              {(stepComments[5] || '').length}/2000
+                            </span>
+                          </div>
+                          <Textarea
+                            placeholder="Đánh giá bước 5..."
+                            value={stepComments[5] || ''}
+                            onChange={(e) =>
+                              setStepComments((prev) => ({
                                 ...prev,
-                                5: star,
+                                5: e.target.value,
                               }))
                             }
+                            maxLength={2000}
+                            className="min-h-[60px]"
                           />
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleCreateChildReview(
-                            journalReviewId,
-                            5,
-                            stepComments[5] || '',
-                            stepRatings[5],
-                          )
-                        }
-                        disabled={!stepComments[5]?.trim()}
-                      >
-                        Gửi đánh giá
-                      </Button>
-                    </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[5] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  5: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            handleCreateChildReview(
+                              journalReviewId,
+                              5,
+                              stepComments[5] || '',
+                              stepRatings[5],
+                            )
+                          }
+                          disabled={!stepComments[5]?.trim()}
+                        >
+                          Gửi đánh giá
+                        </Button>
+                      </CardContent>
+                    </Card>
                   )}
-                </CardContent>
-              </Card>
+
+                  {/* Step 5 Reviews */}
+                  {step5Reviews?.content && step5Reviews.content.length > 0 && (
+                    <Card>
+                      <CardContent className="pt-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setExpandedSteps((prev) => ({
+                              ...prev,
+                              5: !prev[5],
+                            }))
+                          }
+                          className="flex items-center gap-2 mb-3"
+                        >
+                          {expandedSteps[5] ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">
+                            Đánh giá Bước 5 ({step5Reviews.content.length})
+                          </span>
+                        </Button>
+                        {expandedSteps[5] && (
+                          <NestedReviews
+                            reviews={step5Reviews.content}
+                            isReadOnly={isReadOnly}
+                            userId={user?.id}
+                            canDelete={canDelete}
+                            canRate={isExpertOrAdmin}
+                            editingReview={editingReview}
+                            editContent={editContent}
+                            editRating={editRating}
+                            setEditingReview={setEditingReview}
+                            setEditContent={setEditContent}
+                            setEditRating={setEditRating}
+                            handleUpdateReview={handleUpdateReview}
+                            handleDeleteReview={handleDeleteReview}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* Step 6 */}
             {journal.stepData.step6Decision && (
-              <Card id="step-6">
-                <CardHeader>
-                  <CardTitle>Bước 6: Quyết định</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {journal.stepData.step6Decision.evaluatedIdeas?.length >
-                    0 && (
-                    <div className="space-y-3">
-                      {journal.stepData.step6Decision.evaluatedIdeas.map(
-                        (
-                          evaluation: {
-                            ideaStatement?: string;
-                            userRating?: number;
-                            userComment?: string;
-                          },
-                          index: number,
-                        ) => (
-                          <div key={index} className="p-3 border rounded-lg">
-                            <p className="font-medium">
-                              Ý tưởng {index + 1}: {evaluation.ideaStatement}
-                            </p>
-                            {evaluation.userRating && (
-                              <div className="flex items-center gap-1 mt-1">
-                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                <span className="text-sm">
-                                  {evaluation.userRating}/5
-                                </span>
+              <div className="flex gap-6">
+                {/* Left: Step Content */}
+                <Card id="step-6" className="flex-[3]">
+                  <CardHeader>
+                    <CardTitle>Bước 6: Quyết định</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {journal.stepData.step6Decision.evaluatedIdeas?.length >
+                        0 && (
+                        <div className="space-y-3">
+                          {journal.stepData.step6Decision.evaluatedIdeas.map(
+                            (
+                              evaluation: {
+                                ideaStatement?: string;
+                                userRating?: number;
+                                userComment?: string;
+                              },
+                              index: number,
+                            ) => (
+                              <div
+                                key={index}
+                                className="p-3 border rounded-lg"
+                              >
+                                <p className="font-medium">
+                                  Ý tưởng {index + 1}:{' '}
+                                  {evaluation.ideaStatement}
+                                </p>
+                                {evaluation.userRating && (
+                                  <div className="flex items-center gap-1 mt-1">
+                                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                    <span className="text-sm">
+                                      {evaluation.userRating}/5
+                                    </span>
+                                  </div>
+                                )}
+                                {evaluation.userComment && (
+                                  <p className="text-sm text-muted-foreground mt-2 italic">
+                                    &quot;{evaluation.userComment}&quot;
+                                  </p>
+                                )}
                               </div>
-                            )}
-                            {evaluation.userComment && (
-                              <p className="text-sm text-muted-foreground mt-2 italic">
-                                &quot;{evaluation.userComment}&quot;
-                              </p>
-                            )}
-                          </div>
-                        ),
+                            ),
+                          )}
+                        </div>
                       )}
                     </div>
-                  )}
+                  </CardContent>
+                </Card>
 
-                  {/* Step-based reviews */}
-                  {step6Reviews?.content && step6Reviews.content.length > 0 && (
-                    <div className="mt-6 pt-4 border-t">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          setExpandedSteps((prev) => ({
-                            ...prev,
-                            6: !prev[6],
-                          }))
-                        }
-                        className="flex items-center gap-2 mb-3"
-                      >
-                        {expandedSteps[6] ? (
-                          <Minus className="h-4 w-4" />
-                        ) : (
-                          <Plus className="h-4 w-4" />
-                        )}
-                        <span className="font-medium">
-                          Đánh giá ({step6Reviews.content.length})
-                        </span>
-                      </Button>
-                      {expandedSteps[6] && (
-                        <NestedReviews
-                          reviews={step6Reviews.content}
-                          isReadOnly={isReadOnly}
-                          userId={user?.id}
-                          canDelete={canDelete}
-                          canRate={isExpertOrAdmin}
-                          editingReview={editingReview}
-                          editContent={editContent}
-                          editRating={editRating}
-                          setEditingReview={setEditingReview}
-                          setEditContent={setEditContent}
-                          setEditRating={setEditRating}
-                          handleUpdateReview={handleUpdateReview}
-                          handleDeleteReview={handleDeleteReview}
-                        />
-                      )}
-                    </div>
-                  )}
-
+                {/* Right: Reviews */}
+                <div className="flex-[2] space-y-4">
                   {/* Add review for step 6 */}
                   {!isReadOnly && isExpertOrAdmin && (
-                    <div className="space-y-2 pt-4 border-t">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <label className="text-sm font-medium">
-                            Đánh giá bước 6
-                          </label>
-                          <span className="text-xs text-gray-400">
-                            {(stepComments[6] || '').length}/2000
-                          </span>
-                        </div>
-                        <Textarea
-                          placeholder="Đánh giá bước 6..."
-                          value={stepComments[6] || ''}
-                          onChange={(e) =>
-                            setStepComments((prev) => ({
-                              ...prev,
-                              6: e.target.value,
-                            }))
-                          }
-                          maxLength={2000}
-                          className="min-h-[60px]"
-                        />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">Đánh giá:</span>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`h-4 w-4 cursor-pointer ${
-                              star <= (stepRatings[6] || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                            onClick={() =>
-                              setStepRatings((prev) => ({
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <label className="text-sm font-medium">
+                              Đánh giá bước 6
+                            </label>
+                            <span className="text-xs text-gray-400">
+                              {(stepComments[6] || '').length}/2000
+                            </span>
+                          </div>
+                          <Textarea
+                            placeholder="Đánh giá bước 6..."
+                            value={stepComments[6] || ''}
+                            onChange={(e) =>
+                              setStepComments((prev) => ({
                                 ...prev,
-                                6: star,
+                                6: e.target.value,
                               }))
                             }
+                            maxLength={2000}
+                            className="min-h-[60px]"
                           />
-                        ))}
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          handleCreateChildReview(
-                            journalReviewId,
-                            6,
-                            stepComments[6] || '',
-                            stepRatings[6],
-                          )
-                        }
-                        disabled={!stepComments[6]?.trim()}
-                      >
-                        Gửi đánh giá
-                      </Button>
-                    </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-sm">Đánh giá:</span>
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`h-4 w-4 cursor-pointer ${
+                                star <= (stepRatings[6] || 0)
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                              onClick={() =>
+                                setStepRatings((prev) => ({
+                                  ...prev,
+                                  6: star,
+                                }))
+                              }
+                            />
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          className="mt-2"
+                          onClick={() =>
+                            handleCreateChildReview(
+                              journalReviewId,
+                              6,
+                              stepComments[6] || '',
+                              stepRatings[6],
+                            )
+                          }
+                          disabled={!stepComments[6]?.trim()}
+                        >
+                          Gửi đánh giá
+                        </Button>
+                      </CardContent>
+                    </Card>
                   )}
-                </CardContent>
-              </Card>
+
+                  {/* Step 6 Reviews */}
+                  {step6Reviews?.content && step6Reviews.content.length > 0 && (
+                    <Card>
+                      <CardContent className="pt-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setExpandedSteps((prev) => ({
+                              ...prev,
+                              6: !prev[6],
+                            }))
+                          }
+                          className="flex items-center gap-2 mb-3"
+                        >
+                          {expandedSteps[6] ? (
+                            <Minus className="h-4 w-4" />
+                          ) : (
+                            <Plus className="h-4 w-4" />
+                          )}
+                          <span className="font-medium">
+                            Đánh giá Bước 6 ({step6Reviews.content.length})
+                          </span>
+                        </Button>
+                        {expandedSteps[6] && (
+                          <NestedReviews
+                            reviews={step6Reviews.content}
+                            isReadOnly={isReadOnly}
+                            userId={user?.id}
+                            canDelete={canDelete}
+                            canRate={isExpertOrAdmin}
+                            editingReview={editingReview}
+                            editContent={editContent}
+                            editRating={editRating}
+                            setEditingReview={setEditingReview}
+                            setEditContent={setEditContent}
+                            setEditRating={setEditRating}
+                            handleUpdateReview={handleUpdateReview}
+                            handleDeleteReview={handleDeleteReview}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
 
             {/* General Reviews Section */}
