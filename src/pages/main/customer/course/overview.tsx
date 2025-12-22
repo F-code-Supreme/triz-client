@@ -6,7 +6,7 @@ import {
   Users,
   Award,
   BookOpen,
-  CircleDollarSign,
+  // CircleDollarSign,
 } from 'lucide-react';
 
 import {
@@ -33,7 +33,7 @@ import {
   formatDurationVietnamese,
 } from '@/features/courses/utils';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
-import { formatTrizilium } from '@/utils';
+// import { formatTrizilium } from '@/utils';
 
 const CourseOverviewPage = () => {
   const search = useSearch({ from: `/course/$slug` });
@@ -199,14 +199,14 @@ const CourseOverviewPage = () => {
                       {course.learnerCount?.toLocaleString() || 0} học viên
                     </span>
                   </div>
-                  {course.price && (
+                  {/* {course.price && (
                     <div className="flex items-center gap-2">
                       <CircleDollarSign />
                       <span>
                         {formatTrizilium(course.dealPrice || course.price)}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 <AlertDialog>
