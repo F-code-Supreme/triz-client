@@ -1,12 +1,7 @@
 import { Star, Zap, Award, Circle } from 'lucide-react';
 import React from 'react';
 
-export type CourseLevel =
-  | 'STARTER'
-  | 'BEGINNER'
-  | 'INTERMEDIATE'
-  | 'ADVANCED'
-  | string;
+export type CourseLevel = 'STARTER' | 'INTERMEDIATE' | 'ADVANCED' | string;
 
 export interface CourseLevelMeta {
   key: CourseLevel;
@@ -34,15 +29,6 @@ export const COURSE_LEVELS: Record<string, CourseLevelMeta> = {
     Icon: Star,
     difficulty: 1,
     description: 'Giới thiệu cơ bản, phù hợp cho người mới bắt đầu.',
-  },
-  BEGINNER: {
-    key: 'BEGINNER',
-    label: 'Sơ cấp',
-    bgClass: 'bg-emerald-100',
-    textClass: 'text-emerald-900',
-    Icon: Star,
-    difficulty: 2,
-    description: 'Kiến thức nền tảng, dành cho người đã có chút kinh nghiệm.',
   },
   INTERMEDIATE: {
     key: 'INTERMEDIATE',

@@ -27,6 +27,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { useEnrollCourseMutation } from '@/features/courses/services/mutations';
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
+import {
+  getLevelColor,
+  getLevelText,
+  formatDurationVietnamese,
+} from '@/features/courses/utils';
 import { useGetModuleByCourseQuery } from '@/features/modules/services/queries';
 import { formatTrizilium } from '@/utils';
 
@@ -41,19 +46,6 @@ const CourseOverviewPage = () => {
     useGetModuleByCourseQuery(id);
 
   const enrollMutation = useEnrollCourseMutation();
-
-  const getLevelColor = (level?: string) => {
-    switch (level) {
-      case 'BEGINNER':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'INTERMEDIATE':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'ADVANCED':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
 
   if (isLoading) {
     return (
@@ -114,7 +106,7 @@ const CourseOverviewPage = () => {
       </div>
     );
   }
-  if (isError || !course) return <div>Failed to load course.</div>;
+  if (isError || !course) return <div>Thất bại khi tải khóa học.</div>;
 
   const handleEnroll = async () => {
     try {
@@ -131,6 +123,8 @@ const CourseOverviewPage = () => {
       alert('Đăng ký thất bại!');
     }
   };
+
+  console.log('Course level:', course.level);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -166,7 +160,7 @@ const CourseOverviewPage = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <Badge className={`text-xs ${getLevelColor(course.level)}`}>
-                    {course.level || 'Unknown'}
+                    {getLevelText(course.level)}
                   </Badge>
                 </div>
                 <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -182,7 +176,7 @@ const CourseOverviewPage = () => {
           <div className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Course Information</CardTitle>
+                <CardTitle className="text-lg">Thông tin khóa học</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -191,18 +185,18 @@ const CourseOverviewPage = () => {
                     <span>
                       {course.durationInMinutes
                         ? Math.floor(course.durationInMinutes / 60)
-                        : 0}
-                      h total
+                        : 0}{' '}
+                      giờ
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <BookOpen />
-                    <span>{course.totalModules} modules</span>
+                    <span>{course.totalModules} mô-đun</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users />
                     <span>
-                      {course.learnerCount?.toLocaleString() || 0} students
+                      {course.learnerCount?.toLocaleString() || 0} học viên
                     </span>
                   </div>
                   {course.price && (
@@ -218,21 +212,21 @@ const CourseOverviewPage = () => {
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button className="w-full" disabled={!user}>
-                      {user ? 'Enroll Now' : 'Log in to enroll'}
+                      {user ? 'Đăng ký ngay' : 'Đăng nhập để đăng ký'}
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Enrollment</AlertDialogTitle>
+                      <AlertDialogTitle>Đăng ký khóa học</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Enrolling in:{' '}
+                        Bạn đang đăng ký:{' '}
                         <span className="font-semibold">{course.title}</span>
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Close</AlertDialogCancel>
+                      <AlertDialogCancel>Đóng</AlertDialogCancel>
                       <AlertDialogAction autoFocus onClick={handleEnroll}>
-                        Confirm
+                        Xác nhận
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -246,7 +240,7 @@ const CourseOverviewPage = () => {
       <div className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>What you&apos;ll learn</CardTitle>
+            <CardTitle>Bạn sẽ học được gì</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">
@@ -261,7 +255,7 @@ const CourseOverviewPage = () => {
         {modules && modules.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Course Curriculum</CardTitle>
+              <CardTitle>Chương trình học</CardTitle>
             </CardHeader>
             <CardContent>
               {isLoadingModules ? (
@@ -283,12 +277,12 @@ const CourseOverviewPage = () => {
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-medium">{module.name}</h4>
                         <span className="text-sm text-muted-foreground">
-                          {module.lessonCount} lessons
+                          {module.lessonCount} bài học
                         </span>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        Duration: {Math.floor(module.durationInMinutes / 60)}h{' '}
-                        {module.durationInMinutes % 60}m
+                        Thời lượng:{' '}
+                        {formatDurationVietnamese(module.durationInMinutes)}
                       </div>
                     </div>
                   ))}
