@@ -1,5 +1,4 @@
 import { useNavigate } from '@tanstack/react-router';
-import { format } from 'date-fns';
 import {
   ArrowLeft,
   Check,
@@ -32,11 +31,12 @@ import {
 import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/(app)/journals/$journalId/reviews/$reviewId/route';
+import { formatDate } from '@/utils';
 
 import type { PhysicalContradiction } from '@/features/6-steps/types';
 import type { ReviewStatus } from '@/features/journal-review/types';
 
-const DATE_FORMAT = 'dd/MM/yyyy HH:mm';
+const DATE_FORMAT = 'DD/MM/YYYY HH:mm' as const;
 
 const JournalReviewDetailsPage = () => {
   const { journalId, reviewId } = Route.useParams();
@@ -295,7 +295,7 @@ const JournalReviewDetailsPage = () => {
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Ngày tạo:{' '}
-                  {format(new Date(rootReview.createdAt), DATE_FORMAT)}
+                  {formatDate(new Date(rootReview.createdAt), DATE_FORMAT)}
                 </p>
               </div>
               <div className="flex items-center gap-2">

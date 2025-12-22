@@ -7,7 +7,6 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
-import { format } from 'date-fns';
 import { ArrowLeft, MessageSquare, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
@@ -31,6 +30,7 @@ import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
 import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { Route } from '@/routes/(app)/journals/$journalId/reviews';
+import { formatDate } from '@/utils';
 
 import type { RootReviewWithTimestamp } from '@/features/journal-review/types';
 
@@ -112,7 +112,7 @@ const JournalReviewsPage = () => {
         header: 'Ngày tạo',
         cell: (info) => (
           <span className="text-sm">
-            {format(new Date(info.getValue()), 'dd/MM/yyyy HH:mm')}
+            {formatDate(new Date(info.getValue()), 'DD/MM/YYYY HH:mm')}
           </span>
         ),
       }),

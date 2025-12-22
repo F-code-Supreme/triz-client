@@ -1,5 +1,4 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { format } from 'date-fns';
 import {
   ArrowLeft,
   BookOpen,
@@ -400,9 +399,9 @@ const JournalDetailPage = () => {
                                 {review.content}
                               </p>
                               <p className="text-xs text-muted-foreground mt-1">
-                                {format(
+                                {formatDate(
                                   new Date(review.createdAt),
-                                  'dd/MM/yyyy HH:mm',
+                                  'DD/MM/YYYY HH:mm',
                                 )}
                               </p>
                             </div>

@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { Award, Edit3, X, Check } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -127,7 +126,7 @@ export const ProfileView = ({
   const formatJoinDate = (dateString?: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return format(date, 'dd/MM/yyyy');
+    return formatDate(date);
   };
 
   const handleEditClick = () => {

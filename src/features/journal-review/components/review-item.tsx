@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { Star, Trash2 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -10,10 +9,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Textarea } from '@/components/ui/textarea';
+import { formatDate } from '@/utils';
 
 import type { ChildReviewWithTimestamp } from '../types';
 
-const DATE_FORMAT = 'dd/MM/yyyy HH:mm';
+const DATE_FORMAT = 'DD/MM/YYYY HH:mm' as const;
 
 interface ReviewItemProps {
   review: ChildReviewWithTimestamp;
@@ -62,7 +62,7 @@ export const ReviewItem = ({
           <div>
             <p className="font-medium">{review.creatorFullName}</p>
             <p className="text-xs text-muted-foreground">
-              {format(new Date(review.createdAt), DATE_FORMAT)}
+              {formatDate(new Date(review.createdAt), DATE_FORMAT)}
             </p>
           </div>
           {!isReadOnly && (canEdit || canDelete) && (
