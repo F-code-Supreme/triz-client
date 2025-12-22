@@ -408,10 +408,10 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                       key={evaluation.ideaId}
                       className={`p-3 rounded-lg ${
                         isRejected
-                          ? 'bg-red-50/50 dark:bg-red-950/20 border border-red-500/50'
+                          ? 'bg-yellow-50/50 dark:bg-yellow-950/20 border border-yellow-500/50'
                           : isSelected
                             ? 'bg-green-50/50 dark:bg-green-950/20 border border-green-500/50'
-                            : 'bg-yellow-50/50 dark:bg-yellow-950/20 border border-yellow-500/50'
+                            : 'bg-secondary/10 border border-secondary'
                       }`}
                     >
                       <div className="space-y-2">
@@ -422,10 +422,10 @@ export const Step7Summary = ({ onBack }: Step7Props) => {
                           <span
                             className={`text-xs font-medium px-2 py-0.5 rounded ${
                               isRejected
-                                ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-500 border border-red-500/50'
+                                ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500 border border-yellow-500/50'
                                 : isSelected
                                   ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-500 border border-green-500/50'
-                                  : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500 border border-yellow-500/50'
+                                  : 'bg-secondary text-secondary-foreground border border-secondary'
                             }`}
                           >
                             {isRejected

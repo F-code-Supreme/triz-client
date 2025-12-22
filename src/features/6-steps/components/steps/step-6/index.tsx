@@ -1,4 +1,4 @@
-import { HelpCircle, Loader2, Star } from 'lucide-react';
+import { HelpCircle, Loader2, Star, Info } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 
@@ -156,7 +156,7 @@ export const Step6MakeDecision = ({
     );
 
     if (selectedEvaluations.length === 0) {
-      toast.error('Cần ít nhất một ý tưởng được chọn (SELECTED) để tiếp tục');
+      toast.error('Cần ít nhất một ý tưởng được chọn để tiếp tục');
       return;
     }
 
@@ -176,8 +176,31 @@ export const Step6MakeDecision = ({
   return (
     <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
-          Ra quyết định
+        <div className="self-stretch text-center justify-start items-center gap-2 inline-flex">
+          <div className="text-4xl font-bold leading-[48px] tracking-tight">
+            Ra quyết định
+          </div>
+          {targetML && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Info className="h-5 w-5 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">Thông tin bổ sung</h4>
+
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Mâu thuẫn Vật lý mục tiêu:
+                    </p>
+                    <p className="text-sm">{targetML}</p>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
 
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
@@ -204,11 +227,11 @@ export const Step6MakeDecision = ({
                   key={idea.id}
                   className={`p-4 rounded-lg border-2 ${
                     evaluation?.status === 'REJECTED'
-                      ? 'border-red-500/50 bg-red-50/50 dark:bg-red-950/20'
+                      ? 'border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20'
                       : evaluation?.status === 'SELECTED'
                         ? 'border-green-500/50 bg-green-50/50 dark:bg-green-950/20'
                         : evaluation?.status === 'RESERVE'
-                          ? 'border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20'
+                          ? 'border-secondary bg-secondary/10'
                           : 'border-border'
                   }`}
                 >
@@ -223,23 +246,18 @@ export const Step6MakeDecision = ({
                           <>
                             {evaluation.status === 'SELECTED' && (
                               <Badge variant="default" className="bg-green-600">
-                                SELECTED - Được chọn
+                                Đề xuất
                               </Badge>
                             )}
                             {evaluation.status === 'RESERVE' && (
-                              <Badge
-                                variant="outline"
-                                className="border-yellow-500 text-yellow-700 dark:text-yellow-500"
-                              >
-                                RESERVE - Dự phòng
-                              </Badge>
+                              <Badge variant="secondary">Dự phòng</Badge>
                             )}
                             {evaluation.status === 'REJECTED' && (
                               <Badge
-                                variant="destructive"
-                                className="bg-red-600"
+                                variant="outline"
+                                className="border-yellow-500 text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950/30"
                               >
-                                REJECTED - Loại bỏ
+                                Không đề xuất
                               </Badge>
                             )}
                           </>
@@ -276,11 +294,11 @@ export const Step6MakeDecision = ({
                       {/* REJECTED Ideas */}
                       {evaluation.status === 'REJECTED' ? (
                         <div className="space-y-3">
-                          <div className="p-4 bg-red-50 dark:bg-red-950/20 border border-red-500/50 rounded-lg space-y-3">
+                          <div className="p-4 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-500/50 rounded-lg space-y-3">
                             {/* Screening Analysis */}
                             {evaluation.analysis?.screening && (
                               <div className="space-y-2">
-                                <p className="text-sm font-medium text-red-800 dark:text-red-600">
+                                <p className="text-sm font-medium text-yellow-800 dark:text-yellow-600">
                                   Lọc ý tưởng:
                                 </p>
                                 <p className="text-sm text-muted-foreground">
