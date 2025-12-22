@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/sheet';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { Role } from '@/features/auth/types';
-import { formatTrizilium } from '@/utils';
+import { formatTrizilium, formatDate } from '@/utils';
 
 import {
   useCancelTransactionByUserMutation,
@@ -181,7 +181,10 @@ export const TransactionsDataTableRowActions = ({
                 {t('transactions.details.date')}
               </p>
               <p className="font-medium">
-                {new Date(transaction.createdAt).toLocaleString()}
+                {formatDate(
+                  new Date(transaction.createdAt),
+                  'DD/MM/YYYY HH:mm',
+                )}
               </p>
             </div>
           </div>

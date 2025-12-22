@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatTriziliumShort } from '@/utils';
+import { formatDate, formatTriziliumShort } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
 
@@ -121,13 +121,7 @@ export const DeletedPackagesSection = ({
             {pkg.deletedAt && (
               <p className="text-xs text-muted-foreground">
                 {t('archive.packages.deleted_at')}:{' '}
-                {new Date(pkg.deletedAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {formatDate(new Date(pkg.deletedAt), 'DD/MM/YYYY HH:mm')}
               </p>
             )}
 

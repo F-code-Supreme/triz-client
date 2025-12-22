@@ -13,6 +13,6 @@ export enum ParameterType {
 }
 
 export enum TechnicalContradictionKey {
-  MK1 = 'MK1',
-  MK2 = 'MK2',
+  MK1 = 'mk1',
+  MK2 = 'mk2',
 }

@@ -5,3 +5,4 @@ export async function sleep(ms: number) {
 export * from './currency/currency';
 export * from './string/string';
 export * from './url/url';
+export * from './date/date';

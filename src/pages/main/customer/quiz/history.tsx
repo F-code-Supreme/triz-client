@@ -34,17 +34,12 @@ import {
 // import useAuth from '@/features/auth/hooks/use-auth';
 import { useGetUserQuizAttemptsQuery } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
+import { formatDate as utilFormatDate } from '@/utils';
 
 import type { QuizAttempt } from '@/features/quiz/service/mutations/type';
 
 const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('vi-VN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return utilFormatDate(new Date(dateString), 'DD/MM/YYYY HH:mm');
 };
 
 const formatDuration = (minutes: number) => {

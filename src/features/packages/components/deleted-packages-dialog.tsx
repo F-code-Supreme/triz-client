@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { formatNumber } from '@/utils';
+import { formatNumber, formatDate } from '@/utils';
 
 import type { Package } from '@/features/packages/types';
 
@@ -100,13 +100,10 @@ const DeletedPackagesDialog: React.FC<DeletedPackagesDialogProps> = ({
                     {pkg.deletedAt && (
                       <p className="text-xs text-muted-foreground">
                         Deleted on:{' '}
-                        {new Date(pkg.deletedAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
+                        {formatDate(
+                          new Date(pkg.deletedAt),
+                          'DD/MM/YYYY HH:mm',
+                        )}
                       </p>
                     )}
                   </div>

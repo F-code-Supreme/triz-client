@@ -1,4 +1,5 @@
 import type {
+  ObjectType,
   PhysicalContradiction,
   Step1Understand,
   Step2Objectives,
@@ -15,25 +16,25 @@ export interface IStep1SuggestionPayload {
 
 export interface IStep1SuggestionResponse {
   understandingSummary: string;
-  miniProblems: string[];
-  systemRepresentation: {
-    elements: string[];
-    flows: string[];
-    interactions: string[];
+  systemContext: {
+    mainObject: string;
+    environment: string;
   };
-  scope: {
-    inScope: string[];
-    outOfScope: string[];
-  };
-  refinedProblem: string;
-  potentialContradictions: string[];
   psychologicalInertia: string[];
-  clarificationNeeded?: string[];
+  miniProblems: string[];
+  clarificationNeeded: string[] | null;
 }
 
 // Step 2
 export interface IStep2SuggestionPayload {
+  understandingSummary: string;
+  systemContext: {
+    mainObject: string;
+    environment: string;
+  };
+  psychologicalInertia: string[];
   miniProblem: string;
+  clarificationNeeded: string[] | null;
 }
 
 export interface IStep2SuggestionResponse {
@@ -47,21 +48,24 @@ export interface IStep2SuggestionResponse {
 
 // Step 3
 export interface IStep3SuggestionPayload {
-  miniProblem: string;
   goal: string;
+  constraints: string[];
+  scope: string;
+  idealFinalResult: string;
 }
 
 export interface IStep3SuggestionResponse {
   systemIdentified: string;
   elements: string[];
+  objectType: ObjectType;
   requiredStates: Record<string, string[]>;
 }
 
 // Step 4
 export interface IStep4SuggestionPayload {
-  goal: string;
   systemIdentified: string;
   elements: string[];
+  objectType: ObjectType;
   requiredStates: Record<string, string[]>;
 }
 
@@ -70,6 +74,9 @@ export interface IStep4SuggestionResponse {
 }
 
 export interface IConvertMLtoMKPayload {
+  systemInfo: {
+    objectType: ObjectType;
+  };
   physicalContradictions: PhysicalContradiction[];
 }
 
@@ -89,12 +96,8 @@ export interface TechnicalContradictionDirection {
 export interface TechnicalContradiction {
   element: string;
   sourceML: string;
-  MK1: TechnicalContradictionDirection;
-  MK2: TechnicalContradictionDirection;
-  matrixUsage: {
-    MK1_lookup: string;
-    MK2_lookup: string;
-  };
+  mk1: TechnicalContradictionDirection;
+  mk2: TechnicalContradictionDirection;
 }
 
 export interface IConvertMLtoMKResponse {
@@ -103,18 +106,15 @@ export interface IConvertMLtoMKResponse {
 
 // Step 5
 export interface IStep5SuggestionPayload {
-  miniProblem: string;
-  goal: string;
-  systemIdentified: string;
-  physicalContradictions: PhysicalContradiction[];
+  step5Data: {
+    technicalContradictions: TechnicalContradiction[];
+  };
   trizPrinciples: IGetPrinciplesLookupDataResponse;
 }
 
 export interface PrincipleUsed {
   id: number;
   name: string;
-  priority: number;
-  subPoint: string;
 }
 
 export interface Idea {
@@ -124,49 +124,37 @@ export interface Idea {
   principleUsed: PrincipleUsed;
   ideaStatement: string;
   howItAddresses: string;
-  abstractionLevel: 'concept';
 }
 
 export interface IStep5SuggestionResponse {
   ideaGenerationSession: {
     targetML: string;
-    totalIdeasGenerated: number;
     ideas: Idea[];
   };
 }
 
 // Step 6
 export interface IStep6SuggestionPayload {
-  targetML: string;
-  idea: Idea;
-  physicalContradictions: PhysicalContradiction[];
+  ideaGenerationSession: {
+    targetML: string;
+    ideas: Idea[];
+  };
+}
+
+export interface IStep6EvaluatedIdea {
+  ideaId: number;
+  status: 'SELECTED' | 'RESERVE' | 'REJECTED';
+  analysis: {
+    screening: string;
+    resourcesAndInertia: string;
+    overallBenefit: string;
+  };
+  decisionMessage: string;
+  actionSuggestion: string;
 }
 
 export interface IStep6SuggestionResponse {
-  ideaId: number;
-  status: 'passing' | 'rejected';
-  evaluation: {
-    scores: {
-      mlResolution: number;
-      feasibility: number;
-      systemImpact: number;
-      total: number;
-    };
-    category: 'excellent' | 'good' | 'average' | 'poor';
-    keyStrengths: string[];
-    keyWeaknesses: string[];
-    explanation: {
-      mlResolution: string;
-      feasibility: string;
-      systemImpact: string;
-    };
-  } | null;
-  message: string;
-  rejectionReason: string | null;
-  category: 'constraint_violation' | 'not_solving_ml' | 'not_feasible' | null;
-  suggestion: string | null;
-  assumption: string | null;
-  note: string | null;
+  evaluatedIdeas: IStep6EvaluatedIdea[];
 }
 
 // Journal

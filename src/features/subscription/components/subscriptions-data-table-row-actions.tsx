@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { Eye, MoreHorizontal, RefreshCw, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +30,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { formatDate } from '@/utils';
 
 import { useCancelSubscriptionMutation } from '../services/mutations';
 import { SubscriptionStatus, type Subscription } from '../types';
@@ -143,7 +143,10 @@ export const SubscriptionsDataTableRowActions = ({
                 {t('subscription_history.details.start_date')}
               </p>
               <p className="font-medium">
-                {format(new Date(subscription.startDate), 'MMM dd, yyyy HH:mm')}
+                {formatDate(
+                  new Date(subscription.startDate),
+                  'DD/MM/YYYY HH:mm',
+                )}
               </p>
             </div>
             <div>
@@ -151,7 +154,7 @@ export const SubscriptionsDataTableRowActions = ({
                 {t('subscription_history.details.end_date')}
               </p>
               <p className="font-medium">
-                {format(new Date(subscription.endDate), 'MMM dd, yyyy HH:mm')}
+                {formatDate(new Date(subscription.endDate), 'DD/MM/YYYY HH:mm')}
               </p>
             </div>
             <div>

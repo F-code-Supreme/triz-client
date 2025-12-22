@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { formatDate } from '@/utils';
 
 import type { FlashcardDeck } from '../types';
 
@@ -66,7 +67,7 @@ export const FlashcardDeckPreviewSheet = ({
                 {t('flashcards.deck_preview.created_at')}
               </h3>
               <p className="text-sm">
-                {new Date(deck.createdAt).toLocaleString()}
+                {formatDate(new Date(deck.createdAt), 'DD/MM/YYYY HH:mm')}
               </p>
             </div>
           )}
@@ -77,7 +78,7 @@ export const FlashcardDeckPreviewSheet = ({
                 {t('flashcards.deck_preview.updated_at')}
               </h3>
               <p className="text-sm">
-                {new Date(deck.updatedAt).toLocaleString()}
+                {formatDate(new Date(deck.updatedAt), 'DD/MM/YYYY HH:mm')}
               </p>
             </div>
           )}

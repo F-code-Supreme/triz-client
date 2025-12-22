@@ -1,7 +1,12 @@
-import { Plus } from 'lucide-react';
+import { Plus, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   PromptInput,
@@ -32,6 +37,19 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   const [understanding, setUnderstanding] = useState(
     initialData?.understanding || '',
   );
+  const [understandingSummary, setUnderstandingSummary] = useState(
+    initialData?.understandingSummary || '',
+  );
+  const [systemContext, setSystemContext] = useState<{
+    mainObject: string;
+    environment: string;
+  }>(initialData?.systemContext || { mainObject: '', environment: '' });
+  const [psychologicalInertia, setPsychologicalInertia] = useState<string[]>(
+    initialData?.psychologicalInertia || [],
+  );
+  const [clarificationNeeded, setClarificationNeeded] = useState<
+    string[] | null
+  >(initialData?.clarificationNeeded || null);
   const [miniProblems, setMiniProblems] = useState<MiniProblem[]>(
     initialData?.miniProblems || [],
   );
@@ -50,6 +68,12 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   useEffect(() => {
     if (initialData) {
       setUnderstanding(initialData.understanding || '');
+      setUnderstandingSummary(initialData.understandingSummary || '');
+      setSystemContext(
+        initialData.systemContext || { mainObject: '', environment: '' },
+      );
+      setPsychologicalInertia(initialData.psychologicalInertia || []);
+      setClarificationNeeded(initialData.clarificationNeeded || null);
       setMiniProblems(initialData.miniProblems || []);
       setHasSubmitted(
         !!initialData.miniProblems && initialData.miniProblems.length > 0,
@@ -65,6 +89,12 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
         const response = await step1Mutation.mutateAsync({
           rawProblem: understanding,
         });
+
+        // Store all response data
+        setUnderstandingSummary(response.understandingSummary);
+        setSystemContext(response.systemContext);
+        setPsychologicalInertia(response.psychologicalInertia);
+        setClarificationNeeded(response.clarificationNeeded);
 
         // Convert API response mini problems to our format
         const problems: MiniProblem[] = response.miniProblems.map(
@@ -126,8 +156,12 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
       if (selectedProblem) {
         onNext({
           understanding,
-          selectedMiniProblem: selectedProblem.text,
+          understandingSummary,
+          systemContext,
+          psychologicalInertia,
           miniProblems,
+          selectedMiniProblem: selectedProblem.text,
+          clarificationNeeded,
         });
       }
     }
@@ -178,8 +212,79 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   return (
     <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
-          Chọn bài toán mini để phân tích
+        <div className="self-stretch text-center justify-center items-center gap-2 inline-flex">
+          <div className="text-4xl font-bold leading-[48px] tracking-tight">
+            Chọn bài toán mini để phân tích
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Info className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+              <div className="space-y-3">
+                <h4 className="font-semibold text-sm">Thông tin bổ sung</h4>
+
+                {understandingSummary && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Tóm tắt hiểu vấn đề:
+                    </p>
+                    <p className="text-sm">{understandingSummary}</p>
+                  </div>
+                )}
+
+                {systemContext.mainObject && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Đối tượng chính:
+                    </p>
+                    <p className="text-sm">{systemContext.mainObject}</p>
+                  </div>
+                )}
+
+                {systemContext.environment && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Môi trường:
+                    </p>
+                    <p className="text-sm">{systemContext.environment}</p>
+                  </div>
+                )}
+
+                {psychologicalInertia.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Quán tính tâm lý:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {psychologicalInertia.map((item, idx) => (
+                        <li key={idx} className="text-sm">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {clarificationNeeded && clarificationNeeded.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Cần làm rõ:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {clarificationNeeded.map((item, idx) => (
+                        <li key={idx} className="text-sm">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">

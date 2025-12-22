@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { formatDate } from '@/utils';
 
 import type { Transaction } from '@/features/payment/transaction/types';
 import type { Subscription } from '@/features/subscription/types';
@@ -76,7 +77,7 @@ export const StepPreviewRefund = ({
                     {t('step_preview.start_date')}
                   </p>
                   <p className="font-medium">
-                    {new Date(subscription.startDate).toLocaleDateString()}
+                    {formatDate(new Date(subscription.startDate))}
                   </p>
                 </div>
                 <div>
@@ -84,7 +85,7 @@ export const StepPreviewRefund = ({
                     {t('step_preview.end_date')}
                   </p>
                   <p className="font-medium">
-                    {new Date(subscription.endDate).toLocaleDateString()}
+                    {formatDate(new Date(subscription.endDate))}
                   </p>
                 </div>
               </div>

@@ -92,10 +92,6 @@ const PackagesPricingPage = () => {
         id: 'startDate',
         desc: true,
       },
-      {
-        id: 'priceInTokens',
-        desc: true,
-      },
     ],
     user?.id,
   );

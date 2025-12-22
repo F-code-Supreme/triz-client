@@ -37,7 +37,7 @@ import {
   useGetQuizzByModulesQuery,
 } from '@/features/quiz/service/queries';
 import { cn } from '@/lib/utils';
-import { formatDateHour } from '@/utils/date/date';
+import { formatDateHour } from '@/utils';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const CourseQuizPage = () => {

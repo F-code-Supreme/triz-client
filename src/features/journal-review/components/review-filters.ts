@@ -19,7 +19,7 @@ export const getReviewFilters = (): FilterOption[] => [
         value: 'REVIEWED',
       },
       {
-        label: 'Đã phê duyệt',
+        label: 'Đã kết thúc',
         value: 'APPROVED',
       },
       {

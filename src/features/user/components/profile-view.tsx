@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { Award, Edit3, X, Check } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -20,7 +19,7 @@ import {
   useDeleteForumPostMutation,
 } from '@/features/forum/services/mutations';
 import { useGetForumPostsByUserIdQuery } from '@/features/forum/services/queries';
-import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
+import { cleanHtml, formatDate, htmlExcerpt } from '@/utils';
 
 import type { UserAchievementResponse } from '@/features/achievement/types';
 import type { User } from '@/features/auth/types';
@@ -127,7 +126,7 @@ export const ProfileView = ({
   const formatJoinDate = (dateString?: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return format(date, 'dd/MM/yyyy');
+    return formatDate(date);
   };
 
   const handleEditClick = () => {
@@ -277,7 +276,7 @@ export const ProfileView = ({
               <div>
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   <Award className="w-5 h-5" />
-                  Achievements ({achievementsData?.page.totalElements || 0})
+                  Thành tựu ({achievementsData?.page.totalElements || 0})
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {isLoadingAchievements ? (
@@ -315,7 +314,7 @@ export const ProfileView = ({
                     ))
                   ) : (
                     <div className="col-span-2 text-center text-sm text-gray-500 dark:text-gray-400 py-4">
-                      No achievements yet
+                      Chưa có thành tựu nào được ghi nhận.
                     </div>
                   )}
                 </div>
@@ -335,7 +334,7 @@ export const ProfileView = ({
             </div>
           ) : forumPosts.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              No forum posts yet
+              Chưa có bài viết nào từ người dùng này.
             </div>
           ) : (
             <div className="space-y-4">
@@ -366,7 +365,7 @@ export const ProfileView = ({
                     href: `/users/${post.createdBy}`,
                     avatar: post.avtUrl || '',
                   }}
-                  time={formatISODate(post.createdAt)}
+                  time={formatDate(new Date(post.createdAt))}
                   excerpt={
                     <>
                       <div
@@ -396,7 +395,9 @@ export const ProfileView = ({
                   comments={post.replyCount || 0}
                   onLike={(postId, isUpvote) => {
                     if (!currentUser) {
-                      toast.error('Please login to interact with posts');
+                      toast.error(
+                        'Vui lòng đăng nhập để tương tác với bài viết',
+                      );
                       return;
                     }
                     createVoteMutation.mutate(
@@ -406,7 +407,7 @@ export const ProfileView = ({
                           toast.error(
                             error instanceof Error
                               ? error.message
-                              : 'Failed to vote',
+                              : 'Không thể bình chọn bài viết',
                           );
                         },
                       },
@@ -419,7 +420,7 @@ export const ProfileView = ({
                 ref={loadMoreRef}
                 className="py-6 flex justify-center text-slate-500"
               >
-                {isFetchingNextPage ? 'Loading more...' : ''}
+                {isFetchingNextPage ? 'Đang tải thêm...' : ''}
               </div>
             </div>
           )}
