@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
+import useAuth from '@/features/auth/hooks/use-auth';
 import { CourseKeys } from '@/features/courses/services/queries/keys';
 
 import type { CourseEnrollResponse, CourseResponse } from './types';
@@ -43,15 +44,18 @@ export const useGetCourseQueryUser = (pagination?: PaginationState) => {
 };
 
 export const useGetMyEnrollmentsQuery = () => {
+  const { isAuthenticated } = useAuth();
   const _request = useAxios();
   return useQuery({
     queryKey: [CourseKeys.GetCourseQuery, 'my-enrollments'],
-    queryFn: async () => {
-      const response = await _request.get<CourseEnrollResponse>(
-        '/enrollments/my-enrollments',
-      );
-      return response.data;
-    },
+    queryFn: isAuthenticated
+      ? async () => {
+          const response = await _request.get<CourseEnrollResponse>(
+            '/enrollments/my-enrollments',
+          );
+          return response.data;
+        }
+      : skipToken,
   });
 };
 
