@@ -1,7 +1,38 @@
 {
   "dashboard": {
     "title": "Bảng điều khiển Chuyên gia",
-    "description": "Chào mừng đến với bảng chuyên gia"
+    "description": "Chào mừng đến với bảng chuyên gia",
+    "assignments": {
+      "title": "Bài nộp của học viên",
+      "description": "Theo dõi và quản lý bài nộp của học viên",
+      "total_submissions": "Tổng số bài nộp",
+      "total_submissions_desc": "Tất cả bài nộp",
+      "pending_grading": "Chờ chấm điểm",
+      "pending_grading_desc": "Đang chờ đánh giá",
+      "graded": "Đã chấm điểm",
+      "graded_desc": "Đã hoàn thành đánh giá",
+      "pass_rate": "Tỷ lệ đạt",
+      "pass_rate_desc": "Học viên đã vượt qua",
+      "submission_trend": "Xu hướng nộp bài",
+      "submission_trend_desc": "Hoạt động nộp bài gần đây theo thời gian",
+      "submissions": "Bài nộp",
+      "submission_status_distribution": "Phân bố trạng thái bài nộp",
+      "submission_status_distribution_desc": "Phân loại theo trạng thái bài nộp",
+      "no_data": "Không có dữ liệu"
+    },
+    "reviews": {
+      "title": "Đánh giá nhật ký vấn đề",
+      "description": "Quản lý đánh giá nhật ký vấn đề của học viên",
+      "total_reviews": "Tổng số đánh giá",
+      "total_reviews_desc": "Tất cả đánh giá vấn đề",
+      "pending_reviews": "Đánh giá đang chờ",
+      "pending_reviews_desc": "Đang chờ phản hồi",
+      "completed_reviews": "Đánh giá đã hoàn thành",
+      "completed_reviews_desc": "Đánh giá đã hoàn thành",
+      "review_status_distribution": "Phân bố trạng thái đánh giá",
+      "review_status_distribution_desc": "Phân loại đánh giá theo trạng thái",
+      "no_data": "Không có dữ liệu"
+    }
   },
   "six_step_config": {
     "title": "Cấu hình Công cụ 6 Bước",

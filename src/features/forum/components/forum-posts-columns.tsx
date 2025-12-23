@@ -11,7 +11,9 @@ import {
 import { ForumPostsDataTableRowActions } from '@/features/forum/components/forum-posts-data-table-row-actions';
 import { formatDate } from '@/utils';
 
-import type { ForumPost } from '@/features/forum/types';
+import { forumPostStatusLabels } from '../utils';
+
+import type { ForumPost, ForumPostStatus } from '@/features/forum/types';
 
 export const forumpostsColumns: ColumnDef<ForumPost>[] = [
   {
@@ -55,7 +57,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
     accessorKey: 'status',
     header: () => <span>Trạng thái</span>,
     cell: ({ row }) => {
-      const status = row.getValue('status') as string;
+      const status = row.getValue('status') as ForumPostStatus;
 
       return (
         <Badge
@@ -66,7 +68,7 @@ export const forumpostsColumns: ColumnDef<ForumPost>[] = [
               : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
           }
         >
-          {status === 'ACTIVE' ? 'Hoạt động' : 'Chưa hoạt động'}
+          {forumPostStatusLabels[status]}
         </Badge>
       );
     },

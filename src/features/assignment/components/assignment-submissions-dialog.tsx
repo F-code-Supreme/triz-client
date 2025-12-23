@@ -19,6 +19,11 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { useExpertReviewAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useGetAssignmentByIdQueryExpert } from '@/features/assignment/services/queries';
 
+import {
+  assignmentSubmissionStatusLabels,
+  getAssignmentSubmissionStatusColors,
+} from '../utils';
+
 interface AssignmentSubmissionsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -111,30 +116,9 @@ const AssignmentSubmissionsDialog = ({
                 <p>
                   <span className="font-medium">Trạng thái:</span>{' '}
                   <span
-                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs ${
-                      submission.status === 'EXPERT_PENDING'
-                        ? 'bg-blue-100 text-blue-700 hover:bg-blue-100'
-                        : submission.status === 'AI_PENDING'
-                          ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100'
-                          : submission.status === 'APPROVED'
-                            ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                            : submission.status === 'AI_REJECTED' ||
-                                submission.status === 'REJECTED'
-                              ? 'bg-red-100 text-red-700 hover:bg-red-100'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-                    }`}
+                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs ${getAssignmentSubmissionStatusColors(submission.status)}`}
                   >
-                    {submission.status === 'EXPERT_PENDING'
-                      ? 'Chờ chuyên gia đánh giá'
-                      : submission.status === 'AI_PENDING'
-                        ? 'Chờ AI đánh giá'
-                        : submission.status === 'APPROVED'
-                          ? 'Đã duyệt'
-                          : submission.status === 'AI_REJECTED'
-                            ? 'Bị từ chối bởi AI'
-                            : submission.status === 'REJECTED'
-                              ? 'Bị từ chối bởi chuyên gia'
-                              : 'Không xác định'}
+                    {assignmentSubmissionStatusLabels[submission.status]}
                   </span>
                 </p>
               </div>

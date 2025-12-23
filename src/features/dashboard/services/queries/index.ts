@@ -86,7 +86,7 @@ export const useGetForumAnalyticsQuery = () => {
     queryKey: [AdminDashboardQueryKeys.GetForumAnalyticsQuery],
     queryFn: async () => {
       const response = await _request.get<IGetForumAnalyticsResponse>(
-        `/dashboard/forum/analytics`,
+        `/dashboard/forums/analytics`,
       );
 
       return response.data;
@@ -101,7 +101,7 @@ export const useGetExpertAnalyticsQuery = () => {
     queryKey: [AdminDashboardQueryKeys.GetExpertAnalyticsQuery],
     queryFn: async () => {
       const response = await _request.get<IGetExpertAnalyticsResponse>(
-        `/dashboard/expert/analytics`,
+        `/dashboard/experts/analytics`,
       );
       return response.data;
     },

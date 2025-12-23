@@ -1379,7 +1379,38 @@ interface Resources {
   },
   "pages.expert": {
     "dashboard": {
+      "assignments": {
+        "description": "Track and manage student assignment submissions",
+        "graded": "Graded",
+        "graded_desc": "Completed reviews",
+        "no_data": "No data available",
+        "pass_rate": "Pass Rate",
+        "pass_rate_desc": "Students who passed",
+        "pending_grading": "Pending Grading",
+        "pending_grading_desc": "Awaiting review",
+        "submission_status_distribution": "Submission Status Distribution",
+        "submission_status_distribution_desc": "Breakdown by submission status",
+        "submission_trend": "Submission Trend",
+        "submission_trend_desc": "Recent submission activity over time",
+        "submissions": "Submissions",
+        "title": "Assignment Submissions",
+        "total_submissions": "Total Submissions",
+        "total_submissions_desc": "All time submissions"
+      },
       "description": "Welcome to the expert panel",
+      "reviews": {
+        "completed_reviews": "Completed Reviews",
+        "completed_reviews_desc": "Finished reviews",
+        "description": "Manage student problem journal reviews",
+        "no_data": "No data available",
+        "pending_reviews": "Pending Reviews",
+        "pending_reviews_desc": "Awaiting feedback",
+        "review_status_distribution": "Review Status Distribution",
+        "review_status_distribution_desc": "Breakdown of reviews by status",
+        "title": "Problem Reviews",
+        "total_reviews": "Total Reviews",
+        "total_reviews_desc": "All problem reviews"
+      },
       "title": "Expert Dashboard"
     },
     "six_step_config": {
@@ -1596,6 +1627,23 @@ interface Resources {
     "page_meta_title": "TRIZ Matrix",
     "title": "Discover",
     "title_highlight": "TRIZ Creative Matrix"
+  },
+  "pages.moderator": {
+    "dashboard": {
+      "description": "Welcome to the moderator panel. Manage forum content and review reports.",
+      "no_data": "No data available",
+      "pending_reports": "Pending Reports",
+      "pending_reports_desc": "Reports awaiting review",
+      "post_status_distribution": "Post Status Distribution",
+      "post_status_distribution_desc": "Distribution of posts by status",
+      "title": "Moderator Dashboard",
+      "total_posts": "Total Posts",
+      "total_posts_desc": "Total forum posts",
+      "total_replies": "Total Replies",
+      "total_replies_desc": "Total replies to posts",
+      "total_reposts": "Total Reposts",
+      "total_reposts_desc": "Total reposts"
+    }
   },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",

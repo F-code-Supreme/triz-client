@@ -1,0 +1,17 @@
+{
+  "dashboard": {
+    "title": "Bảng điều khiển Kiểm duyệt viên",
+    "description": "Chào mừng đến với bảng điều khiển Kiểm duyệt viên. Quản lý nội dung diễn đàn và xem xét báo cáo.",
+    "total_posts": "Tổng số bài viết",
+    "total_posts_desc": "Tổng số bài viết trên diễn đàn",
+    "total_replies": "Tổng số bình luận",
+    "total_replies_desc": "Tổng số bình luận cho bài viết",
+    "total_reposts": "Tổng số chia sẻ lại",
+    "total_reposts_desc": "Tổng số chia sẻ lại",
+    "pending_reports": "Báo cáo đang chờ",
+    "pending_reports_desc": "Báo cáo đang chờ xem xét",
+    "post_status_distribution": "Phân bố trạng thái bài viết",
+    "post_status_distribution_desc": "Phân bố bài viết theo trạng thái",
+    "no_data": "Không có dữ liệu"
+  }
+}
