@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AsyncSelect } from '@/components/ui/async-select';
 import { Card } from '@/components/ui/card';
+import { GamesInfo } from '@/features/game/configs';
 import { DefaultLayout } from '@/layouts/default-layout';
 import { principlesData } from '@/pages/main/public/learn-triz/components/principles-data';
 
@@ -27,7 +28,7 @@ const GAMES: Game[] = [
     name: 'Giả Kim Thuật',
     route: '/games/merging-game',
     description: 'Kết hợp các nguyên tố để tạo ra sản phẩm mới',
-    principleNumber: 5,
+    principleNumber: GamesInfo.Merging.principle,
     icon: <Sparkles className="w-8 h-8" />,
     color: 'text-orange-600',
     bgGradient: 'from-orange-500 to-red-600',
@@ -37,7 +38,7 @@ const GAMES: Game[] = [
     name: 'Mê Cung Hướng Dẫn',
     route: '/games/preliminary-game',
     description: 'Lập kế hoạch và sắp xếp trước để vượt qua thử thách',
-    principleNumber: 10,
+    principleNumber: GamesInfo.Preliminary.principle,
     icon: <Target className="w-8 h-8" />,
     color: 'text-blue-600',
     bgGradient: 'from-blue-500 to-cyan-600',
@@ -47,7 +48,7 @@ const GAMES: Game[] = [
     name: 'Xây Tháp',
     route: '/games/segmentation-game',
     description: 'Chia nhỏ vấn đề thành các phần để giải quyết',
-    principleNumber: 1,
+    principleNumber: GamesInfo.Segmentation.principle,
     icon: <Gamepad2 className="w-8 h-8" />,
     color: 'text-green-600',
     bgGradient: 'from-green-500 to-emerald-600',

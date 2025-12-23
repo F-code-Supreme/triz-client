@@ -6,4 +6,5 @@ export enum AdminDashboardQueryKeys {
   GetPackageAnalyticsItems = 'admin-dashboard-get-package-analytics-items',
   GetForumAnalyticsQuery = 'dashboard/getForumAnalytics',
   GetExpertAnalyticsQuery = 'dashboard/getExpertAnalytics',
+  GetGameAnalyticsQuery = 'dashboard/getGameAnalytics',
 }

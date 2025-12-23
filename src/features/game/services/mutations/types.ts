@@ -1,4 +1,4 @@
-import type { GamesEnumId } from '@/features/game/services/mutations/enum';
+import type { GamesEnumId } from '../../configs';
 
 export interface CreateScorePayload {
   gameId: GamesEnumId;

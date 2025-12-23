@@ -11,6 +11,7 @@ import type {
   TopUserItem,
   IGetForumAnalyticsResponse,
   IGetExpertAnalyticsResponse,
+  IGetGameAnalyticsResponse,
 } from '@/features/dashboard/services/queries/types';
 
 // ADMIN
@@ -74,6 +75,18 @@ export const useGetAdminPackageAnalyticsQuery = () => {
       const response = await _request.get<PackageAnalyticsItem[]>(
         `dashboard/packages/analytics`,
       );
+      return response.data;
+    },
+  });
+};
+
+export const useGetAdminGameAnalyticsQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AdminDashboardQueryKeys.GetGameAnalyticsQuery],
+    queryFn: async () => {
+      const response =
+        await _request.get<IGetGameAnalyticsResponse>(`dashboard/games`);
       return response.data;
     },
   });
