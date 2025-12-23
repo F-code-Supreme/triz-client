@@ -9,8 +9,11 @@ import type {
   PaymentStatusItem,
   RevenueTrendItem,
   TopUserItem,
+  IGetForumAnalyticsResponse,
+  IGetExpertAnalyticsResponse,
 } from '@/features/dashboard/services/queries/types';
 
+// ADMIN
 export const useGetAdminPaymentsStatsQuery = () => {
   const _request = useAxios();
   return useQuery({
@@ -23,6 +26,7 @@ export const useGetAdminPaymentsStatsQuery = () => {
     },
   });
 };
+
 export const useGetAdminPaymentsRevenueTrendQuery = (time: string) => {
   const _request = useAxios();
   return useQuery({
@@ -35,6 +39,7 @@ export const useGetAdminPaymentsRevenueTrendQuery = (time: string) => {
     },
   });
 };
+
 export const useGetAdminPaymentsStatusDistributionQuery = () => {
   const _request = useAxios();
   return useQuery({
@@ -47,6 +52,7 @@ export const useGetAdminPaymentsStatusDistributionQuery = () => {
     },
   });
 };
+
 export const useGetAdminPaymentsTopUsersQuery = () => {
   const _request = useAxios();
   return useQuery({
@@ -59,6 +65,7 @@ export const useGetAdminPaymentsTopUsersQuery = () => {
     },
   });
 };
+
 export const useGetAdminPackageAnalyticsQuery = () => {
   const _request = useAxios();
   return useQuery({
@@ -66,6 +73,35 @@ export const useGetAdminPackageAnalyticsQuery = () => {
     queryFn: async () => {
       const response = await _request.get<PackageAnalyticsItem[]>(
         `dashboard/packages/analytics`,
+      );
+      return response.data;
+    },
+  });
+};
+
+// MODERATOR & ADMIN
+export const useGetForumAnalyticsQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AdminDashboardQueryKeys.GetForumAnalyticsQuery],
+    queryFn: async () => {
+      const response = await _request.get<IGetForumAnalyticsResponse>(
+        `/dashboard/forum/analytics`,
+      );
+
+      return response.data;
+    },
+  });
+};
+
+// EXPERT & ADMIN
+export const useGetExpertAnalyticsQuery = () => {
+  const _request = useAxios();
+  return useQuery({
+    queryKey: [AdminDashboardQueryKeys.GetExpertAnalyticsQuery],
+    queryFn: async () => {
+      const response = await _request.get<IGetExpertAnalyticsResponse>(
+        `/dashboard/expert/analytics`,
       );
       return response.data;
     },

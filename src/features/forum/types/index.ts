@@ -2,7 +2,7 @@
 export type UUID = string;
 export type ISODateString = string;
 
-export type ForumPostStatus = 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'DELETED';
+export type ForumPostStatus = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 
 // chính interface
 export interface ForumPost {

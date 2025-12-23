@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+import type { AssignmentSubmissionStatus } from '../../types';
 import type { PaginatedResponse } from '@/types';
 
 export interface Assignment {
@@ -25,13 +26,7 @@ export interface AssignmentSubmissionBase {
   isAiPassed: boolean | null;
   isExpertPassed: boolean | null;
   expertComment: string | null;
-  status:
-    | 'PENDING'
-    | 'APPROVED'
-    | 'REJECTED'
-    | 'AI_PENDING'
-    | 'EXPERT_PENDING'
-    | 'AI_REJECTED';
+  status: AssignmentSubmissionStatus;
   gradedAt: string | null;
   createdAt: string;
   updatedAt: string;
