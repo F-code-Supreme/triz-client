@@ -1,7 +1,6 @@
-import { Link, useSearch } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft,
   Clock,
   CheckCircle2,
   XCircle,
@@ -38,6 +37,7 @@ import {
   useGetQuizzByModulesQuery,
 } from '@/features/quiz/service/queries';
 import { cn } from '@/lib/utils';
+import { formatDateHour } from '@/utils';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const CourseQuizPage = () => {
@@ -261,7 +261,7 @@ const CourseQuizPage = () => {
             Module ID: {moduleId}
           </p>
           <Button onClick={() => window.history.back()} className="mt-4">
-            Back to Courses
+            Quay lại khóa học
           </Button>
         </div>
       </div>
@@ -282,7 +282,7 @@ const CourseQuizPage = () => {
             No questions available yet
           </p>
           <Button onClick={() => window.history.back()} className="mt-4">
-            Back to Courses
+            Quay lại khoá học
           </Button>
         </div>
       </div>
@@ -362,61 +362,55 @@ const CourseQuizPage = () => {
 
   if (showResults && quizResults) {
     const score = quizResults.score || 0;
-    const totalQuestions = quizData?.questions?.length || 0;
 
     return (
       <div className="min-h-screen bg-background">
-        <div className="bg-card border-b px-6 py-4">
-          <div className="max-w-4xl mx-auto">
-            <Link to="/course/my-course">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Course
-              </Button>
-            </Link>
-          </div>
-        </div>
-
         <div className="max-w-4xl mx-auto px-6 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
+            className="text-center mb-8 "
           >
-            <div
-              className={cn(
-                'w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center',
-                score >= 80
-                  ? 'bg-green-100'
-                  : score >= 60
-                    ? 'bg-yellow-100'
-                    : 'bg-red-100',
-              )}
-            >
-              {score >= 80 ? (
-                <CheckCircle2 className="w-12 h-12 text-green-600" />
-              ) : (
-                <XCircle className="w-12 h-12 text-red-600" />
-              )}
+            <h2 className="text-3xl font-bold mb-10">Kết quả bài kiểm tra</h2>
+            <div className="flex flex-col md:flex-row md:justify-evenly md:items-center gap-6">
+              <div>
+                <h1 className="text-xl font-bold mb-2">{quizData.title}</h1>
+                <p className="text-muted-foreground">
+                  Thời gian hoàn thành:{' '}
+                  {formatDateHour(new Date(quizResults.completedAt))}
+                </p>
+              </div>
+              <div className="flex flex-row items-center justify-center gap-6">
+                <div
+                  className={cn(
+                    'w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center',
+                    score >= quizResults.passingScore
+                      ? 'bg-green-100'
+                      : 'bg-red-100',
+                  )}
+                >
+                  {score >= quizResults.passingScore ? (
+                    <CheckCircle2 className="w-12 h-12 text-green-600" />
+                  ) : (
+                    <XCircle className="w-12 h-12 text-red-600" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">
+                    {score >= quizResults.passingScore ? 'Đạt' : 'Không đạt'}
+                  </h3>
+                  <p className="text-3xl font-bold text-primary mb-2">
+                    {Math.round(score)}%
+                  </p>
+                </div>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold mb-2">
-              {score >= 80
-                ? 'Great Job!'
-                : score >= 60
-                  ? 'Good Effort!'
-                  : 'Keep Practicing!'}
-            </h1>
-            <p className="text-5xl font-bold text-primary mb-2">
-              {score.toFixed(2)}%
-            </p>
-            <p className="text-muted-foreground">
-              Quiz completed at{' '}
-              {new Date(quizResults.completedAt).toLocaleString('vi-VN')}
-            </p>
           </motion.div>
 
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold mb-4">Review Your Answers</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Đánh giá câu trả lời:
+            </h2>
             {quizResults.answers?.map((answer: any, index: number) => {
               const question = quizData?.questions.find(
                 (q) => q.id === answer.questionId,
@@ -452,9 +446,7 @@ const CourseQuizPage = () => {
                         )}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold mb-1">
-                          Question {index + 1} of {totalQuestions}
-                        </h3>
+                        <h3 className="font-semibold mb-1">Câu {index + 1}</h3>
                         <p className="text-foreground">
                           {answer.questionContent}
                         </p>
@@ -488,7 +480,7 @@ const CourseQuizPage = () => {
                               <span>{option.content}</span>
                               {isSelected && (
                                 <span className="ml-auto text-xs text-muted-foreground">
-                                  Your answer
+                                  Câu trả lời của bạn
                                 </span>
                               )}
                             </div>
@@ -504,14 +496,14 @@ const CourseQuizPage = () => {
 
           <div className="flex gap-4 mt-8">
             <Button onClick={() => window.location.reload()} className="flex-1">
-              Retake Quiz
+              Làm lại bài kiểm tra
             </Button>
             <Button
               onClick={() => window.history.back()}
               variant="outline"
               className="flex-1"
             >
-              Back to Course
+              Quay lại khóa học
             </Button>
           </div>
         </div>
@@ -529,7 +521,7 @@ const CourseQuizPage = () => {
               <div>
                 <h1 className="text-lg font-semibold">{quizData.title}</h1>
                 <p className="text-sm text-muted-foreground">
-                  {answeredCount} / {quizData.questions.length} answered
+                  {answeredCount} / {quizData.questions.length} câu
                 </p>
               </div>
             </div>
@@ -574,8 +566,8 @@ const CourseQuizPage = () => {
                         </h3>
                         <p className="text-sm text-muted-foreground">
                           {question.questionType === 'MULTIPLE_CHOICE'
-                            ? 'Select all that apply'
-                            : 'Select one answer'}
+                            ? 'Chọn nhiều đáp án'
+                            : 'Chọn một đáp án'}
                         </p>
                       </div>
                       {isQuestionAnswered(question.id) && (
@@ -658,8 +650,8 @@ const CourseQuizPage = () => {
             size="lg"
           >
             {answeredCount === quizData.questions.length
-              ? 'Submit Quiz'
-              : `Answer all questions (${answeredCount}/${quizData.questions.length})`}
+              ? 'Nộp bài'
+              : `Câu hỏi đã trả lời (${answeredCount}/${quizData.questions.length})`}
           </Button>
         </div>
       </div>

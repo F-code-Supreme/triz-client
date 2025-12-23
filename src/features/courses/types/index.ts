@@ -50,12 +50,7 @@ export interface Order {
   type: string;
 }
 
-export type CourseLevel =
-  | 'STARTER'
-  | 'BEGINNER'
-  | 'INTERMEDIATE'
-  | 'ADVANCED'
-  | string;
+export type CourseLevel = 'STARTER' | 'INTERMEDIATE' | 'ADVANCED' | string;
 
 export type CourseStatus = 'ACTIVE' | 'INACTIVE' | string;
 
@@ -125,6 +120,7 @@ export interface LessonContentItem extends BaseContentItem {
   type: 'lesson';
   lessonData: {
     id: string;
+    durationInMinutes: number;
     name: string;
     videoUrl?: string;
     content?: string;

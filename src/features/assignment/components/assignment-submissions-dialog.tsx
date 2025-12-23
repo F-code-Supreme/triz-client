@@ -19,6 +19,11 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { useExpertReviewAssignmentMutation } from '@/features/assignment/services/mutations';
 import { useGetAssignmentByIdQueryExpert } from '@/features/assignment/services/queries';
 
+import {
+  assignmentSubmissionStatusLabels,
+  getAssignmentSubmissionStatusColors,
+} from '../utils';
+
 interface AssignmentSubmissionsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -111,15 +116,9 @@ const AssignmentSubmissionsDialog = ({
                 <p>
                   <span className="font-medium">Trạng thái:</span>{' '}
                   <span
-                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs ${
-                      submission.status === 'APPROVED'
-                        ? 'bg-green-100 text-green-800'
-                        : submission.status === 'REJECTED'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                    }`}
+                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs ${getAssignmentSubmissionStatusColors(submission.status)}`}
                   >
-                    {submission.status}
+                    {assignmentSubmissionStatusLabels[submission.status]}
                   </span>
                 </p>
               </div>

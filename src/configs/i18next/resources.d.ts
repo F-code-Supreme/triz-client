@@ -167,6 +167,36 @@ interface Resources {
       "title": "Purchase Invoice",
       "total": "Total",
       "wallet_balance": "Wallet Balance"
+    },
+    "review_request_dialog": {
+      "agree_terms_error": "Please agree to the terms and conditions",
+      "cancel_button": "Cancel",
+      "confirm_request_button": "Submit Review Request",
+      "content_label": "Review Request Content",
+      "content_placeholder": "Describe what aspects you'd like the expert to focus on in their review...",
+      "description": "Submit your journal for expert review and feedback",
+      "empty_content_error": "Please enter review request content",
+      "go_to_wallet_button": "Go to Wallet",
+      "insufficient_balance": "Insufficient balance. You need {{amount}} more",
+      "insufficient_balance_alert": "Your wallet balance is insufficient to submit this review request. Please top up your wallet first.",
+      "insufficient_balance_error": "Insufficient wallet balance",
+      "journal_label": "Your TRIZ journal",
+      "processing_button": "Submitting...",
+      "request_failed_error": "Failed to submit review request",
+      "request_success": "Review request submitted successfully!",
+      "service_description": "Professional TRIZ expert review and feedback",
+      "service_name": "Expert Journal Review",
+      "sufficient_balance": "Sufficient balance to submit this request",
+      "table_amount": "Amount",
+      "table_description": "Description",
+      "terms_checkbox": "I agree to the <bold>Terms and Conditions</bold> and acknowledge that:",
+      "terms_expert_review": "An expert will review my journal within 3-5 business days",
+      "terms_fee": "This request will deduct {{fee}} from my wallet",
+      "terms_non_refundable": "The review fee is non-refundable once the request is submitted",
+      "terms_processing_time": "Review processing time may vary based on expert availability",
+      "title": "Request Expert Review",
+      "total": "Total",
+      "wallet_balance": "Wallet Balance"
     }
   },
   "datetime": {
@@ -766,7 +796,7 @@ interface Resources {
         "create_title": "Create New Package",
         "daily_placeholder": "500",
         "daily_required": "Chat tokens per day must be greater than 0",
-        "daily_trizilium": "Daily Trizilium",
+        "daily_trizilium": "Daily Chat Tokens",
         "duration_days": "Duration (Days)",
         "duration_placeholder": "30",
         "duration_required": "Duration must be greater than 0",
@@ -1168,6 +1198,10 @@ interface Resources {
     }
   },
   "pages.books": {
+    "copyright": {
+      "book_title": "\"Innovation and Creativity\" by Phan Dũng",
+      "notice": "All book copyrights belong to Mr. Phan Dũng"
+    },
     "description": "Explore our collection of educational books about TRIZ principles and innovation",
     "empty": {
       "description": "The book library is currently empty. Please check back later for new additions.",
@@ -1345,7 +1379,38 @@ interface Resources {
   },
   "pages.expert": {
     "dashboard": {
+      "assignments": {
+        "description": "Track and manage student assignment submissions",
+        "graded": "Graded",
+        "graded_desc": "Completed reviews",
+        "no_data": "No data available",
+        "pass_rate": "Pass Rate",
+        "pass_rate_desc": "Students who passed",
+        "pending_grading": "Pending Grading",
+        "pending_grading_desc": "Awaiting review",
+        "submission_status_distribution": "Submission Status Distribution",
+        "submission_status_distribution_desc": "Breakdown by submission status",
+        "submission_trend": "Submission Trend",
+        "submission_trend_desc": "Recent submission activity over time",
+        "submissions": "Submissions",
+        "title": "Assignment Submissions",
+        "total_submissions": "Total Submissions",
+        "total_submissions_desc": "All time submissions"
+      },
       "description": "Welcome to the expert panel",
+      "reviews": {
+        "completed_reviews": "Completed Reviews",
+        "completed_reviews_desc": "Finished reviews",
+        "description": "Manage student problem journal reviews",
+        "no_data": "No data available",
+        "pending_reviews": "Pending Reviews",
+        "pending_reviews_desc": "Awaiting feedback",
+        "review_status_distribution": "Review Status Distribution",
+        "review_status_distribution_desc": "Breakdown of reviews by status",
+        "title": "Problem Reviews",
+        "total_reviews": "Total Reviews",
+        "total_reviews_desc": "All problem reviews"
+      },
       "title": "Expert Dashboard"
     },
     "six_step_config": {
@@ -1562,6 +1627,23 @@ interface Resources {
     "page_meta_title": "TRIZ Matrix",
     "title": "Discover",
     "title_highlight": "TRIZ Creative Matrix"
+  },
+  "pages.moderator": {
+    "dashboard": {
+      "description": "Welcome to the moderator panel. Manage forum content and review reports.",
+      "no_data": "No data available",
+      "pending_reports": "Pending Reports",
+      "pending_reports_desc": "Reports awaiting review",
+      "post_status_distribution": "Post Status Distribution",
+      "post_status_distribution_desc": "Distribution of posts by status",
+      "title": "Moderator Dashboard",
+      "total_posts": "Total Posts",
+      "total_posts_desc": "Total forum posts",
+      "total_replies": "Total Replies",
+      "total_replies_desc": "Total replies to posts",
+      "total_reposts": "Total Reposts",
+      "total_reposts_desc": "Total reposts"
+    }
   },
   "pages.not_found": {
     "back_to_homepage": "Back to homepage",

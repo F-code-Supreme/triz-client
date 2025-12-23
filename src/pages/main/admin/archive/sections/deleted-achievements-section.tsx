@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { formatDate } from '@/utils';
 
 import type { Achievement } from '@/features/achievement/types';
 
@@ -117,13 +118,10 @@ export const DeletedAchievementsSection = ({
             {achievement.deletedAt && (
               <div className="mt-auto pt-2 text-xs text-muted-foreground border-t">
                 {t('archive.achievements.deleted_at')}:{' '}
-                {new Date(achievement.deletedAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {formatDate(
+                  new Date(achievement.deletedAt),
+                  'DD/MM/YYYY HH:mm',
+                )}
               </div>
             )}
           </div>

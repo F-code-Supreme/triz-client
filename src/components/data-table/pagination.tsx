@@ -60,7 +60,9 @@ export const DataTablePagination = <TData,>({
               ))}
             </SelectContent>
           </Select>
-          <p className="hidden text-sm font-medium sm:block">Rows per page</p>
+          <p className="hidden text-sm font-medium sm:block">
+            Số hàng mỗi trang
+          </p>
         </div>
       </div>
 

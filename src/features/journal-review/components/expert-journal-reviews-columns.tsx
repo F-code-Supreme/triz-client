@@ -1,9 +1,9 @@
 import { type ColumnDef } from '@tanstack/react-table';
-import { format } from 'date-fns';
 
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
+import { formatDate } from '@/utils';
 
 import { ExpertJournalReviewsDataTableRowActions } from './expert-journal-reviews-data-table-row-actions';
 
@@ -109,7 +109,7 @@ export const expertJournalReviewsColumns: ColumnDef<RootReviewWithTimestamp>[] =
         const date = row.getValue('createdAt') as string;
         return (
           <div className="text-sm">
-            {format(new Date(date), 'dd/MM/yyyy HH:mm')}
+            {formatDate(new Date(date), 'DD/MM/YYYY HH:mm')}
           </div>
         );
       },

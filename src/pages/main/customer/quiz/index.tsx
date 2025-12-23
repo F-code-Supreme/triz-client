@@ -22,6 +22,7 @@ import {
 } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
 import { Route } from '@/routes/(app)/quiz';
+import { formatDate } from '@/utils';
 
 const QuizListPage = () => {
   const { data, isLoading } = useGetQuizzesMutation();
@@ -266,10 +267,10 @@ const QuizListPage = () => {
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {featured?.updatedAt
-                              ? new Date(
-                                  featured?.updatedAt as string,
-                                ).toLocaleDateString('vi-VN')
-                              : new Date().toLocaleDateString('vi-VN')}
+                              ? formatDate(
+                                  new Date(featured?.updatedAt as string),
+                                )
+                              : formatDate(new Date())}
                           </div>
                         </div>
                       </div>
@@ -376,10 +377,10 @@ const QuizListPage = () => {
                           <div className="flex gap-1 sm:gap-2">
                             <div className="text-xs text-muted-foreground">
                               {quiz?.createdAt
-                                ? new Date(
-                                    quiz?.createdAt as string,
-                                  ).toLocaleDateString('vi-VN')
-                                : new Date().toLocaleDateString('vi-VN')}
+                                ? formatDate(
+                                    new Date(quiz?.createdAt as string),
+                                  )
+                                : formatDate(new Date())}
                             </div>
                           </div>
                         </div>

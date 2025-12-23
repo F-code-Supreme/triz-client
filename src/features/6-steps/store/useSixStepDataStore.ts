@@ -22,25 +22,36 @@ export interface SixStepData {
   // Step 1: Understand the Problem
   step1?: {
     understanding: string;
-    selectedMiniProblem: string;
+    understandingSummary: string;
+    systemContext: {
+      mainObject: string;
+      environment: string;
+    };
+    psychologicalInertia: string[];
     miniProblems: MiniProblem[];
+    selectedMiniProblem: string;
+    clarificationNeeded: string[] | null;
   };
   // Step 2: Define Objective
   step2?: {
-    goals: GoalItem[];
-    selectedGoal?: GoalItem;
+    goal: string;
+    constraints: string[];
+    scope: string;
+    idealFinalResult: string | null;
+    secondaryGoals: string[] | null;
+    clarificationNeeded: string[] | null;
   };
   // Step 3: Answer Questions
   step3?: {
     systemIdentified: string;
     elements: string[];
+    objectType: 'Moving' | 'Stationary';
     requiredStates: Record<string, RequiredStateItem[]>;
   };
   // Step 4: Formulate Contradiction
   step4?: {
     physicalContradictions: {
       element: string;
-      propertyDimension: string;
       stateA: string;
       stateB: string;
       benefitA: string;
@@ -52,7 +63,7 @@ export interface SixStepData {
     technicalContradictions?: {
       element: string;
       sourceML: string;
-      MK1: {
+      mk1: {
         direction: string;
         improvingParameter: {
           name: string;
@@ -66,7 +77,7 @@ export interface SixStepData {
         };
         contradictionStatement: string;
       };
-      MK2: {
+      mk2: {
         direction: string;
         improvingParameter: {
           name: string;
@@ -79,10 +90,6 @@ export interface SixStepData {
           reasoning: string;
         };
         contradictionStatement: string;
-      };
-      matrixUsage: {
-        MK1_lookup: string;
-        MK2_lookup: string;
       };
     }[];
     selectedPrinciples?: {
@@ -102,6 +109,7 @@ export interface SixStepData {
   };
   // Step 5: Generate Ideas
   step5?: {
+    targetML: string;
     ideas: {
       id: number;
       element: string;
@@ -135,27 +143,14 @@ export interface SixStepData {
   step6?: {
     evaluations: {
       ideaId: number;
-      status: 'passing' | 'rejected';
-      evaluation: {
-        scores: {
-          mlResolution: number;
-          feasibility: number;
-          systemImpact: number;
-          total: number;
-        };
-        category: 'excellent' | 'good' | 'average' | 'poor';
-        explanation: {
-          mlResolution: string;
-          feasibility: string;
-          systemImpact: string;
-        };
-      } | null;
-      message: string;
-      rejectionReason?: string;
-      category?: 'feasibility' | 'relevance' | 'clarity' | 'completeness';
-      suggestion?: string;
-      assumption?: string;
-      note?: string;
+      status: 'SELECTED' | 'RESERVE' | 'REJECTED';
+      analysis: {
+        screening: string;
+        resourcesAndInertia: string;
+        overallBenefit: string;
+      };
+      decisionMessage: string;
+      actionSuggestion: string;
       userComment?: string;
       userRating?: number;
     }[];

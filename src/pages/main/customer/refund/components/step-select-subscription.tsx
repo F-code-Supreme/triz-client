@@ -9,6 +9,7 @@ import {
   SubscriptionStatus,
   type Subscription,
 } from '@/features/subscription/types';
+import { formatDate } from '@/utils';
 
 import type { DataTimestamp } from '@/types';
 
@@ -77,7 +78,7 @@ export const StepSelectSubscription = ({
                       {t('step_select.start_date')}
                     </p>
                     <p className="font-medium">
-                      {new Date(subscription.startDate).toLocaleDateString()}
+                      {formatDate(new Date(subscription.startDate))}
                     </p>
                   </div>
                   <div>
@@ -85,7 +86,7 @@ export const StepSelectSubscription = ({
                       {t('step_select.end_date')}
                     </p>
                     <p className="font-medium">
-                      {new Date(subscription.endDate).toLocaleDateString()}
+                      {formatDate(new Date(subscription.endDate))}
                     </p>
                   </div>
                   <div>

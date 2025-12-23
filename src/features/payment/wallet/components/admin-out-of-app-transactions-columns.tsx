@@ -1,12 +1,11 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { format } from 'date-fns';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { TransactionsDataTableRowActions } from '@/features/payment/transaction/components/transactions-data-table-row-actions';
-import { formatVND } from '@/utils';
+import { formatVND, formatDate } from '@/utils';
 
 import {
   getTransactionStatusColor,
@@ -110,7 +109,7 @@ export const useAdminOutOfAppTransactionsColumns = () => {
         ),
         cell: (info) => (
           <span className="text-sm">
-            {format(new Date(info.getValue()), 'MMM dd, yyyy HH:mm')}
+            {formatDate(new Date(info.getValue()), 'DD/MM/YYYY HH:mm')}
           </span>
         ),
       }),

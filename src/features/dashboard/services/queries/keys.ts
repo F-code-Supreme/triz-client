@@ -4,4 +4,6 @@ export enum AdminDashboardQueryKeys {
   GetPaymentStatusItems = 'admin-dashboard-get-payment-status-items',
   GetTopUserItems = 'admin-dashboard-get-top-user-items',
   GetPackageAnalyticsItems = 'admin-dashboard-get-package-analytics-items',
+  GetForumAnalyticsQuery = 'dashboard/getForumAnalytics',
+  GetExpertAnalyticsQuery = 'dashboard/getExpertAnalytics',
 }

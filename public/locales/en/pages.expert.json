@@ -1,7 +1,38 @@
 {
   "dashboard": {
     "title": "Expert Dashboard",
-    "description": "Welcome to the expert panel"
+    "description": "Welcome to the expert panel",
+    "assignments": {
+      "title": "Assignment Submissions",
+      "description": "Track and manage student assignment submissions",
+      "total_submissions": "Total Submissions",
+      "total_submissions_desc": "All time submissions",
+      "pending_grading": "Pending Grading",
+      "pending_grading_desc": "Awaiting review",
+      "graded": "Graded",
+      "graded_desc": "Completed reviews",
+      "pass_rate": "Pass Rate",
+      "pass_rate_desc": "Students who passed",
+      "submission_trend": "Submission Trend",
+      "submission_trend_desc": "Recent submission activity over time",
+      "submissions": "Submissions",
+      "submission_status_distribution": "Submission Status Distribution",
+      "submission_status_distribution_desc": "Breakdown by submission status",
+      "no_data": "No data available"
+    },
+    "reviews": {
+      "title": "Problem Reviews",
+      "description": "Manage student problem journal reviews",
+      "total_reviews": "Total Reviews",
+      "total_reviews_desc": "All problem reviews",
+      "pending_reviews": "Pending Reviews",
+      "pending_reviews_desc": "Awaiting feedback",
+      "completed_reviews": "Completed Reviews",
+      "completed_reviews_desc": "Finished reviews",
+      "review_status_distribution": "Review Status Distribution",
+      "review_status_distribution_desc": "Breakdown of reviews by status",
+      "no_data": "No data available"
+    }
   },
   "six_step_config": {
     "title": "Six Step Tool Configuration",

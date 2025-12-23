@@ -12,5 +12,9 @@
   "empty": {
     "title": "No Books Available",
     "description": "The book library is currently empty. Please check back later for new additions."
+  },
+  "copyright": {
+    "notice": "All book copyrights belong to Mr. Phan Dũng",
+    "book_title": "\"Innovation and Creativity\" by Phan Dũng"
   }
 }

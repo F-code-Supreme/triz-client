@@ -50,7 +50,7 @@ import {
 import { roleColors } from '@/features/user/components/users-columns';
 import { useGetUserByIdQuery } from '@/features/user/services/queries';
 import { AdminLayout } from '@/layouts/admin-layout';
-import { formatTrizilium } from '@/utils';
+import { formatDate, formatTrizilium } from '@/utils';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 const AdminUserDetailPage = () => {
@@ -447,9 +447,7 @@ const AdminUserDetailPage = () => {
                           )}
                           <p className="text-xs text-muted-foreground">
                             Đạt được:{' '}
-                            {new Date(
-                              achievement.earnedAt,
-                            ).toLocaleDateString()}
+                            {formatDate(new Date(achievement.earnedAt))}
                           </p>
                         </div>
                       </TooltipContent>
@@ -504,15 +502,13 @@ const AdminUserDetailPage = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Start Date</p>
                   <p className="text-base font-semibold">
-                    {new Date(
-                      activeSubscription.startDate,
-                    ).toLocaleDateString()}
+                    {formatDate(new Date(activeSubscription.startDate))}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">End Date</p>
                   <p className="text-base font-semibold">
-                    {new Date(activeSubscription.endDate).toLocaleDateString()}
+                    {formatDate(new Date(activeSubscription.endDate))}
                   </p>
                 </div>
                 <div>

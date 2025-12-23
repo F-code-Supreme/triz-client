@@ -23,7 +23,7 @@ import {
   useReviewPostReportMutation,
 } from '@/features/report/services/queries';
 import { ReportStatus } from '@/features/report/types';
-import { formatDateHour } from '@/utils/date/date';
+import { formatDateHour, formatDate } from '@/utils';
 
 interface ReviewPostReportDialogProps {
   open: boolean;
@@ -234,15 +234,9 @@ const ReviewPostReport = ({
                         {report.description}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {new Date(report.createdAt).toLocaleDateString(
-                          'vi-VN',
-                          {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          },
+                        {formatDate(
+                          new Date(report.createdAt),
+                          'DD/MM/YYYY HH:mm',
                         )}
                       </p>
                     </div>
@@ -337,7 +331,7 @@ const ReviewPostReport = ({
                             {selectedReport.reviewedByName}
                           </span>
                           {selectedReport.reviewedAt &&
-                            ` - ${new Date(selectedReport.reviewedAt).toLocaleDateString('vi-VN')}`}
+                            ` - ${formatDate(new Date(selectedReport.reviewedAt))}`}
                         </p>
                       )}
                     </div>

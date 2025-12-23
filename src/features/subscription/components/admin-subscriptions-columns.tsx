@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
-import { format } from 'date-fns';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { formatDate } from '@/utils';
 
 import { AdminSubscriptionsDataTableRowActions } from './admin-subscriptions-data-table-row-actions';
 import {
@@ -81,7 +81,7 @@ export const useAdminSubscriptionsColumns = () => {
         ),
         cell: (info) => {
           const date = info.getValue();
-          return <span>{format(new Date(date), 'MMM dd, yyyy')}</span>;
+          return <span>{formatDate(new Date(date))}</span>;
         },
       }),
 
@@ -94,7 +94,7 @@ export const useAdminSubscriptionsColumns = () => {
         ),
         cell: (info) => {
           const date = info.getValue();
-          return <span>{format(new Date(date), 'MMM dd, yyyy')}</span>;
+          return <span>{formatDate(new Date(date))}</span>;
         },
       }),
 

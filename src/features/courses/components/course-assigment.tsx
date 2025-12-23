@@ -38,7 +38,7 @@ import {
 } from '@/features/assignment/services/queries';
 import { AssignmentKeys } from '@/features/assignment/services/queries/keys';
 import useAuth from '@/features/auth/hooks/use-auth';
-import { formatDateHour } from '@/utils/date/date';
+import { formatDateHour } from '@/utils';
 
 import type { Content } from '@tiptap/react';
 
@@ -88,8 +88,8 @@ const CourseAssignment = ({
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m`
-      : `${hours}h`;
+      ? `${hours} giờ ${remainingMinutes} phút`
+      : `${hours} giờ`;
   };
 
   const handleSubmit = () => {
@@ -158,7 +158,7 @@ const CourseAssignment = ({
                   onClick={() => setShowHistory(true)}
                 >
                   <History className="w-4 h-4 mr-1" />
-                  History
+                  Lịch sử nộp bài
                 </Button>
               </div>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -174,8 +174,7 @@ const CourseAssignment = ({
                         className={`flex items-center gap-1 cursor-help ${attemptCount === maxAttempts ? 'text-red-600' : ''}`}
                       >
                         <AlertCircle className={`w-4 h-4 `} />
-                        {attemptCount}/{maxAttempts} attempt
-                        {maxAttempts !== 1 && 's'}
+                        {attemptCount}/{maxAttempts} số lần nộp
                       </span>
                     </TooltipTrigger>
                   </Tooltip>
@@ -247,7 +246,7 @@ const CourseAssignment = ({
                 characters
               </span>
               {!canSubmit && attemptCount >= maxAttempts && (
-                <span className="text-red-600">Maximum attempts reached</span>
+                <span className="text-red-600">Đã đạt số lần nộp tối đa</span>
               )}
             </div>
           </div>
@@ -267,7 +266,7 @@ const CourseAssignment = ({
                     }
                     className="flex-1"
                   >
-                    {isSubmitting ? 'Submitting...' : 'Submit Assignment'}
+                    {isSubmitting ? 'Đang nộp...' : 'Nộp bài'}
                   </Button>
                 </TooltipTrigger>
                 {!(typeof answer === 'string'
@@ -288,10 +287,10 @@ const CourseAssignment = ({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <History className="w-5 h-5" />
-              Submission History
+              Lịch sử nộp bài
             </DialogTitle>
             <DialogDescription>
-              View all your previous assignment submissions and their status.
+              Xem tất cả các bài nộp trước đây của bạn và trạng thái của chúng.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2 mt-2 max-h-[80vh] overflow-y-auto">
@@ -310,13 +309,14 @@ const CourseAssignment = ({
               </div>
             ) : submissionHistory?.content &&
               submissionHistory.content.length > 0 ? (
+              // eslint-disable-next-line sonarjs/cognitive-complexity
               submissionHistory.content.map((submission) => (
                 <Card key={submission.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
                         <CardTitle className="text-base">
-                          Attempt #{submission.attemptNumber}
+                          Bài nộp #{submission.attemptNumber}
                         </CardTitle>
                         <p className="text-sm text-muted-foreground">
                           {t('assignments.submission_date')}:{' '}
@@ -338,12 +338,21 @@ const CourseAssignment = ({
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
                           }
                         >
-                          {submission.status}
+                          {submission.status === 'EXPERT_PENDING'
+                            ? 'Đang chờ đánh giá chuyên gia'
+                            : submission.status === 'AI_PENDING'
+                              ? 'Đang chờ đánh giá AI'
+                              : submission.status === 'APPROVED'
+                                ? 'Đã duyệt'
+                                : submission.status === 'AI_REJECTED' ||
+                                    submission.status === 'REJECTED'
+                                  ? 'Bị từ chối'
+                                  : 'Chưa xác định'}
                         </Badge>
                         {submission.gradedAt && (
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <CheckCircle2 className="w-3 h-3" />
-                            Graded{' '}
+                            Đã chấm điểm{' '}
                             {formatDistanceToNow(
                               new Date(submission.gradedAt),
                               {
@@ -375,7 +384,7 @@ const CourseAssignment = ({
                       <div>
                         <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
                           <AlertCircle className="w-4 h-4" />
-                          Expert Feedback:
+                          Đánh giá của chuyên gia:
                         </h4>
                         <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
                           <p className="text-sm text-blue-900">
@@ -395,7 +404,7 @@ const CourseAssignment = ({
                               }
                               className="text-xs"
                             >
-                              {submission.isAiPassed ? 'Passed' : 'Not Passed'}
+                              {submission.isAiPassed ? 'Đạt' : 'Không đạt'}
                             </Badge>
                           </div>
                         )}
@@ -410,9 +419,7 @@ const CourseAssignment = ({
                               }
                               className="text-xs"
                             >
-                              {submission.isExpertPassed
-                                ? 'Passed'
-                                : 'Not Passed'}
+                              {submission.isExpertPassed ? 'Đạt' : 'Không đạt'}
                             </Badge>
                           </div>
                         )}
@@ -497,8 +504,7 @@ const CourseAssignment = ({
               <div className="text-center py-12">
                 <History className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-muted-foreground">
-                  No submission history yet. Submit your first assignment to see
-                  it here.
+                  Chưa có bài tập nào được nộp.
                 </p>
               </div>
             )}

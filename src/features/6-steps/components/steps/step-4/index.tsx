@@ -195,7 +195,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
           position: { x: i * horizontalSpacing + 100, y: 50 + verticalSpacing },
           data: {
             element: LOADING_TEXT,
-            propertyDimension: LOADING_TEXT,
             stateA: LOADING_TEXT,
             stateB: LOADING_TEXT,
             benefitA: LOADING_TEXT,
@@ -218,9 +217,9 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         });
 
         const response = await step4Mutation.mutateAsync({
-          goal: stepData.step2?.selectedGoal?.text || '',
           systemIdentified: step3Data.systemIdentified,
           elements: step3Data.elements,
+          objectType: step3Data.objectType || 'Moving',
           requiredStates,
         });
 
@@ -522,6 +521,9 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
         // Call API to convert ML to MK
         const response = await convertMLtoMKMutation.mutateAsync({
+          systemInfo: {
+            objectType: stepData.step3?.objectType || 'Moving',
+          },
           physicalContradictions: [selectedPC],
         });
 
@@ -540,7 +542,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         [TechnicalContradictionKey.MK1, TechnicalContradictionKey.MK2].forEach(
           (mk, mkIndex) => {
             const tcId = `tc-${pcIndex}-${mk}`;
-            const mkData = tc[mk as 'MK1' | 'MK2'];
+            const mkData = tc[mk as 'mk1' | 'mk2'];
 
             newNodes.push({
               id: tcId,
@@ -667,7 +669,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   );
 
   const handleSelectTC = useCallback(
-    async (tcId: string, mkData: TechnicalContradiction['MK1']) => {
+    async (tcId: string, mkData: TechnicalContradiction['mk1']) => {
       setSelectedTechnicalContradiction(tcId);
       setSelectedPrinciples([]);
 
@@ -829,15 +831,93 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       setEdges((eds) => [...eds, ...matrixEdges]);
 
       try {
-        // Matrix params have been set, principles query will auto-fetch
-        // The useEffect below will handle the response
+        // Set matrix to success immediately
         setLoadingStates((prev) => ({
           ...prev,
           matrix: 'success',
         }));
+
+        // Directly fetch principles data
+        const principlesData = await principlesQuery.refetch();
+
+        if (!principlesData.data) {
+          throw new Error('No principles data received');
+        }
+
+        // Create actual principle nodes
+        const principleNodes: Node[] = principlesData.data.map(
+          (item, index) => ({
+            id: `principle-${tcId}-${item.principle.id}`,
+            type: NodeType.PRINCIPLE,
+            position: {
+              x:
+                matrixX -
+                (300 * (principlesData.data.length - 1)) / 2 +
+                index * 300,
+              y: matrixY + 300,
+            },
+            data: {
+              id: item.principle.id,
+              name: item.principle.name,
+              status: 'success' as NodeStatus,
+              isSelected: false,
+              onSelect: () => {
+                setSelectedPrinciples((prev) =>
+                  prev.includes(item.principle.id)
+                    ? prev.filter((id) => id !== item.principle.id)
+                    : [...prev, item.principle.id],
+                );
+              },
+            },
+          }),
+        );
+
+        // Create edges from matrix to principles
+        const principleEdges: Edge[] = principlesData.data.map((item) => ({
+          id: `edge-${matrixId}-principle-${item.principle.id}`,
+          source: matrixId,
+          target: `principle-${tcId}-${item.principle.id}`,
+          style: { stroke: '#94a3b8', strokeWidth: 2 },
+        }));
+
+        // Remove placeholder principles and add actual ones
+        setNodes((nds) =>
+          [
+            ...nds.filter((n) => !n.id.startsWith('principle-')),
+            ...principleNodes,
+          ].map((node) => {
+            // Update matrix node status to success when principles load
+            if (node.type === NodeType.MATRIX) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  status: 'success' as NodeStatus,
+                },
+              };
+            }
+            return node;
+          }),
+        );
+
+        setEdges((eds) => [
+          ...eds.filter(
+            (e) =>
+              !e.id.includes('principle-') &&
+              !e.source.startsWith('principle-') &&
+              !e.target.startsWith('principle-'),
+          ),
+          ...principleEdges,
+        ]);
+
+        // Set success state
+        setLoadingStates((prev) => ({
+          ...prev,
+          principles: 'success',
+        }));
       } catch (error) {
-        console.error('Failed to setup matrix:', error);
-        toast.error('Failed to setup TRIZ matrix');
+        console.error('Failed to fetch principles:', error);
+        toast.error('Failed to fetch principles from TRIZ matrix');
         setLoadingStates((prev) => ({
           ...prev,
           matrix: 'error',
@@ -845,118 +925,32 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         }));
       }
     },
-    [setNodes, setEdges],
+    [setNodes, setEdges, principlesQuery],
   );
 
-  // Handle principles query response
+  // Update principle selection state when selectedPrinciples changes
   useEffect(() => {
-    if (
-      !principlesQuery.data ||
-      !selectedTechnicalContradiction ||
-      !matrixParams
-    ) {
-      return;
-    }
+    if (selectedPrinciples.length === 0) return;
 
-    // Find the matrix node and TC node
-    const matrixNode = nodes.find((n) => n.type === NodeType.MATRIX);
-    const tcNode = nodes.find((n) => n.id === selectedTechnicalContradiction);
-
-    if (!matrixNode || !tcNode) return;
-
-    const tcId = selectedTechnicalContradiction;
-    const matrixId = matrixNode.id;
-    const matrixX = matrixNode.position.x || 100;
-    const matrixY = matrixNode.position.y || 850;
-
-    // Create actual principle nodes
-    const principleNodes: Node[] = principlesQuery.data.map((item, index) => ({
-      id: `principle-${tcId}-${item.principle.id}`,
-      type: NodeType.PRINCIPLE,
-      position: {
-        x:
-          matrixX - (300 * (principlesQuery.data.length - 1)) / 2 + index * 300,
-        y: matrixY + 300,
-      },
-      data: {
-        id: item.principle.id,
-        name: item.principle.name,
-        status: 'success' as NodeStatus,
-        isSelected: selectedPrinciples.includes(item.principle.id),
-        onSelect: () => {
-          setSelectedPrinciples((prev) =>
-            prev.includes(item.principle.id)
-              ? prev.filter((id) => id !== item.principle.id)
-              : [...prev, item.principle.id],
-          );
-        },
-      },
-    }));
-
-    // Create edges from matrix to principles
-    const principleEdges: Edge[] = principlesQuery.data.map((item) => ({
-      id: `edge-${matrixId}-principle-${item.principle.id}`,
-      source: matrixId,
-      target: `principle-${tcId}-${item.principle.id}`,
-      style: { stroke: '#94a3b8', strokeWidth: 2 },
-    }));
-
-    // Remove placeholder principles and add actual ones
     setNodes((nds) =>
-      [
-        ...nds.filter((n) => !n.id.startsWith('principle-')),
-        ...principleNodes,
-      ].map((node) => {
-        // Update matrix node status to success when principles load
-        if (node.type === NodeType.MATRIX) {
+      nds.map((node) => {
+        if (node.type === NodeType.PRINCIPLE) {
+          const principleData = node.data as {
+            id: number;
+            [key: string]: unknown;
+          };
           return {
             ...node,
             data: {
               ...node.data,
-              status: 'success' as NodeStatus,
+              isSelected: selectedPrinciples.includes(principleData.id),
             },
           };
         }
         return node;
       }),
     );
-
-    setEdges((eds) => [
-      ...eds.filter(
-        (e) =>
-          !e.id.includes('principle-') &&
-          !e.source.startsWith('principle-') &&
-          !e.target.startsWith('principle-'),
-      ),
-      ...principleEdges,
-    ]);
-
-    // Set success state
-    setLoadingStates((prev) => ({
-      ...prev,
-      matrix: 'success',
-      principles: 'success',
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    principlesQuery.data,
-    selectedTechnicalContradiction,
-    matrixParams,
-    selectedPrinciples,
-    setNodes,
-    setEdges,
-  ]);
-
-  // Handle principles query error
-  useEffect(() => {
-    if (principlesQuery.error && matrixParams) {
-      toast.error('Failed to fetch principles from TRIZ matrix');
-      setLoadingStates((prev) => ({
-        ...prev,
-        principles: 'error',
-      }));
-    }
-  }, [principlesQuery.error, matrixParams]);
+  }, [selectedPrinciples, setNodes]);
 
   const handleNext = () => {
     if (!selectedPhysicalContradiction) {
@@ -1006,7 +1000,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
-            Mục tiêu: {stepData.step2?.selectedGoal?.text}
+            Mục tiêu: {stepData.step2?.goal}
           </div>
         </div>
       </div>

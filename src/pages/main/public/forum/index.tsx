@@ -23,7 +23,7 @@ import {
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
+import { cleanHtml, formatDate, htmlExcerpt } from '@/utils';
 
 const ForumPage: React.FC = () => {
   const tabs = [
@@ -307,7 +307,7 @@ const ForumPage: React.FC = () => {
                     href: `/users/${p.createdBy}`,
                     avatar: p.avtUrl || '',
                   }}
-                  time={formatISODate(p.createdAt)}
+                  time={formatDate(new Date(p.createdAt))}
                   excerpt={
                     <>
                       <div
@@ -392,13 +392,16 @@ const ForumPage: React.FC = () => {
                         }}
                       >
                         <img
-                          src={r.imgUrl || ''}
+                          src={
+                            r.imgUrl ||
+                            'https://placehold.co/56x56?text=No+Image'
+                          }
                           alt={r.title}
                           className="w-14 h-14 rounded-md object-cover bg-slate-200"
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-slate-500">
-                            {formatISODate(r.createdAt)}
+                            {formatDate(new Date(r.createdAt))}
                           </p>
                           <p className="font-semibold text-[14px] line-clamp-2">
                             {r.title}
@@ -432,13 +435,15 @@ const ForumPage: React.FC = () => {
                     }}
                   >
                     <img
-                      src={r.imgUrl || ''}
+                      src={
+                        r.imgUrl || 'https://placehold.co/56x56?text=No+Image'
+                      }
                       alt={r.title}
                       className="w-14 h-14 rounded-md object-cover bg-slate-200"
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-slate-500">
-                        {formatISODate(r.createdAt)}
+                        {formatDate(new Date(r.createdAt))}
                       </p>
                       <p className="font-semibold text-[14px] line-clamp-2">
                         {r.title}
@@ -482,7 +487,7 @@ const ForumPage: React.FC = () => {
                           {selectedPost.userName || 'Người dùng'}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {formatISODate(selectedPost.createdAt)}
+                          {formatDate(new Date(selectedPost.createdAt))}
                         </p>
                       </div>
                     </div>

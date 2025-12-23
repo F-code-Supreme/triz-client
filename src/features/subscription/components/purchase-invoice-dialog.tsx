@@ -56,10 +56,10 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
   if (!pkg) return null;
 
   const priceInTokens = pkg.priceInTokens;
-  const sufficiendBalance = walletBalance >= priceInTokens;
+  const sufficientBalance = walletBalance >= priceInTokens;
 
   const handlePurchase = () => {
-    if (!sufficiendBalance) {
+    if (!sufficientBalance) {
       toast.error(t('purchase_invoice_dialog.insufficient_balance_error'));
       return;
     }
@@ -177,14 +177,14 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
           {/* Wallet Balance */}
           <div
             className={`border rounded-lg p-4 flex items-start gap-3 ${
-              sufficiendBalance
+              sufficientBalance
                 ? 'bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800'
                 : 'bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-800'
             }`}
           >
             <Wallet
               className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
-                sufficiendBalance
+                sufficientBalance
                   ? 'text-green-600 dark:text-green-500'
                   : 'text-red-600 dark:text-red-500'
               }`}
@@ -196,7 +196,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 </p>
                 <p
                   className={`text-lg font-semibold ${
-                    sufficiendBalance
+                    sufficientBalance
                       ? 'text-green-600 dark:text-green-500'
                       : 'text-red-600 dark:text-red-500'
                   }`}
@@ -205,7 +205,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 </p>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
-                {sufficiendBalance ? (
+                {sufficientBalance ? (
                   <span className="flex items-center gap-1 text-green-600 dark:text-green-500">
                     <CheckCircle className="h-4 w-4" />
                     {t('purchase_invoice_dialog.sufficient_balance')}
@@ -223,7 +223,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
           </div>
 
           {/* Insufficient Balance Warning */}
-          {!sufficiendBalance && (
+          {!sufficientBalance && (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
@@ -241,7 +241,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
                 className="mt-1"
-                disabled={!sufficiendBalance}
+                disabled={!sufficientBalance}
               />
               <label
                 htmlFor="terms"
@@ -294,7 +294,7 @@ export const PurchaseInvoiceDialog: React.FC<PurchaseInvoiceDialogProps> = ({
               {t('purchase_invoice_dialog.cancel_button')}
             </Button>
 
-            {!sufficiendBalance ? (
+            {!sufficientBalance ? (
               <Button onClick={handleTopup} className="gap-2">
                 <Wallet className="h-4 w-4" />
                 {t('purchase_invoice_dialog.go_to_wallet_button')}

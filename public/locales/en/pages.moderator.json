@@ -1,0 +1,17 @@
+{
+  "dashboard": {
+    "title": "Moderator Dashboard",
+    "description": "Welcome to the moderator panel. Manage forum content and review reports.",
+    "total_posts": "Total Posts",
+    "total_posts_desc": "Total forum posts",
+    "total_replies": "Total Replies",
+    "total_replies_desc": "Total replies to posts",
+    "total_reposts": "Total Reposts",
+    "total_reposts_desc": "Total reposts",
+    "pending_reports": "Pending Reports",
+    "pending_reports_desc": "Reports awaiting review",
+    "post_status_distribution": "Post Status Distribution",
+    "post_status_distribution_desc": "Distribution of posts by status",
+    "no_data": "No data available"
+  }
+}

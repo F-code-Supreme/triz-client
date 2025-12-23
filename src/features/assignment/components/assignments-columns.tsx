@@ -3,8 +3,14 @@ import { type ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '@/components/data-table/column-header';
 import { Badge } from '@/components/ui/badge';
 import { AssignmentsDataTableRowActions } from '@/features/assignment/components/assignments-data-table-row-actions';
-import { formatDateHour } from '@/utils/date/date';
+import { formatDateHour } from '@/utils';
 
+import {
+  assignmentSubmissionStatusLabels,
+  getAssignmentSubmissionStatusColors,
+} from '../utils';
+
+import type { AssignmentSubmissionStatus } from '../types';
 import type { AssignmentSubmissionExpertReview } from '@/features/assignment/services/queries/types';
 
 export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
@@ -55,36 +61,15 @@ export const assignmentsColumns: ColumnDef<AssignmentSubmissionExpertReview>[] =
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Trạng thái" />
       ),
-      // eslint-disable-next-line sonarjs/cognitive-complexity
       cell: ({ row }) => {
-        const status = row.getValue('status') as string;
+        const status = row.getValue('status') as AssignmentSubmissionStatus;
 
         return (
           <Badge
             variant={status === 'EXPERT_PENDING' ? 'default' : 'secondary'}
-            className={
-              status === 'EXPERT_PENDING'
-                ? 'bg-blue-100 text-blue-700 hover:bg-blue-100'
-                : status === 'AI_PENDING'
-                  ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100'
-                  : status === 'APPROVED'
-                    ? 'bg-green-100 text-green-700 hover:bg-green-100'
-                    : status === 'AI_REJECTED' || status === 'REJECTED'
-                      ? 'bg-red-100 text-red-700 hover:bg-red-100'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-100'
-            }
+            className={getAssignmentSubmissionStatusColors(status)}
           >
-            {status === 'EXPERT_PENDING'
-              ? 'Chờ chuyên gia đánh giá'
-              : status === 'AI_PENDING'
-                ? 'Chờ AI đánh giá'
-                : status === 'APPROVED'
-                  ? 'Đã duyệt'
-                  : status === 'AI_REJECTED'
-                    ? 'AI từ chối'
-                    : status === 'REJECTED'
-                      ? 'Chuyên gia từ chối'
-                      : 'Không xác định'}
+            {assignmentSubmissionStatusLabels[status]}
           </Badge>
         );
       },

@@ -59,16 +59,16 @@ describe('Currency Utils', () => {
 
   describe('formatVND', () => {
     it('should format Vietnamese currency', () => {
-      expect(formatVND(1000)).toBe('1.000\u00A0₫');
-      expect(formatVND(10000)).toBe('10.000\u00A0₫');
+      expect(formatVND(1000, 'vi-VN')).toBe('1.000\u00A0₫');
+      expect(formatVND(10000, 'vi-VN')).toBe('10.000\u00A0₫');
     });
 
     it(ZERO_MESSAGE, () => {
-      expect(formatVND(0)).toBe('0\u00A0₫');
+      expect(formatVND(0, 'vi-VN')).toBe('0\u00A0₫');
     });
 
     it('should handle large numbers', () => {
-      expect(formatVND(1000000)).toBe(`1.000.000\u00A0₫`);
+      expect(formatVND(1000000, 'vi-VN')).toBe(`1.000.000\u00A0₫`);
     });
   });
 });

@@ -1,9 +1,9 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
 import { DataTableColumnHeader } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
+import { formatDate } from '@/utils';
 
 import { SubscriptionsDataTableRowActions } from './subscriptions-data-table-row-actions';
 import {
@@ -42,7 +42,7 @@ export const useSubscriptionsColumns = () => {
       ),
       cell: (info) => {
         const date = info.getValue();
-        return format(new Date(date), 'MMM dd, yyyy');
+        return formatDate(new Date(date));
       },
     }),
 
@@ -55,7 +55,7 @@ export const useSubscriptionsColumns = () => {
       ),
       cell: (info) => {
         const date = info.getValue();
-        return format(new Date(date), 'MMM dd, yyyy');
+        return formatDate(new Date(date));
       },
     }),
 
@@ -120,7 +120,7 @@ export const subscriptionsColumns = [
     ),
     cell: (info) => {
       const date = info.getValue();
-      return format(new Date(date), 'MMM dd, yyyy');
+      return formatDate(new Date(date));
     },
   }),
 
@@ -130,7 +130,7 @@ export const subscriptionsColumns = [
     ),
     cell: (info) => {
       const date = info.getValue();
-      return format(new Date(date), 'MMM dd, yyyy');
+      return formatDate(new Date(date));
     },
   }),
 

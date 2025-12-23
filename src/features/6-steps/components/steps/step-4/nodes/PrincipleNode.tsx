@@ -20,7 +20,6 @@ import { principlesData } from '@/pages/main/public/learn-triz/components/princi
 interface PrincipleNodeData {
   id: number;
   name: string;
-  priority: number;
   status?: NodeStatus;
   isSelected?: boolean;
   onSelect?: () => void;

@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ReportPostsDataTableRowActions } from '@/features/report/components/report-posts-data-table-row-actions';
+import { formatDate } from '@/utils';
 
 import type { Report } from '@/features/report/types';
 
@@ -102,11 +103,7 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
 
       return (
         <div className="text-sm text-gray-600">
-          {new Date(date).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {formatDate(new Date(date))}
         </div>
       );
     },
@@ -122,11 +119,7 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
 
       return (
         <div className="text-sm text-gray-600">
-          {new Date(date).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {formatDate(new Date(date))}
         </div>
       );
     },
