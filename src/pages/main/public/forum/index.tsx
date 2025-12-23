@@ -384,7 +384,10 @@ const ForumPage: React.FC = () => {
                         }}
                       >
                         <img
-                          src={r.imgUrl || ''}
+                          src={
+                            r.imgUrl ||
+                            'https://placehold.co/56x56?text=No+Image'
+                          }
                           alt={r.title}
                           className="w-14 h-14 rounded-md object-cover bg-slate-200"
                         />
@@ -424,7 +427,9 @@ const ForumPage: React.FC = () => {
                     }}
                   >
                     <img
-                      src={r.imgUrl || ''}
+                      src={
+                        r.imgUrl || 'https://placehold.co/56x56?text=No+Image'
+                      }
                       alt={r.title}
                       className="w-14 h-14 rounded-md object-cover bg-slate-200"
                     />
