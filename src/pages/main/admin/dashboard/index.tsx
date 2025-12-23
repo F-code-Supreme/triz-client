@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   RevenueSection,
-  ChatForumSection,
+  // ChatForumSection,
   mockDashboardData,
   GameSection,
 } from '@/features/dashboard';
@@ -62,7 +62,7 @@ const AdminDashboardPage = () => {
               <TabsTrigger value="revenue">
                 {t('dashboard.tabs.revenue')}
               </TabsTrigger>
-              <TabsTrigger value="chat">{t('dashboard.tabs.chat')}</TabsTrigger>
+              {/* <TabsTrigger value="chat">{t('dashboard.tabs.chat')}</TabsTrigger> */}
               <TabsTrigger value="games">
                 {t('dashboard.tabs.games')}
               </TabsTrigger>
@@ -81,9 +81,9 @@ const AdminDashboardPage = () => {
               trendLoading={trendLoading}
             />
           </TabsContent>
-          <TabsContent value="chat" className="mt-6">
+          {/* <TabsContent value="chat" className="mt-6">
             <ChatForumSection chat={mokdata.chat} isLoading={false} />
-          </TabsContent>
+          </TabsContent> */}
           <TabsContent value="games" className="mt-6">
             <GameSection data={mokdata.games} isLoading={false} />
           </TabsContent>
