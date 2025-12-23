@@ -6,7 +6,7 @@ import {
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
+import { DataTablePagination } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -38,7 +38,7 @@ import { reportPostsColumns } from '@/features/report/components/report-posts-co
 import { useGetAllReportsQuery } from '@/features/report/services/queries';
 import { ModeratorLayout } from '@/layouts/moderator-layout';
 
-import type { FilterOption } from '@/components/data-table';
+// import type { FilterOption } from '@/components/data-table';
 import type {
   ColumnFiltersState,
   PaginationState,
@@ -62,16 +62,16 @@ const ModeratorReportsManagementPage = () => {
   const uploadMutation = useUploadFileMutation();
   const createForumPostMutation = useCreateForumPostMutation();
 
-  const forumPostFilters: FilterOption[] = [
-    {
-      columnId: 'status',
-      title: 'Status',
-      options: [
-        { label: 'Công khai', value: 'ACTIVE' },
-        { label: 'Chưa công khai', value: 'INACTIVE' },
-      ],
-    },
-  ];
+  // const forumPostFilters: FilterOption[] = [
+  //   {
+  //     columnId: 'status',
+  //     title: 'Status',
+  //     options: [
+  //       { label: 'Công khai', value: 'ACTIVE' },
+  //       { label: 'Chưa công khai', value: 'INACTIVE' },
+  //     ],
+  //   },
+  // ];
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -115,13 +115,6 @@ const ModeratorReportsManagementPage = () => {
         </div>
 
         <div className="space-y-4">
-          <DataTableToolbar
-            table={table}
-            searchPlaceholder="Tìm theo tiêu đề..."
-            searchKey="title"
-            filters={forumPostFilters}
-          />
-
           {isLoading ? (
             <div className="border rounded-md overflow-hidden">
               <Table>
