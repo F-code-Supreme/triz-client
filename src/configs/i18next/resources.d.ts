@@ -627,6 +627,8 @@ interface Resources {
         "rank": "Rank",
         "select_view": "Select View",
         "title": "Game Analytics",
+        "top_games": "Top Games",
+        "top_games_desc": "Most played games with highest engagement",
         "top_players": "Top Players Leaderboard",
         "top_players_desc": "Highest scoring players across all games",
         "total_game_plays": "Total Game Plays",

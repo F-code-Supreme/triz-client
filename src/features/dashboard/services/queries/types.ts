@@ -30,6 +30,46 @@ export interface PackageAnalyticsItem {
   autoRenewCount: number; // Số lượng tự động gia hạn
 }
 
+// GAME ANALYTICS
+
+export interface WeeklyTrendItem {
+  week: string;
+  plays: number | null;
+  averageScore: number | null;
+  totalGames: number | null;
+}
+
+export interface GamePopularityItem {
+  gameId: string;
+  gameName: string;
+  thumbnailUrl: string;
+  totalPlays: number;
+  averageScore: number;
+  uniquePlayers: number;
+  popularity: 'HIGH' | 'MEDIUM' | 'LOW';
+}
+
+export interface TopPerformerItem {
+  userId: string;
+  userName: string;
+  userAvatarUrl: string;
+  totalScore: number;
+  averageScore: number;
+  totalPlays: number;
+}
+
+export interface IGetGameAnalyticsResponse {
+  overview: {
+    totalPlays: number;
+    averageScore: number;
+  };
+  // playsTrend: Omit<WeeklyTrendItem, 'averageScore' | 'totalGames'>[];
+  scoreTrend: Omit<WeeklyTrendItem, 'plays'>[];
+  topGames: GamePopularityItem[];
+  topPlayers: TopPerformerItem[];
+}
+
+// FORUM ANALYTICS
 export interface IGetForumAnalyticsResponse {
   totalPosts: number;
   totalReplies: number;
@@ -40,6 +80,7 @@ export interface IGetForumAnalyticsResponse {
   };
 }
 
+// EXPERT ANALYTICS
 export interface AssignmentSubmissionTrendItem {
   date: string; // định dạng 'YYYY-MM-DD'
   count: number; // số lượng nộp bài trong ngày

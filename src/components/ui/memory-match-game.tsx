@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/dialog';
 import MemoryMatchStarted from '@/components/ui/memory-match-started';
 import { principles } from '@/components/ui/principle-hero-section';
+import { GamesEnumId } from '@/features/game/configs';
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
-import { GamesEnumId } from '@/features/game/services/mutations/enum';
 
 interface MemoryCard {
   id: number;

@@ -3,8 +3,8 @@ import { useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, RefreshCw, Trophy, Star, ArrowRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { GamesEnumId } from '@/features/game/configs';
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
-import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { useGetGameLeaderboardByIdQuery } from '@/features/game/services/queries';
 import { GameKeys } from '@/features/game/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
