@@ -1,8 +1,13 @@
-import { Plus } from 'lucide-react';
+import { Plus, Info } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SelectableItem } from '@/features/6-steps/components/selectable-item';
 import { SelectableItemSkeletonList } from '@/features/6-steps/components/selectable-item-skeleton-list';
@@ -26,6 +31,7 @@ export const Step5GenerateIdeas = ({
 }: Step5Props) => {
   const { stepData } = useSixStepDataStore();
   const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [targetML, setTargetML] = useState<string>('');
 
   const step5Mutation = useStep5SuggestionMutation();
 
@@ -50,10 +56,9 @@ export const Step5GenerateIdeas = ({
 
       try {
         const response = await step5Mutation.mutateAsync({
-          miniProblem: step1Data.selectedMiniProblem,
-          goal: step2Data.selectedGoal?.text || '',
-          systemIdentified: step3Data.systemIdentified,
-          physicalContradictions: step4Data.physicalContradictions,
+          step5Data: {
+            technicalContradictions: step4Data.technicalContradictions || [],
+          },
           trizPrinciples:
             step4Data.selectedPrinciples?.map((p) => ({
               priority: p.priority,
@@ -66,6 +71,7 @@ export const Step5GenerateIdeas = ({
             })) || [],
         });
 
+        setTargetML(response.ideaGenerationSession.targetML);
         setIdeas(response.ideaGenerationSession.ideas);
       } catch (error) {
         console.error('Failed to get step 5 suggestions:', error);
@@ -91,18 +97,13 @@ export const Step5GenerateIdeas = ({
 
     // Sort ideas within each group by priority
     Object.keys(groups).forEach((principleId) => {
-      groups[Number(principleId)].sort((a, b) => {
-        return (
-          (a.principleUsed.priority || 999) - (b.principleUsed.priority || 999)
-        );
-      });
+      // Sort by idea id as fallback since priority is not available
+      groups[Number(principleId)].sort((a, b) => a.id - b.id);
     });
 
-    // Convert to array of [principleId, ideas] pairs and sort by priority
+    // Convert to array of [principleId, ideas] pairs and sort by principle id
     const sortedEntries = Object.entries(groups).sort((a, b) => {
-      const priorityA = a[1][0]?.principleUsed.priority || 999;
-      const priorityB = b[1][0]?.principleUsed.priority || 999;
-      return priorityA - priorityB; // Lower priority number comes first
+      return Number(a[0]) - Number(b[0]); // Sort by principle ID
     });
 
     // Convert back to object while maintaining order
@@ -135,7 +136,6 @@ export const Step5GenerateIdeas = ({
       principleUsed: principle,
       ideaStatement: 'Ý tưởng mới...',
       howItAddresses: '',
-      abstractionLevel: 'concept',
     };
 
     setIdeas((prev) => [...prev, newIdea]);
@@ -167,20 +167,20 @@ export const Step5GenerateIdeas = ({
       return;
     }
 
-    if (selectedIdeaIds.size !== 3) {
+    if (selectedIdeaIds.size > 3) {
       toast.error('Vui lòng chọn đúng 3 ý tưởng để tiếp tục');
       return;
     }
 
     const selectedIdeas = ideas.filter((idea) => selectedIdeaIds.has(idea.id));
-    onNext({ ideas, selectedIdeas });
+    onNext({ ideas, selectedIdeas, targetML });
   };
 
   if (step5Mutation.isPending) {
     return (
-      <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
         <div className="flex-1 flex flex-col gap-4">
-          <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
+          <div className="self-stretch text-center justify-center text-4xl font-bold leading-[48px] tracking-tight">
             Phát các ý tưởng giải quyết ML
           </div>
           <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
@@ -219,10 +219,33 @@ export const Step5GenerateIdeas = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
-          Phát các ý tưởng giải quyết ML
+        <div className="self-stretch text-center justify-center items-center gap-2 inline-flex">
+          <div className="text-4xl font-bold leading-[48px] tracking-tight">
+            Phát các ý tưởng giải quyết ML
+          </div>
+          {targetML && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Info className="h-5 w-5 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">Thông tin bổ sung</h4>
+
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Target ML (Mâu thuẫn Vật lý mục tiêu):
+                    </p>
+                    <p className="text-sm">{targetML}</p>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
@@ -235,7 +258,7 @@ export const Step5GenerateIdeas = ({
 
         <div className="self-stretch justify-start text-sm font-semibold leading-6 text-slate-600">
           Xem lại và chỉnh sửa các ý tưởng được tạo từ các nguyên tắc TRIZ. Chọn
-          3 ý tưởng tốt nhất để đánh giá:
+          nhiều nhất 3 ý tưởng tốt nhất để đánh giá:
         </div>
 
         {selectedIdeaIds.size > 0 && (
@@ -256,9 +279,6 @@ export const Step5GenerateIdeas = ({
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold text-base">
                         Nguyên tắc #{principle.id}: {principle.name}
-                        <span className="text-sm text-muted-foreground ml-2">
-                          (Độ ưu tiên: {principle.priority})
-                        </span>
                       </h3>
                       <Button
                         variant="ghost"
@@ -307,7 +327,7 @@ export const Step5GenerateIdeas = ({
       <ActionButtons
         onBack={onBack}
         onNext={handleNext}
-        disableNext={ideas.length === 0 || selectedIdeaIds.size !== 3}
+        disableNext={ideas.length === 0 || selectedIdeaIds.size > 3}
         nextLabel="Đánh giá ý tưởng"
       />
     </div>

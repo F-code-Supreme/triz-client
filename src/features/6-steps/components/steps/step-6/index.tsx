@@ -1,4 +1,4 @@
-import { HelpCircle, Loader2, Star } from 'lucide-react';
+import { HelpCircle, Loader2, Star, Info } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 
@@ -18,7 +18,7 @@ import ActionButtons from '../../action-buttons';
 
 import type {
   Idea,
-  IStep6SuggestionResponse,
+  IStep6EvaluatedIdea,
 } from '@/features/6-steps/services/mutations/types';
 
 interface Step6Props {
@@ -27,46 +27,12 @@ interface Step6Props {
   initialData?: Record<string, unknown>;
 }
 
-interface IdeaEvaluation extends IStep6SuggestionResponse {
+interface IdeaEvaluation extends IStep6EvaluatedIdea {
   idea: Idea;
   isLoading?: boolean;
   userComment?: string;
   userRating?: number;
 }
-
-const getCategoryBadgeVariant = (
-  category: 'excellent' | 'good' | 'average' | 'poor',
-) => {
-  switch (category) {
-    case 'excellent':
-      return 'default'; // blue
-    case 'good':
-      return 'secondary'; // green-ish
-    case 'average':
-      return 'outline'; // neutral
-    case 'poor':
-      return 'destructive'; // red
-    default:
-      return 'outline';
-  }
-};
-
-const getCategoryLabel = (
-  category: 'excellent' | 'good' | 'average' | 'poor',
-) => {
-  switch (category) {
-    case 'excellent':
-      return 'Xuất sắc';
-    case 'good':
-      return 'Tốt';
-    case 'average':
-      return 'Trung bình';
-    case 'poor':
-      return 'Kém';
-    default:
-      return category;
-  }
-};
 
 export const Step6MakeDecision = ({
   onNext,
@@ -88,14 +54,15 @@ export const Step6MakeDecision = ({
     [initialData?.selectedIdeas, stepData.step5],
   );
 
-  const targetML =
-    stepData.step4?.physicalContradictions[
-      stepData.step4.selectedPhysicalContradictionIndex || 0
-    ]?.contradictionStatement || '';
-
-  const physicalContradictions = useMemo(
-    () => stepData.step4?.physicalContradictions || [],
-    [stepData.step4?.physicalContradictions],
+  const targetML = useMemo(
+    () =>
+      (initialData?.targetML as string) ||
+      (stepData.step5?.targetML as string) ||
+      stepData.step4?.physicalContradictions[
+        stepData.step4.selectedPhysicalContradictionIndex || 0
+      ]?.contradictionStatement ||
+      '',
+    [initialData?.targetML, stepData.step4, stepData.step5],
   );
 
   // Evaluate ideas one by one
@@ -118,45 +85,36 @@ export const Step6MakeDecision = ({
           {
             idea,
             ideaId: idea.id,
-            status: 'passing' as const,
-            evaluation: {
-              scores: {
-                mlResolution: 0,
-                feasibility: 0,
-                systemImpact: 0,
-                total: 0,
-              },
-              category: 'average' as const,
-              keyStrengths: [],
-              keyWeaknesses: [],
-              explanation: {
-                mlResolution: '',
-                feasibility: '',
-                systemImpact: '',
-              },
+            status: 'RESERVE' as const,
+            analysis: {
+              screening: '',
+              resourcesAndInertia: '',
+              overallBenefit: '',
             },
-            message: '',
-            rejectionReason: null,
-            category: null,
-            suggestion: null,
-            assumption: null,
-            note: null,
+            decisionMessage: '',
+            actionSuggestion: '',
             isLoading: true,
+            userComment: undefined,
+            userRating: undefined,
           },
         ];
       });
 
       try {
         const response = await step6Mutation.mutateAsync({
-          targetML,
-          idea,
-          physicalContradictions,
+          ideaGenerationSession: {
+            targetML,
+            ideas: [idea],
+          },
         });
+
+        // API returns { evaluatedIdeas: [...] }, extract the first one
+        const evaluation = response.evaluatedIdeas[0];
 
         setEvaluations((prev) => {
           // Ensure uniqueness when updating
           const filtered = prev.filter((e) => e.ideaId !== idea.id);
-          return [...filtered, { ...response, idea, isLoading: false }];
+          return [...filtered, { ...evaluation, idea, isLoading: false }];
         });
 
         setCurrentEvaluatingIndex((prev) => prev + 1);
@@ -193,16 +151,16 @@ export const Step6MakeDecision = ({
       new Map(evaluations.map((e) => [e.ideaId, e])).values(),
     );
 
-    const passingEvaluations = uniqueEvaluations.filter(
-      (e) => e.status === 'passing',
+    const selectedEvaluations = uniqueEvaluations.filter(
+      (e) => e.status === 'SELECTED',
     );
 
-    if (passingEvaluations.length === 0) {
-      toast.error('Cần ít nhất một ý tưởng đạt yêu cầu để tiếp tục');
+    if (selectedEvaluations.length === 0) {
+      toast.error('Cần ít nhất một ý tưởng được chọn để tiếp tục');
       return;
     }
 
-    onNext({ evaluations: passingEvaluations });
+    onNext({ evaluations: uniqueEvaluations });
   };
 
   // Get unique evaluations for display and validation
@@ -216,10 +174,33 @@ export const Step6MakeDecision = ({
     uniqueEvaluations.every((e) => !e.isLoading);
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
-          Ra quyết định
+        <div className="self-stretch text-center justify-center items-center gap-2 inline-flex">
+          <div className="text-4xl font-bold leading-[48px] tracking-tight">
+            Ra quyết định
+          </div>
+          {targetML && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Info className="h-5 w-5 text-muted-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">Thông tin bổ sung</h4>
+
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Mâu thuẫn Vật lý mục tiêu:
+                    </p>
+                    <p className="text-sm">{targetML}</p>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
 
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
@@ -245,11 +226,13 @@ export const Step6MakeDecision = ({
                 <div
                   key={idea.id}
                   className={`p-4 rounded-lg border-2 ${
-                    evaluation?.status === 'rejected'
+                    evaluation?.status === 'REJECTED'
                       ? 'border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20'
-                      : evaluation?.status === 'passing'
-                        ? 'border-primary/50 bg-primary/5'
-                        : 'border-border'
+                      : evaluation?.status === 'SELECTED'
+                        ? 'border-green-500/50 bg-green-50/50 dark:bg-green-950/20'
+                        : evaluation?.status === 'RESERVE'
+                          ? 'border-secondary bg-secondary/10'
+                          : 'border-border'
                   }`}
                 >
                   {/* Header */}
@@ -261,25 +244,21 @@ export const Step6MakeDecision = ({
                         </h3>
                         {evaluation && !isEvaluating && (
                           <>
-                            {evaluation.status === 'rejected' ? (
+                            {evaluation.status === 'SELECTED' && (
+                              <Badge variant="default" className="bg-green-600">
+                                Đề xuất
+                              </Badge>
+                            )}
+                            {evaluation.status === 'RESERVE' && (
+                              <Badge variant="secondary">Dự phòng</Badge>
+                            )}
+                            {evaluation.status === 'REJECTED' && (
                               <Badge
                                 variant="outline"
-                                className="border-yellow-500 text-yellow-700 dark:text-yellow-500"
+                                className="border-yellow-500 text-yellow-700 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-950/30"
                               >
-                                Không khả thi
+                                Không đề xuất
                               </Badge>
-                            ) : (
-                              evaluation.evaluation && (
-                                <Badge
-                                  variant={getCategoryBadgeVariant(
-                                    evaluation.evaluation.category,
-                                  )}
-                                >
-                                  {getCategoryLabel(
-                                    evaluation.evaluation.category,
-                                  )}
-                                </Badge>
-                              )
                             )}
                           </>
                         )}
@@ -312,47 +291,41 @@ export const Step6MakeDecision = ({
                   {/* Evaluation Content */}
                   {evaluation && !isEvaluating && (
                     <div className="space-y-4">
-                      {/* Rejected Idea */}
-                      {evaluation.status === 'rejected' ||
-                      !evaluation.evaluation ? (
+                      {/* REJECTED Ideas */}
+                      {evaluation.status === 'REJECTED' ? (
                         <div className="space-y-3">
-                          <div className="p-4 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-500/50 rounded-lg">
-                            {evaluation.rejectionReason && (
+                          <div className="p-4 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-500/50 rounded-lg space-y-3">
+                            {/* Screening Analysis */}
+                            {evaluation.analysis?.screening && (
                               <div className="space-y-2">
                                 <p className="text-sm font-medium text-yellow-800 dark:text-yellow-600">
-                                  Lý do:
+                                  Lọc ý tưởng:
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                  {evaluation.rejectionReason}
+                                  {evaluation.analysis.screening}
                                 </p>
                               </div>
                             )}
-                            {evaluation.category && (
-                              <div className="mt-2 text-sm">
-                                <span className="font-medium">Loại: </span>
-                                <span className="text-muted-foreground">
-                                  {evaluation.category ===
-                                  'constraint_violation'
-                                    ? 'Vi phạm ràng buộc'
-                                    : evaluation.category === 'not_solving_ml'
-                                      ? 'Không giải quyết ML'
-                                      : evaluation.category === 'not_feasible'
-                                        ? 'Không khả thi'
-                                        : evaluation.category}
-                                </span>
+
+                            {/* Decision Message */}
+                            {evaluation.decisionMessage && (
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium">
+                                  Quyết định:
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {evaluation.decisionMessage}
+                                </p>
                               </div>
                             )}
-                            {evaluation.suggestion && (
-                              <div className="mt-3 space-y-1">
+
+                            {/* Action Suggestion */}
+                            {evaluation.actionSuggestion && (
+                              <div className="space-y-2">
                                 <p className="text-sm font-medium">Gợi ý:</p>
                                 <p className="text-sm text-muted-foreground">
-                                  {evaluation.suggestion}
+                                  {evaluation.actionSuggestion}
                                 </p>
-                              </div>
-                            )}
-                            {evaluation.message && (
-                              <div className="mt-3 text-sm text-muted-foreground">
-                                {evaluation.message}
                               </div>
                             )}
                           </div>
@@ -411,139 +384,151 @@ export const Step6MakeDecision = ({
                         </div>
                       ) : (
                         <>
-                          {/* AI Evaluation Scores */}
+                          {/* SELECTED / RESERVE Ideas - Full Analysis */}
                           <div className="space-y-3">
                             <h4 className="text-sm font-semibold">
                               Đánh giá của AI:
                             </h4>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              {/* ML Resolution */}
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-1">
-                                  <label className="text-sm font-medium">
-                                    Giải quyết ML
-                                  </label>
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-4 w-4 p-0"
-                                      >
-                                        <HelpCircle className="h-3 w-3 text-muted-foreground" />
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-80">
-                                      <div className="space-y-2">
-                                        <h4 className="font-medium text-sm">
-                                          Khả năng giải quyết ML
-                                        </h4>
-                                        <p className="text-sm text-muted-foreground">
-                                          {evaluation.evaluation.explanation
-                                            .mlResolution ||
-                                            'Đánh giá mức độ ý tưởng giải quyết được mâu thuẫn vật lý'}
-                                        </p>
-                                      </div>
-                                    </PopoverContent>
-                                  </Popover>
-                                </div>
-                                <div className="flex items-center justify-center h-10 px-3 py-2 bg-muted rounded-md border border-input">
-                                  <span className="text-lg font-semibold">
-                                    {evaluation.evaluation.scores.mlResolution}
-                                    /10
-                                  </span>
-                                </div>
-                              </div>
 
-                              {/* Feasibility */}
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-1">
-                                  <label className="text-sm font-medium">
-                                    Tính khả thi
-                                  </label>
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-4 w-4 p-0"
-                                      >
-                                        <HelpCircle className="h-3 w-3 text-muted-foreground" />
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-80">
-                                      <div className="space-y-2">
-                                        <h4 className="font-medium text-sm">
-                                          Tính khả thi
-                                        </h4>
-                                        <p className="text-sm text-muted-foreground">
-                                          {evaluation.evaluation.explanation
-                                            .feasibility ||
-                                            'Đánh giá khả năng triển khai ý tưởng trong thực tế'}
-                                        </p>
-                                      </div>
-                                    </PopoverContent>
-                                  </Popover>
+                            {/* Analysis Criteria */}
+                            <div className="space-y-4">
+                              {/* Screening */}
+                              {evaluation.analysis?.screening && (
+                                <div className="p-3 bg-muted/30 rounded-lg space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <h5 className="text-sm font-medium">
+                                      1. Lọc ý tưởng
+                                    </h5>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-4 w-4 p-0"
+                                        >
+                                          <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-80">
+                                        <div className="space-y-2">
+                                          <h4 className="font-medium text-sm">
+                                            Lọc ý tưởng
+                                          </h4>
+                                          <p className="text-sm text-muted-foreground">
+                                            Loại bỏ các ý tưởng sai về khoa học,
+                                            có độ tin cậy thấp (dựa vào may
+                                            rủi), hoặc không khả thi với người
+                                            dùng phổ thông.
+                                          </p>
+                                        </div>
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    {evaluation.analysis.screening}
+                                  </p>
                                 </div>
-                                <div className="flex items-center justify-center h-10 px-3 py-2 bg-muted rounded-md border border-input">
-                                  <span className="text-lg font-semibold">
-                                    {evaluation.evaluation.scores.feasibility}
-                                    /10
-                                  </span>
-                                </div>
-                              </div>
+                              )}
 
-                              {/* System Impact */}
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-1">
-                                  <label className="text-sm font-medium">
-                                    Tác động hệ thống
-                                  </label>
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-4 w-4 p-0"
-                                      >
-                                        <HelpCircle className="h-3 w-3 text-muted-foreground" />
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-80">
-                                      <div className="space-y-2">
-                                        <h4 className="font-medium text-sm">
-                                          Tác động hệ thống
-                                        </h4>
-                                        <p className="text-sm text-muted-foreground">
-                                          {evaluation.evaluation.explanation
-                                            .systemImpact ||
-                                            'Đánh giá ảnh hưởng của ý tưởng đến hệ thống tổng thể'}
-                                        </p>
-                                      </div>
-                                    </PopoverContent>
-                                  </Popover>
+                              {/* Resources and Inertia */}
+                              {evaluation.analysis?.resourcesAndInertia && (
+                                <div className="p-3 bg-muted/30 rounded-lg space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <h5 className="text-sm font-medium">
+                                      2. Tài nguyên & Quán tính hệ thống
+                                    </h5>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-4 w-4 p-0"
+                                        >
+                                          <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-80">
+                                        <div className="space-y-2">
+                                          <h4 className="font-medium text-sm">
+                                            Tài nguyên & Quán tính
+                                          </h4>
+                                          <p className="text-sm text-muted-foreground">
+                                            Ưu tiên sử dụng tài nguyên sẵn có
+                                            (đặc biệt tài nguyên &quot;miễn
+                                            phí&quot; như không khí, trọng lực,
+                                            hình dạng). Giảm thiểu thay đổi hệ
+                                            thống.
+                                          </p>
+                                        </div>
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    {evaluation.analysis.resourcesAndInertia}
+                                  </p>
                                 </div>
-                                <div className="flex items-center justify-center h-10 px-3 py-2 bg-muted rounded-md border border-input">
-                                  <span className="text-lg font-semibold">
-                                    {evaluation.evaluation.scores.systemImpact}
-                                    /10
-                                  </span>
+                              )}
+
+                              {/* Overall Benefit */}
+                              {evaluation.analysis?.overallBenefit && (
+                                <div className="p-3 bg-muted/30 rounded-lg space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <h5 className="text-sm font-medium">
+                                      3. Lợi ích tổng thể (9-Screens)
+                                    </h5>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-4 w-4 p-0"
+                                        >
+                                          <HelpCircle className="h-3 w-3 text-muted-foreground" />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-80">
+                                        <div className="space-y-2">
+                                          <h4 className="font-medium text-sm">
+                                            Lợi ích tổng thể
+                                          </h4>
+                                          <p className="text-sm text-muted-foreground">
+                                            Đánh giá theo phương pháp 9-Screens:
+                                            lợi ích cho các hệ thống liên quan
+                                            và môi trường, không tạo mâu thuẫn
+                                            mới.
+                                          </p>
+                                        </div>
+                                      </PopoverContent>
+                                    </Popover>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    {evaluation.analysis.overallBenefit}
+                                  </p>
                                 </div>
-                              </div>
+                              )}
                             </div>
 
-                            {/* Total Score */}
-                            <div className="flex items-center gap-4 bg-muted/50 rounded-lg">
-                              <span className="font-medium">Tổng điểm:</span>
-                              <span className="text-2xl font-bold text-secondary">
-                                {evaluation.evaluation.scores.total}/30
-                              </span>
-                            </div>
+                            {/* Decision Message */}
+                            {evaluation.decisionMessage && (
+                              <div className="p-3 bg-primary/10 rounded-lg space-y-2">
+                                <p className="text-sm font-medium">
+                                  Quyết định:
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {evaluation.decisionMessage}
+                                </p>
+                              </div>
+                            )}
 
-                            {/* AI Message */}
-                            {evaluation.message && (
-                              <div className="text-sm text-muted-foreground bg-muted/30 rounded-lg">
-                                {evaluation.message}
+                            {/* Action Suggestion */}
+                            {evaluation.actionSuggestion && (
+                              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg space-y-2">
+                                <p className="text-sm font-medium">
+                                  Gợi ý hành động:
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {evaluation.actionSuggestion}
+                                </p>
                               </div>
                             )}
                           </div>

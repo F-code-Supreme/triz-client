@@ -127,11 +127,6 @@ const PackagesPricingPage = () => {
     setInvoiceOpen(true);
   };
 
-  // Sort packages by price for better UX
-  const sortedPackages = useMemo(() => {
-    return [...packages].sort((a, b) => a.priceInTokens - b.priceInTokens);
-  }, [packages]);
-
   // Get all unique features across packages
   const allFeatures = useMemo(() => {
     const featuresMap = new Map<string, string>();
@@ -145,15 +140,15 @@ const PackagesPricingPage = () => {
 
   // Find the most popular package (highest priced or first)
   const mostPopularId = useMemo(() => {
-    if (sortedPackages.length === 0) return null;
-    return sortedPackages[sortedPackages.length - 2].id;
-  }, [sortedPackages]);
+    if (packages.length === 0) return null;
+    return packages[0].id;
+  }, [packages]);
 
   return (
     <DefaultLayout meta={{ title: t('page_meta_title') }}>
       <BackgroundBeams className="absolute inset-0" />
       <div className="relative z-10">
-        <section className="w-full py-20 md:py-32">
+        <section className="w-full py-4">
           <div className="container mx-auto px-4 md:px-6">
             {/* Header */}
             <div className="text-center space-y-4 mb-16">
@@ -189,7 +184,7 @@ const PackagesPricingPage = () => {
                 <PackageCardSkeleton />
                 <PackageCardSkeleton />
               </div>
-            ) : sortedPackages.length === 0 ? (
+            ) : packages.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground">
                   {t('no_packages')}
@@ -200,14 +195,14 @@ const PackagesPricingPage = () => {
                 {/* Pricing Cards Grid */}
                 <div
                   className={`grid gap-8 max-w-6xl mx-auto ${
-                    sortedPackages.length === 1
+                    packages.length === 1
                       ? 'md:grid-cols-1'
-                      : sortedPackages.length === 2
+                      : packages.length === 2
                         ? 'md:grid-cols-2'
                         : 'md:grid-cols-3'
                   }`}
                 >
-                  {sortedPackages.map((pkg) => {
+                  {packages.map((pkg) => {
                     const isPopular = pkg.id === mostPopularId;
                     return (
                       <Card
@@ -219,7 +214,7 @@ const PackagesPricingPage = () => {
                         }`}
                       >
                         {/* Popular Badge */}
-                        {isPopular && sortedPackages.length > 1 && (
+                        {isPopular && packages.length > 1 && (
                           <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                             <Badge className="px-4 py-1">
                               {t('most_popular')}
@@ -304,7 +299,7 @@ const PackagesPricingPage = () => {
                 </div>
 
                 {/* Features Comparison Table */}
-                {sortedPackages.length > 1 && allFeatures.length > 0 && (
+                {packages.length > 1 && allFeatures.length > 0 && (
                   <div className="mt-20 max-w-6xl mx-auto">
                     <h3 className="text-2xl font-bold text-center mb-8">
                       {t('detailed_comparison')}
@@ -316,7 +311,7 @@ const PackagesPricingPage = () => {
                             <th className="text-left py-4 px-4 font-semibold">
                               {t('features')}
                             </th>
-                            {sortedPackages.map((pkg) => (
+                            {packages.map((pkg) => (
                               <th
                                 key={pkg.id}
                                 className="text-center py-4 px-4 font-semibold"
@@ -333,16 +328,12 @@ const PackagesPricingPage = () => {
                               className="border-b hover:bg-muted/50"
                             >
                               <td className="py-4 px-4 text-left">{feature}</td>
-                              {sortedPackages.map((pkg) => (
+                              {packages.map((pkg) => (
                                 <td
                                   key={pkg.id}
                                   className="text-center py-4 px-4"
                                 >
-                                  {packageHasFeature(
-                                    sortedPackages,
-                                    pkg,
-                                    feature,
-                                  ) ? (
+                                  {packageHasFeature(packages, pkg, feature) ? (
                                     <CheckCircle className="h-5 w-5 text-green-500 mx-auto" />
                                   ) : (
                                     <X className="h-5 w-5 text-muted-foreground mx-auto" />
@@ -356,16 +347,6 @@ const PackagesPricingPage = () => {
                     </div>
                   </div>
                 )}
-
-                {/* CTA Section */}
-                <div className="text-center mt-12">
-                  <p className="text-muted-foreground mb-4">
-                    {t('contact_sales.description')}
-                  </p>
-                  <Button variant="outline" size="lg">
-                    {t('contact_sales.button')}
-                  </Button>
-                </div>
               </>
             )}
           </div>

@@ -49,13 +49,7 @@ export const AdminTransactionsTable = ({
 }: AdminTransactionsTableProps) => {
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-2">
-        <DataTableToolbar
-          table={table}
-          searchPlaceholder={t('transactions.search_placeholder')}
-          searchKey="orderCode"
-          filters={filters}
-        />
+      <div className="flex items-center gap-2">
         {onFromDateChange && onToDateChange && (
           <DateRangeFilter
             fromDate={fromDate}
@@ -64,6 +58,9 @@ export const AdminTransactionsTable = ({
             onToDateChange={onToDateChange}
           />
         )}
+        <div className="flex-1">
+          <DataTableToolbar table={table} filters={filters} />
+        </div>
       </div>
 
       {isLoading ? (

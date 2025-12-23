@@ -18,14 +18,6 @@ const ProfilePage = () => {
   const { data: achievementsData, isLoading: achievementsLoading } =
     useGetUserAchievementsQuery(user?.id, pagination, sorting);
 
-  const handleSaveProfile = (profileData: {
-    fullName: string;
-    email: string;
-  }) => {
-    // TODO: Gọi API cập nhật thông tin user
-    console.log('Saving profile data:', profileData);
-  };
-
   return (
     <DefaultLayout
       meta={{
@@ -39,9 +31,7 @@ const ProfilePage = () => {
         isLoadingUser={isLoading}
         achievementsData={achievementsData}
         isLoadingAchievements={achievementsLoading}
-        isOwnProfile={true}
         currentUser={user || undefined}
-        onSaveProfile={handleSaveProfile}
       />
     </DefaultLayout>
   );

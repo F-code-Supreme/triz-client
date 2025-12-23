@@ -22,7 +22,7 @@ export const AchievementNotifier = ({
 
   const { unreadAchievements, hasNewAchievements, clearNewAchievements } =
     useAchievementPolling({
-      userId: user?.id,
+      userId: isUserRole ? user?.id : undefined,
       enabled: isUserRole && !!user?.id,
       pollingInterval,
     });

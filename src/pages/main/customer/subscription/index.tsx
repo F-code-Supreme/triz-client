@@ -46,7 +46,7 @@ import {
   useGetSubscriptionsByUserQuery,
 } from '@/features/subscription/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { formatNumber } from '@/utils';
+import { formatDate, formatNumber } from '@/utils';
 
 import type { Subscription } from '@/features/subscription/types';
 
@@ -227,14 +227,7 @@ const SubscriptionPage = () => {
                   </CardTitle>
                   <CardDescription>
                     {t('active_subscription.active_until')}{' '}
-                    {new Date(activeSubscription.endDate).toLocaleDateString(
-                      'en-US',
-                      {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      },
-                    )}
+                    {formatDate(new Date(activeSubscription.endDate))}
                   </CardDescription>
                 </div>
                 <Badge className="bg-green-600 hover:bg-green-600/90">
@@ -292,13 +285,7 @@ const SubscriptionPage = () => {
                       {t('active_subscription.start_date')}
                     </p>
                     <p className="text-lg font-semibold mt-1">
-                      {new Date(
-                        activeSubscription.startDate,
-                      ).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                      {formatDate(new Date(activeSubscription.startDate))}
                     </p>
                   </div>
                   <div>
@@ -306,14 +293,7 @@ const SubscriptionPage = () => {
                       {t('active_subscription.end_date')}
                     </p>
                     <p className="text-lg font-semibold mt-1">
-                      {new Date(activeSubscription.endDate).toLocaleDateString(
-                        'en-US',
-                        {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        },
-                      )}
+                      {formatDate(new Date(activeSubscription.endDate))}
                     </p>
                   </div>
                 </div>

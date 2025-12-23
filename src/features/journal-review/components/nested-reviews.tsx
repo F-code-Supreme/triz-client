@@ -1,0 +1,188 @@
+import { Check, MoreHorizontal, Star, Trash2, X } from 'lucide-react';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Textarea } from '@/components/ui/textarea';
+import { formatDate } from '@/utils';
+
+import type { ChildReviewWithTimestamp } from '../types';
+
+const DATE_FORMAT = 'DD/MM/YYYY HH:mm' as const;
+
+interface NestedReviewsProps {
+  reviews: ChildReviewWithTimestamp[];
+  isReadOnly: boolean;
+  userId?: string;
+  canDelete: (reviewOwnerId: string) => boolean;
+  canRate?: boolean;
+  editingReview: string | null;
+  editContent: string;
+  editRating: number | null;
+  setEditingReview: (id: string | null) => void;
+  setEditContent: (content: string) => void;
+  setEditRating: (rating: number | null) => void;
+  handleUpdateReview: (reviewId: string, stepNumber: number | null) => void;
+  handleDeleteReview: (reviewId: string, stepNumber: number | null) => void;
+}
+
+export const NestedReviews = ({
+  reviews,
+  isReadOnly,
+  userId,
+  canDelete,
+  canRate = false,
+  editingReview,
+  editContent,
+  editRating,
+  setEditingReview,
+  setEditContent,
+  setEditRating,
+  handleUpdateReview,
+  handleDeleteReview,
+}: NestedReviewsProps) => {
+  const renderReview = (review: ChildReviewWithTimestamp) => {
+    const isEditing = editingReview === review.id;
+    const canEdit = !isReadOnly && review.creatorId === userId;
+    const canDeleteThis = !isReadOnly && canDelete(review.creatorId);
+    const showRatingInput = canRate && review.stepNumber !== null; // Allow rating input only if user can rate and it's a step review
+    const hasRating = review.stepNumber !== null && review.rating; // Show existing rating if it's a step review and rating exists
+
+    return (
+      <div key={review.id} className="border rounded-lg p-3">
+        <div className="flex gap-3">
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={review.creatorAvatarUrl || ''} />
+            <AvatarFallback>{review.creatorFullName?.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="font-medium text-sm">{review.creatorFullName}</p>
+                <p className="text-xs text-muted-foreground">
+                  {formatDate(new Date(review.createdAt), DATE_FORMAT)}
+                </p>
+              </div>
+              {(canEdit || canDeleteThis) && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {canEdit && (
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setEditingReview(review.id);
+                          setEditContent(review.content);
+                          setEditRating(review.rating);
+                        }}
+                      >
+                        Chỉnh sửa
+                      </DropdownMenuItem>
+                    )}
+                    {canDeleteThis && (
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleDeleteReview(review.id, review.stepNumber)
+                        }
+                        className="text-red-600"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Xóa
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+
+            {isEditing ? (
+              <div className="mt-2 space-y-2">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Nội dung</label>
+                    <span className="text-xs text-gray-400">
+                      {editContent.length}/2000
+                    </span>
+                  </div>
+                  <Textarea
+                    value={editContent}
+                    onChange={(e) => setEditContent(e.target.value)}
+                    maxLength={2000}
+                    className="min-h-[80px]"
+                  />
+                </div>
+                {showRatingInput && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">Đánh giá:</span>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`h-5 w-5 cursor-pointer ${
+                          star <= (editRating || 0)
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-gray-300'
+                        }`}
+                        onClick={() => setEditRating(star)}
+                      />
+                    ))}
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      handleUpdateReview(review.id, review.stepNumber)
+                    }
+                  >
+                    <Check className="h-4 w-4 mr-1" />
+                    Lưu
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingReview(null);
+                      setEditContent('');
+                      setEditRating(null);
+                    }}
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Hủy
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="mt-2 text-sm whitespace-pre-wrap">
+                  {review.content}
+                </p>
+                {hasRating && (
+                  <div className="flex items-center gap-1 mt-2">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm font-medium">
+                      {review.rating}/5
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-3">
+      {reviews.map((review) => renderReview(review))}
+    </div>
+  );
+};

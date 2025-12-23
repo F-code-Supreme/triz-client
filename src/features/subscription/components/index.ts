@@ -8,7 +8,7 @@ export {
 } from './subscriptions-columns';
 export { SubscriptionsDataTableRowActions } from './subscriptions-data-table-row-actions';
 export {
-  adminSubscriptionsColumns,
-  createAdminSubscriptionsColumns,
+  useAdminSubscriptionsColumns,
+  useCreateAdminSubscriptionsColumns,
 } from './admin-subscriptions-columns';
 export { AdminSubscriptionsDataTableRowActions } from './admin-subscriptions-data-table-row-actions';

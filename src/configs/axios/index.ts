@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-import { axiosBaseOptions } from '@/configs/axios/axios-setup';
+import {
+  axiosBaseOptions,
+  axiosV2BaseOptions,
+} from '@/configs/axios/axios-setup';
 import { setupTokenRefreshInterceptor } from '@/configs/axios/token-refresh-interceptor';
 import { TokenManager } from '@/utils/token/token-manager';
 
@@ -226,3 +229,4 @@ class MyAxios {
 export const request = new MyAxios(axiosBaseOptions);
 
 export const useAxios = () => new MyAxios(axiosBaseOptions, true);
+export const useAxiosV2 = () => new MyAxios(axiosV2BaseOptions, true);

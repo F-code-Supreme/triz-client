@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,9 @@ type CreatePostDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreated?: () => void;
+  initialTitle?: string;
+  initialContent?: string;
+  initialImage?: string;
 };
 
 const stripHtml = (html: string) =>
@@ -36,15 +39,26 @@ const CreatePostDialog = ({
   open,
   onOpenChange,
   onCreated,
+  initialTitle = '',
+  initialContent = '',
+  initialImage = '',
 }: CreatePostDialogProps) => {
-  const [postTitle, setPostTitle] = useState('');
-  const [postImage, setPostImage] = useState('');
-  const [answer, setAnswer] = useState<string>('');
+  const [postTitle, setPostTitle] = useState(initialTitle);
+  const [postImage, setPostImage] = useState(initialImage);
+  const [answer, setAnswer] = useState<string>(initialContent);
   const [titleError, setTitleError] = useState<string | null>(null);
   const [contentError, setContentError] = useState<string | null>(null);
 
   const uploadMutation = useUploadFileMutation();
   const createForumPostMutation = useCreateForumPostMutation();
+
+  useEffect(() => {
+    if (open) {
+      setPostTitle(initialTitle);
+      setAnswer(initialContent);
+      setPostImage(initialImage);
+    }
+  }, [open, initialTitle, initialContent, initialImage]);
 
   const handleClose = () => onOpenChange(false);
 

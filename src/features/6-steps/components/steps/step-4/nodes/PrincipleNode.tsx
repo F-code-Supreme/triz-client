@@ -20,7 +20,6 @@ import { principlesData } from '@/pages/main/public/learn-triz/components/princi
 interface PrincipleNodeData {
   id: number;
   name: string;
-  priority: number;
   status?: NodeStatus;
   isSelected?: boolean;
   onSelect?: () => void;
@@ -61,9 +60,6 @@ export const PrincipleNode = memo((props: NodeProps) => {
                   </div>
                   <div className="text-white text-sm font-semibold leading-tight">
                     {data.name}
-                  </div>
-                  <div className="text-white/80 text-xs mt-1">
-                    Độ ưu tiên: {data.priority}
                   </div>
                 </div>
               </div>

@@ -218,7 +218,7 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                   'w-full',
                 )}
               >
-                Start Quiz
+                Bắt đầu làm bài
               </Link>
             </CardContent>
           </Card>
@@ -260,7 +260,13 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
           >
             <div className="flex items-center justify-between mb-2">
               <Badge className={cn('text-xs', getItemTypeColor(item.type))}>
-                {item.type.toUpperCase()}
+                {item.type.toUpperCase() === 'LESSON'
+                  ? 'BÀI HỌC'
+                  : item.type.toUpperCase() === 'QUIZ'
+                    ? 'BÀI KIỂM TRA'
+                    : item.type.toUpperCase() === 'ASSIGNMENT'
+                      ? 'BÀI TẬP'
+                      : item.type.toUpperCase()}
               </Badge>
             </div>
             <h1 className="text-2xl font-bold text-foreground">{item.title}</h1>

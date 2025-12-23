@@ -3,6 +3,7 @@ import { Plus, Trash2, Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectContent,
@@ -50,6 +52,8 @@ import {
   useUpdateQuizMutation,
   useGetQuizByIdMutationAdmin,
 } from '@/features/quiz/service/mutations';
+
+import type { UpdateQuizPayload } from '../service/mutations/type';
 
 const createQuestionSchema = (t: any) =>
   z.object({
@@ -72,11 +76,17 @@ const createQuestionSchema = (t: any) =>
 const createQuizEditFormSchema = (t: any) =>
   z.object({
     title: z.string().min(1, t('quizzes.create_dialog.form.title_required')),
+    passingScore: z
+      .number()
+      .min(50, t('quizzes.create_dialog.form.passing_score_min'))
+      .max(100, t('quizzes.create_dialog.form.passing_score_max')),
     description: z
       .string()
       .min(1, t('quizzes.create_dialog.form.description_required')),
     durationInMinutes: z
-      .number()
+      .number({
+        invalid_type_error: t('quizzes.create_dialog.form.duration_min'),
+      })
       .min(1, t('quizzes.create_dialog.form.duration_min'))
       .optional(),
     moduleId: z.string().optional(),
@@ -127,6 +137,7 @@ export const QuizEditDialog = ({
     mode: 'onSubmit',
     defaultValues: {
       title: '',
+      passingScore: 50,
       description: '',
       durationInMinutes: undefined,
       moduleId: '',
@@ -179,8 +190,10 @@ export const QuizEditDialog = ({
         setSelectedCourseId(currentModuleData.courseId);
       }
 
+      onSuccess?.();
       form.reset({
         title: quizData.title || '',
+        passingScore: quizData.passingScore || 50,
         description: quizData.description || '',
         durationInMinutes: quizData.durationInMinutes
           ? Number(quizData.durationInMinutes)
@@ -224,10 +237,14 @@ export const QuizEditDialog = ({
         return q;
       });
 
-      const submitValues: any = {
+      const submitValues: UpdateQuizPayload = {
         title: values.title,
         description: values.description,
+        passingScore: values.passingScore,
+        durationInMinutes: values.durationInMinutes || 1,
         questions: processedQuestions,
+        moduleId: null,
+        imageSource: null,
       };
 
       if (isGeneralQuiz) {
@@ -238,13 +255,14 @@ export const QuizEditDialog = ({
           throw new Error('Module is required for course quiz');
         }
         submitValues.moduleId = values.moduleId;
+        submitValues.imageSource = null;
       }
 
       await updateQuizMutation.mutateAsync({
         quizId,
         payload: submitValues,
       });
-
+      toast.success('Cập nhật bài kiểm tra thành công!');
       onSuccess?.();
       onOpenChange(false);
       setSelectedCourseId('');
@@ -357,9 +375,14 @@ export const QuizEditDialog = ({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t('quizzes.create_dialog.form.title')}
-                    </FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>
+                        {t('quizzes.create_dialog.form.title')}
+                      </FormLabel>
+                      <span className="text-xs text-gray-400">
+                        {form.getValues('title').length}/254
+                      </span>
+                    </div>
                     <FormControl>
                       <Input
                         placeholder={t(
@@ -378,9 +401,14 @@ export const QuizEditDialog = ({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t('quizzes.create_dialog.form.description')}
-                    </FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>
+                        {t('quizzes.create_dialog.form.description')}
+                      </FormLabel>
+                      <span className="text-xs text-gray-400">
+                        {form.getValues('description').length}/254
+                      </span>
+                    </div>
                     <FormControl>
                       <Textarea
                         placeholder={t(
@@ -404,18 +432,37 @@ export const QuizEditDialog = ({
                       {t('quizzes.create_dialog.form.duration')}
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         min={1}
                         placeholder={t(
                           'quizzes.create_dialog.form.duration_placeholder',
                         )}
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : undefined,
-                          )
-                        }
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isLoading}
+                        stepper={1}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="passingScore"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Điểm tối thiểu</FormLabel>
+                    <FormControl>
+                      <NumberInput
+                        min={50}
+                        max={100}
+                        placeholder="Điểm đạt tối thiểu..."
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isLoading}
+                        stepper={1}
                       />
                     </FormControl>
                     <FormMessage />

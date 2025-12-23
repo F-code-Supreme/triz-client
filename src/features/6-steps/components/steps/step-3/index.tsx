@@ -1,8 +1,13 @@
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Info } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -32,11 +37,14 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
     stepData.step1?.selectedMiniProblem ||
     'Khả năng lưu trữ năng lượng hóa học của các cell pin bị suy giảm (hiện tượng lão hóa vật liệu).';
   const selectedGoal =
-    stepData.step2?.selectedGoal?.text ||
+    stepData.step2?.goal ||
     'Khả năng lưu trữ năng lượng của các cell pin được duy trì nguyên vẹn ở mức tối ưu bất chấp thời gian hoạt động.';
 
   const [systemIdentified, setSystemIdentified] = useState(
     initialData?.systemIdentified || '',
+  );
+  const [objectType, setObjectType] = useState<'Moving' | 'Stationary'>(
+    initialData?.objectType || 'Moving',
   );
   const [elements, setElements] = useState<string[]>(
     initialData?.elements || [],
@@ -55,7 +63,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
   // Fetch suggestions when component mounts
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (!selectedMiniProblem || !selectedGoal) return;
+      if (!selectedMiniProblem || !selectedGoal || !stepData.step2) return;
 
       // Check if we need to fetch new suggestions
       // Fetch if: no system identified OR no initial data exists
@@ -67,11 +75,14 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
       if (shouldFetch) {
         try {
           const response = await step3Mutation.mutateAsync({
-            miniProblem: selectedMiniProblem,
-            goal: selectedGoal,
+            goal: stepData.step2.goal,
+            constraints: stepData.step2.constraints || [],
+            scope: stepData.step2.scope || '',
+            idealFinalResult: stepData.step2.idealFinalResult || '',
           });
 
           setSystemIdentified(response.systemIdentified);
+          setObjectType(response.objectType);
           setElements(response.elements);
 
           // Convert requiredStates to the format with IDs
@@ -117,7 +128,7 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
     }
 
     if (systemIdentified && elements.length > 0) {
-      onNext({ systemIdentified, elements, requiredStates });
+      onNext({ systemIdentified, elements, objectType, requiredStates });
     }
   };
 
@@ -229,142 +240,195 @@ export const Step3AnswerQuestions = ({ onNext, onBack }: Step3Props) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
-          Trả lời các câu hỏi
+        <div className="self-stretch text-center justify-center items-center gap-2 inline-flex">
+          <div className="text-4xl font-bold leading-[48px] tracking-tight">
+            Trả lời các câu hỏi
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Info className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+              <div className="space-y-3">
+                <h4 className="font-semibold text-sm">Thông tin bổ sung</h4>
+
+                {systemIdentified && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Hệ thống được xác định:
+                    </p>
+                    <p className="text-sm">{systemIdentified}</p>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
-            Mục tiêu: {stepData.step2?.selectedGoal?.text}
+            Mục tiêu: {stepData.step2?.goal}
+          </div>
+        </div>
+
+        {/* Object Type Selector */}
+        <div className="flex flex-col gap-2">
+          <div className="text-sm font-semibold text-slate-600">
+            Loại đối tượng:
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant={objectType === 'Moving' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setObjectType('Moving')}
+              disabled={step3Mutation.isPending}
+            >
+              Chuyển động
+            </Button>
+            <Button
+              variant={objectType === 'Stationary' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setObjectType('Stationary')}
+              disabled={step3Mutation.isPending}
+            >
+              Bất động
+            </Button>
           </div>
         </div>
 
         {/* Elements Tabs */}
-        {step3Mutation.isPending ? (
-          <div className="space-y-4">
-            <Skeleton className="h-10 w-full" />
-            <div className="space-y-3">
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-16 w-full" />
-            </div>
+        <div className="flex flex-col gap-2">
+          <div className="text-sm font-semibold text-slate-600">
+            Các yếu tố:
           </div>
-        ) : (
-          elements.length > 0 && (
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
-              <TabsList>
+          {step3Mutation.isPending ? (
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <div className="space-y-3">
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-16 w-full" />
+              </div>
+            </div>
+          ) : (
+            elements.length > 0 && (
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
+                <TabsList>
+                  {elements.map((element) => (
+                    <TabsTrigger
+                      key={element}
+                      value={element}
+                      className="text-xs relative group pr-7"
+                      title={element}
+                    >
+                      {truncate(element, 20)}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteElement(element);
+                        }}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-0.5 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-all"
+                        aria-label="Delete element"
+                      >
+                        <X className="w-3 h-3 text-red-600 dark:text-red-400" />
+                      </button>
+                    </TabsTrigger>
+                  ))}
+                  {isAddingElement ? (
+                    <div className="inline-flex items-center px-2">
+                      <input
+                        type="text"
+                        value={newElementText}
+                        onChange={(e) => setNewElementText(e.target.value)}
+                        onKeyDown={handleElementKeyDown}
+                        onBlur={handleAddElement}
+                        placeholder="Tên yếu tố..."
+                        className="w-32 text-xs px-2 py-1 bg-transparent border-b border-primary outline-none"
+                        autoFocus
+                      />
+                    </div>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsAddingElement(true)}
+                      className="h-8 px-2"
+                    >
+                      <Plus className="w-3 h-3" />
+                      <span className="text-xs ml-1">Thêm yếu tố</span>
+                    </Button>
+                  )}
+                </TabsList>
+
                 {elements.map((element) => (
-                  <TabsTrigger
+                  <TabsContent
                     key={element}
                     value={element}
-                    className="text-xs relative group pr-7"
-                    title={element}
+                    className="space-y-4"
                   >
-                    {truncate(element, 20)}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteElement(element);
-                      }}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-0.5 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-all"
-                      aria-label="Delete element"
-                    >
-                      <X className="w-3 h-3 text-red-600 dark:text-red-400" />
-                    </button>
-                  </TabsTrigger>
-                ))}
-                {isAddingElement ? (
-                  <div className="inline-flex items-center px-2">
-                    <input
-                      type="text"
-                      value={newElementText}
-                      onChange={(e) => setNewElementText(e.target.value)}
-                      onKeyDown={handleElementKeyDown}
-                      onBlur={handleAddElement}
-                      placeholder="Tên yếu tố..."
-                      className="w-32 text-xs px-2 py-1 bg-transparent border-b border-primary outline-none"
-                      autoFocus
-                    />
-                  </div>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setIsAddingElement(true)}
-                    className="h-8 px-2"
-                  >
-                    <Plus className="w-3 h-3" />
-                    <span className="text-xs ml-1">Thêm yếu tố</span>
-                  </Button>
-                )}
-              </TabsList>
-
-              {elements.map((element) => (
-                <TabsContent
-                  key={element}
-                  value={element}
-                  className="space-y-4"
-                >
-                  <div className="text-sm font-semibold text-slate-600">
-                    Trạng thái yêu cầu cho {element}:
-                  </div>
-
-                  <ScrollArea className="h-[35vh] pr-4">
-                    <div className="flex flex-col gap-3">
-                      {requiredStates[element]?.map((state) => (
-                        <SelectableItem
-                          key={state.id}
-                          id={state.id}
-                          text={state.text}
-                          isEditable={true}
-                          isDeletable={true}
-                          onEdit={(id, newText) =>
-                            handleEditState(element, id, newText)
-                          }
-                          onDelete={(id) => handleDeleteState(element, id)}
-                        />
-                      ))}
+                    <div className="text-sm font-semibold text-slate-600">
+                      Trạng thái yêu cầu cho {element}:
                     </div>
-                  </ScrollArea>
 
-                  {/* Add more states */}
-                  <div>
-                    {isAddingState ? (
-                      <div className="w-full pl-3.5 pr-3 py-4 rounded-lg bg-secondary-foreground outline outline-1 outline-offset-[-1px] outline-primary flex items-center gap-3">
-                        <input
-                          type="text"
-                          value={newStateText}
-                          onChange={(e) => setNewStateText(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          onBlur={handleAddState}
-                          placeholder="Nhập trạng thái mới..."
-                          className="flex-1 text-primary dark:text-foreground text-sm font-normal leading-5 bg-transparent outline-none"
-                          autoFocus
-                        />
+                    <ScrollArea className="h-[35vh] pr-4">
+                      <div className="flex flex-col gap-3">
+                        {requiredStates[element]?.map((state) => (
+                          <SelectableItem
+                            key={state.id}
+                            id={state.id}
+                            text={state.text}
+                            isEditable={true}
+                            isDeletable={true}
+                            onEdit={(id, newText) =>
+                              handleEditState(element, id, newText)
+                            }
+                            onDelete={(id) => handleDeleteState(element, id)}
+                          />
+                        ))}
                       </div>
-                    ) : (
-                      <Button
-                        variant="ghost"
-                        onClick={() => setIsAddingState(true)}
-                        className="rounded-lg pl-1 pr-1"
-                      >
-                        <Plus className="w-4 h-4 text-secondary" />
-                        <span className="text-sm font-normal leading-5">
-                          Thêm trạng thái khác
-                        </span>
-                      </Button>
-                    )}
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          )
-        )}
+                    </ScrollArea>
+
+                    {/* Add more states */}
+                    <div>
+                      {isAddingState ? (
+                        <div className="w-full pl-3.5 pr-3 py-4 rounded-lg bg-secondary-foreground outline outline-1 outline-offset-[-1px] outline-primary flex items-center gap-3">
+                          <input
+                            type="text"
+                            value={newStateText}
+                            onChange={(e) => setNewStateText(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            onBlur={handleAddState}
+                            placeholder="Nhập trạng thái mới..."
+                            className="flex-1 text-primary dark:text-foreground text-sm font-normal leading-5 bg-transparent outline-none"
+                            autoFocus
+                          />
+                        </div>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          onClick={() => setIsAddingState(true)}
+                          className="rounded-lg pl-1 pr-1"
+                        >
+                          <Plus className="w-4 h-4 text-secondary" />
+                          <span className="text-sm font-normal leading-5">
+                            Thêm trạng thái khác
+                          </span>
+                        </Button>
+                      )}
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
+            )
+          )}
+        </div>
       </div>
 
       <ActionButtons

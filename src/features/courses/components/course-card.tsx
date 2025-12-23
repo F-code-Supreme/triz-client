@@ -14,8 +14,9 @@ import {
   useCourseProgressQuery,
   useGetMyEnrollmentsQuery,
 } from '../services/queries';
+import { getLevelColor, formatDuration } from '../utils';
 
-import type { CourseLevel, Course } from '@/features/courses/types';
+import type { Course } from '@/features/courses/types';
 
 interface CourseCardProps {
   course: Course;
@@ -36,26 +37,6 @@ const CourseCard = ({
   const checkEnrolled = enrollmentsData?.content.some(
     (enrollment) => enrollment.courseId === course.id,
   );
-
-  const getLevelColor = (level?: CourseLevel) => {
-    switch (level) {
-      case 'BEGINNER':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'INTERMEDIATE':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'ADVANCED':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const formatDuration = (minutes?: number) => {
-    if (!minutes) return '0h';
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return h > 0 ? `${h}h${m > 0 ? ` ${m}m` : ''}` : `${m}m`;
-  };
 
   const { data: progressData } = useCourseProgressQuery(course.id || '');
 
@@ -143,7 +124,7 @@ const CourseCard = ({
               className="w-full"
             >
               <BookOpen className="w-4 h-4 mr-2" />
-              Continue Learning
+              Tiếp tục khóa học
             </Button>
           ) : (
             <Link
@@ -160,7 +141,7 @@ const CourseCard = ({
               )}
             >
               <Play className="w-4 h-4 mr-2" />
-              View Details
+              Xem chi tiết khóa học
             </Link>
           )}
         </CardFooter>

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useAxios } from '@/configs/axios';
+import { useAxios, useAxiosV2 } from '@/configs/axios';
 
 import type {
   IStep1SuggestionResponse,
@@ -24,7 +24,7 @@ import type { Problem } from '../../types';
 import type { ForumPost } from '@/features/forum/types';
 
 export const useStep1SuggestionMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IStep1SuggestionPayload) => {
@@ -39,7 +39,7 @@ export const useStep1SuggestionMutation = () => {
 };
 
 export const useStep2SuggestionMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IStep2SuggestionPayload) => {
@@ -54,7 +54,7 @@ export const useStep2SuggestionMutation = () => {
 };
 
 export const useStep3SuggestionMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IStep3SuggestionPayload) => {
@@ -69,7 +69,7 @@ export const useStep3SuggestionMutation = () => {
 };
 
 export const useStep4SuggestionMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IStep4SuggestionPayload) => {
@@ -84,7 +84,7 @@ export const useStep4SuggestionMutation = () => {
 };
 
 export const useConvertMLtoMKMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IConvertMLtoMKPayload) => {
@@ -99,7 +99,7 @@ export const useConvertMLtoMKMutation = () => {
 };
 
 export const useStep5SuggestionMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IStep5SuggestionPayload) => {
@@ -114,7 +114,7 @@ export const useStep5SuggestionMutation = () => {
 };
 
 export const useStep6SuggestionMutation = () => {
-  const _request = useAxios();
+  const _request = useAxiosV2();
 
   return useMutation({
     mutationFn: async (payload: IStep6SuggestionPayload) => {

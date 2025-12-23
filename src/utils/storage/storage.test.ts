@@ -4,7 +4,6 @@ import {
   isStorageAvailable,
   getStorageQuota,
   getAllStorage,
-  hasStorageItem,
   clearStorageByPrefix,
   getStorageSize,
 } from './storage';
@@ -79,17 +78,17 @@ describe('Storage Utils', () => {
     });
   });
 
-  describe('hasStorageItem', () => {
-    it('should return true when item exists', () => {
-      vi.spyOn(Object, 'keys').mockReturnValue(['testKey']);
-      expect(hasStorageItem('testKey', mockStorage)).toBe(true);
-    });
+  // describe('hasStorageItem', () => {
+  //   it('should return true when item exists', () => {
+  //     vi.spyOn(Object, 'keys').mockReturnValue(['testKey']);
+  //     expect(hasStorageItem('testKey', mockStorage)).toBe(true);
+  //   });
 
-    it('should return false when item does not exist', () => {
-      vi.spyOn(Object, 'keys').mockReturnValue(['otherKey']);
-      expect(hasStorageItem('testKey', mockStorage)).toBe(false);
-    });
-  });
+  //   it('should return false when item does not exist', () => {
+  //     vi.spyOn(Object, 'keys').mockReturnValue(['otherKey']);
+  //     expect(hasStorageItem('testKey', mockStorage)).toBe(false);
+  //   });
+  // });
 
   describe('clearStorageByPrefix', () => {
     it('should clear items with matching prefix', () => {

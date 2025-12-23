@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/sheet';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { Role } from '@/features/auth/types';
+import { formatTrizilium, formatDate } from '@/utils';
 
 import {
   useCancelTransactionByUserMutation,
@@ -152,23 +153,21 @@ export const TransactionsDataTableRowActions = ({
                 {t('transactions.details.amount')}
               </p>
               <p className="font-medium">
-                {transaction.amount.toLocaleString()} VND
+                {formatTrizilium(transaction.amount)}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">
                 {t('transactions.details.provider')}
               </p>
-              <p className="font-medium capitalize">
-                {transaction.provider?.toLowerCase() || 'N/A'}
-              </p>
+              <p className="font-medium">{transaction.provider || 'N/A'}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">
                 {t('transactions.details.provider_tx_ref')}
               </p>
-              <p className="font-medium capitalize">
-                {transaction.providerTxRef?.toLowerCase() || 'N/A'}
+              <p className="font-medium">
+                {transaction.providerTxRef || 'N/A'}
               </p>
             </div>
             <div>
@@ -182,7 +181,10 @@ export const TransactionsDataTableRowActions = ({
                 {t('transactions.details.date')}
               </p>
               <p className="font-medium">
-                {new Date(transaction.createdAt).toLocaleString()}
+                {formatDate(
+                  new Date(transaction.createdAt),
+                  'DD/MM/YYYY HH:mm',
+                )}
               </p>
             </div>
           </div>

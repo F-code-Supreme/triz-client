@@ -44,7 +44,7 @@ export const TechnicalContradictionNode = memo((props: NodeProps) => {
             <ArrowRightLeft className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
             <div>
               <div className="text-white font-bold text-sm mb-1">
-                Mâu thuẫn Kỹ thuật ({data.mk})
+                Mâu thuẫn Kỹ thuật ({data.mk.toUpperCase()})
               </div>
               <div className="text-white/90 text-xs font-medium">
                 {data.direction}

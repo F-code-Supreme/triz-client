@@ -13,15 +13,13 @@ describe('Date Utils', () => {
   describe('formatDate', () => {
     it('should format date with default format', () => {
       const date = new Date('2024-02-15T12:30:45');
-      expect(formatDate(date)).toBe('2024-02-15');
+      expect(formatDate(date)).toBe('15/02/2024');
     });
 
     it('should format date with custom format', () => {
       const date = new Date('2024-02-15T12:30:45');
       expect(formatDate(date, 'DD/MM/YYYY')).toBe('15/02/2024');
-      expect(formatDate(date, 'YYYY-MM-DD HH:mm:ss')).toBe(
-        '2024-02-15 12:30:45',
-      );
+      expect(formatDate(date, 'DD/MM/YYYY HH:mm')).toBe('15/02/2024 12:30');
     });
   });
 

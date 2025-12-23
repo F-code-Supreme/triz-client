@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ReportPostsDataTableRowActions } from '@/features/report/components/report-posts-data-table-row-actions';
+import { formatDate } from '@/utils';
 
 import type { Report } from '@/features/report/types';
 
@@ -58,7 +59,7 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
 
       const STATUS_MAP: Record<string, { label: string; className: string }> = {
         PENDING: {
-          label: 'Đang chờ xử lý',
+          label: 'Chờ xử lý',
           className: 'bg-yellow-100 text-yellow-800',
         },
         IN_REVIEW: {
@@ -102,11 +103,7 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
 
       return (
         <div className="text-sm text-gray-600">
-          {new Date(date).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {formatDate(new Date(date))}
         </div>
       );
     },
@@ -122,11 +119,7 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
 
       return (
         <div className="text-sm text-gray-600">
-          {new Date(date).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })}
+          {formatDate(new Date(date))}
         </div>
       );
     },
@@ -152,14 +145,6 @@ export const reportPostsColumns: ColumnDef<Report>[] = [
       const label = REASON_MAP[reason] || reason || 'N/A';
 
       return <div className="text-sm text-gray-600">{label}</div>;
-    },
-  },
-  {
-    accessorKey: 'description',
-    header: () => <span>Mô tả</span>,
-    cell: ({ row }) => {
-      const description = row.getValue('description') as string;
-      return <div className="text-sm text-gray-600">{description}</div>;
     },
   },
   {

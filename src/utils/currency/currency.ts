@@ -90,8 +90,8 @@ export function formatDailyTrizilium(
  * @param amount - The amount to format
  * @returns Formatted string with VND
  */
-export function formatVND(amount: number): string {
-  return new Intl.NumberFormat('vi-VN', {
+export function formatVND(amount: number, locale?: string): string {
+  return new Intl.NumberFormat(locale || getLocale(), {
     style: 'currency',
     currency: 'VND',
     maximumFractionDigits: 0,

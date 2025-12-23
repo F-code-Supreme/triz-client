@@ -139,6 +139,64 @@ interface Resources {
       "start_learning": "Start learning now",
       "subtitle": "Systematic Creative Problem Solving",
       "title": "Discover TRIZ"
+    },
+    "purchase_invoice_dialog": {
+      "access_duration": "Access duration: {{days}} days",
+      "agree_terms_error": "Please agree to the terms and conditions",
+      "cancel_button": "Cancel",
+      "confirm_purchase_button": "Confirm Purchase",
+      "days_access": "{{days}} days access",
+      "description": "Review your purchase details before confirming",
+      "go_to_wallet_button": "Go to Wallet",
+      "insufficient_balance": "Insufficient balance. You need {{amount}} more",
+      "insufficient_balance_alert": "Your wallet balance is insufficient to complete this purchase. Please top up your wallet first.",
+      "insufficient_balance_error": "Insufficient wallet balance",
+      "package_badge": "Package",
+      "package_name": "{{name}} Package",
+      "processing_button": "Processing...",
+      "purchase_failed_error": "Failed to purchase package",
+      "purchase_success": "Package purchased successfully!",
+      "sufficient_balance": "Sufficient balance to complete this purchase",
+      "table_amount": "Amount",
+      "table_description": "Description",
+      "terms_checkbox": "I agree to the <bold>Terms and Conditions</bold> and acknowledge that:",
+      "terms_duration": "This purchase grants me {{days}} days of access",
+      "terms_non_refundable": "Trizilium are non-refundable once consumed",
+      "terms_non_transferable": "The subscription cannot be transferred",
+      "terms_tokens": "I will receive {{tokens}}",
+      "title": "Purchase Invoice",
+      "total": "Total",
+      "wallet_balance": "Wallet Balance"
+    },
+    "review_request_dialog": {
+      "agree_terms_error": "Please agree to the terms and conditions",
+      "cancel_button": "Cancel",
+      "confirm_request_button": "Submit Review Request",
+      "content_label": "Review Request Content",
+      "content_placeholder": "Describe what aspects you'd like the expert to focus on in their review...",
+      "description": "Submit your journal for expert review and feedback",
+      "empty_content_error": "Please enter review request content",
+      "go_to_wallet_button": "Go to Wallet",
+      "insufficient_balance": "Insufficient balance. You need {{amount}} more",
+      "insufficient_balance_alert": "Your wallet balance is insufficient to submit this review request. Please top up your wallet first.",
+      "insufficient_balance_error": "Insufficient wallet balance",
+      "journal_label": "Your TRIZ journal",
+      "processing_button": "Submitting...",
+      "request_failed_error": "Failed to submit review request",
+      "request_success": "Review request submitted successfully!",
+      "service_description": "Professional TRIZ expert review and feedback",
+      "service_name": "Expert Journal Review",
+      "sufficient_balance": "Sufficient balance to submit this request",
+      "table_amount": "Amount",
+      "table_description": "Description",
+      "terms_checkbox": "I agree to the <bold>Terms and Conditions</bold> and acknowledge that:",
+      "terms_expert_review": "An expert will review my journal within 3-5 business days",
+      "terms_fee": "This request will deduct {{fee}} from my wallet",
+      "terms_non_refundable": "The review fee is non-refundable once the request is submitted",
+      "terms_processing_time": "Review processing time may vary based on expert availability",
+      "title": "Request Expert Review",
+      "total": "Total",
+      "wallet_balance": "Wallet Balance"
     }
   },
   "datetime": {
@@ -227,6 +285,10 @@ interface Resources {
           "description_required": "Description is required",
           "image": "Achievement Image",
           "image_description": "Upload an achievement icon or badge (max 2MB)",
+          "image_error": "Image upload error(s)",
+          "image_instruction": "PNG, JPG up to 2MB",
+          "image_upload": "Upload image",
+          "image_uploaded": "Image uploaded",
           "milestone_count": "Milestone Count",
           "milestone_count_description": "Number of books required to unlock this achievement",
           "milestone_count_placeholder": "e.g., 5",
@@ -734,7 +796,7 @@ interface Resources {
         "create_title": "Create New Package",
         "daily_placeholder": "500",
         "daily_required": "Chat tokens per day must be greater than 0",
-        "daily_trizilium": "Daily Trizilium",
+        "daily_trizilium": "Daily Chat Tokens",
         "duration_days": "Duration (Days)",
         "duration_placeholder": "30",
         "duration_required": "Duration must be greater than 0",
@@ -937,8 +999,13 @@ interface Resources {
       "no_results": "No results.",
       "no_subscriptions": "No subscriptions found",
       "status": {
+        "active": "Active",
+        "canceled": "Canceled",
         "disabled": "Disabled",
-        "enabled": "Enabled"
+        "enabled": "Enabled",
+        "expired": "Expired",
+        "pending": "Pending",
+        "refunded": "Refunded"
       },
       "title": "Subscriptions",
       "toast": {
@@ -1005,6 +1072,7 @@ interface Resources {
         "date": "Date",
         "order_code": "Order Code",
         "provider": "Provider",
+        "provider_tx_ref": "Provider Tx Ref",
         "status": "Status",
         "type": "Type"
       },
@@ -1022,6 +1090,7 @@ interface Resources {
       },
       "filters": {
         "provider": "Provider",
+        "search_placeholder": "Search by order code, provider ref...",
         "status": "Status",
         "transaction_type": "Transaction Type"
       },
@@ -1038,6 +1107,10 @@ interface Resources {
         "completed": "Completed",
         "pending": "Pending"
       },
+      "tabs": {
+        "in_app": "In-App Transactions",
+        "out_of_app": "Out-of-App Transactions"
+      },
       "title": "Transactions",
       "toast": {
         "cancel_error": "Failed to cancel transaction",
@@ -1050,6 +1123,14 @@ interface Resources {
       }
     },
     "users": {
+      "columns": {
+        "actions": "Actions",
+        "avatar": "Avatar",
+        "email": "Email",
+        "full_name": "Full Name",
+        "roles": "Roles",
+        "status": "Status"
+      },
       "create_user": "Create New User",
       "description": "Manage system users and view their details",
       "detail": {
@@ -1072,8 +1153,16 @@ interface Resources {
         "user_information": "User Information"
       },
       "edit_user": "Edit User",
+      "filters": {
+        "role": "Role",
+        "status": "Status"
+      },
       "form": {
         "avatar": "Avatar",
+        "avatar_error": "Avatar upload error(s)",
+        "avatar_instruction": "PNG, JPG up to 2MB",
+        "avatar_upload": "Upload avatar",
+        "avatar_uploaded": "Avatar uploaded",
         "create_user": "Create User",
         "email": "Email",
         "full_name": "Full Name",
@@ -1084,6 +1173,7 @@ interface Resources {
         "role": "Role",
         "role_admin": "Admin",
         "role_expert": "Expert",
+        "role_moderator": "Moderator",
         "role_user": "User",
         "status": "Status",
         "status_active": "Active",
@@ -1092,11 +1182,26 @@ interface Resources {
       },
       "new_user": "New User",
       "no_users": "No users found",
+      "roles": {
+        "admin": "Admin",
+        "expert": "Expert",
+        "moderator": "Moderator",
+        "user": "User"
+      },
+      "search_placeholder": "Search by email or full name...",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
       "title": "Users",
       "view_details": "View Details"
     }
   },
   "pages.books": {
+    "copyright": {
+      "book_title": "\"Innovation and Creativity\" by Phan Dũng",
+      "notice": "All book copyrights belong to Mr. Phan Dũng"
+    },
     "description": "Explore our collection of educational books about TRIZ principles and innovation",
     "empty": {
       "description": "The book library is currently empty. Please check back later for new additions.",
@@ -1725,9 +1830,10 @@ interface Resources {
       "no_subscriptions": "No subscriptions found",
       "status": {
         "ACTIVE": "Active",
-        "CANCELED": "Canceled",
+        "CANCELLED": "Cancelled",
         "EXPIRED": "Expired",
-        "PENDING": "Pending"
+        "PENDING": "Pending",
+        "REFUNDED": "Refunded"
       },
       "title": "Subscription History",
       "toggle_auto_renewal": "Toggle Auto Renewal"
@@ -1904,7 +2010,7 @@ interface Resources {
       "assignments": "Assignments",
       "configuration": "Configuration",
       "dashboard": "Dashboard",
-      "idea_assessment": "Idea Assessment",
+      "journal_reviews": "Journal Reviews",
       "main": "Main",
       "review": "Review",
       "six_step_config": "Six Step Configuration",

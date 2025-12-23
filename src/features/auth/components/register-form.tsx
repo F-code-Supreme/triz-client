@@ -101,7 +101,13 @@ export const RegisterForm = () => {
                 t('form.submit')
               )}
             </SubmitButton>
-            <GoogleSignInButton />
+            <div className="flex justify-center">
+              <GoogleSignInButton
+                onSuccess={() => {
+                  navigate({ to: redirect || '/' });
+                }}
+              />
+            </div>
           </div>
         </form>
       </Form>

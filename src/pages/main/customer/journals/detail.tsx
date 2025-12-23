@@ -7,7 +7,10 @@ import {
   CheckCircle2,
   Star,
   Share2,
+  MessageSquare,
+  Plus,
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
@@ -17,10 +20,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetJournalByIdQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
+import { ReviewRequestDialog } from '@/features/journal-review/components';
+import { useGetRootReviewsByProblemQuery } from '@/features/journal-review/services/queries';
+import { getReviewStatusBadge } from '@/features/journal-review/utils/status';
+import { useGetWalletByUserQuery } from '@/features/payment/wallet/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { Route } from '@/routes/(app)/journals/$journalId/route';
+import { Route } from '@/routes/(app)/journals/$journalId';
+import { formatDate } from '@/utils';
 
 import type { PhysicalContradiction } from '@/features/6-steps/types';
+import type { ReviewStatus } from '@/features/journal-review/types';
 
 const JournalDetailPage = () => {
   const { t } = useTranslation('pages.journals');
@@ -33,6 +42,30 @@ const JournalDetailPage = () => {
     isLoading,
     error,
   } = useGetJournalByIdQuery(user?.id, journalId);
+
+  // Get latest 5 root reviews for preview
+  const [reviewsPagination] = useState({ pageIndex: 0, pageSize: 5 });
+  const [reviewsSorting] = useState([{ id: 'createdAt', desc: true }]);
+  const { data: reviewsData, isLoading: reviewsLoading } =
+    useGetRootReviewsByProblemQuery(
+      reviewsPagination,
+      reviewsSorting,
+      journal?.id,
+    );
+
+  const latestReviews = useMemo(
+    () => reviewsData?.content || [],
+    [reviewsData],
+  );
+  const totalReviewsCount = reviewsData?.page?.totalElements ?? 0;
+
+  // Get wallet balance for review request
+  const { data: wallet } = useGetWalletByUserQuery(user?.id);
+  const walletBalance = useMemo(() => wallet?.balance || 0, [wallet]);
+
+  // Review request dialog state
+  const [isReviewRequestDialogOpen, setIsReviewRequestDialogOpen] =
+    useState(false);
 
   // eslint-disable-next-line sonarjs/cognitive-complexity
   const formatJournalContentForForum = () => {
@@ -278,9 +311,7 @@ const JournalDetailPage = () => {
                           {t('created_date')}
                         </p>
                         <p className="font-medium">
-                          {new Date(journal.createdAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.createdAt))}
                         </p>
                       </div>
                     </div>
@@ -291,9 +322,7 @@ const JournalDetailPage = () => {
                           {t('updated_date')}
                         </p>
                         <p className="font-medium">
-                          {new Date(journal.updatedAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.updatedAt))}
                         </p>
                       </div>
                     </div>
@@ -307,6 +336,98 @@ const JournalDetailPage = () => {
                     </Button>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Reviews Preview Card */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <Link
+                    to="/journals/$journalId/reviews"
+                    params={{ journalId }}
+                    className="font-semibold flex items-center gap-2 hover:text-primary transition-colors"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Đánh giá
+                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary">{totalReviewsCount}</Badge>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8"
+                      onClick={() => setIsReviewRequestDialogOpen(true)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                {reviewsLoading ? (
+                  <div className="space-y-3">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                      <Skeleton key={idx} className="h-16 w-full" />
+                    ))}
+                  </div>
+                ) : latestReviews.length === 0 ? (
+                  <div className="text-center py-6 text-muted-foreground text-sm">
+                    <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>Chưa có đánh giá nào</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {latestReviews.map(
+                      (review: {
+                        id: string;
+                        creatorFullName: string;
+                        content: string;
+                        createdAt: string;
+                        status: string;
+                      }) => (
+                        <Link
+                          key={review.id}
+                          to="/journals/$journalId/reviews/$reviewId"
+                          params={{ journalId, reviewId: review.id }}
+                          className="block p-3 rounded-lg border hover:bg-accent transition-colors"
+                        >
+                          <div className="flex items-start gap-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {review.creatorFullName}
+                              </p>
+                              <p className="text-xs text-muted-foreground line-clamp-2">
+                                {review.content}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {formatDate(
+                                  new Date(review.createdAt),
+                                  'DD/MM/YYYY HH:mm',
+                                )}
+                              </p>
+                            </div>
+                            {getReviewStatusBadge(
+                              review.status as ReviewStatus,
+                            )}
+                          </div>
+                        </Link>
+                      ),
+                    )}
+                    {totalReviewsCount > 5 && (
+                      <Link
+                        to="/journals/$journalId/reviews"
+                        params={{ journalId }}
+                      >
+                        <Button
+                          variant="outline"
+                          className="w-full mt-2"
+                          size="sm"
+                        >
+                          Xem tất cả {totalReviewsCount} đánh giá
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -582,8 +703,6 @@ const JournalDetailPage = () => {
                                       <p className="text-xs font-medium text-muted-foreground">
                                         Nguyên tắc #{idea.principleUsed.id}:{' '}
                                         {idea.principleUsed.name}
-                                        {idea.principleUsed.priority &&
-                                          ` (Độ ưu tiên: ${idea.principleUsed.priority})`}
                                       </p>
                                     )}
                                     <p className="text-sm">
@@ -731,6 +850,15 @@ const JournalDetailPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Request Dialog */}
+      <ReviewRequestDialog
+        open={isReviewRequestDialogOpen}
+        onOpenChange={setIsReviewRequestDialogOpen}
+        journalId={journal?.id || null}
+        journalTitle={journal?.title}
+        walletBalance={walletBalance}
+      />
     </DefaultLayout>
   );
 };

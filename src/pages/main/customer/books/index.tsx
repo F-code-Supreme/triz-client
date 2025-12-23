@@ -23,6 +23,9 @@ const CustomerBookLibraryPage = () => {
             {t('title')}
           </h1>
           <p className="text-muted-foreground">{t('description')}</p>
+          <p className="text-sm text-muted-foreground/80 italic">
+            {t('copyright.notice')} - {t('copyright.book_title')}
+          </p>
         </div>
 
         {/* Books Grid */}
@@ -54,7 +57,7 @@ const CustomerBookLibraryPage = () => {
             <p className="text-muted-foreground">{t('empty.description')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {books.map((book) => (
               <BookItem
                 key={book.id}
@@ -65,6 +68,13 @@ const CustomerBookLibraryPage = () => {
             ))}
           </div>
         )}
+
+        {/* Copyright Footer */}
+        <div className="pt-6 mt-6 border-t">
+          <p className="text-center text-sm text-muted-foreground italic">
+            {t('copyright.notice')} - {t('copyright.book_title')}
+          </p>
+        </div>
       </div>
     </DefaultLayout>
   );

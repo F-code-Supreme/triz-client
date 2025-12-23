@@ -27,6 +27,9 @@ const BookLibraryPage = () => {
               {t('title')}
             </h1>
             <p className="text-muted-foreground">{t('description')}</p>
+            <p className="text-sm text-muted-foreground/80 italic">
+              {t('copyright.notice')} - {t('copyright.book_title')}
+            </p>
           </div>
           {isAuthenticated && (
             <Button asChild className="h-10">
@@ -70,6 +73,13 @@ const BookLibraryPage = () => {
             ))}
           </div>
         )}
+
+        {/* Copyright Footer */}
+        <div className="pt-6 mt-6 border-t">
+          <p className="text-center text-sm text-muted-foreground italic">
+            {t('copyright.notice')} - {t('copyright.book_title')}
+          </p>
+        </div>
       </div>
     </DefaultLayout>
   );

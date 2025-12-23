@@ -1,25 +1,32 @@
-import { Plus } from 'lucide-react';
+import { Plus, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Textarea } from '@/components/ui/textarea';
 import { useStep2SuggestionMutation } from '@/features/6-steps/services/mutations';
 import { useSixStepDataStore } from '@/features/6-steps/store/useSixStepDataStore';
 
 import ActionButtons from '../../action-buttons';
 import { SelectableItem } from '../../selectable-item';
-import { SelectableItemSkeletonList } from '../../selectable-item-skeleton-list';
 
-import type {
-  GoalItem,
-  SixStepData,
-} from '@/features/6-steps/store/useSixStepDataStore';
+import type { SixStepData } from '@/features/6-steps/store/useSixStepDataStore';
 
 interface Step2Props {
   onNext: (data: SixStepData['step2']) => void;
   onBack: () => void;
-  initialData?: { goals: GoalItem[] };
-  selectedMiniProblem?: string;
+}
+
+interface ConstraintItem {
+  id: string;
+  text: string;
 }
 
 export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
@@ -27,123 +34,200 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
   const initialData = stepData.step2;
   const selectedMiniProblem = stepData.step1?.selectedMiniProblem;
 
-  const [goals, setGoals] = useState<GoalItem[]>(initialData?.goals || []);
-  const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
-  const [isAddingGoal, setIsAddingGoal] = useState(false);
-  const [newGoalText, setNewGoalText] = useState('');
+  // Editable fields
+  const [goal, setGoal] = useState<string>(initialData?.goal || '');
+  const [constraints, setConstraints] = useState<ConstraintItem[]>(
+    initialData?.constraints?.map((c, i) => ({
+      id: `constraint-${i}`,
+      text: c,
+    })) || [],
+  );
+
+  // Hidden fields (not editable, passed to next step)
+  const [scope, setScope] = useState<string>(initialData?.scope || '');
+  const [idealFinalResult, setIdealFinalResult] = useState<string | null>(
+    initialData?.idealFinalResult || null,
+  );
+  const [secondaryGoals, setSecondaryGoals] = useState<string[] | null>(
+    initialData?.secondaryGoals || null,
+  );
+  const [clarificationNeeded, setClarificationNeeded] = useState<
+    string[] | null
+  >(initialData?.clarificationNeeded || null);
+
+  const [isAddingConstraint, setIsAddingConstraint] = useState(false);
+  const [newConstraintText, setNewConstraintText] = useState('');
 
   const step2Mutation = useStep2SuggestionMutation();
 
-  // Update local state when store data changes
+  // Fetch goal and constraints suggestions when component mounts
   useEffect(() => {
-    if (initialData?.goals) {
-      setGoals(initialData.goals);
-    }
-  }, [initialData]);
+    const fetchSuggestions = async () => {
+      if (!selectedMiniProblem || !stepData.step1) return;
 
-  // Fetch goal suggestions when component mounts or mini problem changes
-  useEffect(() => {
-    const fetchGoalSuggestions = async () => {
-      if (!selectedMiniProblem) return;
-
-      // Check if we need to fetch new suggestions
-      // Fetch if: no goals exist OR the existing goals don't match the current mini problem
-      const shouldFetch =
-        goals.length === 0 ||
-        !initialData?.goals ||
-        initialData?.goals.length === 0;
+      // Fetch if no goal exists
+      const shouldFetch = !goal || !initialData?.goal;
 
       if (shouldFetch) {
         try {
           const response = await step2Mutation.mutateAsync({
+            understandingSummary: stepData.step1.understandingSummary,
+            systemContext: stepData.step1.systemContext,
+            psychologicalInertia: stepData.step1.psychologicalInertia,
             miniProblem: selectedMiniProblem,
+            clarificationNeeded: stepData.step1.clarificationNeeded,
           });
 
-          // Convert API response to goals
-          const suggestedGoals: GoalItem[] = [];
+          // Set editable fields
+          setGoal(response.goal);
+          setConstraints(
+            response.constraints.map((c, i) => ({
+              id: `constraint-${i}`,
+              text: c,
+            })),
+          );
 
-          // Add main goal
-          if (response.goal) {
-            suggestedGoals.push({
-              id: 'main-goal',
-              text: response.goal,
-            });
-          }
-
-          // Add secondary goals if available
-          if (response.secondaryGoals && response.secondaryGoals.length > 0) {
-            response.secondaryGoals.forEach((goal, index) => {
-              suggestedGoals.push({
-                id: `secondary-${index}`,
-                text: goal,
-              });
-            });
-          }
-
-          setGoals(suggestedGoals);
-          // Auto-select the first goal
-          if (suggestedGoals.length > 0) {
-            setSelectedGoalId(suggestedGoals[0].id);
-          }
+          // Set hidden fields
+          setScope(response.scope);
+          setIdealFinalResult(response.idealFinalResult);
+          setSecondaryGoals(response.secondaryGoals);
+          setClarificationNeeded(response.clarificationNeeded);
         } catch (error) {
-          console.error('Failed to get goal suggestions:', error);
-          setGoals([]);
+          console.error('Failed to get step 2 suggestions:', error);
         }
       }
     };
 
-    fetchGoalSuggestions();
+    fetchSuggestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMiniProblem]);
 
   const handleNext = () => {
-    if (goals.length > 0 && selectedGoalId) {
-      const selectedGoal = goals.find((g) => g.id === selectedGoalId);
-      onNext({ goals, selectedGoal });
+    if (!goal.trim()) {
+      toast.error('Vui lòng nhập mục tiêu.');
+      return;
     }
+
+    onNext({
+      goal: goal.trim(),
+      constraints: constraints.map((c) => c.text),
+      scope,
+      idealFinalResult,
+      secondaryGoals,
+      clarificationNeeded,
+    });
   };
 
-  const handleEditGoal = (id: string, newText: string) => {
-    setGoals((prevGoals) =>
-      prevGoals.map((goal) =>
-        goal.id === id ? { ...goal, text: newText } : goal,
+  const handleEditConstraint = (id: string, newText: string) => {
+    setConstraints((prev) =>
+      prev.map((constraint) =>
+        constraint.id === id ? { ...constraint, text: newText } : constraint,
       ),
     );
   };
 
-  const handleAddGoal = () => {
-    if (!newGoalText.trim()) {
-      setIsAddingGoal(false);
+  const handleDeleteConstraint = (id: string) => {
+    setConstraints((prev) => prev.filter((constraint) => constraint.id !== id));
+  };
+
+  const handleAddConstraint = () => {
+    if (!newConstraintText.trim()) {
+      setIsAddingConstraint(false);
       return;
     }
-    const newGoal: GoalItem = {
-      id: Date.now().toString(),
-      text: newGoalText.trim(),
+
+    const newConstraint: ConstraintItem = {
+      id: `constraint-${Date.now()}`,
+      text: newConstraintText.trim(),
     };
-    setGoals((prevGoals) => [newGoal, ...prevGoals]); // Add to top
-    setNewGoalText('');
-    setIsAddingGoal(false);
-    setSelectedGoalId(newGoal.id);
+
+    setConstraints((prev) => [...prev, newConstraint]);
+    setNewConstraintText('');
+    setIsAddingConstraint(false);
   };
 
-  const handleCancelAdd = () => {
-    setNewGoalText('');
-    setIsAddingGoal(false);
+  const handleCancelAddConstraint = () => {
+    setNewConstraintText('');
+    setIsAddingConstraint(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleConstraintKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (e.key === 'Enter') {
-      handleAddGoal();
+      handleAddConstraint();
     } else if (e.key === 'Escape') {
-      handleCancelAdd();
+      handleCancelAddConstraint();
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+    <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto h-full flex flex-col gap-4">
       <div className="flex-1 flex flex-col gap-4">
-        <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
-          Mục tiêu bạn muốn đạt được từ vấn đề là gì?
+        <div className="self-stretch text-center justify-center items-center gap-2 inline-flex">
+          <div className="text-4xl font-bold leading-[48px] tracking-tight">
+            Xác định mục tiêu và ràng buộc
+          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Info className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-96 max-h-96 overflow-y-auto">
+              <div className="space-y-3">
+                <h4 className="font-semibold text-sm">Thông tin bổ sung</h4>
+
+                {scope && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Phạm vi:
+                    </p>
+                    <p className="text-sm">{scope}</p>
+                  </div>
+                )}
+
+                {idealFinalResult && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Kết quả lý tưởng cuối cùng (IFR):
+                    </p>
+                    <p className="text-sm">{idealFinalResult}</p>
+                  </div>
+                )}
+
+                {secondaryGoals && secondaryGoals.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Mục tiêu phụ:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {secondaryGoals.map((goal, idx) => (
+                        <li key={idx} className="text-sm">
+                          {goal}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {clarificationNeeded && clarificationNeeded.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Cần làm rõ:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {clarificationNeeded.map((item, idx) => (
+                        <li key={idx} className="text-sm">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
@@ -151,60 +235,76 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
           </div>
         </div>
 
-        <div className="self-stretch justify-start text-sm font-semibold leading-6 text-slate-600 ">
-          Chọn 1 trong các mục tiêu sau:
-        </div>
-
         {step2Mutation.isPending ? (
-          <ScrollArea className="h-[45vh] pr-4">
-            <div className="flex flex-col gap-3">
-              <SelectableItemSkeletonList count={5} />
-            </div>
-          </ScrollArea>
+          <div className="space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            <ScrollArea className="h-[45vh] pr-4">
-              <div className="flex flex-col gap-3">
-                {goals.map((goal) => (
-                  <SelectableItem
-                    key={goal.id}
-                    id={goal.id}
-                    text={goal.text}
-                    isSelected={selectedGoalId === goal.id}
-                    isEditable={true}
-                    onEdit={handleEditGoal}
-                    onSelect={(id) => setSelectedGoalId(id)}
-                  />
-                ))}
+          <div className="flex flex-col gap-6">
+            {/* Goal Editor */}
+            <div className="flex flex-col gap-2">
+              <div className="text-sm font-semibold text-slate-600">
+                Mục tiêu:
               </div>
-            </ScrollArea>
-            {/* Add more goals */}
-            <div>
-              {isAddingGoal ? (
-                <div className="w-full pl-3.5 pr-3 py-4 rounded-lg bg-secondary-foreground outline outline-1 outline-offset-[-1px] outline-primary flex items-center gap-3">
-                  <input
-                    type="text"
-                    value={newGoalText}
-                    onChange={(e) => setNewGoalText(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    onBlur={handleAddGoal}
-                    placeholder="Nhập mục tiêu mới..."
-                    className="flex-1 text-primary dark:text-foreground text-sm font-normal leading-5 bg-transparent outline-none"
-                    autoFocus
-                  />
+              <Textarea
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+                placeholder="Nhập mục tiêu..."
+                className="min-h-[100px] resize-none"
+              />
+            </div>
+
+            {/* Constraints List */}
+            <div className="flex flex-col gap-2">
+              <div className="text-sm font-semibold text-slate-600">
+                Ràng buộc:
+              </div>
+
+              <ScrollArea className="h-[30vh] pr-4">
+                <div className="flex flex-col gap-3">
+                  {constraints.map((constraint) => (
+                    <SelectableItem
+                      key={constraint.id}
+                      id={constraint.id}
+                      text={constraint.text}
+                      isEditable={true}
+                      isDeletable={true}
+                      onEdit={handleEditConstraint}
+                      onDelete={handleDeleteConstraint}
+                    />
+                  ))}
                 </div>
-              ) : (
-                <Button
-                  variant="ghost"
-                  onClick={() => setIsAddingGoal(true)}
-                  className="rounded-lg pl-1 pr-1"
-                >
-                  <Plus className="w-4 h-4 text-secondary" />
-                  <span className="text-sm font-normal leading-5">
-                    Thêm mục tiêu khác
-                  </span>
-                </Button>
-              )}
+              </ScrollArea>
+
+              {/* Add constraint */}
+              <div>
+                {isAddingConstraint ? (
+                  <div className="w-full pl-3.5 pr-3 py-4 rounded-lg bg-secondary-foreground outline outline-1 outline-offset-[-1px] outline-primary flex items-center gap-3">
+                    <input
+                      type="text"
+                      value={newConstraintText}
+                      onChange={(e) => setNewConstraintText(e.target.value)}
+                      onKeyDown={handleConstraintKeyDown}
+                      onBlur={handleAddConstraint}
+                      placeholder="Nhập ràng buộc mới..."
+                      className="flex-1 text-primary dark:text-foreground text-sm font-normal leading-5 bg-transparent outline-none"
+                      autoFocus
+                    />
+                  </div>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    onClick={() => setIsAddingConstraint(true)}
+                    className="rounded-lg pl-1 pr-1"
+                  >
+                    <Plus className="w-4 h-4 text-secondary" />
+                    <span className="text-sm font-normal leading-5">
+                      Thêm ràng buộc
+                    </span>
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -212,7 +312,7 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
       <ActionButtons
         onBack={onBack}
         onNext={handleNext}
-        disableNext={!selectedGoalId || step2Mutation.isPending}
+        disableNext={!goal.trim() || step2Mutation.isPending}
       />
     </div>
   );

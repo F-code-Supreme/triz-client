@@ -195,7 +195,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
           position: { x: i * horizontalSpacing + 100, y: 50 + verticalSpacing },
           data: {
             element: LOADING_TEXT,
-            propertyDimension: LOADING_TEXT,
             stateA: LOADING_TEXT,
             stateB: LOADING_TEXT,
             benefitA: LOADING_TEXT,
@@ -218,9 +217,9 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         });
 
         const response = await step4Mutation.mutateAsync({
-          goal: stepData.step2?.selectedGoal?.text || '',
           systemIdentified: step3Data.systemIdentified,
           elements: step3Data.elements,
+          objectType: step3Data.objectType || 'Moving',
           requiredStates,
         });
 
@@ -522,6 +521,9 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
         // Call API to convert ML to MK
         const response = await convertMLtoMKMutation.mutateAsync({
+          systemInfo: {
+            objectType: stepData.step3?.objectType || 'Moving',
+          },
           physicalContradictions: [selectedPC],
         });
 
@@ -540,7 +542,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         [TechnicalContradictionKey.MK1, TechnicalContradictionKey.MK2].forEach(
           (mk, mkIndex) => {
             const tcId = `tc-${pcIndex}-${mk}`;
-            const mkData = tc[mk as 'MK1' | 'MK2'];
+            const mkData = tc[mk as 'mk1' | 'mk2'];
 
             newNodes.push({
               id: tcId,
@@ -667,7 +669,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
   );
 
   const handleSelectTC = useCallback(
-    async (tcId: string, mkData: TechnicalContradiction['MK1']) => {
+    async (tcId: string, mkData: TechnicalContradiction['mk1']) => {
       setSelectedTechnicalContradiction(tcId);
       setSelectedPrinciples([]);
 
@@ -881,7 +883,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       data: {
         id: item.principle.id,
         name: item.principle.name,
-        priority: item.priority,
         status: 'success' as NodeStatus,
         isSelected: selectedPrinciples.includes(item.principle.id),
         onSelect: () => {
@@ -900,7 +901,6 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
       source: matrixId,
       target: `principle-${tcId}-${item.principle.id}`,
       style: { stroke: '#94a3b8', strokeWidth: 2 },
-      label: `Ưu tiên ${item.priority}`,
     }));
 
     // Remove placeholder principles and add actual ones
@@ -1002,13 +1002,13 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
 
   return (
     <div className="h-full flex flex-col gap-4">
-      <div className="max-w-4xl mx-auto flex flex-col gap-4">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl mx-auto flex flex-col gap-4">
         <div className="self-stretch text-center justify-start text-4xl font-bold leading-[48px] tracking-tight">
           Trả lời các câu hỏi
         </div>
         <div className="self-stretch px-6 py-5 bg-blue-50 dark:bg-blue-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-blue-600 inline-flex justify-center items-center gap-2 mx-auto">
           <div className="justify-start text-blue-800 dark:text-blue-200 text-base font-bold leading-6">
-            Mục tiêu: {stepData.step2?.selectedGoal?.text}
+            Mục tiêu: {stepData.step2?.goal}
           </div>
         </div>
       </div>
@@ -1110,7 +1110,7 @@ export const Step4FormulateContradiction = ({ onNext, onBack }: Step4Props) => {
         </ReactFlow>
       </div>
 
-      <div className="max-w-4xl w-full mx-auto pb-4">
+      <div className="max-w-4xl xl:max-w-5xl 2xl:max-w-7xl w-full mx-auto pb-4">
         <ActionButtons
           onBack={onBack}
           onNext={handleNext}

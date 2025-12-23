@@ -1,3 +1,5 @@
+export type ObjectType = 'Moving' | 'Stationary';
+
 export interface Principle {
   id: number;
   name: string;
@@ -7,7 +9,6 @@ export interface Principle {
 
 export interface PhysicalContradiction {
   element: string;
-  propertyDimension: string;
   stateA: string;
   stateB: string;
   benefitA: string;
@@ -40,6 +41,7 @@ export interface Step2Objectives {
 export interface Step3Analysis {
   systemIdentified: string;
   elements: string[];
+  objectType: ObjectType;
   requiredStates: Record<string, string[]>;
 }
 

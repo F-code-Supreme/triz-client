@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useGetJournalsByUserQuery } from '@/features/6-steps/services/queries';
 import useAuth from '@/features/auth/hooks/use-auth';
 import { DefaultLayout } from '@/layouts/default-layout';
+import { formatDate } from '@/utils';
 
 const JournalsPage = () => {
   const { t } = useTranslation('pages.journals');
@@ -123,14 +124,11 @@ const JournalsPage = () => {
                   key={journal.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col"
                 >
-                  <div className="relative h-48 w-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                    <Newspaper className="h-16 w-16 text-primary/40" />
-                    <div className="absolute top-3 right-3">
+                  <CardContent className="relative p-6 flex-1 flex flex-col">
+                    <div className="absolute top-3 left-6">
                       {getStatusBadge(journal.status)}
                     </div>
-                  </div>
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-semibold mb-3 line-clamp-2">
+                    <h3 className="text-xl font-semibold mt-6 mb-3 line-clamp-2">
                       {journal.title}
                     </h3>
 
@@ -158,18 +156,14 @@ const JournalsPage = () => {
                         <Clock className="h-4 w-4" />
                         <span>
                           {t('created_date')}:{' '}
-                          {new Date(journal.createdAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.createdAt))}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
                         <span>
                           {t('updated_date')}:{' '}
-                          {new Date(journal.updatedAt).toLocaleDateString(
-                            'vi-VN',
-                          )}
+                          {formatDate(new Date(journal.updatedAt))}
                         </span>
                       </div>
                     </div>

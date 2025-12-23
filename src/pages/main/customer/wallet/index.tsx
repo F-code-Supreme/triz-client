@@ -1,3 +1,4 @@
+import { useSearch } from '@tanstack/react-router';
 import {
   getCoreRowModel,
   useReactTable,
@@ -5,7 +6,7 @@ import {
   type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import useAuth from '@/features/auth/hooks/use-auth';
@@ -22,7 +23,12 @@ import { DefaultLayout } from '@/layouts/default-layout';
 
 const WalletPage = () => {
   const { t } = useTranslation('pages.wallet');
+  const search = useSearch({ strict: false }) as {
+    topup?: string;
+    amount?: number;
+  };
   const [topupOpen, setTopupOpen] = useState(false);
+  const [topupAmount, setTopupAmount] = useState<number | undefined>();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -32,6 +38,14 @@ const WalletPage = () => {
   const [fromDate, setFromDate] = useState<Date | undefined>();
   const [toDate, setToDate] = useState<Date | undefined>();
   const { user } = useAuth();
+
+  // Auto-open topup dialog if query params present
+  useEffect(() => {
+    if (search?.topup === 'open') {
+      setTopupAmount(search.amount);
+      setTopupOpen(true);
+    }
+  }, [search]);
 
   // Build filters with date range
   const filters = useMemo(() => {
@@ -119,7 +133,11 @@ const WalletPage = () => {
           />
         </div>
 
-        <TopupDialog open={topupOpen} onOpenChange={setTopupOpen} />
+        <TopupDialog
+          open={topupOpen}
+          onOpenChange={setTopupOpen}
+          initialAmount={topupAmount}
+        />
       </div>
     </DefaultLayout>
   );

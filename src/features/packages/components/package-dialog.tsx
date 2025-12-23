@@ -33,8 +33,8 @@ import {
 } from '@/components/ui/select';
 import { useUploadFileMutation } from '@/features/book/services/mutations';
 import { PackageStatus } from '@/features/packages/types';
-import { validateUrl } from '@/utils';
 
+// import { validateUrl } from '@/utils';
 import type { Package } from '@/features/packages/types';
 
 interface Feature {
@@ -152,13 +152,13 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleIconUrlChange = (url: string) => {
-    setNewFeature({ ...newFeature, iconUrl: url });
-    // Validate URL with image requirement
-    const error = validateUrl(url, true);
-    setIconUrlError(error);
-    setIconFiles([]);
-  };
+  // const handleIconUrlChange = (url: string) => {
+  //   setNewFeature({ ...newFeature, iconUrl: url });
+  //   // Validate URL with image requirement
+  //   const error = validateUrl(url, true);
+  //   setIconUrlError(error);
+  //   setIconFiles([]);
+  // };
 
   const handleAddFeature = () => {
     if (newFeature.iconUrl && newFeature.description && !iconUrlError) {
@@ -208,10 +208,15 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
 
         <div className="grid">
           <div className="space-y-1">
-            <Label htmlFor="name">
-              {t('packages.dialog.package_name')}{' '}
-              <span className="text-red-500">*</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="name">
+                {t('packages.dialog.package_name')}{' '}
+                <span className="text-red-500">*</span>
+              </Label>
+              <span className="text-xs text-gray-400">
+                {formData.name.length}/254
+              </span>
+            </div>
             <Input
               id="name"
               value={formData.name}
@@ -221,6 +226,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                   setFormErrors({ ...formErrors, name: undefined });
                 }
               }}
+              maxLength={254}
               placeholder={t('packages.dialog.package_name_placeholder')}
               className={formErrors.name ? 'border-red-500' : ''}
             />
@@ -320,7 +326,7 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
                 min={1}
                 stepper={1}
                 thousandSeparator=","
-                suffix=" Ƶ"
+                suffix=" / ngày"
                 placeholder={
                   t('packages.dialog.daily_placeholder') || 'Nhập số token/ngày'
                 }
@@ -398,12 +404,12 @@ const PackageDialog: React.FC<PackageDialogProps> = ({
               </Label>
               <div className="grid gap-2">
                 <div className="space-y-1">
-                  <Input
+                  {/* <Input
                     placeholder={t('packages.dialog.icon_url_placeholder')}
                     value={newFeature.iconUrl}
                     onChange={(e) => handleIconUrlChange(e.target.value)}
                     className={iconUrlError ? ERROR_CLASS : ''}
-                  />
+                  /> */}
                   <div className="my-2">
                     <FileUpload
                       value={iconFiles}

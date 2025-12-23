@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 
@@ -168,7 +168,10 @@ export const useCreateQuizMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (payload: CreateQuizPayload) => {
-      const res = await _request.post<CreateQuizResponse>('/quizzes', payload);
+      const res = await _request.post<CreateQuizResponse>(
+        `/modules/${payload.moduleId}/quizzes`,
+        payload,
+      );
       return res.data;
     },
   });
@@ -176,6 +179,7 @@ export const useCreateQuizMutation = () => {
 
 export const useUpdateQuizMutation = () => {
   const _request = useAxios();
+  const queryClient = useQueryClient();
   return useMutation<
     UpdateQuizResponse,
     unknown,
@@ -187,6 +191,12 @@ export const useUpdateQuizMutation = () => {
         payload,
       );
       return res.data;
+    },
+    onSuccess: (_, values) => {
+      queryClient.invalidateQueries({ queryKey: ['getAdminQuizzes'] });
+      queryClient.invalidateQueries({
+        queryKey: ['getQuizById', values.quizId],
+      });
     },
   });
 };

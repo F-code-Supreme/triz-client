@@ -33,6 +33,7 @@ import {
 } from '@/features/quiz/service/mutations';
 import { QuizLayout } from '@/layouts/quiz-layout';
 import { cn } from '@/lib/utils';
+import { formatDate } from '@/utils';
 
 const QuizResults = ({
   results,
@@ -44,7 +45,7 @@ const QuizResults = ({
   onRetry: () => void;
 }) => {
   const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('vi-VN');
+    return formatDate(new Date(dateString), 'DD/MM/YYYY HH:mm');
   };
 
   const calculateDuration = (startTime: string, completedAt: string) => {

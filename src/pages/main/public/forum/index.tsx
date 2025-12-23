@@ -23,7 +23,7 @@ import {
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
-import { cleanHtml, formatISODate, htmlExcerpt } from '@/utils';
+import { cleanHtml, formatDate, htmlExcerpt } from '@/utils';
 
 const ForumPage: React.FC = () => {
   const tabs = [
@@ -60,9 +60,9 @@ const ForumPage: React.FC = () => {
   const [selectedPostId, setSelectedPostId] = React.useState<string | null>(
     null,
   );
-  const [_title, setPostTitle] = React.useState('');
-  const [_postImage, setPostImage] = React.useState<string>('');
-  const [_answer, setAnswer] = React.useState<string>('');
+  const [draftTitle, setDraftTitle] = React.useState('');
+  const [draftContent, setDraftContent] = React.useState('');
+  const [draftImage, setDraftImage] = React.useState('');
   const myPostsTab = React.useMemo(
     () => myPosts?.pages.flatMap((page) => page?.content || []) ?? [],
     [myPosts],
@@ -90,13 +90,13 @@ const ForumPage: React.FC = () => {
           fromJournal?: boolean;
           title: string;
           content: string;
-          imgUrl: string;
+          imgUrl?: string;
         };
 
         if (parsed.fromJournal) {
-          setPostTitle(parsed.title);
-          setAnswer(parsed.content);
-          setPostImage(parsed.imgUrl);
+          setDraftTitle(parsed.title);
+          setDraftContent(parsed.content);
+          setDraftImage(parsed.imgUrl || '');
           setShowCreateDialog(true);
 
           // Clear sessionStorage to prevent re-opening on refresh
@@ -252,6 +252,14 @@ const ForumPage: React.FC = () => {
                 <CreatePostDialog
                   open={showCreateDialog}
                   onOpenChange={setShowCreateDialog}
+                  initialTitle={draftTitle}
+                  initialContent={draftContent}
+                  initialImage={draftImage}
+                  onCreated={() => {
+                    setDraftTitle('');
+                    setDraftContent('');
+                    setDraftImage('');
+                  }}
                 />
               </div>
             )}
@@ -299,7 +307,7 @@ const ForumPage: React.FC = () => {
                     href: `/users/${p.createdBy}`,
                     avatar: p.avtUrl || '',
                   }}
-                  time={formatISODate(p.createdAt)}
+                  time={formatDate(new Date(p.createdAt))}
                   excerpt={
                     <>
                       <div
@@ -393,7 +401,7 @@ const ForumPage: React.FC = () => {
                         />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs text-slate-500">
-                            {formatISODate(r.createdAt)}
+                            {formatDate(new Date(r.createdAt))}
                           </p>
                           <p className="font-semibold text-[14px] line-clamp-2">
                             {r.title}
@@ -435,7 +443,7 @@ const ForumPage: React.FC = () => {
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-slate-500">
-                        {formatISODate(r.createdAt)}
+                        {formatDate(new Date(r.createdAt))}
                       </p>
                       <p className="font-semibold text-[14px] line-clamp-2">
                         {r.title}
@@ -479,7 +487,7 @@ const ForumPage: React.FC = () => {
                           {selectedPost.userName || 'Người dùng'}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {formatISODate(selectedPost.createdAt)}
+                          {formatDate(new Date(selectedPost.createdAt))}
                         </p>
                       </div>
                     </div>
