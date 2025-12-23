@@ -120,6 +120,7 @@ export interface LessonContentItem extends BaseContentItem {
   type: 'lesson';
   lessonData: {
     id: string;
+    durationInMinutes: number;
     name: string;
     videoUrl?: string;
     content?: string;

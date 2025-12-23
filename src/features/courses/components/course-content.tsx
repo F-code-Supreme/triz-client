@@ -38,6 +38,8 @@ interface CourseContentProps {
 const CourseContent = ({ item, className }: CourseContentProps) => {
   const [isVideoLoading, setIsVideoLoading] = useState(true);
 
+  console.log('CourseContent item:', item);
+
   const lessonId = item?.type === 'lesson' ? item.lessonData?.id : undefined;
   const markLessonAsCompletedMutation = useMarkLessonAsCompletedMutation(
     lessonId || '',
@@ -73,12 +75,12 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
 
   const formatDuration = (minutes: number) => {
     if (!minutes) return '';
-    if (minutes < 60) return `${minutes} min`;
+    if (minutes < 60) return `${minutes} phút`;
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     return remainingMinutes > 0
-      ? `${hours}h ${remainingMinutes}m`
-      : `${hours}h`;
+      ? `${hours} giờ ${remainingMinutes} phút`
+      : `${hours} giờ`;
   };
 
   const renderContent = () => {
@@ -188,13 +190,6 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* {quizData.imageSource && (
-                <img
-                  // src={quizData.imageSource}
-                  alt={quizData.title}
-                  className="w-full rounded-lg"
-                />
-              )} */}
               <div className="prose prose-slate max-w-none">
                 <ReactMarkdown>{quizData.description}</ReactMarkdown>
               </div>
@@ -269,7 +264,43 @@ const CourseContent = ({ item, className }: CourseContentProps) => {
                       : item.type.toUpperCase()}
               </Badge>
             </div>
-            <h1 className="text-2xl font-bold text-foreground">{item.title}</h1>
+            <div className="flex flex-row items-center justify-between">
+              <h1 className="text-2xl font-bold text-foreground">
+                {item.title}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {item.type === 'lesson' ? (
+                  <>
+                    {item.lessonData.durationInMinutes && (
+                      <>
+                        Thời gian:{' '}
+                        {formatDuration(item.lessonData.durationInMinutes)}
+                      </>
+                    )}
+                  </>
+                ) : item.type === 'quiz' ? (
+                  <>
+                    {item.quizData.durationInMinutes && (
+                      <>
+                        Thời gian:{' '}
+                        {formatDuration(item.quizData.durationInMinutes)}
+                      </>
+                    )}
+                  </>
+                ) : item.type === 'assignment' ? (
+                  <>
+                    {item.assignmentData.durationInMinutes && (
+                      <>
+                        Thời gian:{' '}
+                        {formatDuration(item.assignmentData.durationInMinutes)}
+                      </>
+                    )}
+                  </>
+                ) : (
+                  ''
+                )}
+              </p>
+            </div>
           </motion.div>
         </div>
 

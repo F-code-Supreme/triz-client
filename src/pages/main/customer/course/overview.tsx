@@ -45,6 +45,21 @@ const CourseOverviewPage = () => {
   const { data: modules, isLoading: isLoadingModules } =
     useGetModuleByCourseQuery(id);
 
+  const sortedModulesData =
+    modules && course?.orders
+      ? [...modules].sort((a, b) => {
+          const orderA = course.orders?.findIndex(
+            (order) => order.moduleId === a.id,
+          );
+          const orderB = course.orders?.findIndex(
+            (order) => order.moduleId === b.id,
+          );
+          return (orderA ?? -1) - (orderB ?? -1);
+        })
+      : modules;
+
+  console.log('Module data:', sortedModulesData);
+
   const enrollMutation = useEnrollCourseMutation();
 
   if (isLoading) {
@@ -252,7 +267,7 @@ const CourseOverviewPage = () => {
           </CardContent>
         </Card>
 
-        {modules && modules.length > 0 && (
+        {sortedModulesData && sortedModulesData.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle>Chương trình học</CardTitle>
@@ -272,7 +287,7 @@ const CourseOverviewPage = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {modules.map((module) => (
+                  {sortedModulesData.map((module: any) => (
                     <div key={module.id} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-medium">{module.name}</h4>
