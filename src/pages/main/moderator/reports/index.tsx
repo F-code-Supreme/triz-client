@@ -75,7 +75,10 @@ const ModeratorReportsManagementPage = () => {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const { data: reportsData, isLoading } = useGetAllReportsQuery();
+  const { data: reportsData, isLoading } = useGetAllReportsQuery({
+    page: pagination.pageIndex,
+    size: pagination.pageSize,
+  });
   const totalRowCount = reportsData?.page?.totalElements ?? 0;
   const forumPosts = useMemo(() => {
     const currentData = reportsData;
