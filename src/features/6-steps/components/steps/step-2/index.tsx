@@ -48,12 +48,6 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
   const [idealFinalResult, setIdealFinalResult] = useState<string | null>(
     initialData?.idealFinalResult || null,
   );
-  const [secondaryGoals, setSecondaryGoals] = useState<string[] | null>(
-    initialData?.secondaryGoals || null,
-  );
-  const [clarificationNeeded, setClarificationNeeded] = useState<
-    string[] | null
-  >(initialData?.clarificationNeeded || null);
 
   const [isAddingConstraint, setIsAddingConstraint] = useState(false);
   const [newConstraintText, setNewConstraintText] = useState('');
@@ -90,8 +84,6 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
           // Set hidden fields
           setScope(response.scope);
           setIdealFinalResult(response.idealFinalResult);
-          setSecondaryGoals(response.secondaryGoals);
-          setClarificationNeeded(response.clarificationNeeded);
         } catch (error) {
           console.error('Failed to get step 2 suggestions:', error);
         }
@@ -113,8 +105,6 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
       constraints: constraints.map((c) => c.text),
       scope,
       idealFinalResult,
-      secondaryGoals,
-      clarificationNeeded,
     });
   };
 
@@ -193,36 +183,6 @@ export const Step2DefineObjective = ({ onNext, onBack }: Step2Props) => {
                       Kết quả lý tưởng cuối cùng (IFR):
                     </p>
                     <p className="text-sm">{idealFinalResult}</p>
-                  </div>
-                )}
-
-                {secondaryGoals && secondaryGoals.length > 0 && (
-                  <div className="space-y-1">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      Mục tiêu phụ:
-                    </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      {secondaryGoals.map((goal, idx) => (
-                        <li key={idx} className="text-sm">
-                          {goal}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {clarificationNeeded && clarificationNeeded.length > 0 && (
-                  <div className="space-y-1">
-                    <p className="text-xs font-medium text-muted-foreground">
-                      Cần làm rõ:
-                    </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      {clarificationNeeded.map((item, idx) => (
-                        <li key={idx} className="text-sm">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 )}
               </div>

@@ -47,9 +47,9 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
   const [psychologicalInertia, setPsychologicalInertia] = useState<string[]>(
     initialData?.psychologicalInertia || [],
   );
-  const [clarificationNeeded, setClarificationNeeded] = useState<
-    string[] | null
-  >(initialData?.clarificationNeeded || null);
+  const [clarificationNeeded, setClarificationNeeded] = useState<string | null>(
+    initialData?.clarificationNeeded || null,
+  );
   const [miniProblems, setMiniProblems] = useState<MiniProblem[]>(
     initialData?.miniProblems || [],
   );
@@ -271,15 +271,8 @@ export const Step1UnderstandProblem = ({ onNext }: Step1Props) => {
                 {clarificationNeeded && clarificationNeeded.length > 0 && (
                   <div className="space-y-1">
                     <p className="text-xs font-medium text-muted-foreground">
-                      Cần làm rõ:
+                      Cần làm rõ: {clarificationNeeded}
                     </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      {clarificationNeeded.map((item, idx) => (
-                        <li key={idx} className="text-sm">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 )}
               </div>

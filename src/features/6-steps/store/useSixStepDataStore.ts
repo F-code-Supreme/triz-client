@@ -30,7 +30,7 @@ export interface SixStepData {
     psychologicalInertia: string[];
     miniProblems: MiniProblem[];
     selectedMiniProblem: string;
-    clarificationNeeded: string[] | null;
+    clarificationNeeded: string | null;
   };
   // Step 2: Define Objective
   step2?: {
@@ -38,8 +38,6 @@ export interface SixStepData {
     constraints: string[];
     scope: string;
     idealFinalResult: string | null;
-    secondaryGoals: string[] | null;
-    clarificationNeeded: string[] | null;
   };
   // Step 3: Answer Questions
   step3?: {

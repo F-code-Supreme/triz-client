@@ -22,7 +22,7 @@ export interface IStep1SuggestionResponse {
   };
   psychologicalInertia: string[];
   miniProblems: string[];
-  clarificationNeeded: string[] | null;
+  clarificationNeeded: string | null;
 }
 
 // Step 2
@@ -34,7 +34,7 @@ export interface IStep2SuggestionPayload {
   };
   psychologicalInertia: string[];
   miniProblem: string;
-  clarificationNeeded: string[] | null;
+  clarificationNeeded: string | null;
 }
 
 export interface IStep2SuggestionResponse {
@@ -42,8 +42,6 @@ export interface IStep2SuggestionResponse {
   constraints: string[];
   scope: string;
   idealFinalResult: string | null;
-  secondaryGoals: string[] | null;
-  clarificationNeeded: string[] | null;
 }
 
 // Step 3
@@ -51,7 +49,7 @@ export interface IStep3SuggestionPayload {
   goal: string;
   constraints: string[];
   scope: string;
-  idealFinalResult: string;
+  idealFinalResult: string | null;
 }
 
 export interface IStep3SuggestionResponse {
