@@ -99,6 +99,8 @@
       "avg_score_trend": "Xu hướng điểm trung bình",
       "avg_scores_period": "Điểm trung bình trong {{period}} qua",
       "avg_score_label": "Điểm TB",
+      "top_games": "Trò chơi hàng đầu",
+      "top_games_desc": "Các trò chơi được chơi nhiều nhất với mức độ tương tác cao nhất",
       "top_players": "Bảng xếp hạng người chơi hàng đầu",
       "top_players_desc": "Người chơi có điểm cao nhất trên tất cả trò chơi",
       "rank": "Xếp hạng",

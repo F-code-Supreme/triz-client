@@ -16,8 +16,8 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+import { GamesEnumId } from '@/features/game/configs';
 import { useUpdateGameScoreMutation } from '@/features/game/services/mutations';
-import { GamesEnumId } from '@/features/game/services/mutations/enum';
 import { useGetGameLeaderboardByIdQuery } from '@/features/game/services/queries';
 import { GameKeys } from '@/features/game/services/queries/keys';
 import { DefaultLayout } from '@/layouts/default-layout';
