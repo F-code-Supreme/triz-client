@@ -23,15 +23,16 @@ import { usePublishCourseMutation } from '@/features/courses/services/mutations'
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetLessonsByModuleQuery } from '@/features/lesson/services/queries';
 import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
-import { formatTrizilium } from '@/utils';
+// import { formatTrizilium } from '@/utils';
 
 type Props = {
   goBack: () => void;
-  title: string;
+  // title: string;
   description: string;
 };
 
-const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
+// const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
+const StepSummary: React.FC<Props> = ({ goBack, description }) => {
   const courseFromLocalStorage = localStorage.getItem('createCourseDraft_v1');
   const navigate = useNavigate();
   const courseId = courseFromLocalStorage
@@ -331,7 +332,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
       case 'INTERMEDIATE':
         return 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100/90';
       case 'HARD':
-      case 'ADVANCED':
+      case 'EXPERT':
         return 'bg-red-100 text-red-700 hover:bg-red-100/90';
       default:
         return 'bg-gray-100 text-gray-700 hover:bg-gray-100/90';
@@ -403,7 +404,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
             <div
               className={`${course?.thumbnailUrl ? 'lg:col-span-2' : 'lg:col-span-3'} p-6`}
             >
-              <div className="flex items-start justify-between mb-4">
+              {/* <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     {course?.title || title || 'Untitled Course'}
@@ -431,7 +432,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <div className="space-y-4">
                 <div>

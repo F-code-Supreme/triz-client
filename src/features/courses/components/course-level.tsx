@@ -1,7 +1,7 @@
 import { Star, Zap, Award, Circle } from 'lucide-react';
 import React from 'react';
 
-export type CourseLevel = 'STARTER' | 'INTERMEDIATE' | 'ADVANCED' | string;
+export type CourseLevel = 'STARTER' | 'INTERMEDIATE' | 'EXPERT' | string;
 
 export interface CourseLevelMeta {
   key: CourseLevel;
@@ -39,8 +39,8 @@ export const COURSE_LEVELS: Record<string, CourseLevelMeta> = {
     difficulty: 3,
     description: 'Nâng cao, bao gồm các kỹ thuật/khái niệm quan trọng.',
   },
-  ADVANCED: {
-    key: 'ADVANCED',
+  EXPERT: {
+    key: 'EXPERT',
     label: 'Nâng cao',
     bgClass: 'bg-rose-100',
     textClass: 'text-rose-900',

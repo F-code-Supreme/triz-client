@@ -50,7 +50,7 @@ export interface Order {
   type: string;
 }
 
-export type CourseLevel = 'STARTER' | 'INTERMEDIATE' | 'ADVANCED' | string;
+export type CourseLevel = 'STARTER' | 'INTERMEDIATE' | 'EXPERT' | string;
 
 export type CourseStatus = 'ACTIVE' | 'INACTIVE' | string;
 
