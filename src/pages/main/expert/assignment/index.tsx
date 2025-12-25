@@ -1,14 +1,11 @@
 import {
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 
-import { DataTablePagination, DataTableToolbar } from '@/components/data-table';
+import { DataTablePagination } from '@/components/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -22,51 +19,49 @@ import { assignmentsColumns } from '@/features/assignment/components/assignments
 import { useGetAssignmentsQueryExpert } from '@/features/assignment/services/queries';
 import { ExpertLayout } from '@/layouts/expert-layout';
 
-const ExpertAssignmentsManagementPage = () => {
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [sorting, setSorting] = useState<
-    Array<{
-      id: string;
-      desc: boolean;
-    }>
-  >([]);
-  const [columnFilters, setColumnFilters] = useState<
-    Array<{
-      id: string;
-      value: unknown;
-    }>
-  >([]);
-  const [columnVisibility, setColumnVisibility] = useState<
-    Record<string, boolean>
-  >({});
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+import type {
+  ColumnFiltersState,
+  PaginationState,
+} from '@tanstack/react-table';
 
-  const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert();
+const ExpertAssignmentsManagementPage = () => {
+  const [sorting, setSorting] = useState<Array<{ id: string; desc: boolean }>>(
+    [],
+  );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert(
+    pagination.pageIndex,
+    pagination.pageSize,
+  );
 
   const assignments = useMemo(() => {
     const currentData = assignmentsData;
     return currentData?.content || [];
   }, [assignmentsData]);
 
+  const totalRowCount = assignmentsData?.page?.totalElements ?? 0;
+
   const table = useReactTable({
     data: assignments,
     columns: assignmentsColumns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onGlobalFilterChange: setGlobalFilter,
     state: {
-      sorting,
       columnFilters,
-      columnVisibility,
-      rowSelection,
-      globalFilter,
+      pagination,
+      sorting,
     },
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    rowCount: totalRowCount,
   });
 
   return (
@@ -84,11 +79,7 @@ const ExpertAssignmentsManagementPage = () => {
         </div>
 
         <div className="space-y-4">
-          <DataTableToolbar
-            table={table}
-            searchPlaceholder="Search by title, author..."
-            searchKey="title"
-          />
+          {/* Toolbar can be re-enabled if needed, but quizzes page does not use it by default */}
 
           {isLoading ? (
             <div className="border rounded-md overflow-hidden">

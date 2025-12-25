@@ -1,9 +1,8 @@
 import {
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
@@ -49,33 +48,28 @@ const AdminQuizzesPage = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
-  const [globalFilter, setGlobalFilter] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingQuiz, setDeletingQuiz] = useState<any>(null);
-  const [sorting, setSorting] = useState<
-    Array<{
-      id: string;
-      desc: boolean;
-    }>
-  >([]);
-  const [columnFilters, setColumnFilters] = useState<
-    Array<{
-      id: string;
-      value: unknown;
-    }>
-  >([]);
-  const [columnVisibility, setColumnVisibility] = useState<
-    Record<string, boolean>
-  >({});
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const [sorting, setSorting] = useState<Array<{ id: string; desc: boolean }>>(
+    [],
+  );
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
-  const { data, isLoading, refetch } = useGetAdminQuizzesQuery();
+  const { data, isLoading, refetch } = useGetAdminQuizzesQuery({
+    page: pagination.pageIndex,
+    size: pagination.pageSize,
+  });
   const deleteQuizMutation = useDeleteQuizByIdMutation();
   const { data: selectedQuizData } = useGetQuizByIdMutationAdmin(
     selectedQuizId || '',
   );
 
   const quizzes = data?.content || [];
+  const totalRowCount = data?.page?.totalElements ?? 0;
 
   const handleDeleteQuiz = (quiz: any) => {
     setDeletingQuiz(quiz);
@@ -84,18 +78,18 @@ const AdminQuizzesPage = () => {
 
   const handleDeleteConfirm = async () => {
     if (!deletingQuiz) return;
-    try {
-      const data = await deleteQuizMutation.mutateAsync(deletingQuiz.id);
-      console.log('Delete response data:', data);
-      setDeleteDialogOpen(false);
-      setDeletingQuiz(null);
-      if (data !== null) toast.success('Xóa bài kiểm tra thành công!');
-      else toast.error('Bài kiểm tra không thể xóa vì đã có học viên làm!');
 
-      refetch();
-    } catch (error) {
-      console.error('Failed to delete quiz:', error);
-    }
+    await deleteQuizMutation.mutateAsync(deletingQuiz.id, {
+      onError: () => {
+        toast.error('Không thể xóa bài kiểm tra vì có người đã làm!'); //400
+      },
+      onSuccess: () => {
+        toast.success('Xóa bài kiểm tra thành công!'); //200
+        setDeleteDialogOpen(false);
+        setDeletingQuiz(null);
+        refetch();
+      },
+    });
   };
 
   const handleEditQuiz = (quiz: any) => {
@@ -118,22 +112,19 @@ const AdminQuizzesPage = () => {
   const table = useReactTable({
     data: quizzes,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    onGlobalFilterChange: setGlobalFilter,
     state: {
-      sorting,
       columnFilters,
-      columnVisibility,
-      rowSelection,
-      globalFilter,
+      pagination,
+      sorting,
     },
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    rowCount: totalRowCount,
   });
 
   return (

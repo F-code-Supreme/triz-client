@@ -57,6 +57,7 @@ import type { UpdateQuizPayload } from '../service/mutations/type';
 
 const createQuestionSchema = (t: any) =>
   z.object({
+    id: z.string().optional(),
     content: z
       .string()
       .min(1, t('quizzes.create_dialog.question.content_required')),
@@ -64,10 +65,12 @@ const createQuestionSchema = (t: any) =>
     options: z
       .array(
         z.object({
+          id: z.string().optional(),
           content: z
             .string()
             .min(1, t('quizzes.create_dialog.question.option_required')),
           isCorrect: z.boolean(),
+          questionId: z.string().optional(),
         }),
       )
       .min(2, t('quizzes.create_dialog.question.min_options')),
@@ -109,7 +112,6 @@ export const QuizEditDialog = ({
   open,
   onOpenChange,
   quizId,
-  onSuccess,
 }: QuizEditDialogProps) => {
   const { t } = useTranslation('pages.admin');
   const [isLoading, setIsLoading] = useState(false);
@@ -144,11 +146,12 @@ export const QuizEditDialog = ({
       imageSource: '',
       questions: [
         {
+          id: '',
           content: '',
           questionType: 'SINGLE_CHOICE' as const,
           options: [
-            { content: '', isCorrect: true },
-            { content: '', isCorrect: false },
+            { id: '', content: '', isCorrect: true, questionId: '' },
+            { id: '', content: '', isCorrect: false, questionId: '' },
           ],
         },
       ],
@@ -175,14 +178,17 @@ export const QuizEditDialog = ({
 
       const formattedQuestions =
         quizData.questions?.map((question) => ({
+          id: question.id,
           content: question.content,
           questionType: question.questionType as
             | 'SINGLE_CHOICE'
             | 'MULTIPLE_CHOICE',
           options:
             question.options?.map((option) => ({
+              id: option.id,
               content: option.content,
               isCorrect: option.isCorrect,
+              questionId: question.id,
             })) || [],
         })) || [];
 
@@ -190,7 +196,8 @@ export const QuizEditDialog = ({
         setSelectedCourseId(currentModuleData.courseId);
       }
 
-      onSuccess?.();
+      // onSuccess?.();
+
       form.reset({
         title: quizData.title || '',
         passingScore: quizData.passingScore || 50,
@@ -205,11 +212,12 @@ export const QuizEditDialog = ({
             ? formattedQuestions
             : [
                 {
+                  id: '',
                   content: '',
                   questionType: 'SINGLE_CHOICE' as const,
                   options: [
-                    { content: '', isCorrect: true },
-                    { content: '', isCorrect: false },
+                    { id: '', content: '', isCorrect: true, questionId: '' },
+                    { id: '', content: '', isCorrect: false, questionId: '' },
                   ],
                 },
               ],
@@ -263,7 +271,7 @@ export const QuizEditDialog = ({
         payload: submitValues,
       });
       toast.success('Cập nhật bài kiểm tra thành công!');
-      onSuccess?.();
+      // onSuccess?.();
       onOpenChange(false);
       setSelectedCourseId('');
     } catch (error) {
@@ -275,11 +283,12 @@ export const QuizEditDialog = ({
 
   const addQuestion = () => {
     appendQuestion({
+      id: '',
       content: '',
       questionType: 'SINGLE_CHOICE' as const,
       options: [
-        { content: '', isCorrect: true },
-        { content: '', isCorrect: false },
+        { id: '', content: '', isCorrect: true, questionId: '' },
+        { id: '', content: '', isCorrect: false, questionId: '' },
       ],
     });
   };

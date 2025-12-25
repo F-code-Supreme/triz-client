@@ -8,6 +8,7 @@ export type UpdateQuizPayload = {
   moduleId: string | null;
   imageSource?: string | null;
   questions: Array<{
+    id?: string;
     content: string;
     questionType: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE';
     options: Array<{
@@ -88,15 +89,6 @@ export interface QuizOption {
   questionId: string;
 }
 
-export interface QuizQuestion {
-  id: string;
-  content: string;
-  questionType: string;
-  createdAt: string;
-  updatedAt: string;
-  quizId: string;
-  options: QuizOption[];
-}
 export interface QuizOption {
   id: string;
   content: string;
@@ -106,15 +98,6 @@ export interface QuizOption {
   questionId: string;
 }
 
-export interface QuizQuestion {
-  id: string;
-  content: string;
-  questionType: string;
-  createdAt: string;
-  updatedAt: string;
-  quizId: string;
-  options: QuizOption[];
-}
 export interface QuizOption {
   id: string;
   content: string;
