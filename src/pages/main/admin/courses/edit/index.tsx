@@ -94,7 +94,7 @@ const EditCoursePage = () => {
         {step === 3 && (
           <StepPlaceholder
             goBack={goBack}
-            title={title}
+            // title={title}
             description={description}
           />
         )}
