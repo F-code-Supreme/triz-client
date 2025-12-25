@@ -85,10 +85,12 @@ const AdminQuizzesPage = () => {
   const handleDeleteConfirm = async () => {
     if (!deletingQuiz) return;
     try {
-      await deleteQuizMutation.mutateAsync(deletingQuiz.id);
+      const data = await deleteQuizMutation.mutateAsync(deletingQuiz.id);
+      console.log('Delete response data:', data);
       setDeleteDialogOpen(false);
       setDeletingQuiz(null);
-      toast.success('Xóa bài kiểm tra thành công!');
+      if (data !== null) toast.success('Xóa bài kiểm tra thành công!');
+      else toast.error('Bài kiểm tra không thể xóa vì đã có học viên làm!');
 
       refetch();
     } catch (error) {

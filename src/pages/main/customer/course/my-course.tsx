@@ -7,7 +7,8 @@ import CourseFiltersComponent from '@/features/courses/components/course-filters
 import CourseList from '@/features/courses/components/course-list';
 import {
   useGetMyEnrollmentsQuery,
-  useGetCourseQueryUser,
+  // useGetCourseQueryUser,
+  useGetCourseQuery,
 } from '@/features/courses/services/queries';
 import { DefaultLayout } from '@/layouts/default-layout';
 
@@ -21,7 +22,8 @@ const MyCoursePage = () => {
     isLoading,
     isError,
   } = useGetMyEnrollmentsQuery();
-  const { data: coursesData } = useGetCourseQueryUser();
+  // const { data: coursesData } = useGetCourseQueryUser();
+  const { data: coursesData } = useGetCourseQuery();
 
   const enrolledCourses = (enrollmentsData?.content || []).map((enrollment) => {
     const courseDetail = (coursesData?.content || []).find(

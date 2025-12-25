@@ -289,7 +289,7 @@ const QuizListPage = () => {
                         ) : (
                           <>
                             <Play className="w-4 h-4 mr-2" />
-                            Start Quiz
+                            Bắt đầu làm bài
                           </>
                         )}
                       </Button>
@@ -306,10 +306,10 @@ const QuizListPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
-                    All Quiz Sets
+                    Tất cả bài kiểm tra
                   </h1>
                   <p className="text-sm sm:text-base text-muted-foreground mt-1">
-                    Choose a topic to start learning
+                    Chọn một chủ đề để bắt đầu
                   </p>
                 </div>
                 <Button
@@ -319,7 +319,7 @@ const QuizListPage = () => {
                   onClick={() => navigate({ to: '/quiz/history' })}
                 >
                   <History className="w-4 h-4 mr-2" />
-                  History Quiz
+                  Lịch sử làm bài
                 </Button>
               </div>
 
