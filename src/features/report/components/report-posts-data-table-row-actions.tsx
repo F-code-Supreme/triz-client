@@ -1,3 +1,4 @@
+import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Row } from '@tanstack/react-table';
@@ -41,10 +42,11 @@ import {
 import {
   useGetForumPostReplyByIdQuery,
   useGetForumPostChildrenReplyByIdQuery,
+  useGetForumPostByIdQuery,
 } from '@/features/forum/services/queries';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
 import ReviewPostReport from '@/features/report/components/report-review-dialog';
-import { formatDate } from '@/utils';
+import { cleanHtml, formatDate } from '@/utils';
 
 import type { Comment } from '@/features/forum/types';
 import type { Report } from '@/features/report/types';
@@ -61,7 +63,17 @@ export const ReportPostsDataTableRowActions = <TData,>({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const deleteForumPost = useDeleteForumPostMutation();
   const updateForumPostMutation = useUpdateForumPostMutation();
-
+  const [showDetailDialog, setShowDetailDialog] = React.useState(false);
+  const [selectedPostId, setSelectedPostId] = React.useState<string | null>(
+    null,
+  );
+  const { data: selectedPost, isFetching } = useGetForumPostByIdQuery(
+    selectedPostId!,
+    {
+      enabled: !!selectedPostId,
+    },
+  );
+  console.log('selectedPost', selectedPost);
   // reply management (admin)
   const [isRepliesOpen, setIsRepliesOpen] = React.useState(false);
   const [isReportReviewOpen, setIsReportReviewOpen] = React.useState(false);
@@ -248,6 +260,15 @@ export const ReportPostsDataTableRowActions = <TData,>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
+          <DropdownMenuItem
+            onClick={() => {
+              setSelectedPostId(forumPost.forumPostId);
+              setShowDetailDialog(true);
+            }}
+          >
+            <BookDashed className="mr-2 h-4 w-4" />
+            Chi tiết bài viết
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsReportReviewOpen(true)}>
             <BookDashed className="mr-2 h-4 w-4" />
             Đánh giá báo cáo
@@ -452,6 +473,80 @@ export const ReportPostsDataTableRowActions = <TData,>({
               Đóng
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        open={showDetailDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowDetailDialog(false);
+            setSelectedPostId(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {isFetching ? (
+            <div className="py-8 text-center text-slate-500">Đang tải...</div>
+          ) : (
+            <>
+              {selectedPost ? (
+                <>
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold">
+                      {selectedPost.title}
+                    </DialogTitle>
+                  </DialogHeader>
+
+                  <div className="space-y-4 mt-4">
+                    {/* Author info */}
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage
+                          src={selectedPost.avtUrl || ''}
+                          alt={selectedPost.userName || 'User'}
+                        />
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="font-medium text-sm">
+                          {selectedPost.userName || 'Người dùng'}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {formatDate(new Date(selectedPost.createdAt))}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Post image */}
+                    {selectedPost.imgUrl && (
+                      <div className="w-full rounded-lg overflow-hidden border">
+                        <img
+                          src={selectedPost.imgUrl}
+                          alt={selectedPost.title}
+                          className="w-full object-cover max-h-96"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display =
+                              'none';
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Post content */}
+                    <div
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{
+                        __html: cleanHtml(selectedPost.content || ''),
+                      }}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="py-8 text-center text-slate-500">
+                  Không tìm thấy bài viết
+                </div>
+              )}
+            </>
+          )}
         </DialogContent>
       </Dialog>
 

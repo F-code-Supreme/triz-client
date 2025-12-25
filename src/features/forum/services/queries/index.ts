@@ -7,7 +7,7 @@ import type {
   CommentResponse,
   ForumPostResponse,
 } from '@/features/forum/services/queries/types';
-import type { Comment } from '@/features/forum/types';
+import type { Comment, ForumPost } from '@/features/forum/types';
 import type { UseQueryOptions } from '@tanstack/react-query';
 import type {
   ColumnFiltersState,
@@ -67,16 +67,18 @@ export const useGetMyForumPostAll = (pagination?: PaginationState) => {
   });
 };
 
-export const useGetForumPostByIdQuery = (postId: string) => {
+export const useGetForumPostByIdQuery = (
+  postId: string,
+  options?: Omit<UseQueryOptions<ForumPost, any>, 'queryKey' | 'queryFn'>,
+) => {
   const _request = useAxios();
   return useQuery({
     queryKey: [ForumKeys.GetForumByIdQuery, postId],
     queryFn: async () => {
-      const response = await _request.get<ForumPostResponse>(
-        `/forumPosts/${postId}`,
-      );
+      const response = await _request.get<ForumPost>(`/forumPosts/${postId}`);
       return response.data;
     },
+    ...options,
   });
 };
 export const useGetForumPostsByAdminQuery = (
