@@ -2,7 +2,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
@@ -22,8 +21,14 @@ import { assignmentsColumns } from '@/features/assignment/components/assignments
 import { useGetAssignmentsQueryExpert } from '@/features/assignment/services/queries';
 import { ExpertLayout } from '@/layouts/expert-layout';
 
+import type { PaginationState } from '@tanstack/react-table';
+
 const ExpertAssignmentsManagementPage = () => {
   const [globalFilter, setGlobalFilter] = useState('');
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [sorting, setSorting] = useState<
     Array<{
       id: string;
@@ -41,18 +46,23 @@ const ExpertAssignmentsManagementPage = () => {
   >({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert();
+  const { data: assignmentsData, isLoading } = useGetAssignmentsQueryExpert(
+    pagination.pageIndex,
+    pagination.pageSize,
+  );
 
   const assignments = useMemo(() => {
     const currentData = assignmentsData;
     return currentData?.content || [];
   }, [assignmentsData]);
 
+  const totalRowCount = assignmentsData?.page?.totalElements ?? 0;
+
   const table = useReactTable({
     data: assignments,
     columns: assignmentsColumns,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
@@ -67,6 +77,8 @@ const ExpertAssignmentsManagementPage = () => {
       rowSelection,
       globalFilter,
     },
+    manualPagination: true,
+    rowCount: totalRowCount,
   });
 
   return (
