@@ -67,12 +67,8 @@ export const ReportPostsDataTableRowActions = <TData,>({
   const [selectedPostId, setSelectedPostId] = React.useState<string | null>(
     null,
   );
-  const { data: selectedPost, isFetching } = useGetForumPostByIdQuery(
-    selectedPostId!,
-    {
-      enabled: !!selectedPostId,
-    },
-  );
+  const { data: selectedPost, isFetching } =
+    useGetForumPostByIdQuery(selectedPostId);
   // reply management (admin)
   const [isRepliesOpen, setIsRepliesOpen] = React.useState(false);
   const [isReportReviewOpen, setIsReportReviewOpen] = React.useState(false);

@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { skipToken, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { useAxios } from '@/configs/axios';
 import { ForumKeys } from '@/features/forum/services/queries/keys';
@@ -67,18 +67,19 @@ export const useGetMyForumPostAll = (pagination?: PaginationState) => {
   });
 };
 
-export const useGetForumPostByIdQuery = (
-  postId: string,
-  options?: Omit<UseQueryOptions<ForumPost, any>, 'queryKey' | 'queryFn'>,
-) => {
+export const useGetForumPostByIdQuery = (postId?: string | null) => {
   const _request = useAxios();
   return useQuery({
     queryKey: [ForumKeys.GetForumByIdQuery, postId],
-    queryFn: async () => {
-      const response = await _request.get<ForumPost>(`/forumPosts/${postId}`);
-      return response.data;
-    },
-    ...options,
+    queryFn: postId
+      ? async () => {
+          const response = await _request.get<ForumPost>(
+            `/forumPosts/${postId}`,
+          );
+          return response.data;
+        }
+      : skipToken,
+    enabled: !!postId,
   });
 };
 export const useGetForumPostsByAdminQuery = (
