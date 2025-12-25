@@ -73,12 +73,18 @@ export const useAutoSaveQuizAnswerMutation = () => {
 
 export const useSubmitQuizAttemptMutation = () => {
   const _request = useAxios();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ attemptId, answers }: SubmitQuizAttemptPayload) => {
       const res = await _request.post(`/quiz-attempts/${attemptId}/submit`, {
         answers,
       });
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['quizAttemptInProgress'],
+      });
     },
   });
 };
