@@ -124,16 +124,23 @@ export const useGetUserQuizAttemptsQuery = () => {
   });
 };
 
-export const useGetAdminQuizzesQuery = () => {
+export const useGetAdminQuizzesQuery = ({
+  page,
+  size,
+}: {
+  page: number;
+  size: number;
+}) => {
   const _request = useAxios();
   return useQuery({
-    queryKey: ['getAdminQuizzes'],
+    queryKey: ['getAdminQuizzes', page, size],
     queryFn: async () => {
       const res = await _request.get<GetAdminQuizzesResponse>(
         '/quizzes/admin',
         {
           params: {
-            sort: 'createdAt,desc',
+            page,
+            size,
           },
         },
       );
@@ -158,22 +165,15 @@ export const useDeleteQuizByIdMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (quizId: string) => {
-      try {
-        const res = await _request.delete(`/quizzes/${quizId}`);
-        return res.data;
-      } catch (error: unknown) {
-        const axiosError = error as { response?: { status?: number } };
-        if (axiosError.response?.status === 400) {
-          return null;
-        }
-        throw error;
-      }
+      const res = await _request.delete(`/quizzes/${quizId}`);
+      return res.data;
     },
   });
 };
 
 export const useCreateQuizMutation = () => {
   const _request = useAxios();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: CreateQuizPayload) => {
       const res = await _request.post<CreateQuizResponse>(
@@ -181,6 +181,10 @@ export const useCreateQuizMutation = () => {
         payload,
       );
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getAdminQuizzes'] });
+      queryClient.invalidateQueries({ queryKey: ['getQuizzes'] });
     },
   });
 };
@@ -211,6 +215,7 @@ export const useUpdateQuizMutation = () => {
 
 export const useCreateQuizGeneralMutation = () => {
   const _request = useAxios();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: CreateQuizPayload) => {
       const res = await _request.post<CreateQuizGeneralResponse>(
@@ -218,6 +223,10 @@ export const useCreateQuizGeneralMutation = () => {
         payload,
       );
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['getAdminQuizzes'] });
+      queryClient.invalidateQueries({ queryKey: ['getQuizzes'] });
     },
   });
 };

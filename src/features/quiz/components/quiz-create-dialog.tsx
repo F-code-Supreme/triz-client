@@ -106,7 +106,7 @@ interface QuizCreateDialogProps {
 export const QuizCreateDialog = ({
   open,
   onOpenChange,
-  onSuccess,
+  // onSuccess,
 }: QuizCreateDialogProps) => {
   const { t } = useTranslation('pages.admin');
   const [isLoading, setIsLoading] = useState(false);
@@ -311,7 +311,10 @@ export const QuizCreateDialog = ({
     reader.readAsBinaryString(file);
   };
 
+  console.log('isloading', isLoading);
+
   const onSubmit = async (values: QuizCreateFormValues) => {
+    console.log('Form Values on Submit:', values);
     setIsLoading(true);
     try {
       const processedQuestions = values.questions.map((q) => {
@@ -355,9 +358,15 @@ export const QuizCreateDialog = ({
       }
 
       toast.success('Tạo bài kiểm tra thành công!');
-      onSuccess?.();
+
+      // Reset mutations
+      createQuizMutation.reset();
+      createQuizGeneralMutation.reset();
+
+      // Reset form
       form.reset({
         title: '',
+        passingScore: 50,
         description: '',
         durationInMinutes: 1,
         moduleId: '',
@@ -373,13 +382,17 @@ export const QuizCreateDialog = ({
           },
         ],
       });
+
+      // Reset states
       setSelectedCourseId('');
       setUploadedImageUrl('');
-
       setActiveTab('general');
+
+      // Close dialog
       onOpenChange(false);
     } catch (error) {
       console.error('Error creating quiz:', error);
+      toast.error('Có lỗi xảy ra khi tạo bài kiểm tra!');
     } finally {
       setIsLoading(false);
     }
@@ -421,6 +434,7 @@ export const QuizCreateDialog = ({
         if (!open) {
           form.reset({
             title: '',
+            passingScore: 50,
             description: '',
             durationInMinutes: 1,
             moduleId: '',
@@ -955,6 +969,7 @@ export const QuizCreateDialog = ({
                 onClick={() => {
                   form.reset({
                     title: '',
+                    passingScore: 50,
                     description: '',
                     durationInMinutes: 1,
                     moduleId: '',
