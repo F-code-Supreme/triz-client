@@ -240,7 +240,7 @@ const StepModules: React.FC<Props> = ({ goNext, goBack }) => {
             onChange={(e) => setName(e.target.value)}
             disabled={isCreateDisabled}
             min={2}
-            maxLength={255}
+            maxLength={200}
           />
           {/* <NumberInput
             min={1}
