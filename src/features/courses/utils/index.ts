@@ -6,7 +6,7 @@ export const getLevelColor = (level?: CourseLevel | string) => {
       return 'bg-green-100 text-green-800 border-green-200';
     case 'INTERMEDIATE':
       return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-    case 'ADVANCED':
+    case 'EXPERT':
       return 'bg-red-100 text-red-800 border-red-200';
     default:
       return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -19,7 +19,7 @@ export const getLevelText = (level?: CourseLevel | string) => {
       return 'Cơ bản';
     case 'INTERMEDIATE':
       return 'Trung cấp';
-    case 'ADVANCED':
+    case 'EXPERT':
       return 'Nâng cao';
     default:
       return 'Chưa xác định';

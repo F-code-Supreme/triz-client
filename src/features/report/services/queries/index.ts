@@ -6,13 +6,23 @@ import { ReportKeys } from './keys';
 
 import type { ReportResponse } from '@/features/report/types';
 
-export const useGetAllReportsQuery = () => {
+export const useGetAllReportsQuery = ({
+  page,
+  size,
+}: {
+  page: number;
+  size: number;
+}) => {
   const _request = useAxios();
   return useQuery({
-    queryKey: [ReportKeys.GetAllReportsQuery],
+    queryKey: [ReportKeys.GetAllReportsQuery, page, size],
     queryFn: async ({ signal }) => {
       const response = await _request.get<ReportResponse>('/reports', {
         signal,
+        params: {
+          page,
+          size,
+        },
       });
 
       return response.data;

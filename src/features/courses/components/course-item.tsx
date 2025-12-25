@@ -25,7 +25,7 @@ import {
   useDeleteCourseMutation,
   usePublishCourseMutation,
 } from '@/features/courses/services/mutations';
-import { formatTriziliumShort } from '@/utils';
+// import { formatTriziliumShort } from '@/utils';
 
 import CourseLevelBadge from './course-level';
 import CourseStatusBadge from './course-status';
@@ -41,8 +41,8 @@ const CourseItem = ({ course }: { course: Course }) => {
 
   const publishCourse = usePublishCourseMutation(course.id);
 
-  const dealPrice = course.dealPrice ?? course.price ?? null;
-  const originalPrice = course.price ?? null;
+  // const dealPrice = course.dealPrice ?? course.price ?? null;
+  // const originalPrice = course.price ?? null;
 
   const handleDelete = () => {
     deleteCourse.mutate(course.id, {
@@ -165,7 +165,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                 <div>Số lượng bài học: {course.orders?.length ?? 0}</div>
               </div>
 
-              <div className="text-right text-xs w-[45%] flex flex-col items-end space-y-1">
+              {/* <div className="text-right text-xs w-[45%] flex flex-col items-end space-y-1">
                 {dealPrice !== null ? (
                   <div className="text-sm font-semibold text-primary">
                     {formatTriziliumShort(dealPrice)}
@@ -179,7 +179,7 @@ const CourseItem = ({ course }: { course: Course }) => {
                     {formatTriziliumShort(originalPrice)}
                   </div>
                 ) : null}
-              </div>
+              </div> */}
             </div>
           </div>
         </CardContent>

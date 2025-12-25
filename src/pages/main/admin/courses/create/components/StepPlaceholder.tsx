@@ -23,15 +23,16 @@ import { usePublishCourseMutation } from '@/features/courses/services/mutations'
 import { useGetCourseByIdQuery } from '@/features/courses/services/queries';
 import { useGetLessonsByModuleQuery } from '@/features/lesson/services/queries';
 import { useGetModulesByCourseQuery } from '@/features/modules/services/queries';
-import { formatTrizilium } from '@/utils';
+// import { formatTrizilium } from '@/utils';
 
 type Props = {
   goBack: () => void;
-  title: string;
+  // title: string;
   description: string;
 };
 
-const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
+// const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
+const StepSummary: React.FC<Props> = ({ goBack, description }) => {
   const courseFromLocalStorage = localStorage.getItem('createCourseDraft_v1');
   const navigate = useNavigate();
   const courseId = courseFromLocalStorage
@@ -74,13 +75,13 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
     return sum + (module.assignmentCount ?? 0);
   }, 0);
 
-  const totalDuration = modules.reduce((sum, module) => {
-    const duration =
-      typeof module.durationInMinutes === 'number'
-        ? module.durationInMinutes
-        : 0;
-    return sum + duration;
-  }, 0);
+  // const totalDuration = modules.reduce((sum, module) => {
+  //   const duration =
+  //     typeof module.durationInMinutes === 'number'
+  //       ? module.durationInMinutes
+  //       : 0;
+  //   return sum + duration;
+  // }, 0);
 
   const handlePublish = async () => {
     if (totalModules === 0) {
@@ -166,7 +167,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                 {module.durationInMinutes > 0 && (
                   <span className="text-sm text-gray-600 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {module.durationInMinutes} min
+                    {module.durationInMinutes} phút
                   </span>
                 )}
               </div>
@@ -331,7 +332,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
       case 'INTERMEDIATE':
         return 'bg-yellow-100 text-yellow-700 hover:bg-yellow-100/90';
       case 'HARD':
-      case 'ADVANCED':
+      case 'EXPERT':
         return 'bg-red-100 text-red-700 hover:bg-red-100/90';
       default:
         return 'bg-gray-100 text-gray-700 hover:bg-gray-100/90';
@@ -403,7 +404,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
             <div
               className={`${course?.thumbnailUrl ? 'lg:col-span-2' : 'lg:col-span-3'} p-6`}
             >
-              <div className="flex items-start justify-between mb-4">
+              {/* <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     {course?.title || title || 'Untitled Course'}
@@ -431,7 +432,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <div className="space-y-4">
                 <div>
@@ -458,8 +459,8 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                   )}
 
                 {/* Additional Info Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t">
+                  {/* <div className="text-center p-3 bg-gray-50 rounded-lg">
                     <Clock className="w-5 h-5 text-gray-500 mx-auto mb-1" />
                     <p className="text-xs text-gray-500 mb-1">Thời lượng</p>
                     <p className="text-sm font-semibold text-gray-900">
@@ -467,7 +468,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                         ? `${course.durationInMinutes} phút`
                         : 'N/A'}
                     </p>
-                  </div>
+                  </div> */}
 
                   <div className="text-center p-3 bg-blue-50 rounded-lg">
                     <BookOpen className="w-5 h-5 text-blue-600 mx-auto mb-1" />
@@ -520,7 +521,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
         </Card>
 
         {/* Statistics Grid - Keep existing or remove if redundant */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -557,7 +558,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
             </div>
           </Card>
 
-          <Card className="p-4">
+          {/* <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <Clock className="w-5 h-5 text-orange-600" />
@@ -569,7 +570,7 @@ const StepSummary: React.FC<Props> = ({ goBack, title, description }) => {
                 </p>
               </div>
             </div>
-          </Card>
+          </Card> */}
         </div>
 
         {/* Modules Detail */}

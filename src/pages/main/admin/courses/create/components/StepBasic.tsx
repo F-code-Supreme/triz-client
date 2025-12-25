@@ -8,7 +8,7 @@ import {
   FileUploadDropzone,
   FileUploadTrigger,
 } from '@/components/ui/file-upload';
-import { NumberInput } from '@/components/ui/number-input';
+// import { NumberInput } from '@/components/ui/number-input';
 import {
   Select,
   SelectTrigger,
@@ -57,7 +57,7 @@ const StepBasic: React.FC<Props> = ({
   setCourseId,
   initialCourse,
 }) => {
-  const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'ADVANCED'>(
+  const [level, setLevel] = useState<'STARTER' | 'INTERMEDIATE' | 'EXPERT'>(
     'STARTER',
   );
   const [price, setPrice] = useState<number>(1000);
@@ -126,8 +126,8 @@ const StepBasic: React.FC<Props> = ({
       setIfString('description', setDescription);
 
       const levelVal = payload.level;
-      if (['STARTER', 'INTERMEDIATE', 'ADVANCED'].includes(String(levelVal)))
-        setLevel(levelVal as 'STARTER' | 'INTERMEDIATE' | 'ADVANCED');
+      if (['STARTER', 'INTERMEDIATE', 'EXPERT'].includes(String(levelVal)))
+        setLevel(levelVal as 'STARTER' | 'INTERMEDIATE' | 'EXPERT');
 
       if (typeof payload.price === 'number') {
         setPrice(payload.price);
@@ -413,7 +413,7 @@ const StepBasic: React.FC<Props> = ({
               <Select
                 value={level}
                 onValueChange={(v: string) =>
-                  setLevel(v as 'STARTER' | 'INTERMEDIATE' | 'ADVANCED')
+                  setLevel(v as 'STARTER' | 'INTERMEDIATE' | 'EXPERT')
                 }
               >
                 <SelectTrigger className="w-full" disabled={loading}>
@@ -422,13 +422,13 @@ const StepBasic: React.FC<Props> = ({
                 <SelectContent>
                   <SelectItem value="STARTER">Sơ cấp</SelectItem>
                   <SelectItem value="INTERMEDIATE">Trung cấp</SelectItem>
-                  <SelectItem value="ADVANCED">Nâng cao</SelectItem>
+                  <SelectItem value="EXPERT">Nâng cao</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700">
                 Giá <span className="text-red-500">*</span>
@@ -471,7 +471,7 @@ const StepBasic: React.FC<Props> = ({
                 </p>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
