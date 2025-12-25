@@ -130,8 +130,6 @@ export const QuizEditDialog = ({
     error,
   } = useGetQuizByIdMutationAdmin(quizId);
 
-  console.log('Fetched quiz data:', quizData);
-
   const { data: currentModuleData } = useGetModulesById(
     quizData?.moduleId || '',
   );
@@ -267,8 +265,6 @@ export const QuizEditDialog = ({
         submitValues.moduleId = values.moduleId;
         submitValues.imageSource = null;
       }
-
-      console.log('Submitting values:', submitValues);
 
       await updateQuizMutation.mutateAsync({
         quizId,

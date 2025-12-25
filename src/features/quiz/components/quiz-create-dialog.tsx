@@ -311,10 +311,7 @@ export const QuizCreateDialog = ({
     reader.readAsBinaryString(file);
   };
 
-  console.log('isloading', isLoading);
-
   const onSubmit = async (values: QuizCreateFormValues) => {
-    console.log('Form Values on Submit:', values);
     setIsLoading(true);
     try {
       const processedQuestions = values.questions.map((q) => {
