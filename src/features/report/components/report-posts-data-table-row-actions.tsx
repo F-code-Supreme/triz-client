@@ -73,7 +73,6 @@ export const ReportPostsDataTableRowActions = <TData,>({
       enabled: !!selectedPostId,
     },
   );
-  console.log('selectedPost', selectedPost);
   // reply management (admin)
   const [isRepliesOpen, setIsRepliesOpen] = React.useState(false);
   const [isReportReviewOpen, setIsReportReviewOpen] = React.useState(false);

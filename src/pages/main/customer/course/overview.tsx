@@ -58,8 +58,6 @@ const CourseOverviewPage = () => {
         })
       : modules;
 
-  console.log('Module data:', sortedModulesData);
-
   const enrollMutation = useEnrollCourseMutation();
 
   if (isLoading) {
@@ -138,8 +136,6 @@ const CourseOverviewPage = () => {
       alert('Đăng ký thất bại!');
     }
   };
-
-  console.log('Course level:', course.level);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
