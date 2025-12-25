@@ -75,13 +75,13 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
     return sum + (module.assignmentCount ?? 0);
   }, 0);
 
-  const totalDuration = modules.reduce((sum, module) => {
-    const duration =
-      typeof module.durationInMinutes === 'number'
-        ? module.durationInMinutes
-        : 0;
-    return sum + duration;
-  }, 0);
+  // const totalDuration = modules.reduce((sum, module) => {
+  //   const duration =
+  //     typeof module.durationInMinutes === 'number'
+  //       ? module.durationInMinutes
+  //       : 0;
+  //   return sum + duration;
+  // }, 0);
 
   const handlePublish = async () => {
     if (totalModules === 0) {
@@ -167,7 +167,7 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
                 {module.durationInMinutes > 0 && (
                   <span className="text-sm text-gray-600 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {module.durationInMinutes} min
+                    {module.durationInMinutes} phút
                   </span>
                 )}
               </div>
@@ -459,8 +459,8 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
                   )}
 
                 {/* Additional Info Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
-                  <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t">
+                  {/* <div className="text-center p-3 bg-gray-50 rounded-lg">
                     <Clock className="w-5 h-5 text-gray-500 mx-auto mb-1" />
                     <p className="text-xs text-gray-500 mb-1">Thời lượng</p>
                     <p className="text-sm font-semibold text-gray-900">
@@ -468,7 +468,7 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
                         ? `${course.durationInMinutes} phút`
                         : 'N/A'}
                     </p>
-                  </div>
+                  </div> */}
 
                   <div className="text-center p-3 bg-blue-50 rounded-lg">
                     <BookOpen className="w-5 h-5 text-blue-600 mx-auto mb-1" />
@@ -521,7 +521,7 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
         </Card>
 
         {/* Statistics Grid - Keep existing or remove if redundant */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -558,7 +558,7 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
             </div>
           </Card>
 
-          <Card className="p-4">
+          {/* <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <Clock className="w-5 h-5 text-orange-600" />
@@ -570,7 +570,7 @@ const StepSummary: React.FC<Props> = ({ goBack, description }) => {
                 </p>
               </div>
             </div>
-          </Card>
+          </Card> */}
         </div>
 
         {/* Modules Detail */}
