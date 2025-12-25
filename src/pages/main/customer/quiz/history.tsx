@@ -3,7 +3,7 @@ import {
   Calendar,
   CheckCircle,
   XCircle,
-  RotateCcw,
+  // RotateCcw,
   Search,
   BookOpen,
   Target,
@@ -412,10 +412,10 @@ const HistoryPage = () => {
                             </DialogContent>
                           </Dialog>
 
-                          <Button variant="outline" size="sm">
+                          {/* <Button variant="outline" size="sm">
                             <RotateCcw className="w-4 h-4 mr-2" />
                             Làm lại
-                          </Button>
+                          </Button> */}
                         </div>
                       </div>
                     </div>

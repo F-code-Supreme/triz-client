@@ -8,7 +8,7 @@ import {
   Loader2,
   Trophy,
   CheckCircle,
-  RotateCcw,
+  // RotateCcw,
   Home,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -38,11 +38,11 @@ import { formatDate } from '@/utils';
 const QuizResults = ({
   results,
   onClose,
-  onRetry,
+  // onRetry,
 }: {
   results: any;
   onClose: () => void;
-  onRetry: () => void;
+  // onRetry: () => void;
 }) => {
   const formatTime = (dateString: string) => {
     return formatDate(new Date(dateString), 'DD/MM/YYYY HH:mm');
@@ -141,13 +141,13 @@ const QuizResults = ({
                 <Home className="w-4 h-4" />
                 Thoát
               </Button>
-              <Button
+              {/* <Button
                 onClick={onRetry}
                 className="flex-1 gap-2 bg-slate-800 hover:bg-slate-900 text-white"
               >
                 <RotateCcw className="w-4 h-4" />
                 Làm lại
-              </Button>
+              </Button> */}
             </div>
           </CardContent>
         </Card>
@@ -418,11 +418,12 @@ const QuizDetail = () => {
     navigate({ to: '/quiz' });
   };
 
-  const handleRetryQuiz = () => {
-    localStorage.removeItem(`quiz-attempt-${quizId}`);
-    setShowResults(false);
-    navigate({ to: `/quiz/${quizId}` });
-  };
+  // const handleRetryQuiz = () => {
+  //   localStorage.removeItem(`quiz-attempt-${quizId}`);
+  //   setShowResults(false);
+  //   navigate({ to: `/quiz/${quizId}` });
+  // };
+
   if (isLoading) {
     return <QuizSkeleton />;
   }
@@ -456,7 +457,7 @@ const QuizDetail = () => {
         <QuizResults
           results={quizResults}
           onClose={handleCloseResults}
-          onRetry={handleRetryQuiz}
+          // onRetry={handleRetryQuiz}
         />
       )}
       <div className=" dark:from-slate-900 dark:to-slate-800">

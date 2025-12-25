@@ -158,8 +158,16 @@ export const useDeleteQuizByIdMutation = () => {
   const _request = useAxios();
   return useMutation({
     mutationFn: async (quizId: string) => {
-      const res = await _request.delete(`/quizzes/${quizId}`);
-      return res.data;
+      try {
+        const res = await _request.delete(`/quizzes/${quizId}`);
+        return res.data;
+      } catch (error: unknown) {
+        const axiosError = error as { response?: { status?: number } };
+        if (axiosError.response?.status === 400) {
+          return null;
+        }
+        throw error;
+      }
     },
   });
 };
