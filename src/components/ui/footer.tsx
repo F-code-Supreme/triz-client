@@ -116,12 +116,11 @@ const Footer = ({ showCTA = false }: { showCTA: boolean }) => {
                 {t('nav.packages')}
               </Link>
             </div>
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <div className="bg-white flex items-center justify-center">
                 <img src="/logo.svg" alt="TRIZ Logo" className="w-24" />
               </div>
-              <img src="/tsk-logo.png" alt="TSK CSTC Logo" className="w-24" />
-            </div>
+            </div> */}
             {/* Social Media Icons
             <div className="flex items-center gap-4 md:gap-6">
               <div className="w-6 h-6 bg-white rounded flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
